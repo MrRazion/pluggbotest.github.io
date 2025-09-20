@@ -41,7 +41,7 @@
             color: var(--tg-theme-text-color, #ffffff);
             line-height: 1.6;
             padding-top: var(--tg-safe-area-inset-top);
-            padding-bottom: calc(100px + var(--tg-safe-area-inset-bottom));
+            padding-bottom: calc(80px + var(--tg-safe-area-inset-bottom));
             padding-left: var(--tg-safe-area-inset-left);
             padding-right: var(--tg-safe-area-inset-right);
             scroll-behavior: smooth; /* Smooth scrolling */
@@ -90,43 +90,6 @@
         .header p {
             color: var(--tg-theme-hint-color, #aaaaaa);
             font-size: 14px;
-        }
-        
-        .tabs {
-            display: flex;
-            overflow-x: auto;
-            margin-bottom: 20px;
-            padding-bottom: 5px;
-            scrollbar-width: none;
-            transition: all 0.3s ease;
-        }
-        
-        .tabs::-webkit-scrollbar {
-            display: none;
-        }
-        
-        .tab {
-            padding: 10px 20px;
-            background: var(--glass-bg);
-            backdrop-filter: var(--glass-blur);
-            border: var(--glass-border);
-            border-radius: var(--border-radius-md);
-            margin-right: 10px;
-            white-space: nowrap;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-        
-        .tab:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-        }
-        
-        .tab.active {
-            background: var(--primary-gradient);
-            color: white;
-            transform: scale(1.05);
         }
         
         .games-grid {
@@ -641,11 +604,14 @@
         
         .tab-content {
             display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
             animation: fadeIn 0.5s ease;
         }
         
         .tab-content.active {
             display: block;
+            opacity: 1;
         }
         
         .search-bar {
@@ -835,6 +801,58 @@
             padding-left: var(--tg-safe-area-inset-left);
             padding-right: var(--tg-safe-area-inset-right);
         }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border-top: var(--glass-border);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--tg-theme-hint-color, #aaaaaa);
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .nav-item:hover {
+            transform: scale(1.1);
+        }
+
+        .nav-item.active {
+            color: white;
+        }
+
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        .nav-item span {
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .development-message {
+            text-align: center;
+            padding: 20px;
+            color: #ffffff;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
@@ -851,16 +869,17 @@
             <input type="text" placeholder="Поиск игр..." id="search-input">
         </div>
         
-        <div class="tabs">
-            <div class="tab active" data-tab="all">ПРИВАТКИ</div>
-            <div class="tab" data-tab="popular">ПРИВАТКИ ДЛЯ ПК</div>
-        </div>
-        
-        <div class="tab-content active" id="all-tab">
+        <div class="tab-content active" id="home-tab">
             <div class="games-grid"></div>
         </div>
-        <div class="tab-content" id="popular-tab">
+        <div class="tab-content" id="privatki-tab">
             <div class="games-grid"></div>
+        </div>
+        <div class="tab-content" id="library-tab">
+            <div class="development-message">Функция в разработке. Следите за обновлениями.</div>
+        </div>
+        <div class="tab-content" id="settings-tab">
+            <div class="development-message">Функция в разработке. Следите за обновлениями.</div>
         </div>
         
         <!-- Детали игры (общий) -->
@@ -976,6 +995,33 @@
         </div>
     </div>
 
+    <div class="bottom-nav" id="bottom-nav">
+        <button class="nav-item active" data-tab="home">
+            <svg viewBox="0 0 24 24" class="nav-icon">
+                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+            </svg>
+            <span>Главная</span>
+        </button>
+        <button class="nav-item" data-tab="privatki">
+            <svg viewBox="0 0 24 24" class="nav-icon">
+                <path d="M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6-9h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1 .9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM8.9 6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2H8.9V6zM18 20H6V10h12v10z" />
+            </svg>
+            <span>Приватки</span>
+        </button>
+        <button class="nav-item" data-tab="library">
+            <svg viewBox="0 0 24 24" class="nav-icon">
+                <path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1 .9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 18H6V4h12v16zM11 4h2v2h-2V4zm0 4h2v2h-2V8zm0 4h2v2h-2v-2zM11 16h2v2h-2v-2z" />
+            </svg>
+            <span>Библиотека</span>
+        </button>
+        <button class="nav-item" data-tab="settings">
+            <svg viewBox="0 0 24 24" class="nav-icon">
+                <path d="M19.14 12.94c.04-.3 .06-.61 .06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14 .23-.41 .12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39 .96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43 .17-.47 .41l-.36 2.54c-.59 .24-1.13 .57-1.62 .94l-2.39-.96c-.22-.08-.47 0-.59 .22L2.74 8.87c-.12 .21-.08 .47 .12 .61l2.03 1.58c-.05 .3-.09 .63-.09 .94s.02 .64 .07 .94l-2.03 1.58c-.18 .14-.23 .41-.12 .61l1.92 3.32c.12 .22 .37 .29 .59 .22l2.39-.96c.5 .38 1.03 .7 1.62 .94l.36 2.54c.05 .24 .24 .41 .48 .41h3.84c.24 0 .44-.17 .47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39 .96c.22 .08 .47 0 .59-.22l1.92-3.32c.12-.22 .07-.47-.12-.61l-2.03-1.58zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z" />
+            </svg>
+            <span>Настройки</span>
+        </button>
+    </div>
+
     <script>
         // Инициализация Telegram Web App
         const tg = window.Telegram.WebApp;
@@ -1005,10 +1051,11 @@
         const detectorsInfo = document.getElementById('detectors-info');
         const detectorsList = document.getElementById('detectors-list');
         const closeVerify = document.getElementById('close-verify');
+        const searchBar = document.querySelector('.search-bar');
         
         // Переменные для отслеживания прогресса
         let isDownloading = false;
-        let currentTab = 'all';
+        let currentTab = 'home';
         let xhr = null;
         let currentDownloadUrl = '';
         let currentFileName = '';
@@ -1202,7 +1249,7 @@
             
             grid.innerHTML = '';
             
-            const filteredGames = tab === 'all' ? games : games.filter(game => game.categories.includes(tab));
+            const filteredGames = games;
             
             filteredGames.forEach(game => {
                 const card = document.createElement('div');
@@ -1263,19 +1310,41 @@
             }
         }
         
-        // Обработчики для вкладок
-        document.querySelectorAll('.tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
+        // Обработчики для навигации
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
                 
-                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-                const content = document.getElementById(`${tab.dataset.tab}-tab`);
-                content.classList.add('active');
-                
-                currentTab = tab.dataset.tab;
-                renderGames(currentTab);
-                applySearch(); // Применить поиск при смене таба
+                const tab = item.dataset.tab;
+                const content = document.getElementById(`${tab}-tab`);
+
+                // Smooth transition
+                document.querySelectorAll('.tab-content').forEach(c => {
+                    if (c.classList.contains('active')) {
+                        c.style.opacity = '0';
+                        setTimeout(() => {
+                            c.style.display = 'none';
+                            c.classList.remove('active');
+                        }, 300);
+                    }
+                });
+
+                if (content) {
+                    content.classList.add('active');
+                    content.style.display = 'block';
+                    setTimeout(() => {
+                        content.style.opacity = '1';
+                    }, 10);
+                }
+
+                searchBar.style.display = (tab === 'home') ? 'block' : 'none';
+
+                if (tab === 'home' || tab === 'privatki') {
+                    currentTab = tab;
+                    renderGames(tab);
+                    applySearch();
+                }
             });
         });
         
@@ -1510,7 +1579,7 @@
         }
         
         // Рендеринг начального таба
-        renderGames('all');
+        renderGames('home');
         
         // Слушатель события writeAccessRequested (если нужно, но в данном случае не используется)
         tg.onEvent('writeAccessRequested', (result) => {
