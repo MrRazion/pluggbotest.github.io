@@ -949,7 +949,6 @@
                     <!-- Detector items will be added here -->
                 </div>
                 <div class="modal-buttons">
-                    <button class="scan-virus" id="scan-virus">Проверить на вирусы</button>
                     <button class="close-verify" id="close-verify">Закрыть</button>
                 </div>
             </div>
@@ -1004,10 +1003,6 @@
         const detectorsInfo = document.getElementById('detectors-info');
         const detectorsList = document.getElementById('detectors-list');
         const closeVerify = document.getElementById('close-verify');
-        const scanVirus = document.getElementById('scan-virus');
-        
-        // VirusTotal API Key (replace with your own)
-        const VIRUS_TOTAL_API_KEY = '6564be73eb640cb3df3efade57e8bfd4faf78c1a86b65221ec8a8247e488e776';
         
         // Переменные для отслеживания прогресса
         let isDownloading = false;
@@ -1492,120 +1487,6 @@
         // Close verify modal
         closeVerify.addEventListener('click', () => {
             verifyModal.classList.remove('active');
-        });
-        
-        // Scan virus button
-        scanVirus.addEventListener('click', async () => {
-            if (!VIRUS_TOTAL_API_KEY) {
-                alert('VirusTotal API key is not set. Please set VIRUS_TOTAL_API_KEY in the script.');
-                return;
-            }
-            
-            scanVirus.disabled = true;
-            scanVirus.textContent = 'Сканирую...';
-            
-            try {
-                // Step 1: Submit URL for scan
-                const submitResponse = await fetch('https://www.virustotal.com/api/v3/urls', {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                        'x-apikey': VIRUS_TOTAL_API_KEY
-                    },
-                    body: new URLSearchParams({ url: currentDownloadUrl })
-                });
-                
-                if (!submitResponse.ok) {
-                    throw new Error('Failed to submit URL for scan: ' + await submitResponse.text());
-                }
-                
-                const submitData = await submitResponse.json();
-                const analysisId = submitData.data.id;
-                
-                // Step 2: Poll for analysis results
-                let analysisData;
-                let attempts = 0;
-                const maxAttempts = 10;
-                
-                while (attempts < maxAttempts) {
-                    const analysisResponse = await fetch(`https://www.virustotal.com/api/v3/analyses/${analysisId}`, {
-                        headers: {
-                            'x-apikey': VIRUS_TOTAL_API_KEY
-                        }
-                    });
-                    
-                    if (!analysisResponse.ok) {
-                        throw new Error('Failed to get analysis results: ' + await analysisResponse.text());
-                    }
-                    
-                    analysisData = await analysisResponse.json();
-                    
-                    if (analysisData.data.attributes.status === 'completed') {
-                        break;
-                    }
-                    
-                    attempts++;
-                    await new Promise(resolve => setTimeout(resolve, 5000)); // Wait 5 seconds before next poll
-                }
-                
-                if (attempts >= maxAttempts) {
-                    throw new Error('Analysis timed out');
-                }
-                
-                // Process results
-                const stats = analysisData.data.attributes.stats;
-                const malicious = stats.malicious || 0;
-                const suspicious = stats.suspicious || 0;
-                const detectorsFound = malicious + suspicious;
-                
-                // Update detectors info
-                detectorsInfo.textContent = `Детекторы: ${detectorsFound}/${Object.keys(analysisData.data.attributes.results).length}`;
-                
-                // Clear and update detectors list
-                detectorsList.innerHTML = '';
-                Object.entries(analysisData.data.attributes.results).forEach(([detector, result]) => {
-                    const item = document.createElement('div');
-                    item.className = 'detector-item';
-                    if (result.category === 'malicious' || result.category === 'suspicious') {
-                        item.innerHTML = `
-                            <svg class="question" viewBox="0 0 24 24">
-                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"></path>
-                            </svg>
-                            ${detector}: ${result.result || 'Suspicious'}
-                        `;
-                    } else {
-                        item.innerHTML = `
-                            <svg class="checkmark" viewBox="0 0 24 24">
-                                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path>
-                            </svg>
-                            ${detector}: Clean
-                        `;
-                    }
-                    detectorsList.appendChild(item);
-                });
-                
-                // Update verified status
-                const isVerified = detectorsFound === 0;
-                verifiedBadge.className = `verified-badge ${isVerified ? 'verified' : 'unverified'}`;
-                verifiedBadge.textContent = isVerified ? 'Verified' : 'Unverified';
-                
-                // Optionally update currentGame
-                currentGame.verified = isVerified;
-                currentGame.detectorsFound = detectorsFound;
-                currentGame.detectorsTotal = Object.keys(analysisData.data.attributes.results).length;
-                currentGame.maliciousDetectors = Object.entries(analysisData.data.attributes.results)
-                    .filter(([, result]) => result.category === 'malicious' || result.category === 'suspicious')
-                    .map(([detector, result]) => ({ detector, virus: result.result || 'Suspicious' }));
-                
-                alert('Сканирование завершено!');
-            } catch (error) {
-                console.error(error);
-                alert('Ошибка при сканировании: ' + error.message);
-            } finally {
-                scanVirus.disabled = false;
-                scanVirus.textContent = 'Проверить на вирусы';
-            }
         });
         
         // Инициализация при загрузке
