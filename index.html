@@ -1517,7 +1517,7 @@
                 });
                 
                 if (!submitResponse.ok) {
-                    throw new Error('Failed to submit URL for scan');
+                    throw new Error('Failed to submit URL for scan: ' + await submitResponse.text());
                 }
                 
                 const submitData = await submitResponse.json();
@@ -1536,7 +1536,7 @@
                     });
                     
                     if (!analysisResponse.ok) {
-                        throw new Error('Failed to get analysis results');
+                        throw new Error('Failed to get analysis results: ' + await analysisResponse.text());
                     }
                     
                     analysisData = await analysisResponse.json();
