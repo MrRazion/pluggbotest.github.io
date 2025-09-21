@@ -64,7 +64,9 @@
             border-radius: var(--border-radius-lg);
             box-shadow: var(--shadow-soft);
             transition: transform 0.3s ease, opacity 0.3s ease;
-            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         
         .header:hover {
@@ -94,13 +96,10 @@
         }
 
         .header-icons {
-            position: absolute;
-            top: 50%;
-            right: 15px;
-            transform: translateY(-50%);
             display: flex;
             align-items: center;
             gap: 10px;
+            margin-bottom: 10px;
         }
 
         .avatar-icon {
@@ -818,7 +817,7 @@
             fill: #ffffff;
         }
         
-        #profile-modal, #inbox-modal {
+        #profile-modal, #inbox-modal, #description-editor-modal {
             display: none;
             position: fixed;
             top: 0;
@@ -832,7 +831,7 @@
             animation: fadeIn 0.5s ease;
         }
         
-        #profile-modal.active, #inbox-modal.active {
+        #profile-modal.active, #inbox-modal.active, #description-editor-modal.active {
             display: block;
         }
         
@@ -903,18 +902,134 @@
         .profile-info {
             margin-top: 60px;
             padding: 0 20px;
+            text-align: center;
         }
 
         .profile-username {
-            font-size: 18px;
-            font-weight: 600;
+            font-size: 24px;
+            font-weight: 700;
             color: var(--tg-theme-text-color, #ffffff);
             margin-bottom: 5px;
         }
 
         .profile-handle {
+            font-size: 16px;
+            color: var(--tg-theme-hint-color, #aaaaaa);
+            margin-bottom: 10px;
+        }
+
+        .profile-reg-date {
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 14px;
             color: var(--tg-theme-hint-color, #aaaaaa);
+            margin-bottom: 20px;
+        }
+
+        .reg-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--accent-green);
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: flash 1.5s infinite;
+        }
+
+        .profile-description {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border: var(--glass-border);
+            border-radius: var(--border-radius-lg);
+            padding: 15px;
+            font-size: 14px;
+            color: var(--tg-theme-text-color, #ffffff);
+            cursor: pointer;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            transition: background 0.3s ease;
+        }
+
+        .profile-description:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .profile-description.empty {
+            color: var(--tg-theme-hint-color, #aaaaaa);
+        }
+
+        .description-editor-content {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border: var(--glass-border);
+            border-radius: var(--border-radius-lg);
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 90%;
+            box-shadow: var(--shadow-soft);
+            animation: slideUp 0.5s ease;
+            position: relative;
+        }
+
+        .description-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .description-textarea {
+            width: 100%;
+            height: 150px;
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border: var(--glass-border);
+            border-radius: var(--border-radius-md);
+            padding: 15px;
+            color: var(--tg-theme-text-color, #ffffff);
+            font-size: 14px;
+            resize: none;
+        }
+
+        .word-limit {
+            text-align: right;
+            font-size: 12px;
+            color: var(--tg-theme-hint-color, #aaaaaa);
+            margin-top: 5px;
+            margin-bottom: 15px;
+        }
+
+        .editor-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .editor-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: var(--border-radius-md);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .cancel-btn {
+            background: var(--unverified-red);
+            color: white;
+        }
+
+        .save-btn {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .editor-btn:hover {
+            opacity: 0.9;
         }
 
         .inbox-content {
@@ -1175,8 +1290,6 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>PLUGG BOT</h1>
-            <p>Лучшая коллекция приваток для удобного скачивания </p>
             <div class="header-icons">
                 <div class="avatar-icon" id="avatar-icon">
                     <img id="avatar-img" src="" alt="Avatar">
@@ -1185,6 +1298,8 @@
                     <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
                 </svg>
             </div>
+            <h1>PLUGG BOT</h1>
+            <p>Лучшая коллекция приваток для удобного скачивания </p>
         </div>
         
         <div class="search-bar">
@@ -1293,9 +1408,28 @@
                 <div class="profile-info">
                     <div class="profile-username" id="profile-username"></div>
                     <div class="profile-handle" id="profile-handle"></div>
+                    <div class="profile-reg-date">
+                        <div class="reg-dot"></div>
+                        <span id="profile-reg-text"></span>
+                    </div>
+                    <div class="profile-description" id="profile-description">Добавить описание...</div>
                 </div>
             </div>
             <input type="file" id="banner-file-input" class="file-input" accept="image/*">
+        </div>
+
+        <!-- Description Editor Modal -->
+        <div id="description-editor-modal">
+            <button class="modal-close" id="close-description-editor">&times;</button>
+            <div class="description-editor-content">
+                <div class="description-title">Описание</div>
+                <textarea class="description-textarea" id="description-textarea" maxlength="500"></textarea>
+                <div class="word-limit" id="word-limit">Осталось слов: 100</div>
+                <div class="editor-buttons">
+                    <button class="editor-btn cancel-btn" id="cancel-description">Отмена</button>
+                    <button class="editor-btn save-btn" id="save-description">Сохранить</button>
+                </div>
+            </div>
         </div>
 
         <!-- Inbox Modal -->
@@ -1416,8 +1550,16 @@
         const profileAvatarImg = document.getElementById('profile-avatar-img');
         const profileUsername = document.getElementById('profile-username');
         const profileHandle = document.getElementById('profile-handle');
+        const profileRegText = document.getElementById('profile-reg-text');
+        const profileDescription = document.getElementById('profile-description');
         const editBanner = document.getElementById('edit-banner');
         const bannerFileInput = document.getElementById('banner-file-input');
+        const descriptionEditorModal = document.getElementById('description-editor-modal');
+        const descriptionTextarea = document.getElementById('description-textarea');
+        const wordLimit = document.getElementById('word-limit');
+        const cancelDescription = document.getElementById('cancel-description');
+        const saveDescription = document.getElementById('save-description');
+        const closeDescriptionEditor = document.getElementById('close-description-editor');
         const inboxModal = document.getElementById('inbox-modal');
         const closeInbox = document.getElementById('close-inbox');
         const closeVerifyModal = document.getElementById('close-verify-modal');
@@ -1435,6 +1577,8 @@
         let currentGameTitle = '';
         let currentGame = null;
         let library = JSON.parse(localStorage.getItem('plugg_library') || '[]');
+        let originalDescription = '';
+        let hasDescriptionChanged = false;
         
         // Данные игр (добавил поле whatsNew для каждого)
         const games = [
@@ -1483,7 +1627,7 @@
                 image: 'https://avatars.mds.yandex.net/i?id=0e819955e77d734dbf74a1628015204f_l-12569562-images-thumbs&n=13',
                 screenshots: [
                     'https://i.ytimg.com/vi/z-Wb0j6gupk/maxresdefault.jpg',
-                    'https://play-lh.googleusercontent.com/1-hPxafOxdYpYZEOKzNIkSP43HXCNftVJVpU5iqs-Oracle-OLm0Cr6hD3a5qFK3r1L8U7pWZw',
+                    'https://play-lh.googleusercontent.com/1-hPxafOxdYpYZEOKzNIkSP43HXCNftVJVpU5iqs-OLm0Cr6hD3a5qFK3r1L8U7pWZw',
                     'https://play-lh.googleusercontent.com/R4r5bI6k4gC2c4f4g5g6h7h8i9i0j1j2k3k4l5l6m7m0Cr6hD3a5qFK3r1L8U7pWZw'
                 ],
                 categories: ['action'],
@@ -1582,7 +1726,7 @@
             {
                 id: 'crossoff',
                 title: 'Crossoff: Classic',
-                description: 'CrossOFF — приватка в которой за сыгранные матчи выдают серебро и золото, является копией оригинальной игры, возможность входа через Google.',
+                description: 'CrossOff — приватка в которой за сыгранные матчи выдают серебро и золото, является копией оригинальной игры, возможность входа через Google.',
                 whatsNew: [
                     'Добавлен античит',
                     'Добавлены кланы',
@@ -1624,7 +1768,11 @@
                 avatarImg.src = avatarSrc;
                 profileAvatarImg.src = avatarSrc;
                 profileUsername.textContent = user.first_name || 'User';
-                profileHandle.innerHTML = user.username ? `| <span style="color: var(--tg-theme-button-color, #40a7e3);">@${user.username}</span>` : '| Нет username';
+                profileHandle.innerHTML = user.username ? `@${user.username} | ${user.id}` : `| ${user.id}`;
+
+                // Approximate registration date
+                const approxDate = estimateRegistrationDate(user.id);
+                profileRegText.textContent = `Дата регистрации в Telegram: ${approxDate}`;
 
                 // Load saved banner
                 const savedBanner = localStorage.getItem('plugg_banner');
@@ -1634,7 +1782,34 @@
                     // Default banner
                     bannerImg.src = 'https://via.placeholder.com/300x150/000000/6a11cb?text=PLUGG+BOT';
                 }
+
+                // Load description
+                const savedDescription = localStorage.getItem('plugg_description');
+                if (savedDescription) {
+                    profileDescription.textContent = savedDescription;
+                    profileDescription.classList.remove('empty');
+                } else {
+                    profileDescription.textContent = 'Добавить описание...';
+                    profileDescription.classList.add('empty');
+                }
             }
+        }
+
+        function estimateRegistrationDate(userId) {
+            // Approximate linear interpolation
+            // Telegram launched Aug 2013, assume id 1: 2013-08-01
+            // Assume current ~1e9 ids in 2025, but adjust
+            const startDate = new Date(2013, 7, 1); // August 1, 2013
+            const currentDate = new Date(2025, 8, 21); // September 21, 2025
+            const maxId = 2000000000; // Approximate max id in 2025
+            const daysTotal = (currentDate - startDate) / (1000 * 60 * 60 * 24);
+            const daysFromStart = Math.floor((userId / maxId) * daysTotal);
+            const estDate = new Date(startDate);
+            estDate.setDate(estDate.getDate() + daysFromStart);
+            const day = estDate.getDate().toString().padStart(2, '0');
+            const month = estDate.toLocaleString('ru', { month: 'short' }) + '.';
+            const year = estDate.getFullYear();
+            return `${day} ${month} ${year}`;
         }
 
         // Banner Selection
@@ -1659,6 +1834,61 @@
         profileBanner.addEventListener('click', () => {
             editBanner.click();
         });
+
+        // Description Editor
+        profileDescription.addEventListener('click', () => {
+            originalDescription = profileDescription.textContent === 'Добавить описание...' ? '' : profileDescription.textContent;
+            descriptionTextarea.value = originalDescription;
+            updateWordLimit();
+            hasDescriptionChanged = false;
+            descriptionEditorModal.classList.add('active');
+        });
+
+        function updateWordLimit() {
+            const text = descriptionTextarea.value.trim();
+            const words = text ? text.split(/\s+/).length : 0;
+            const remaining = 100 - words;
+            wordLimit.textContent = `Осталось слов: ${remaining}`;
+            wordLimit.style.color = remaining < 0 ? 'red' : 'var(--tg-theme-hint-color, #aaaaaa)';
+            saveDescription.disabled = remaining < 0;
+        }
+
+        descriptionTextarea.addEventListener('input', () => {
+            hasDescriptionChanged = descriptionTextarea.value !== originalDescription;
+            updateWordLimit();
+        });
+
+        saveDescription.addEventListener('click', () => {
+            const newDesc = descriptionTextarea.value.trim();
+            if (newDesc) {
+                profileDescription.textContent = newDesc;
+                profileDescription.classList.remove('empty');
+                localStorage.setItem('plugg_description', newDesc);
+            } else {
+                profileDescription.textContent = 'Добавить описание...';
+                profileDescription.classList.add('empty');
+                localStorage.removeItem('plugg_description');
+            }
+            descriptionEditorModal.classList.remove('active');
+            hasDescriptionChanged = false;
+        });
+
+        cancelDescription.addEventListener('click', closeEditor);
+
+        closeDescriptionEditor.addEventListener('click', closeEditor);
+
+        function closeEditor() {
+            if (hasDescriptionChanged) {
+                tg.showConfirm('Описание не сохранено. Вы уверены, что хотите отменить?', (confirmed) => {
+                    if (confirmed) {
+                        descriptionEditorModal.classList.remove('active');
+                        hasDescriptionChanged = false;
+                    }
+                });
+            } else {
+                descriptionEditorModal.classList.remove('active');
+            }
+        }
         
         // Функция для рендеринга игр в таб
         function renderGames(tab) {
@@ -2119,9 +2349,15 @@
         closeVerifyModal.addEventListener('click', () => verifyModal.classList.remove('active'));
 
         // Close modals on outside click
-        [profileModal, inboxModal, verifyModal].forEach(modal => {
+        [profileModal, inboxModal, verifyModal, descriptionEditorModal].forEach(modal => {
             modal.addEventListener('click', (e) => {
-                if (e.target === modal) modal.classList.remove('active');
+                if (e.target === modal) {
+                    if (modal === descriptionEditorModal) {
+                        closeEditor();
+                    } else {
+                        modal.classList.remove('active');
+                    }
+                }
             });
         });
         
