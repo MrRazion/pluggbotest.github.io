@@ -3,285 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plugg Bot Store - Gifts Sale</title>
+    <title>YouTube Player in Telegram</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: #000000; /* Black background */
-            color: #ffffff; /* White text for contrast */
-            font-family: Arial, sans-serif;
-            overflow-x: hidden;
-        }
-
-        .container {
-            max-width: 100%;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .header {
-            width: 100%;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .header h1 {
-            font-size: 24px;
-            margin: 0;
-        }
-
-        .user-info {
-            font-size: 16px;
-            margin-top: 10px;
-        }
-
-        .gift-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 20px;
-            width: 100%;
-        }
-
-        .gift-card {
-            perspective: 1000px; /* For 3D flip effect */
-            cursor: pointer;
-        }
-
-        .gift-card-inner {
-            position: relative;
-            width: 100%;
-            height: 200px;
-            transition: transform 0.6s ease-in-out; /* Smooth flip animation */
-            transform-style: preserve-3d;
-        }
-
-        .gift-card.flipped .gift-card-inner {
-            transform: rotateY(180deg);
-        }
-
-        .gift-front, .gift-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            border-radius: 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 10px;
-            box-sizing: border-box;
-            background-color: #1a1a1a; /* Dark gray for cards */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Shadow for depth */
-        }
-
-        .gift-back {
-            transform: rotateY(180deg);
-        }
-
-        .gift-image {
-            width: 100px;
-            height: 100px;
-            background-color: #333; /* Placeholder for image */
-            border-radius: 50%;
-            margin-bottom: 10px;
-            animation: pulse 2s infinite; /* Pulsing animation for attractiveness */
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
-        .gift-name {
-            font-size: 18px;
-            margin-bottom: 5px;
-        }
-
-        .gift-price {
-            font-size: 14px;
-            color: #ffd700; /* Gold for price */
-        }
-
-        .gift-description {
-            font-size: 14px;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-
-        .buy-button {
-            background-color: #4CAF50; /* Green buy button */
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease; /* Smooth hover */
-        }
-
-        .buy-button:hover {
-            background-color: #45a049;
-        }
-
-        .fullscreen-button {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: #2196F3;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-
-        .fullscreen-button:hover {
-            transform: scale(1.1);
-        }
-
-        /* Smooth scrolling */
-        html {
-            scroll-behavior: smooth;
-        }
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f0f0f0; }
+        #player { width: 100%; height: 400px; border: none; }
+        input { width: 100%; padding: 10px; margin-bottom: 10px; box-sizing: border-box; }
+        button { padding: 10px 20px; background: #0088cc; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #006ba0; }
+        #search { display: none; } /* Optional search UI */
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Welcome to Plugg Bot Store - Gifts Sale</h1>
-            <div class="user-info" id="user-info">Loading user...</div>
-        </div>
-        <div class="gift-grid" id="gift-grid">
-            <!-- Gifts will be dynamically added here -->
-        </div>
+    <h2>YouTube Player</h2>
+    <input type="url" id="urlInput" placeholder="Paste YouTube URL here (e.g., https://www.youtube.com/watch?v=VIDEO_ID)">
+    <button onclick="loadVideo()">Load Video</button>
+    <button onclick="toggleFullscreen()">Fullscreen</button>
+    
+    <div id="search">
+        <input type="text" id="searchInput" placeholder="Or search for videos...">
+        <button onclick="searchVideos()">Search</button>
+        <ul id="searchResults"></ul>
     </div>
-    <button class="fullscreen-button" id="fullscreen-btn">🖥️</button>
+    
+    <iframe id="player" src=""></iframe>
 
     <script>
-        const WebApp = window.Telegram.WebApp;
+        // Initialize Telegram WebApp
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand(); // Start in expanded mode
 
-        // Initialize WebApp
-        WebApp.ready();
-        WebApp.expand(); // Expand to full height initially
+        let isFullscreen = false;
 
-        // Set theme to dark if not already
-        if (WebApp.colorScheme !== 'dark') {
-            // Note: Can't force theme, but we use black background anyway
+        function loadVideo() {
+            const url = document.getElementById('urlInput').value;
+            if (!url) return alert('Please enter a YouTube URL!');
+            
+            // Extract video ID from URL (simple regex for common formats)
+            const videoId = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/)?.[1];
+            if (!videoId) return alert('Invalid YouTube URL!');
+            
+            document.getElementById('player').src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
         }
 
-        // Get user info
-        const user = WebApp.initDataUnsafe.user;
-        document.getElementById('user-info').innerText = user ? `Hello, ${user.first_name}!` : 'Hello, Guest!';
-
-        // Example gifts based on Telegram gifts types (limited, unlimited, collectibles)
-        const gifts = [
-            {
-                name: 'Rose Bouquet',
-                price: 50, // In Telegram Stars
-                description: 'A beautiful animated rose bouquet. Unlimited edition.',
-                image: '🌹' // Placeholder, use URL for real image
-            },
-            {
-                name: 'Teddy Bear',
-                price: 100,
-                description: 'Cute teddy bear gift. Collectible and transferable.',
-                image: '🧸'
-            },
-            {
-                name: 'Star Badge',
-                price: 200,
-                description: 'Shiny star badge. Limited edition, can be worn as status.',
-                image: '⭐'
-            },
-            {
-                name: 'Diamond Ring',
-                price: 500,
-                description: 'Luxurious diamond ring. Rare collectible, blockchain integrable.',
-                image: '💎'
-            },
-            // Add more gifts as needed
-        ];
-
-        // Render gifts
-        const giftGrid = document.getElementById('gift-grid');
-        gifts.forEach(gift => {
-            const card = document.createElement('div');
-            card.className = 'gift-card';
-
-            const inner = document.createElement('div');
-            inner.className = 'gift-card-inner';
-
-            const front = document.createElement('div');
-            front.className = 'gift-front';
-            front.innerHTML = `
-                <div class="gift-image" style="font-size: 50px;">${gift.image}</div>
-                <div class="gift-name">${gift.name}</div>
-                <div class="gift-price">${gift.price} Stars</div>
-            `;
-
-            const back = document.createElement('div');
-            back.className = 'gift-back';
-            back.innerHTML = `
-                <div class="gift-name">${gift.name}</div>
-                <div class="gift-description">${gift.description}</div>
-                <button class="buy-button" data-price="${gift.price}" data-name="${gift.name}">Buy Now</button>
-            `;
-
-            inner.appendChild(front);
-            inner.appendChild(back);
-            card.appendChild(inner);
-            giftGrid.appendChild(card);
-
-            // Flip on click
-            card.addEventListener('click', () => {
-                card.classList.toggle('flipped');
-                WebApp.HapticFeedback.impactOccurred('light'); // Haptic feedback on flip
-            });
-
-            // Buy button
-            const buyBtn = back.querySelector('.buy-button');
-            buyBtn.addEventListener('click', (e) => {
-                e.stopPropagation(); // Prevent flip back
-                handleBuy(gift.name, gift.price);
-            });
-        });
-
-        // Fullscreen button
-        const fsBtn = document.getElementById('fullscreen-btn');
-        fsBtn.addEventListener('click', () => {
-            if (!WebApp.isFullscreen) {
-                WebApp.requestFullscreen();
+        function toggleFullscreen() {
+            isFullscreen = !isFullscreen;
+            if (isFullscreen) {
+                tg.expand(); // Fullscreen in Telegram
+                document.getElementById('player').style.height = '100vh';
             } else {
-                WebApp.exitFullscreen();
+                tg.close(); // Or just shrink
+                document.getElementById('player').style.height = '400px';
             }
-            WebApp.HapticFeedback.impactOccurred('medium');
-        });
-
-        // Listen for fullscreen changes
-        WebApp.onEvent('fullscreenChanged', () => {
-            fsBtn.innerText = WebApp.isFullscreen ? '🔽' : '🖥️';
-        });
-
-        // Handle buy (simulate invoice, in real app use openInvoice with bot-generated URL)
-        function handleBuy(name, price) {
-            WebApp.HapticFeedback.notificationOccurred('success');
-            alert(`Purchasing ${name} for ${price} Stars! (Simulation)`);
-            // In real: WebApp.openInvoice('invoice_url_from_bot', callback);
-            // Or use cloud storage to save purchase history
-            WebApp.CloudStorage.setItem(`purchase_${name}`, JSON.stringify({ date: new Date(), price }), (err, success) => {
-                if (success) {
-                    console.log('Purchase saved!');
-                }
-            });
         }
 
-        // Smooth animations are handled by CSS transitions
+        // Optional: Simple search (uses YouTube search embed)
+        function searchVideos() {
+            const query = document.getElementById('searchInput').value;
+            if (!query) return;
+            
+            // This embeds a YouTube search page—click a result to play
+            document.getElementById('player').src = `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`;
+            document.getElementById('search').style.display = 'block';
+        }
+
+        // Listen for theme changes from Telegram
+        tg.onEvent('themeChanged', () => {
+            document.body.className = tg.colorScheme;
+        });
+        document.body.className = tg.colorScheme;
     </script>
 </body>
 </html>
