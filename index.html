@@ -3,76 +3,586 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YouTube Player in Telegram</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <title>Music Listener WebApp</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f0f0f0; }
-        #player { width: 100%; height: 400px; border: none; }
-        input { width: 100%; padding: 10px; margin-bottom: 10px; box-sizing: border-box; }
-        button { padding: 10px 20px; background: #0088cc; color: white; border: none; border-radius: 5px; cursor: pointer; }
-        button:hover { background: #006ba0; }
-        #search { display: none; } /* Optional search UI */
-    </style>
-</head>
-<body>
-    <h2>YouTube Player</h2>
-    <input type="url" id="urlInput" placeholder="Paste YouTube URL here (e.g., https://www.youtube.com/watch?v=VIDEO_ID)">
-    <button onclick="loadVideo()">Load Video</button>
-    <button onclick="toggleFullscreen()">Fullscreen</button>
-    
-    <div id="search">
-        <input type="text" id="searchInput" placeholder="Or search for videos...">
-        <button onclick="searchVideos()">Search</button>
-        <ul id="searchResults"></ul>
-    </div>
-    
-    <iframe id="player" src=""></iframe>
-
-    <script>
-        // Initialize Telegram WebApp
-        const tg = window.Telegram.WebApp;
-        tg.ready();
-        tg.expand(); // Start in expanded mode
-
-        let isFullscreen = false;
-
-        function loadVideo() {
-            const url = document.getElementById('urlInput').value;
-            if (!url) return alert('Please enter a YouTube URL!');
-            
-            // Extract video ID from URL (simple regex for common formats)
-            const videoId = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/)?.[1];
-            if (!videoId) return alert('Invalid YouTube URL!');
-            
-            document.getElementById('player').src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+        /* Global styles inspired by Telegram: clean, blue accents, modern UI */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5; /* Light gray background like Telegram */
+            color: #000;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
         }
 
-        function toggleFullscreen() {
-            isFullscreen = !isFullscreen;
-            if (isFullscreen) {
-                tg.expand(); // Fullscreen in Telegram
-                document.getElementById('player').style.height = '100vh';
-            } else {
-                tg.close(); // Or just shrink
-                document.getElementById('player').style.height = '400px';
+        /* Liquid glass style: glassmorphism with blur, transparency, rounded corners */
+        .glass-container {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 20px;
+            margin: 20px auto;
+            width: 90%;
+            max-width: 600px;
+        }
+
+        /* Search bar: square with rounded corners on top */
+        #search-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.8); /* Semi-transparent for glass effect */
+            backdrop-filter: blur(5px);
+            padding: 10px;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #search-input {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.5);
+            font-size: 16px;
+            outline: none;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Suggestions list */
+        #suggestions {
+            margin-top: 60px; /* Below search bar */
+            overflow-y: auto;
+            height: calc(100vh - 200px); /* Leave space for player */
+            padding: 10px;
+        }
+
+        .suggestion-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .suggestion-item:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .suggestion-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 15px;
+            object-fit: cover;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .suggestion-text {
+            flex: 1;
+        }
+
+        .suggestion-title {
+            font-weight: bold;
+            font-size: 16px;
+            color: #000;
+        }
+
+        .suggestion-artist {
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* Music player like Telegram core: bottom bar */
+        #player {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 10px;
+            display: none;
+            align-items: center;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #player-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        #player-info {
+            flex: 1;
+        }
+
+        #player-title {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        #player-artist {
+            font-size: 12px;
+            color: #666;
+        }
+
+        #player-controls {
+            display: flex;
+            align-items: center;
+        }
+
+        #play-pause {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        #progress {
+            width: 100px;
+            height: 4px;
+            background: #ddd;
+            border-radius: 2px;
+            position: relative;
+        }
+
+        #progress-bar {
+            height: 100%;
+            background: #1a73e8; /* Telegram blue */
+            width: 0;
+            border-radius: 2px;
+        }
+
+        #track-list {
+            display: none;
+            margin-top: 60px;
+            padding: 10px;
+            overflow-y: auto;
+            height: calc(100vh - 200px);
+        }
+
+        /* Additional styles for responsiveness */
+        @media (max-width: 600px) {
+            .glass-container {
+                width: 95%;
+                padding: 10px;
             }
         }
 
-        // Optional: Simple search (uses YouTube search embed)
-        function searchVideos() {
-            const query = document.getElementById('searchInput').value;
-            if (!query) return;
-            
-            // This embeds a YouTube search page—click a result to play
-            document.getElementById('player').src = `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`;
-            document.getElementById('search').style.display = 'block';
+        /* Animations for liquid glass feel */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        // Listen for theme changes from Telegram
-        tg.onEvent('themeChanged', () => {
-            document.body.className = tg.colorScheme;
+        .suggestion-item {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <div id="search-container" class="glass-container">
+        <input type="text" id="search-input" placeholder="Search for artists or tracks...">
+    </div>
+    <div id="suggestions"></div>
+    <div id="track-list"></div>
+    <div id="player">
+        <img id="player-icon" src="" alt="Track Icon">
+        <div id="player-info">
+            <div id="player-title"></div>
+            <div id="player-artist"></div>
+        </div>
+        <div id="player-controls">
+            <button id="play-pause">▶️</button>
+            <div id="progress">
+                <div id="progress-bar"></div>
+            </div>
+        </div>
+    </div>
+    <audio id="audio-player"></audio>
+
+    <script>
+        // JavaScript for functionality
+        const searchInput = document.getElementById('search-input');
+        const suggestionsDiv = document.getElementById('suggestions');
+        const trackListDiv = document.getElementById('track-list');
+        const player = document.getElementById('player');
+        const playerIcon = document.getElementById('player-icon');
+        const playerTitle = document.getElementById('player-title');
+        const playerArtist = document.getElementById('player-artist');
+        const playPauseBtn = document.getElementById('play-pause');
+        const progressBar = document.getElementById('progress-bar');
+        const audio = document.getElementById('audio-player');
+
+        let currentTrack = null;
+        let isPlaying = false;
+        let debounceTimer;
+
+        // Debounce function for search input
+        function debounce(func, delay) {
+            return function(...args) {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => func.apply(this, args), delay);
+            };
+        }
+
+        // Fetch suggestions from Deezer API (mixed artists and tracks)
+        async function fetchSuggestions(query) {
+            if (!query) {
+                suggestionsDiv.innerHTML = '';
+                trackListDiv.style.display = 'none';
+                return;
+            }
+
+            try {
+                // Fetch tracks
+                const trackRes = await fetch(`https://api.deezer.com/search/track?q=${encodeURIComponent(query)}&limit=10`);
+                const trackData = await trackRes.json();
+                const tracks = trackData.data || [];
+
+                // Fetch artists
+                const artistRes = await fetch(`https://api.deezer.com/search/artist?q=${encodeURIComponent(query)}&limit=10`);
+                const artistData = await artistRes.json();
+                const artists = artistData.data || [];
+
+                // Display mixed suggestions
+                displaySuggestions(tracks, artists);
+            } catch (error) {
+                console.error('Error fetching suggestions:', error);
+                suggestionsDiv.innerHTML = '<p>Error loading suggestions. Please try again.</p>';
+            }
+        }
+
+        // Display suggestions in list
+        function displaySuggestions(tracks, artists) {
+            suggestionsDiv.innerHTML = '';
+            trackListDiv.style.display = 'none';
+
+            // Add artists first
+            artists.forEach(artist => {
+                const item = createSuggestionItem(artist.picture_medium, artist.name, 'Artist', true, artist);
+                suggestionsDiv.appendChild(item);
+            });
+
+            // Then tracks
+            tracks.forEach(track => {
+                const item = createSuggestionItem(track.album.cover_medium, track.title, track.artist.name);
+                suggestionsDiv.appendChild(item);
+            });
+
+            if (tracks.length === 0 && artists.length === 0) {
+                suggestionsDiv.innerHTML = '<p>No results found.</p>';
+            }
+        }
+
+        // Create suggestion item element
+        function createSuggestionItem(iconSrc, title, artist, isArtist = false, data) {
+            const div = document.createElement('div');
+            div.classList.add('suggestion-item');
+
+            const img = document.createElement('img');
+            img.src = iconSrc || 'https://via.placeholder.com/50'; // Fallback icon
+            img.classList.add('suggestion-icon');
+            img.alt = title;
+
+            const textDiv = document.createElement('div');
+            textDiv.classList.add('suggestion-text');
+
+            const titleSpan = document.createElement('span');
+            titleSpan.classList.add('suggestion-title');
+            titleSpan.textContent = title;
+
+            const artistSpan = document.createElement('span');
+            artistSpan.classList.add('suggestion-artist');
+            artistSpan.textContent = artist;
+
+            textDiv.appendChild(titleSpan);
+            textDiv.appendChild(artistSpan);
+
+            div.appendChild(img);
+            div.appendChild(textDiv);
+
+            // Click handler
+            div.addEventListener('click', () => {
+                if (isArtist) {
+                    // If artist, fetch and show tracks by artist
+                    fetchArtistTracks(data.name);
+                } else {
+                    // If track, play it
+                    playTrack({ title, artist: { name: artist }, preview: data.preview, album: { cover_medium: iconSrc } });
+                }
+            });
+
+            return div;
+        }
+
+        // Fetch tracks for an artist
+        async function fetchArtistTracks(artistName) {
+            try {
+                const res = await fetch(`https://api.deezer.com/search/track?q=artist:"${encodeURIComponent(artistName)}"&limit=50`);
+                const data = await res.json();
+                const tracks = data.data || [];
+
+                displayTrackList(tracks);
+            } catch (error) {
+                console.error('Error fetching artist tracks:', error);
+                suggestionsDiv.innerHTML = '<p>Error loading tracks.</p>';
+            }
+        }
+
+        // Display list of tracks (many tracks with similar name or by artist)
+        function displayTrackList(tracks) {
+            suggestionsDiv.style.display = 'none';
+            trackListDiv.style.display = 'block';
+            trackListDiv.innerHTML = '';
+
+            tracks.forEach(track => {
+                const item = createSuggestionItem(track.album.cover_medium, track.title, track.artist.name, false, track);
+                trackListDiv.appendChild(item);
+            });
+
+            if (tracks.length === 0) {
+                trackListDiv.innerHTML = '<p>No tracks found.</p>';
+            }
+        }
+
+        // Play a track (using preview URL from Deezer)
+        function playTrack(track) {
+            currentTrack = track;
+            audio.src = track.preview; // 30s preview, as full tracks require premium
+            audio.play();
+            isPlaying = true;
+            updatePlayerUI();
+            player.style.display = 'flex';
+            playPauseBtn.textContent = '⏸️';
+        }
+
+        // Update player UI
+        function updatePlayerUI() {
+            playerIcon.src = currentTrack.album.cover_medium || 'https://via.placeholder.com/40';
+            playerTitle.textContent = currentTrack.title;
+            playerArtist.textContent = currentTrack.artist.name;
+        }
+
+        // Audio event listeners
+        audio.addEventListener('timeupdate', () => {
+            const progress = (audio.currentTime / audio.duration) * 100;
+            progressBar.style.width = `${progress}%`;
         });
-        document.body.className = tg.colorScheme;
+
+        audio.addEventListener('ended', () => {
+            isPlaying = false;
+            playPauseBtn.textContent = '▶️';
+            progressBar.style.width = '0%';
+        });
+
+        // Play/pause button
+        playPauseBtn.addEventListener('click', () => {
+            if (isPlaying) {
+                audio.pause();
+                playPauseBtn.textContent = '▶️';
+            } else {
+                audio.play();
+                playPauseBtn.textContent = '⏸️';
+            }
+            isPlaying = !isPlaying;
+        });
+
+        // Search input listener with debounce
+        searchInput.addEventListener('input', debounce(() => {
+            const query = searchInput.value.trim();
+            fetchSuggestions(query);
+        }, 300));
+
+        // Back to suggestions if needed (optional feature)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && trackListDiv.style.display === 'block') {
+                trackListDiv.style.display = 'none';
+                suggestionsDiv.style.display = 'block';
+            }
+        });
+
+        // Initialize Telegram WebApp if in Telegram context
+        if (window.Telegram && window.Telegram.WebApp) {
+            Telegram.WebApp.ready();
+            Telegram.WebApp.expand();
+            // Additional Telegram integrations if needed, like theme matching
+            const theme = Telegram.WebApp.themeParams;
+            if (theme) {
+                document.body.style.backgroundColor = theme.bg_color || '#f0f2f5';
+                // More theme adjustments...
+            }
+        }
+
+        // Additional functionality: Queue system (to make it more pumped)
+        let queue = [];
+        function addToQueue(track) {
+            queue.push(track);
+            if (!currentTrack) {
+                playNext();
+            }
+        }
+
+        function playNext() {
+            if (queue.length > 0) {
+                const nextTrack = queue.shift();
+                playTrack(nextTrack);
+            } else {
+                player.style.display = 'none';
+            }
+        }
+
+        audio.addEventListener('ended', playNext);
+
+        // Modify click handler to add to queue instead of direct play
+        // But for simplicity, keep direct play, add queue as optional
+
+        // More features: Volume control
+        const volumeSlider = document.createElement('input');
+        volumeSlider.type = 'range';
+        volumeSlider.min = 0;
+        volumeSlider.max = 1;
+        volumeSlider.step = 0.01;
+        volumeSlider.value = 1;
+        volumeSlider.style.width = '50px';
+        volumeSlider.addEventListener('input', () => {
+            audio.volume = parseFloat(volumeSlider.value);
+        });
+        document.getElementById('player-controls').appendChild(volumeSlider);
+
+        // Search history (local storage)
+        function saveSearch(query) {
+            let history = JSON.parse(localStorage.getItem('searchHistory')) || [];
+            if (!history.includes(query)) {
+                history.push(query);
+                localStorage.setItem('searchHistory', JSON.stringify(history));
+            }
+        }
+
+        // On search, save if enter pressed
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                saveSearch(searchInput.value.trim());
+            }
+        });
+
+        // Display recent searches when input empty (extra feature)
+        function displayRecentSearches() {
+            const history = JSON.parse(localStorage.getItem('searchHistory')) || [];
+            if (history.length > 0) {
+                suggestionsDiv.innerHTML = '<h3>Recent Searches</h3>';
+                history.reverse().slice(0, 5).forEach(query => {
+                    const item = document.createElement('div');
+                    item.classList.add('suggestion-item');
+                    item.textContent = query;
+                    item.addEventListener('click', () => {
+                        searchInput.value = query;
+                        fetchSuggestions(query);
+                    });
+                    suggestionsDiv.appendChild(item);
+                });
+            }
+        }
+
+        searchInput.addEventListener('focus', () => {
+            if (!searchInput.value) {
+                displayRecentSearches();
+            }
+        });
+
+        // Error handling for API
+        function handleApiError(error) {
+            suggestionsDiv.innerHTML = `<p>Error: ${error.message}. Please check your connection.</p>`;
+        }
+
+        // Offline detection
+        window.addEventListener('offline', () => {
+            suggestionsDiv.innerHTML = '<p>You are offline. Connect to the internet to search music.</p>';
+        });
+
+        // More styling adjustments for liquid glass
+        document.querySelectorAll('.glass-container').forEach(el => {
+            el.style.transition = 'all 0.3s ease';
+        });
+
+        // Pumped functionality: Random playlist generator
+        async function generateRandomPlaylist() {
+            try {
+                const res = await fetch('https://api.deezer.com/playlist/908622995'); // Example popular playlist
+                const data = await res.json();
+                const tracks = data.tracks.data;
+                queue = [...tracks];
+                playNext();
+            } catch (error) {
+                console.error('Error generating playlist:', error);
+            }
+        }
+
+        // Add a button for random playlist
+        const randomBtn = document.createElement('button');
+        randomBtn.textContent = 'Random Playlist';
+        randomBtn.style.margin = '10px';
+        randomBtn.style.padding = '10px';
+        randomBtn.style.borderRadius = '10px';
+        randomBtn.style.background = '#1a73e8';
+        randomBtn.style.color = '#fff';
+        randomBtn.style.border = 'none';
+        randomBtn.style.cursor = 'pointer';
+        randomBtn.addEventListener('click', generateRandomPlaylist);
+        document.body.insertBefore(randomBtn, suggestionsDiv);
+
+        // Even more: Share track to Telegram
+        function shareTrack() {
+            if (currentTrack && Telegram.WebApp) {
+                Telegram.WebApp.shareUrl(`https://deezer.com/track/${currentTrack.id}`, `Listen to ${currentTrack.title} by ${currentTrack.artist.name}`);
+            }
+        }
+
+        const shareBtn = document.createElement('button');
+        shareBtn.textContent = 'Share';
+        shareBtn.style.fontSize = '20px';
+        shareBtn.style.background = 'none';
+        shareBtn.style.border = 'none';
+        shareBtn.style.cursor = 'pointer';
+        shareBtn.addEventListener('click', shareTrack);
+        document.getElementById('player-controls').appendChild(shareBtn);
+
+        // Final touches: Loading spinner
+        function showLoading() {
+            suggestionsDiv.innerHTML = '<p>Loading...</p>';
+        }
+
+        // Wrap fetch calls with loading
+        const originalFetchSuggestions = fetchSuggestions;
+        fetchSuggestions = async (query) => {
+            showLoading();
+            await originalFetchSuggestions(query);
+        };
+
+        const originalFetchArtistTracks = fetchArtistTracks;
+        fetchArtistTracks = async (artistName) => {
+            showLoading();
+            await originalFetchArtistTracks(artistName);
+        };
+
+        console.log('Music Listener WebApp initialized.');
     </script>
 </body>
 </html>
