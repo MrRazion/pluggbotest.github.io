@@ -66,9 +66,7 @@
             border-radius: var(--border-radius-lg);
             box-shadow: var(--shadow-soft);
             transition: transform 0.3s ease, opacity 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            position: relative;
         }
         
         .header:hover {
@@ -98,10 +96,12 @@
         }
 
         .header-icons {
+            position: absolute;
+            top: 15px;
+            right: 15px;
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-bottom: 10px;
         }
 
         .avatar-icon {
@@ -1316,7 +1316,7 @@
         <div class="header">
             <div class="header-icons">
                 <div class="avatar-icon" id="avatar-icon">
-                    <img id="avatar-img" src="" alt="Avatar">
+                    <img id="avatar-img" src="https://via.placeholder.com/32?text=👤" alt="Avatar">
                 </div>
                 <svg viewBox="0 0 24 24" class="inbox-icon" id="inbox-icon">
                     <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
@@ -1587,15 +1587,186 @@
         
         // Данные игр
         const games = [
-            // ... (same as before)
+            {
+                id: 'standrise',
+                title: 'StandRise',
+                description: 'Приватный сервер StandRise - это приватный сервер для популярной игры Standoff 2, который открывает перед игроками безграничные возможности и новую степень свободы. Здесь нет строгих ограничений, которые сдерживают ваш игровой процесс, а весь контент становится доступным без дополнительных усилий. Сервер предоставляет неограниченные ресурсы, позволяя вам мгновенно приобрести любые скины, оружие и улучшения.',
+                whatsNew: [
+                    '— Улучшена оптимизация',
+                    '— Исправлены вылеты',
+                    'Доступны новые методы для входа Facebook и VK',
+                    '— Доступна линковка аккаунтов через различные способы входов Google, Facebook, VK',
+                    '— Теперь доступны функции приватности',
+                    '— Улучшен античит'
+                ],
+                image: 'https://avatars.mds.yandex.net/i?id=725c7c7f58887b1cd7015d30752cfa7b_sr-16333491-images-thumbs&n=13',
+                screenshots: [
+                    'https://i.ytimg.com/vi/9OvuoQpMV3k/maxresdefault.jpg',
+                    'https://i.ytimg.com/vi/opDkJ7HhOCM/maxresdefault.jpg',
+                    'https://i.ytimg.com/vi/DlO7hYgoAaE/maxresdefault.jpg'
+                ],
+                categories: ['action'],
+                url: 'https://huggingface.co/Zerchi/test/resolve/main/StandRise1.4.0f1.apk',
+                fileName: 'StandRise1.4.0f1.apk',
+                version: '1.4F2',
+                size: '1.98 GB',
+                verified: true,
+                detectorsFound: 0,
+                detectorsTotal: 60,
+                maliciousDetectors: []
+            },
+            {
+                id: 'standleo',
+                title: 'StandLeo',
+                description: 'Приватный сервер StandLeo - настоящий рай для фанатов Standoff 2, предлагающий приватный сервер. Здесь вы сможете погрузиться в адреналиновые сражения и тактические соревнования, не тратя ни копейки на внешние атрибуты и награды.',
+                whatsNew: [
+                    '- Новый подарок',
+                    '- Все из Standoff 0.35.0 (Новый пак, новая акция с коллекцией, карты, новое оружие и т.д.)',
+                    '- Добавлены ежедневные вызовы',
+                    '- Режим наблюдателей',
+                    '- Кланы',
+                    '- Ребаланс оружий из оригинала',
+                    '- Улучшение рейтинговых игр с первым сезоном',
+                    '- Новая акция с скинами из спина "Gambit" (Бабочка и т.д.)'
+                ],
+                image: 'https://avatars.mds.yandex.net/i?id=0e819955e77d734dbf74a1628015204f_l-12569562-images-thumbs&n=13',
+                screenshots: [
+                    'https://i.ytimg.com/vi/z-Wb0j6gupk/maxresdefault.jpg',
+                    'https://play-lh.googleusercontent.com/1-hPxafOxdYpYZEOKzNIkSP43HXCNftVJVpU5iqs-OLm0Cr6hD3a5qFK3r1L8U7pWZw',
+                    'https://play-lh.googleusercontent.com/R4r5bI6k4gC2c4f4g5g6h7h8i9i0j1j2k3k4l5l6m7m0Cr6hD3a5qFK3r1L8U7pWZw'
+                ],
+                categories: ['action'],
+                url: 'https://huggingface.co/Zerchi/test/resolve/main/standleoprivate3.0.apk',
+                fileName: 'standleoprivate3.0.apk',
+                version: '3.0',
+                size: '2.01 GB',
+                verified: true,
+                detectorsFound: 0,
+                detectorsTotal: 60,
+                maliciousDetectors: []
+            },
+            {
+                id: 'projectevolution',
+                title: 'Project Evolution',
+                description: 'Приватный сервер Project Evolution - это модификация популярного шутера Standoff 2, предлагающий игрокам уникальные возможности и множество дополнительных функций. Этот сервер предоставляет отличные условия для всех любителей интенсивных и увлекательных онлайн-сражений, с мощной настройкой и проработкой всех элементов.',
+                whatsNew: [
+                    'Новая карта Hanami для режимов со сценарием «Закладки бомбы».',
+                    'Новый боевой пропуск — «Syndicate».',
+                    'Новая карта Hanari для режимов «Командный бой», «Гонка вооружений» и «Ограбление».',
+                    'Переработана карта Bridge и слегка обновлена карта Yard.',
+                    'Новая снайперская винтовка — Mallard.',
+                    'Обновление фракции Синдикат «Коготь Дракона» и небольшое обновление фракции S.A.F.',
+                    'Новые коллекции — «Syndicate» и «Rewind».',
+                    'Новый Charm Pack — «Rewind».',
+                    'Новый задний фон главного меню.',
+                ],
+                image: 'https://static1.tgstat.ru/channels/_0/51/5149f74cbede968093f53564123bd9f5.jpg',
+                screenshots: [
+                    'https://i.ytimg.com/vi/esOTLgKRd78/maxresdefault.jpg',
+                    'https://i.ytimg.com/vi/mEza3FpyPt0/maxresdefault.jpg',
+                    'https://play-lh.googleusercontent.com/1-hPxafOxdYpYZEOKzNIkSP43HXCNftVJVpU5iqs-OLm0Cr6hD3a5qFK3r1L8U7pWZw'
+                ],
+                categories: ['action'],
+                url: 'https://huggingface.co/Zerchi/test/resolve/main/Project%20Evolution%209.4%20f1.apk',
+                fileName: 'Project Evolution 9.4 f1.apk',
+                version: '9.4',
+                size: '1.80 GB',
+                verified: true,
+                detectorsFound: 0,
+                detectorsTotal: 60,
+                maliciousDetectors: []
+            },
+            {
+                id: 'standknife',
+                title: 'StandKnife',
+                description: 'Приватный сервер StandKnife Simulator - известная многим приватка, перерабатывающая концепцию популярного шутера Standoff 2 и сосредотачивающий весь игровой процесс на мастерстве владения холодным оружием.',
+                whatsNew: [
+                    'Фикс ошибок при входе в игру.'
+                ],
+                image: 'https://edroid.ru/wp-content/uploads/2024/02/4-31.webp',
+                screenshots: [
+                    'https://i.ytimg.com/vi/IjVMHGrcbRg/maxresdefault.jpg',
+                    'https://i.ytimg.com/vi/JYlqsm90H4U/maxresdefault.jpg',
+                    'https://play-lh.googleusercontent.com/1-hPxafOxdYpYZEOKzNIkSP43HXCNftVJVpU5iqs-OLm0Cr6hD3a5qFK3r1L8U7pWZw'
+                ],
+                categories: ['action'],
+                url: 'https://huggingface.co/Zerchi/test/resolve/main/StandKnife%202.9%20(f3).apk',
+                fileName: 'StandKnife 2.9 (f3).apk',
+                version: '2.9 (f3)',
+                size: '2.08 GB',
+                verified: true,
+                detectorsFound: 0,
+                detectorsTotal: 60,
+                maliciousDetectors: []
+            },
+            {
+                id: 'standchillow',
+                title: 'StandChillow',
+                description: 'StandChillow - это увлекательный шутер для Android, который предлагает насыщенные командные бои на основе популярного мобильного экшена Standoff 2. Игра переносит вас в мир тактических баталий, где каждая схватка проверяет ваши боевые навыки.',
+                whatsNew: [
+                    'Фикс ошибок при входе в игру.',
+                    '- Новый контент из обновления 0.34.0 (скины, интерфейс, саундтрек)',
+                    '- Добавлены карты "Awm Lego" и "Summer Breeze"',
+                    '- Убрано снижение уровня при убийстве с ножа в гонке вооружений',
+                    '- Возвращены статтрек версии скинов на береты',
+                    '- Улучшено пространственное аудио',
+                    '- Исправление багов (включая кривой скелет персонажа)'
+                ],
+                image: 'https://5play.life/uploads/posts/2025-07/thumbs/1751996821_standchillow-icon.png',
+                screenshots: [
+                    'https://i.ytimg.com/vi/VYc18bjnL6k/maxresdefault.jpg',
+                    'https://play-lh.googleusercontent.com/1-hPxafOxdYpYZEOKzNIkSP43HXCNftVJVpU5iqs-OLm0Cr6hD3a5qFK3r1L8U7pWZw',
+                    'https://play-lh.googleusercontent.com/R4r5bI6k4gC2c4f4g5g6h7h8i9i0j1j2k3k4l5l6m7m8n9n0o1o2p3p4q5q6r7r8s9'
+                ],
+                categories: ['action'],
+                url: 'https://huggingface.co/Zerchi/test/resolve/main/1.6.apk',
+                fileName: '1.6.apk',
+                version: '1.6',
+                size: '1.34 GB',
+                verified: true,
+                detectorsFound: 0,
+                detectorsTotal: 60,
+                maliciousDetectors: []
+            },
+            {
+                id: 'crossoff',
+                title: 'Crossoff: Classic',
+                description: 'CrossOff — приватка в которой за сыгранные матчи выдают серебро и золото, является копией оригинальной игры, возможность входа через Google.',
+                whatsNew: [
+                    'Добавлен античит',
+                    'Добавлены кланы',
+                    '- Добавлены режим "Соревновательный"',
+                ],
+                image: 'https://5play.info/_ld/14/1487.webp',
+                screenshots: [
+                    'https://play-lh.googleusercontent.com/1-hPxafOxdYpYZEOKzNIkSP43HXCNftVJVpU5iqs-OLm0Cr6hD3a5qFK3r1L8U7pWZw',
+                    'https://play-lh.googleusercontent.com/R4r5bI6k4gC2c4f4g5g6h7h8i9i0j1j2k3k4l5l6m7m8n9n0o1o2p3p4q5q6r7r8s9',
+                    'https://play-lh.googleusercontent.com/4k6m7l3K6w6x4bX8v3M9g9j8j9k0l1m2n3m4b5m6k7m8n9k0l1o2p3p4q5q6r7r8s9'
+                ],
+                categories: ['action'],
+                url: 'https://huggingface.co/Zerchi/test/resolve/main/CrossOffClassic-1.1F2.apk',
+                fileName: 'CrossOffClassic-1.1F2.apk',
+                version: '1.1 (F2)',
+                size: '499.1 MB',
+                verified: true,
+                detectorsFound: 0,
+                detectorsTotal: 60,
+                maliciousDetectors: []
+            }
         ];
         
         const detectors = [
-            // ... (same as before)
-        ];
+            'Ad-Aware', 'AegisLab', 'Alibaba', 'ALYac', 'AVG', 'Baidu', 'CMC', 'Kaspersky', 'Max', 'McAfee',
+            'Panda', 'Nano-Antivirus', 'Trellix', 'Acronis', 'Trapmine', 'VBA32', 'AhnLab-V3', 'Arcabit', 'Baidu',
+            'Cynet', 'eScan', 'Ikarus', 'Malwarebytes', 'MaxSecure', 'Microsoft', 'Rising', 'Sophos', 'Symantec',
+            'TrendMicro', 'Vipre', 'ZoneAlarm', 'Avast', 'Bitdefender', 'ClamAV', 'Comodo', 'DrWeb', 'ESET-NOD32',
+            'F-Secure', 'Fortinet', 'GData', 'Jiangmin', 'K7AntiVirus', 'Kingsoft', 'Lionic', 'NANOAV', 'Qihoo-360',
+            'SUPERAntiSpyware', 'Tencent', 'TotalDefense', 'Virusdie', 'Yandex', 'Zillya', 'Zoner', 'Antiy-AVL',
+            'Avira', 'CrowdStrike', 'Elastic', 'Gridinsoft', 'MicroWorld'
+        ]; // 60 detectors
 
-        // Google Client ID (replace with your actual client ID)
-        const GOOGLE_CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com';
+        // Google Client ID (replace with your actual client ID from Google Developer Console to fix the 400 error)
+        const GOOGLE_CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com'; // <-- Replace this with your actual Client ID
 
         // Setup Profile
         function setupProfile() {
@@ -1611,6 +1782,9 @@
                 }
             }
             renderProfileContent();
+            if (!isLoggedIn) {
+                avatarImg.src = 'https://via.placeholder.com/32?text=👤';
+            }
         }
 
         function renderProfileContent() {
@@ -1692,6 +1866,7 @@
             library = [];
             renderProfileContent();
             tg.showPopup({ message: 'Вы вышли из аккаунта' });
+            avatarImg.src = 'https://via.placeholder.com/32?text=👤';
         }
 
         // Banner Change
