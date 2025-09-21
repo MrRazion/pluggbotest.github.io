@@ -456,6 +456,14 @@
             margin-bottom: 30px;
             align-items: center;
         }
+
+        .download-btn-container .download-btn {
+            margin-right: auto;
+        }
+
+        .download-btn-container .library-btn {
+            margin-left: auto;
+        }
         
         .download-btn, .library-btn {
             flex: 1;
@@ -915,25 +923,7 @@
         .profile-handle {
             font-size: 16px;
             color: var(--tg-theme-hint-color, #aaaaaa);
-            margin-bottom: 10px;
-        }
-
-        .profile-reg-date {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            color: var(--tg-theme-hint-color, #aaaaaa);
             margin-bottom: 20px;
-        }
-
-        .reg-dot {
-            width: 8px;
-            height: 8px;
-            background-color: var(--accent-green);
-            border-radius: 50%;
-            margin-right: 8px;
-            animation: flash 1.5s infinite;
         }
 
         .profile-description {
@@ -1408,10 +1398,6 @@
                 <div class="profile-info">
                     <div class="profile-username" id="profile-username"></div>
                     <div class="profile-handle" id="profile-handle"></div>
-                    <div class="profile-reg-date">
-                        <div class="reg-dot"></div>
-                        <span id="profile-reg-text"></span>
-                    </div>
                     <div class="profile-description" id="profile-description">Добавить описание...</div>
                 </div>
             </div>
@@ -1550,7 +1536,6 @@
         const profileAvatarImg = document.getElementById('profile-avatar-img');
         const profileUsername = document.getElementById('profile-username');
         const profileHandle = document.getElementById('profile-handle');
-        const profileRegText = document.getElementById('profile-reg-text');
         const profileDescription = document.getElementById('profile-description');
         const editBanner = document.getElementById('edit-banner');
         const bannerFileInput = document.getElementById('banner-file-input');
@@ -1576,9 +1561,10 @@
         let currentFileName = '';
         let currentGameTitle = '';
         let currentGame = null;
-        let library = JSON.parse(localStorage.getItem('plugg_library') || '[]');
+        let library = [];
         let originalDescription = '';
         let hasDescriptionChanged = false;
+        let userId = '';
         
         // Данные игр (добавил поле whatsNew для каждого)
         const games = [
@@ -1764,18 +1750,15 @@
         function setupProfile() {
             const user = tg.initDataUnsafe.user;
             if (user) {
+                userId = user.id.toString();
                 const avatarSrc = user.photo_url || 'https://via.placeholder.com/32?text=👤';
                 avatarImg.src = avatarSrc;
                 profileAvatarImg.src = avatarSrc;
                 profileUsername.textContent = user.first_name || 'User';
                 profileHandle.innerHTML = user.username ? `@${user.username} | ${user.id}` : `| ${user.id}`;
 
-                // Approximate registration date
-                const approxDate = estimateRegistrationDate(user.id);
-                profileRegText.textContent = `Дата регистрации в Telegram: ${approxDate}`;
-
-                // Load saved banner
-                const savedBanner = localStorage.getItem('plugg_banner');
+                // Load saved banner per user
+                const savedBanner = localStorage.getItem(`plugg_banner_${userId}`);
                 if (savedBanner) {
                     bannerImg.src = savedBanner;
                 } else {
@@ -1783,8 +1766,8 @@
                     bannerImg.src = 'https://via.placeholder.com/300x150/000000/6a11cb?text=PLUGG+BOT';
                 }
 
-                // Load description
-                const savedDescription = localStorage.getItem('plugg_description');
+                // Load description per user
+                const savedDescription = localStorage.getItem(`plugg_description_${userId}`);
                 if (savedDescription) {
                     profileDescription.textContent = savedDescription;
                     profileDescription.classList.remove('empty');
@@ -1792,24 +1775,10 @@
                     profileDescription.textContent = 'Добавить описание...';
                     profileDescription.classList.add('empty');
                 }
-            }
-        }
 
-        function estimateRegistrationDate(userId) {
-            // Approximate linear interpolation
-            // Telegram launched Aug 2013, assume id 1: 2013-08-01
-            // Assume current ~1e9 ids in 2025, but adjust
-            const startDate = new Date(2013, 7, 1); // August 1, 2013
-            const currentDate = new Date(2025, 8, 21); // September 21, 2025
-            const maxId = 2000000000; // Approximate max id in 2025
-            const daysTotal = (currentDate - startDate) / (1000 * 60 * 60 * 24);
-            const daysFromStart = Math.floor((userId / maxId) * daysTotal);
-            const estDate = new Date(startDate);
-            estDate.setDate(estDate.getDate() + daysFromStart);
-            const day = estDate.getDate().toString().padStart(2, '0');
-            const month = estDate.toLocaleString('ru', { month: 'short' }) + '.';
-            const year = estDate.getFullYear();
-            return `${day} ${month} ${year}`;
+                // Load library per user
+                library = JSON.parse(localStorage.getItem(`plugg_library_${userId}`) || '[]');
+            }
         }
 
         // Banner Selection
@@ -1824,7 +1793,7 @@
                 reader.onload = (event) => {
                     const base64 = event.target.result;
                     bannerImg.src = base64;
-                    localStorage.setItem('plugg_banner', base64);
+                    localStorage.setItem(`plugg_banner_${userId}`, base64);
                     tg.showPopup({ message: 'Баннер обновлён!' });
                 };
                 reader.readAsDataURL(file);
@@ -1863,11 +1832,11 @@
             if (newDesc) {
                 profileDescription.textContent = newDesc;
                 profileDescription.classList.remove('empty');
-                localStorage.setItem('plugg_description', newDesc);
+                localStorage.setItem(`plugg_description_${userId}`, newDesc);
             } else {
                 profileDescription.textContent = 'Добавить описание...';
                 profileDescription.classList.add('empty');
-                localStorage.removeItem('plugg_description');
+                localStorage.removeItem(`plugg_description_${userId}`);
             }
             descriptionEditorModal.classList.remove('active');
             hasDescriptionChanged = false;
@@ -1978,7 +1947,7 @@
                 libraryBtn.textContent = 'Убрать из библиотеки';
                 libraryBtn.classList.add('in-library');
             }
-            localStorage.setItem('plugg_library', JSON.stringify(library));
+            localStorage.setItem(`plugg_library_${userId}`, JSON.stringify(library));
             if (currentTab === 'library') {
                 renderLibrary();
             }
