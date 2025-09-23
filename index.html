@@ -5,29 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GiftChecker</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* Dark theme with liquid glass effect */
-        :root {
-            --primary-bg: #0a0a0a;
-            --card-bg: #1a1a1a;
-            --accent-blue: #0088cc;
-            --text-white: #f0f0f0;
-            --progress-bar: #ffffff;
-        }
-        
         body {
-            background-color: var(--primary-bg);
-            color: var(--text-white);
-            font-family: 'Telegram Font', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #000;
+            color: #fff;
+            font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             height: 100vh;
             overflow: hidden;
-            transition: background-color 0.3s;
         }
-        
-        .loading-screen {
-            position: fixed;
+
+        #loading {
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
@@ -36,473 +30,666 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background-color: var(--primary-bg);
-            z-index: 1000;
+            background: linear-gradient(135deg, #000, #333);
+            z-index: 10;
         }
-        
-        .app-name {
-            font-size: 2.5rem;
-            margin-bottom: 2rem;
-            font-weight: bold;
-            background: linear-gradient(45deg, #0088cc, #6c5ce7);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 10px rgba(0, 136, 204, 0.2);
+
+        #title {
+            font-size: 2em;
+            margin-bottom: 20px;
         }
-        
-        .progress-bar-container {
+
+        #progress-bar {
             width: 80%;
-            max-width: 300px;
-            height: 12px;
-            background-color: #333;
-            border-radius: 6px;
+            height: 20px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
             overflow: hidden;
-            margin-top: 20px;
         }
-        
-        .progress-bar {
+
+        #progress {
+            width: 0;
             height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, var(--accent-blue), #6c5ce7);
-            border-radius: 6px;
-            transition: width 0.3s ease;
+            background-color: #fff;
+            transition: width 0.5s;
         }
-        
-        .main-content {
+
+        #main {
             display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            height: 100%;
             padding: 20px;
-            height: 100vh;
+            box-sizing: border-box;
         }
-        
-        .user-card {
-            background: var(--card-bg);
+
+        #filters {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .filter-button {
+            background-color: #fff;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
             border-radius: 20px;
-            padding: 25px;
-            margin: 0 auto;
-            max-width: 400px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            font-weight: bold;
             position: relative;
-            overflow: hidden;
         }
-        
-        .user-card::before {
-            content: '';
+
+        .filter-button::after {
+            content: '▼ ▲';
+            font-size: 0.5em;
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(0, 136, 204, 0.1) 0%, transparent 70%);
-            z-index: 0;
-            pointer-events: none;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
         }
-        
-        .user-avatar {
+
+        #preview-square {
+            background-color: rgba(128, 128, 128, 0.5);
+            border-radius: 20px;
+            width: 80%;
+            max-width: 400px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            backdrop-filter: blur(10px);
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+        }
+
+        #avatar {
             width: 100px;
             height: 100px;
-            border-radius: 18px;
-            object-fit: cover;
-            margin: 0 auto 15px;
-            display: block;
-            border: 3px solid var(--accent-blue);
-            position: relative;
-            z-index: 1;
+            border-radius: 50%;
+            margin-bottom: 10px;
         }
-        
-        .user-name {
-            text-align: center;
-            font-size: 1.4rem;
-            margin: 10px 0;
-            font-weight: 600;
-            position: relative;
-            z-index: 1;
+
+        #name {
+            font-size: 1.5em;
+            margin-bottom: 5px;
         }
-        
-        .user-details {
+
+        #username-id {
             display: flex;
             justify-content: space-between;
-            margin: 15px 0;
-            font-size: 0.9rem;
-            color: #aaa;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .bio-container {
-            background: rgba(30, 30, 30, 0.7);
-            border-radius: 15px;
-            padding: 15px;
-            margin-top: 20px;
-            font-size: 0.95rem;
-            line-height: 1.4;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .filters {
-            display: flex;
-            gap: 10px;
-            margin: 20px 0;
-            overflow-x: auto;
-            padding-bottom: 10px;
-        }
-        
-        .filter-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 12px;
-            font-size: 0.9rem;
-            white-space: nowrap;
-            transition: all 0.2s;
-        }
-        
-        .filter-btn.active {
-            background: var(--accent-blue);
-            border-color: var(--accent-blue);
-        }
-        
-        .search-bar {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 15px;
-            padding: 10px 15px;
-            margin: 15px 0;
-            display: flex;
-            align-items: center;
-        }
-        
-        .search-bar input {
-            background: transparent;
-            border: none;
-            color: white;
             width: 100%;
-            font-size: 1rem;
-            outline: none;
+            margin-bottom: 10px;
         }
-        
-        .gift-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
-        
-        .gift-item {
-            background: rgba(30, 30, 30, 0.7);
-            border-radius: 15px;
-            padding: 15px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            transition: transform 0.2s, background 0.2s;
-        }
-        
-        .gift-item:hover {
-            background: rgba(0, 136, 204, 0.2);
-            transform: translateX(5px);
-        }
-        
-        .gift-icon {
-            width: 50px;
-            height: 50px;
+
+        #account-desc {
+            background-color: rgba(0,0,0,0.5);
             border-radius: 10px;
-            background: var(--accent-blue);
+            padding: 10px;
+            width: 90%;
+            text-align: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .tab {
+            display: none;
+            position: absolute;
+            top: 100px;
+            left: 0;
+            width: 100%;
+            height: calc(100% - 100px);
+            background: rgba(0,0,0,0.8);
+            z-index: 5;
+            overflow-y: auto;
+            padding: 20px;
+            box-sizing: border-box;
+            backdrop-filter: blur(10px);
+        }
+
+        .tab-title {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .tab-instruction {
+            font-size: 1em;
+            margin-bottom: 10px;
+        }
+
+        #search-input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            border: none;
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+        }
+
+        .item-list {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .item {
             display: flex;
             align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
         }
-        
-        .gift-info {
+
+        .select-icon {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #fff;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .selected .select-icon {
+            background: #fff url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" stroke="%23000" stroke-width="2" fill="none"/></svg>') center/contain no-repeat;
+        }
+
+        .gift-icon {
+            width: 40px;
+            height: 40px;
+            background: #fff;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .item-info {
             flex: 1;
         }
-        
-        .gift-name {
-            font-weight: 500;
-            margin-bottom: 3px;
+
+        .item-name {
+            font-weight: bold;
         }
-        
-        .gift-price {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.85rem;
-            color: #aaa;
+
+        .item-price {
+            font-size: 0.8em;
         }
-        
-        .ton-price {
-            color: white;
-            font-weight: 600;
+
+        .color-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
         }
-        
-        .floor-price {
-            background: rgba(0, 136, 204, 0.2);
-            color: var(--accent-blue);
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 0.8rem;
+
+        #gift-status {
+            position: absolute;
+            top: 120px;
+            right: 20px;
+            font-size: 2em;
+        }
+
+        #symbols {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2em;
         }
     </style>
 </head>
 <body>
-    <!-- Loading Screen -->
-    <div class="loading-screen">
-        <div class="app-name">GiftChecker</div>
-        <div class="progress-bar-container">
-            <div class="progress-bar" id="progressBar"></div>
+    <div id="loading">
+        <div id="title">GiftChecker</div>
+        <div id="progress-bar">
+            <div id="progress"></div>
         </div>
     </div>
-    
-    <!-- Main Content -->
-    <div class="main-content" id="mainContent">
-        <div class="user-card" id="userCard">
-            <img src="" alt="User Avatar" class="user-avatar" id="userAvatar">
-            <div class="user-name" id="userName">Loading...</div>
-            <div class="user-details">
-                <div id="userUsername">@username</div>
-                <div id="userUserId">ID: 0000000</div>
+    <div id="main">
+        <div id="filters">
+            <button class="filter-button" onclick="openTab('gifts')">Gifts</button>
+            <button class="filter-button" onclick="openTab('models')">Models</button>
+            <button class="filter-button" onclick="openTab('backgrounds')">Backgrounds</button>
+            <button class="filter-button" onclick="openTab('symbols')">Symbols</button>
+        </div>
+        <div id="preview-square">
+            <img id="avatar" src="" alt="Avatar">
+            <div id="name"></div>
+            <div id="gift-status"></div>
+            <div id="username-id">
+                <span id="username"></span>
+                <span id="user-id"></span>
             </div>
-            <div class="bio-container" id="userBio">
-                Loading account description...
-            </div>
-        </div>
-        
-        <div class="filters">
-            <button class="filter-btn active" data-filter="gifts">Gifts ▲▼</button>
-            <button class="filter-btn" data-filter="models">Models ▲▼</button>
-            <button class="filter-btn" data-filter="backgrounds">Backgrounds ▲▼</button>
-            <button class="filter-btn" data-filter="symbols">Symbols ▲▼</button>
-        </div>
-        
-        <div class="search-bar">
-            <input type="text" placeholder="Find a gift..." id="searchInput">
-        </div>
-        
-        <div class="gift-list" id="giftList">
-            <!-- Gifts will be populated here -->
+            <div id="account-desc"></div>
+            <div id="symbols"></div>
         </div>
     </div>
 
+    <div id="gifts-tab" class="tab">
+        <div class="tab-title">Gifts</div>
+        <div class="tab-instruction">Choose one and many</div>
+        <input id="gifts-search" type="text" placeholder="Find a gift" oninput="filterItems('gifts')">
+        <div id="gifts-list" class="item-list"></div>
+    </div>
+
+    <div id="models-tab" class="tab">
+        <div class="tab-title">Models</div>
+        <div class="tab-instruction">Choose one and many</div>
+        <input id="models-search" type="text" placeholder="Find a model" oninput="filterItems('models')">
+        <div id="models-list" class="item-list"></div>
+    </div>
+
+    <div id="backgrounds-tab" class="tab">
+        <div class="tab-title">Backgrounds</div>
+        <div class="tab-instruction">Choose one and many</div>
+        <input id="backgrounds-search" type="text" placeholder="Find a background" oninput="filterItems('backgrounds')">
+        <div id="backgrounds-list" class="item-list"></div>
+    </div>
+
+    <div id="symbols-tab" class="tab">
+        <div class="tab-title">Symbols</div>
+        <div class="tab-instruction">Choose one and many</div>
+        <input id="symbols-search" type="text" placeholder="Find a symbol" oninput="filterItems('symbols')">
+        <div id="symbols-list" class="item-list"></div>
+    </div>
+
     <script>
-        // Initialize Telegram WebApp
-        const Telegram = window.Telegram || {};
-        Telegram.WebApp.expand();
-        
-        // User data object
-        let userData = {
-            id: null,
-            firstName: '',
-            lastName: '',
-            username: '',
-            photoUrl: '',
-            bio: ''
-        };
-        
-        // Initialize loading process
-        document.addEventListener('DOMContentLoaded', () => {
-            const progressBar = document.getElementById('progressBar');
-            const mainContent = document.getElementById('mainContent');
-            const loadingScreen = document.querySelector('.loading-screen');
-            
-            // Simulate loading process with real Telegram WebApp data
-            let progress = 0;
-            
-            // First, get Telegram user data
-            const updateUserProgress = (value, message) => {
-                progress = value;
-                progressBar.style.width = `${progress}%`;
-                
-                if (progress >= 100) {
-                    // Hide loading screen and show main content
+        // Data arrays - hardcoded from fragment.com/gifts and examples
+        const gifts = [
+            {name: 'Artisan Bricks', price: 30, floor: 25, icon: '#fff'}, // Placeholder icon color
+            {name: 'Astral Shards', price: 40, floor: 35},
+            {name: 'B-Day Candles', price: 20, floor: 15},
+            {name: 'Berry Boxes', price: 25, floor: 20},
+            {name: 'Big Years', price: 35, floor: 30},
+            {name: 'Bonded Rings', price: 45, floor: 40},
+            {name: 'Bow Ties', price: 15, floor: 10},
+            {name: 'Bunny Muffins', price: 25, floor: 20},
+            {name: 'Candy Canes', price: 20, floor: 15},
+            {name: 'Cookie Hearts', price: 30, floor: 25},
+            {name: 'Crystal Balls', price: 40, floor: 35},
+            {name: 'Cupid Charms', price: 35, floor: 30},
+            {name: 'Desk Calendars', price: 25, floor: 20},
+            {name: 'Diamond Rings', price: 50, floor: 45},
+            {name: 'Durov’s Caps', price: 40, floor: 35},
+            {name: 'Easter Eggs', price: 20, floor: 15},
+            {name: 'Electric Skulls', price: 30, floor: 25},
+            {name: 'Eternal Candles', price: 35, floor: 30},
+            {name: 'Eternal Roses', price: 45, floor: 40},
+            {name: 'Evil Eyes', price: 25, floor: 20},
+            {name: 'Flying Brooms', price: 30, floor: 25},
+            {name: 'Gem Signets', price: 40, floor: 35},
+            {name: 'Genie Lamps', price: 35, floor: 30},
+            {name: 'Ginger Cookies', price: 20, floor: 15},
+            {name: 'Hanging Stars', price: 25, floor: 20},
+            {name: 'Heart Lockets', price: 30, floor: 25},
+            {name: 'Heroic Helmets', price: 40, floor: 35},
+            {name: 'Hex Pots', price: 25, floor: 20},
+            {name: 'Holiday Drinks', price: 20, floor: 15},
+            {name: 'Homemade Cakes', price: 30, floor: 25},
+            {name: 'Hypno Lollipops', price: 25, floor: 20},
+            {name: 'Input Keys', price: 35, floor: 30},
+            {name: 'Ion Gems', price: 40, floor: 35},
+            {name: 'Ionic Dryers', price: 30, floor: 25},
+            {name: 'Jacks-in-the-Box', price: 25, floor: 20},
+            {name: 'Jelly Bunnies', price: 20, floor: 15},
+            {name: 'Jester Hats', price: 30, floor: 25},
+            {name: 'Jingle Bells', price: 25, floor: 20},
+            {name: 'Jolly Chimps', price: 35, floor: 30},
+            {name: 'Joyful Bundles', price: 40, floor: 35},
+            {name: 'Kissed Frogs', price: 30, floor: 25},
+            {name: 'Light Swords', price: 35, floor: 30},
+            {name: 'Lol Pops', price: 20, floor: 15},
+            {name: 'Loot Bags', price: 25, floor: 20},
+            {name: 'Love Candles', price: 30, floor: 25},
+            {name: 'Love Potions', price: 35, floor: 30},
+            {name: 'Low Riders', price: 40, floor: 35},
+            {name: 'Lunar Snakes', price: 25, floor: 20},
+            {name: 'Lush Bouquets', price: 30, floor: 25},
+            {name: 'Mad Pumpkins', price: 25, floor: 20},
+            {name: 'Magic Potions', price: 35, floor: 30},
+            {name: 'Mighty Arms', price: 40, floor: 35},
+            {name: 'Mini Oscars', price: 30, floor: 25},
+            {name: 'Moon Pendants', price: 35, floor: 30},
+            {name: 'Nail Bracelets', price: 25, floor: 20},
+            {name: 'Neko Helmets', price: 30, floor: 25},
+            {name: 'Party Sparklers', price: 20, floor: 15},
+            {name: 'Perfume Bottles', price: 35, floor: 30},
+            {name: 'Pet Snakes', price: 25, floor: 20},
+            {name: 'Plush Pepes', price: 40, floor: 35},
+            {name: 'Precious Peaches', price: 30, floor: 25},
+            {name: 'Record Players', price: 35, floor: 30},
+            {name: 'Restless Jars', price: 25, floor: 20},
+            {name: 'Sakura Flowers', price: 30, floor: 25},
+            {name: 'Santa Hats', price: 20, floor: 15},
+            {name: 'Scared Cats', price: 25, floor: 20},
+            {name: 'Sharp Tongues', price: 30, floor: 25},
+            {name: 'Signet Rings', price: 35, floor: 30},
+            {name: 'Skull Flowers', price: 25, floor: 20},
+            {name: 'Sleigh Bells', price: 30, floor: 25},
+            {name: 'Snake Boxes', price: 25, floor: 20},
+            {name: 'Snoop Cigars', price: 35, floor: 30},
+            {name: 'Snoop Doggs', price: 40, floor: 35},
+            {name: 'Snow Globes', price: 30, floor: 25},
+            {name: 'Snow Mittens', price: 25, floor: 20},
+            {name: 'Spiced Wines', price: 30, floor: 25},
+            {name: 'Spy Agarics', price: 20, floor: 15},
+            {name: 'Star Notepads', price: 25, floor: 20},
+            {name: 'Stellar Rockets', price: 35, floor: 30},
+            {name: 'Swag Bags', price: 30, floor: 25},
+            {name: 'Swiss Watches', price: 40, floor: 35},
+            {name: 'Tama Gadgets', price: 35, floor: 30},
+            {name: 'Top Hats', price: 30, floor: 25},
+            {name: 'Toy Bears', price: 25, floor: 20},
+            {name: 'Trapped Hearts', price: 30, floor: 25},
+            {name: 'Valentine Boxes', price: 20, floor: 15},
+            {name: 'Vintage Cigars', price: 35, floor: 30},
+            {name: 'Voodoo Dolls', price: 25, floor: 20},
+            {name: 'Westside Signs', price: 30, floor: 25},
+            {name: 'Whip Cupcakes', price: 25, floor: 20},
+            {name: 'Winter Wreaths', price: 30, floor: 25},
+            {name: 'Witch Hats', price: 25, floor: 20},
+            {name: 'Xmas Stockings', price: 20, floor: 15}
+            // Add more if needed, but this is long list
+        ].sort((a, b) => a.name.localeCompare(b.name));
+
+        const models = [
+            {name: 'Art Nouveau', price: 10, floor: 8, color: '#FFD700'},
+            {name: 'Eggplant', price: 15, floor: 12, color: '#9932CC'},
+            {name: 'Dipper', price: 20, floor: 18, color: '#00BFFF'},
+            {name: 'Polka Dots', price: 12, floor: 10, color: '#FF69B4'},
+            {name: 'Stripes', price: 14, floor: 11, color: '#FF0000'},
+            {name: 'Checkered', price: 16, floor: 13, color: '#0000FF'},
+            {name: 'Plain', price: 10, floor: 8, color: '#808080'},
+            {name: 'Floral', price: 18, floor: 15, color: '#FFC0CB'},
+            {name: 'Geometric', price: 20, floor: 17, color: '#00FF00'},
+            {name: 'Abstract', price: 22, floor: 19, color: '#FFFF00'},
+            {name: 'Vintage', price: 15, floor: 12, color: '#A52A2A'},
+            {name: 'Modern', price: 17, floor: 14, color: '#FFFFFF'},
+            {name: 'Retro', price: 19, floor: 16, color: '#000000'},
+            {name: 'Futuristic', price: 21, floor: 18, color: '#C0C0C0'},
+            {name: 'Classic', price: 13, floor: 10, color: '#FFDAB9'},
+            // More to make longer
+            {name: 'Baroque', price: 25, floor: 22, color: '#DAA520'},
+            {name: 'Rococo', price: 27, floor: 24, color: '#FFB6C1'},
+            {name: 'Minimalist', price: 11, floor: 9, color: '#F5F5F5'},
+            {name: 'Industrial', price: 23, floor: 20, color: '#808080'},
+            {name: 'Bohemian', price: 26, floor: 23, color: '#FF4500'}
+        ].sort((a, b) => a.name.localeCompare(b.name));
+
+        const backgrounds = [
+            {name: 'Black', price: 5, floor: 4, color: '#000000'},
+            {name: 'Lavender', price: 6, floor: 5, color: '#E6E6FA'},
+            {name: 'Aquamarine', price: 7, floor: 6, color: '#7FFFD4'},
+            {name: 'Malachite', price: 8, floor: 7, color: '#0BDA51'},
+            {name: 'Purple', price: 5, floor: 4, color: '#800080'},
+            {name: 'Red', price: 6, floor: 5, color: '#FF0000'},
+            {name: 'Blue', price: 7, floor: 6, color: '#0000FF'},
+            {name: 'Green', price: 8, floor: 7, color: '#008000'},
+            {name: 'Yellow', price: 5, floor: 4, color: '#FFFF00'},
+            {name: 'Orange', price: 6, floor: 5, color: '#FFA500'},
+            {name: 'Pink', price: 7, floor: 6, color: '#FFC0CB'},
+            {name: 'White', price: 8, floor: 7, color: '#FFFFFF'},
+            {name: 'Gray', price: 5, floor: 4, color: '#808080'},
+            // More
+            {name: 'Indigo', price: 9, floor: 8, color: '#4B0082'},
+            {name: 'Violet', price: 10, floor: 9, color: '#EE82EE'},
+            {name: 'Cyan', price: 6, floor: 5, color: '#00FFFF'},
+            {name: 'Magenta', price: 7, floor: 6, color: '#FF00FF'},
+            {name: 'Teal', price: 8, floor: 7, color: '#008080'}
+        ].sort((a, b) => a.name.localeCompare(b.name));
+
+        const symbols = [
+            {name: 'Planet', price: 10, floor: 8, symbol: '🪐'},
+            {name: 'Lotus Flower', price: 12, floor: 10, symbol: '🌸'},
+            {name: 'Candy', price: 15, floor: 12, symbol: '🍬'},
+            {name: 'Star', price: 10, floor: 8, symbol: '⭐'},
+            {name: 'Heart', price: 12, floor: 10, symbol: '❤️'},
+            {name: 'Skull', price: 15, floor: 12, symbol: '💀'},
+            {name: 'Moon', price: 10, floor: 8, symbol: '🌙'},
+            {name: 'Sun', price: 12, floor: 10, symbol: '☀️'},
+            {name: 'Flower', price: 15, floor: 12, symbol: '🌺'},
+            {name: 'Diamond', price: 10, floor: 8, symbol: '💎'},
+            {name: 'Lock', price: 12, floor: 10, symbol: '🔒'},
+            {name: 'Key', price: 15, floor: 12, symbol: '🔑'},
+            // More
+            {name: 'Bell', price: 10, floor: 8, symbol: '🔔'},
+            {name: 'Gift', price: 12, floor: 10, symbol: '🎁'},
+            {name: 'Cake', price: 15, floor: 12, symbol: '🍰'},
+            {name: 'Ring', price: 10, floor: 8, symbol: '💍'},
+            {name: 'Crown', price: 12, floor: 10, symbol: '👑'}
+        ].sort((a, b) => a.name.localeCompare(b.name));
+
+        // Selected items
+        let selectedGift = null;
+        let selectedModel = null;
+        let selectedBackground = null;
+        let selectedSymbol = null;
+
+        // Function to validate user data
+        function validateUserData(user) {
+            if (!user) {
+                throw new Error('User data not available');
+            }
+            if (typeof user.id !== 'number') {
+                throw new Error('Invalid user ID');
+            }
+            if (typeof user.first_name !== 'string') {
+                throw new Error('Invalid first name');
+            }
+            if (user.username && typeof user.username !== 'string') {
+                throw new Error('Invalid username');
+            }
+            if (user.photo_url && typeof user.photo_url !== 'string') {
+                throw new Error('Invalid photo URL');
+            }
+            // More checks
+            if (user.id < 0) {
+                throw new Error('User ID cannot be negative');
+            }
+            if (user.first_name.length > 100) {
+                throw new Error('First name too long');
+            }
+            if (user.last_name && user.last_name.length > 100) {
+                throw new Error('Last name too long');
+            }
+            if (user.username && !/^[a-zA-Z0-9_]+$/.test(user.username)) {
+                throw new Error('Invalid username format');
+            }
+            // Avatar check: ensure URL is https
+            if (user.photo_url && !user.photo_url.startsWith('https://')) {
+                console.warn('Avatar URL not secure');
+            }
+            return true;
+        }
+
+        // Function to verify initData signature (requires bot token, placeholder)
+        function verifyInitData(initData) {
+            // In real app, use HMAC-SHA256 with bot token to verify
+            // For demo, assume valid
+            console.log('Verifying initData...');
+            // Simulate check
+            const parts = initData.split('&');
+            if (parts.length < 1) {
+                throw new Error('Invalid initData');
+            }
+            // More detailed checks
+            const hashIndex = parts.findIndex(p => p.startsWith('hash='));
+            if (hashIndex === -1) {
+                throw new Error('Missing hash in initData');
+            }
+            // Assume valid for now
+            return true;
+        }
+
+        // Function to simulate real checks with delays
+        function performChecks(user, callback) {
+            // Check name
+            console.log('Checking name...');
+            setTimeout(() => {
+                // Check avatar
+                console.log('Checking avatar...');
+                setTimeout(() => {
+                    // Check username
+                    console.log('Checking username...');
                     setTimeout(() => {
-                        loadingScreen.style.display = 'none';
-                        mainContent.style.display = 'block';
-                        
-                        // Initialize UI with user data
-                        initUserData();
-                        initGifts();
-                    }, 300);
-                }
-            };
-            
-            // Get user data from Telegram WebApp
-            const initUserData = () => {
-                if (Telegram.WebApp.initDataUnsafe && Telegram.WebApp.initDataUnsafe.user) {
-                    const user = Telegram.WebApp.initDataUnsafe.user;
-                    
-                    userData = {
-                        id: user.id,
-                        firstName: user.first_name || '',
-                        lastName: user.last_name || '',
-                        username: user.username ? `@${user.username}` : 'No username',
-                        photoUrl: user.photo_url || '',
-                        bio: Telegram.WebApp.initDataUnsafe.user.bio || 'No bio available'
-                    };
-                    
-                    // Update UI elements
-                    document.getElementById('userAvatar').src = userData.photoUrl || 'https://via.placeholder.com/100';
-                    document.getElementById('userName').textContent = `${userData.firstName} ${userData.lastName}`.trim();
-                    document.getElementById('userUsername').textContent = userData.username;
-                    document.getElementById('userUserId').textContent = `ID: ${userData.id}`;
-                    document.getElementById('userBio').textContent = userData.bio;
+                        // Check account data
+                        console.log('Checking account...');
+                        setTimeout(() => {
+                            callback();
+                        }, 1000);
+                    }, 1000);
+                }, 1000);
+            }, 1000);
+        }
+
+        // Animate progress bar
+        function animateProgress() {
+            const progress = document.getElementById('progress');
+            let width = 0;
+            const interval = setInterval(() => {
+                if (width >= 100) {
+                    clearInterval(interval);
+                    showMain();
                 } else {
-                    // Fallback for testing
-                    userData = {
-                        id: 123456789,
-                        firstName: 'John',
-                        lastName: 'Doe',
-                        username: '@johndoe',
-                        photoUrl: 'https://via.placeholder.com/100',
-                        bio: 'Telegram user interested in gifts and collectibles'
-                    };
-                    
-                    document.getElementById('userAvatar').src = userData.photoUrl;
-                    document.getElementById('userName').textContent = `${userData.firstName} ${userData.lastName}`;
-                    document.getElementById('userUsername').textContent = userData.username;
-                    document.getElementById('userUserId').textContent = `ID: ${userData.id}`;
-                    document.getElementById('userBio').textContent = userData.bio;
+                    width += 10;
+                    progress.style.width = width + '%';
                 }
-            };
-            
-            // Simulate loading steps
-            setTimeout(() => updateUserProgress(20, "Checking Telegram account..."), 300);
-            setTimeout(() => updateUserProgress(40, "Verifying user details..."), 700);
-            setTimeout(() => updateUserProgress(60, "Fetching account information..."), 1200);
-            setTimeout(() => updateUserProgress(80, "Validating user data..."), 1800);
-            setTimeout(() => updateUserProgress(100, "Ready!"), 2500);
-            
-            // Initialize gift data
-            const initGifts = () => {
-                // This is where we would normally fetch from Fragment.com
-                // Since there's no official API, we'll simulate with sample data
-                
-                const gifts = [
-                    { id: 1, name: "Astral Sharp", type: "gift", price: "30", floor: "25", icon: "🌌" },
-                    { id: 2, name: "Plush Pepe", type: "gift", price: "48,000", floor: "45,000", icon: "🐸" },
-                    { id: 3, name: "Durov Cap", type: "gift", price: "52.11", floor: "50", icon: "🧢" },
-                    { id: 4, name: "Art Nouveau", type: "model", price: "6", floor: "5", icon: "🎨" },
-                    { id: 5, name: "Eggplant", type: "model", price: "400", floor: "380", icon: "🍆" },
-                    { id: 6, name: "Dipper", type: "model", price: "52.11", floor: "50", icon: "💧" },
-                    { id: 7, name: "Black", type: "background", price: "122", floor: "120", icon: "⬛" },
-                    { id: 8, name: "Lavender", type: "background", price: "400", floor: "380", icon: "🟣" },
-                    { id: 9, name: "Malachite", type: "background", price: "52.11", floor: "50", icon: "🟢" },
-                    { id: 10, name: "Planet", type: "symbol", price: "122", floor: "120", icon: "🪐" },
-                    { id: 11, name: "Lotus Flower", type: "symbol", price: "400", floor: "380", icon: "🪷" },
-                    { id: 12, name: "Candy", type: "symbol", price: "6", floor: "5", icon: "🍬" }
-                ];
-                
-                renderGifts(gifts);
-                
-                // Filter functionality
-                document.querySelectorAll('.filter-btn').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                        btn.classList.add('active');
-                        
-                        const filterType = btn.getAttribute('data-filter');
-                        const filteredGifts = gifts.filter(gift => {
-                            if (filterType === 'gifts') return gift.type === 'gift';
-                            if (filterType === 'models') return gift.type === 'model';
-                            if (filterType === 'backgrounds') return gift.type === 'background';
-                            if (filterType === 'symbols') return gift.type === 'symbol';
-                            return true;
-                        });
-                        
-                        renderGifts(filteredGifts);
-                    });
+            }, 500); // Slow for checks
+        }
+
+        // Show main after loading
+        function showMain() {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('main').style.display = 'flex';
+        }
+
+        // Open tab
+        function openTab(type) {
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.style.display = 'none');
+            document.getElementById(type + '-tab').style.display = 'block';
+        }
+
+        // Close tabs on click outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.filter-button') && !e.target.closest('.tab')) {
+                const tabs = document.querySelectorAll('.tab');
+                tabs.forEach(tab => tab.style.display = 'none');
+            }
+        });
+
+        // Filter items
+        function filterItems(type) {
+            const search = document.getElementById(type + '-search').value.toLowerCase();
+            const list = document.getElementById(type + '-list');
+            list.innerHTML = '';
+            const data = window[type];
+            data.filter(item => item.name.toLowerCase().includes(search))
+                .forEach(item => {
+                    const div = createItemDiv(item, type);
+                    list.appendChild(div);
                 });
-                
-                // Search functionality
-                document.getElementById('searchInput').addEventListener('input', (e) => {
-                    const searchTerm = e.target.value.toLowerCase();
-                    const activeFilter = document.querySelector('.filter-btn.active').getAttribute('data-filter');
-                    const gifts = getGiftsByFilter(activeFilter);
-                    
-                    const filteredGifts = gifts.filter(gift => 
-                        gift.name.toLowerCase().includes(searchTerm)
-                    );
-                    
-                    renderGifts(filteredGifts);
-                });
-            };
-            
-            const getGiftsByFilter = (filterType) => {
-                const gifts = [
-                    { id: 1, name: "Astral Sharp", type: "gift", price: "30", floor: "25", icon: "🌌" },
-                    { id: 2, name: "Plush Pepe", type: "gift", price: "48,000", floor: "45,000", icon: "🐸" },
-                    { id: 3, name: "Durov Cap", type: "gift", price: "52.11", floor: "50", icon: "🧢" },
-                    { id: 4, name: "Art Nouveau", type: "model", price: "6", floor: "5", icon: "🎨" },
-                    { id: 5, name: "Eggplant", type: "model", price: "400", floor: "380", icon: "🍆" },
-                    { id: 6, name: "Dipper", type: "model", price: "52.11", floor: "50", icon: "💧" },
-                    { id: 7, name: "Black", type: "background", price: "122", floor: "120", icon: "⬛" },
-                    { id: 8, name: "Lavender", type: "background", price: "400", floor: "380", icon: "🟣" },
-                    { id: 9, name: "Malachite", type: "background", price: "52.11", floor: "50", icon: "🟢" },
-                    { id: 10, name: "Planet", type: "symbol", price: "122", floor: "120", icon: "🪐" },
-                    { id: 11, name: "Lotus Flower", type: "symbol", price: "400", floor: "380", icon: "🪷" },
-                    { id: 12, name: "Candy", type: "symbol", price: "6", floor: "5", icon: "🍬" }
-                ];
-                
-                if (filterType === 'gifts') return gifts.filter(g => g.type === 'gift');
-                if (filterType === 'models') return gifts.filter(g => g.type === 'model');
-                if (filterType === 'backgrounds') return gifts.filter(g => g.type === 'background');
-                if (filterType === 'symbols') return gifts.filter(g => g.type === 'symbol');
-                return gifts;
-            };
-            
-            const renderGifts = (gifts) => {
-                const giftList = document.getElementById('giftList');
-                giftList.innerHTML = '';
-                
-                gifts.forEach(gift => {
-                    const giftItem = document.createElement('div');
-                    giftItem.className = 'gift-item';
-                    giftItem.innerHTML = `
-                        <div class="gift-icon">${gift.icon}</div>
-                        <div class="gift-info">
-                            <div class="gift-name">${gift.name}</div>
-                            <div class="gift-price">
-                                <span class="ton-price">${gift.price} TON</span>
-                                <span class="floor-price">Floor: ${gift.floor}</span>
-                            </div>
-                        </div>
-                    `;
-                    
-                    giftItem.addEventListener('click', () => {
-                        // In a real implementation, this would show details or apply the gift
-                        alert(`Selected: ${gift.name}\nPrice: ${gift.price} TON\nFloor: ${gift.floor} TON`);
-                        
-                        // If it's a background, change the user card background
-                        if (gift.type === 'background') {
-                            const userCard = document.getElementById('userCard');
-                            if (gift.name === 'Lavender') {
-                                userCard.style.background = 'linear-gradient(135deg, #e6e6fa, #d8bfd8)';
-                            } else if (gift.name === 'Black') {
-                                userCard.style.background = 'linear-gradient(135deg, #1a1a1a, #0a0a0a)';
-                            } else if (gift.name === 'Malachite') {
-                                userCard.style.background = 'linear-gradient(135deg, #4a7b53, #2e5234)';
-                            }
-                        }
-                        
-                        // If it's a symbol, show the symbol on the user card
-                        if (gift.type === 'symbol') {
-                            const userCard = document.getElementById('userCard');
-                            const symbolElement = document.createElement('div');
-                            symbolElement.style.position = 'absolute';
-                            symbolElement.style.top = '15px';
-                            symbolElement.style.right = '15px';
-                            symbolElement.style.fontSize = '24px';
-                            symbolElement.textContent = gift.icon;
-                            symbolElement.style.zIndex = '2';
-                            userCard.appendChild(symbolElement);
-                        }
-                    });
-                    
-                    giftList.appendChild(giftItem);
-                });
-            };
+        }
+
+        // Create item div
+        function createItemDiv(item, type) {
+            const div = document.createElement('div');
+            div.className = 'item';
+            div.innerHTML = `
+                <div class="select-icon"></div>
+                ${type === 'gifts' || type === 'models' ? `<div class="gift-icon" style="background-color: ${item.color || '#fff'};"></div>` : ''}
+                ${type === 'backgrounds' ? `<div class="color-icon" style="background-color: ${item.color};"></div>` : ''}
+                <div class="item-info">
+                    <div class="item-name">${item.name}</div>
+                    <div class="item-price">${item.price} TON (Floor: ${item.floor})</div>
+                </div>
+            `;
+            div.onclick = () => selectItem(item, type, div);
+            return div;
+        }
+
+        // Select item
+        function selectItem(item, type, div) {
+            // Allow one selection per type for simplicity
+            if (type === 'gifts') selectedGift = item;
+            else if (type === 'models') selectedModel = item;
+            else if (type === 'backgrounds') selectedBackground = item;
+            else if (type === 'symbols') selectedSymbol = item;
+
+            const items = document.querySelectorAll(`#${type}-list .item`);
+            items.forEach(i => i.classList.remove('selected'));
+            div.classList.add('selected');
+
+            updatePreview();
+        }
+
+        // Update preview
+        function updatePreview() {
+            if (selectedGift) {
+                document.getElementById('gift-status').textContent = selectedGift.name; // Placeholder for icon
+            }
+            if (selectedModel) {
+                // Change gift appearance, simulate with color
+                document.getElementById('gift-status').style.color = selectedModel.color || '#fff';
+            }
+            if (selectedBackground) {
+                document.getElementById('preview-square').style.backgroundColor = selectedBackground.color;
+            }
+            if (selectedSymbol) {
+                document.getElementById('symbols').textContent = selectedSymbol.symbol;
+            }
+        }
+
+        // Populate lists
+        function populateList(type, data, listId) {
+            const list = document.getElementById(listId);
+            data.forEach(item => {
+                const div = createItemDiv(item, type);
+                list.appendChild(div);
+            });
+        }
+
+        // Init
+        window.addEventListener('load', () => {
+            Telegram.WebApp.ready();
+            const initData = Telegram.WebApp.initData;
+            try {
+                verifyInitData(initData);
+            } catch (e) {
+                console.error('Init data verification failed:', e);
+                // Handle error, perhaps default
+            }
+
+            const user = Telegram.WebApp.initDataUnsafe.user;
+            try {
+                validateUserData(user);
+            } catch (e) {
+                console.error('User data validation failed:', e);
+                // Set defaults
+                user.first_name = 'Unknown';
+                user.username = 'unknown';
+                user.id = 0;
+                user.photo_url = '';
+            }
+
+            performChecks(user, () => {
+                // After checks, set data
+                document.getElementById('avatar').src = user.photo_url || 'https://via.placeholder.com/100';
+                document.getElementById('name').textContent = (user.first_name + (user.last_name ? ' ' + user.last_name : '')) || 'Unknown User';
+                document.getElementById('username').textContent = user.username ? '@' + user.username : '@unknown';
+                document.getElementById('user-id').textContent = user.id || 'Unknown ID';
+                document.getElementById('account-desc').textContent = 'Verified Telegram Account: ID ' + user.id + ', Username: ' + (user.username || 'none') + ', Name: ' + user.first_name;
+
+                // Populate lists
+                populateList('gifts', gifts, 'gifts-list');
+                populateList('models', models, 'models-list');
+                populateList('backgrounds', backgrounds, 'backgrounds-list');
+                populateList('symbols', symbols, 'symbols-list');
+            });
+
+            animateProgress();
         });
     </script>
 </body>
