@@ -1,682 +1,295 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GiftChecker</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-        body {
-            background: #000000;
-            color: #ffffff;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            overflow: hidden;
-            position: relative;
-        }
-        body::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: 0;
-        }
-        .loading {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            width: 100%;
-            z-index: 10;
-            position: relative;
-        }
-        .loading-title {
-            font-size: 32px;
-            font-weight: 700;
-            margin-bottom: 40px;
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-            animation: glow 2s ease-in-out infinite alternate;
-        }
-        @keyframes glow {
-            from { text-shadow: 0 0 20px rgba(255, 255, 255, 0.3); }
-            to { text-shadow: 0 0 30px rgba(255, 255, 255, 0.5); }
-        }
-        .progress-container {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 4px;
-            width: 250px;
-            height: 25px;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        }
-        .progress-bar {
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            border-radius: 11px;
-            overflow: hidden;
-            position: relative;
-        }
-        .progress {
-            width: 0;
-            height: 100%;
-            background: linear-gradient(90deg, #ffffff 0%, #cccccc 100%);
-            transition: width 0.3s ease;
-            border-radius: 11px;
-            position: relative;
-            overflow: hidden;
-        }
-        .progress::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            animation: shimmer 1.5s infinite;
-        }
-        @keyframes shimmer {
-            0% { left: -100%; }
-            100% { left: 100%; }
-        }
-        .main {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            height: 100%;
-            position: relative;
-            z-index: 5;
-            padding: 20px;
-            overflow-y: auto;
-        }
-        .filters {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            position: sticky;
-            top: 0;
-            background: rgba(0, 0, 0, 0.8);
-            padding: 10px;
-            border-radius: 20px;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            z-index: 10;
-        }
-        .filter-button {
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 12px 24px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 500;
-            position: relative;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-        }
-        .filter-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s;
-        }
-        .filter-button:hover::before {
-            left: 100%;
-        }
-        .filter-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.3);
-        }
-        .arrow {
-            font-size: 12px;
-            margin-left: 8px;
-            transition: transform 0.3s;
-        }
-        .filter-button:hover .arrow {
-            transform: scale(1.2);
-        }
-        .tab {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 25px;
-            padding: 30px;
-            width: 90%;
-            max-width: 500px;
-            max-height: 80%;
-            overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            animation: slideIn 0.3s ease-out;
-            z-index: 20;
-        }
-        @keyframes slideIn {
-            from { opacity: 0; transform: translate(-50%, -60%); }
-            to { opacity: 1; transform: translate(-50%, -50%); }
-        }
-        .tab::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-        }
-        .tab-title {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 10px;
-            text-align: center;
-            color: #ffffff;
-        }
-        .tab-subtitle {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        .search-input {
-            width: 100%;
-            padding: 15px;
-            border-radius: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            margin-bottom: 20px;
-            background: rgba(255, 255, 255, 0.05);
-            color: #ffffff;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
-        .search-input::placeholder {
-            color: rgba(255, 255, 255, 0.5);
-        }
-        .search-input:focus {
-            outline: none;
-            border-color: rgba(255, 255, 255, 0.3);
-            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.05);
-        }
-        .list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .list-item {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
-        .list-item:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateX(5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        .list-item.selected {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: rgba(255, 255, 255, 0.3);
-        }
-        .check-mark {
-            margin-right: 15px;
-            font-size: 20px;
-            color: rgba(255, 255, 255, 0.5);
-            transition: color 0.3s;
-        }
-        .list-item.selected .check-mark {
-            color: #ffffff;
-        }
-        .item-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #333333, #555555);
-            border-radius: 50%;
-            margin-right: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        }
-        .item-name {
-            flex: 1;
-            font-weight: 500;
-        }
-        .item-price {
-            text-align: right;
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.8);
-            font-weight: 600;
-        }
-        .preview {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 25px;
-            padding: 30px;
-            width: 90%;
-            max-width: 450px;
-            position: relative;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            transition: all 0.5s ease;
-            margin: 20px auto;
-        }
-        .preview:hover {
-            transform: scale(1.02);
-            box-shadow: 0 25px 70px rgba(255, 255, 255, 0.1);
-        }
-        .avatar {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #333, #555);
-            margin: 0 auto 20px;
-            display: block;
-            overflow: hidden;
-            border: 3px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease;
-        }
-        .avatar:hover {
-            transform: scale(1.05);
-        }
-        .name {
-            font-size: 24px;
-            text-align: center;
-            margin-bottom: 10px;
-            font-weight: 600;
-            color: #ffffff;
-        }
-        .gift-status {
-            font-size: 18px;
-            color: #dddddd;
-            font-weight: 500;
-        }
-        .username-id {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.8);
-        }
-        .symbol {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 28px;
-            color: #ffffff;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-            animation: float 3s ease-in-out infinite;
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-5px); }
-        }
-        .close-tab {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: none;
-            border: none;
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 24px;
-            cursor: pointer;
-            transition: color 0.3s;
-        }
-        .close-tab:hover {
-            color: #ffffff;
-        }
-    </style>
-</head>
-<body>
-    <div class="loading">
-        <div class="loading-title">GiftChecker</div>
-        <div class="progress-container">
-            <div class="progress-bar">
-                <div class="progress"></div>
+import React, {useEffect, useState, useRef} from "react";
+
+/*
+  GiftChecker - Telegram WebApp
+  Single-file React component meant to be used inside a Telegram WebApp (bot / mini app).
+  - TailwindCSS classes are used for styling. Make sure Tailwind is present in the build.
+  - This component reads window.Telegram.WebApp.initDataUnsafe to get the user (name, username, id, photo_url)
+    (photo_url is provided by Telegram Web Apps when user's privacy allows it; otherwise avatar will be placeholder.)
+  - For Fragment data (gifts, models, backdrops, symbols) this component calls a placeholder API
+    at /api/fragment/* which you should implement server-side (because Fragment's official API requires auth
+    and CORS; a server-side proxy is recommended). Example endpoints used below:
+      GET /api/fragment/catalog?type=gifts
+      GET /api/fragment/catalog?type=models
+      GET /api/fragment/catalog?type=backdrops
+      GET /api/fragment/catalog?type=symbols
+  - The UI follows the user's design requirements: dark/black design, Telegram-like font (replace with a Telegram font import if desired),
+    liquid-glass cards, progress loader that verifies real Telegram user data from initDataUnsafe.
+
+  Notes on "real checks":
+  - A Telegram WebApp running inside a user's Telegram client receives and signs initialization data (initData).
+    We trust initDataUnsafe for quick display, and for security you may validate initData on your server using the bot token
+    and the initData hash if you need cryptographic verification.
+  - The WebApp cannot magically "poll" Telegram for changes without a reload; we show a simulated progress that reads
+    the current initData on load and treats it as the verified source. If you want live monitoring of profile changes,
+    you'll need to implement a bot-side check (server) that compares user data over time.
+*/
+
+// Simple placeholder fallback avatar
+const FALLBACK_AVATAR = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='512' height='512'><rect width='100%' height='100%' fill='%23333333'/><text x='50%' y='54%' font-size='120' text-anchor='middle' fill='%23ffffff' font-family='sans-serif'>U</text></svg>";
+
+export default function GiftChecker() {
+  const [loading, setLoading] = useState(true);
+  const [progress, setProgress] = useState(0);
+  const [telegramUser, setTelegramUser] = useState(null);
+  const [verifiedUser, setVerifiedUser] = useState(null);
+  const [catalog, setCatalog] = useState({gifts: [], models: [], backdrops: [], symbols: []});
+  const [activeFilter, setActiveFilter] = useState("gifts");
+  const [search, setSearch] = useState("");
+  const [selectedGift, setSelectedGift] = useState(null);
+  const [selectedModel, setSelectedModel] = useState(null);
+  const [selectedBackdrop, setSelectedBackdrop] = useState(null);
+  const [selectedSymbol, setSelectedSymbol] = useState(null);
+  const progressRef = useRef(null);
+
+  // Utility to read Telegram WebApp user data (initDataUnsafe)
+  function readTelegramUser() {
+    try {
+      if (window.Telegram && window.Telegram.WebApp) {
+        const w = window.Telegram.WebApp;
+        // initDataUnsafe.user is a JS object with user info if available
+        const u = w.initDataUnsafe && w.initDataUnsafe.user ? w.initDataUnsafe.user : null;
+        return u;
+      }
+    } catch (e) {
+      console.warn("Telegram WebApp not available", e);
+    }
+    return null;
+  }
+
+  // Background progress + checks
+  useEffect(() => {
+    const user = readTelegramUser();
+    setTelegramUser(user);
+
+    // Simulate progressive checking bar while performing 'real' checks (reading initData and fetching catalog)
+    let p = 0;
+    setProgress(0);
+    setLoading(true);
+
+    progressRef.current = setInterval(() => {
+      p += Math.random() * 12;
+      if (p >= 98) p = 98; // wait until network calls finish
+      setProgress(Math.round(p));
+    }, 400);
+
+    // fetch catalog data (server-side proxy recommended)
+    async function loadAllCatalogs() {
+      try {
+        const endpoints = [
+          {key: 'gifts', url: '/api/fragment/catalog?type=gifts'},
+          {key: 'models', url: '/api/fragment/catalog?type=models'},
+          {key: 'backdrops', url: '/api/fragment/catalog?type=backdrops'},
+          {key: 'symbols', url: '/api/fragment/catalog?type=symbols'},
+        ];
+        const results = {};
+        await Promise.all(endpoints.map(async (ep) => {
+          try {
+            const resp = await fetch(ep.url);
+            if (!resp.ok) throw new Error('network');
+            const json = await resp.json();
+            results[ep.key] = Array.isArray(json) ? json : json.items || [];
+          } catch (e) {
+            console.warn('Could not load', ep.url, e);
+            results[ep.key] = [];
+          }
+        }));
+
+        setCatalog(prev => ({...prev, ...results}));
+      } catch (e) {
+        console.error('Catalog load failed', e);
+      }
+    }
+
+    loadAllCatalogs().finally(() => {
+      // finish progress
+      clearInterval(progressRef.current);
+      setProgress(100);
+      // small delay for UX
+      setTimeout(() => {
+        setVerifiedUser(user); // 'real check' result is whatever initDataUnsafe provided
+        setLoading(false);
+      }, 350);
+    });
+
+    return () => clearInterval(progressRef.current);
+  }, []);
+
+  // Derived display name
+  const displayName = verifiedUser ? `${verifiedUser.first_name || ''} ${verifiedUser.last_name || ''}`.trim() : 'Unknown';
+  const username = verifiedUser ? (verifiedUser.username ? `@${verifiedUser.username}` : '(no username)') : '';
+  const userId = verifiedUser ? verifiedUser.id : '';
+  const avatarUrl = verifiedUser && verifiedUser.photo_url ? verifiedUser.photo_url : FALLBACK_AVATAR;
+
+  // Filtering logic
+  function itemsForActiveFilter() {
+    const list = catalog[activeFilter] || [];
+    if (!search) return list.sort((a,b)=> (a.name||'').localeCompare(b.name||''));
+    return list.filter(i => (i.name||'').toLowerCase().includes(search.toLowerCase())).sort((a,b)=> (a.name||'').localeCompare(b.name||''));
+  }
+
+  // When selecting gift/model/backdrop/symbol, update preview
+  function handleSelect(item, kind) {
+    if (kind === 'gifts') setSelectedGift(item);
+    if (kind === 'models') setSelectedModel(item);
+    if (kind === 'backdrops') setSelectedBackdrop(item);
+    if (kind === 'symbols') setSelectedSymbol(item);
+  }
+
+  // Simple Price display helper (expects price object or number)
+  function priceText(item) {
+    if (!item) return '';
+    if (typeof item.price === 'number') return `${item.price} TON`;
+    if (item.price && item.price.amount) return `${item.price.amount} TON`;
+    if (item.floor_price) return `${item.floor_price} TON`;
+    return item.price_text || '';
+  }
+
+  // Preview computed composite: combine selected model/backdrop/symbol into a display
+  function renderPreviewOverlays() {
+    const overlays = [];
+    if (selectedBackdrop) overlays.push(<div key="backdrop" className="absolute inset-0 rounded-2xl mix-blend-multiply opacity-60" style={{background: selectedBackdrop.color || 'transparent'}} />);
+    if (selectedModel) overlays.push(<div key="model" className="absolute left-4 top-4 p-2 rounded-full border border-white/8 backdrop-blur-sm"> <div className="text-xs">{selectedModel.name}</div></div>);
+    if (selectedSymbol) overlays.push(<div key="symbol" className="absolute right-3 bottom-3 p-1 rounded-md bg-white/6"> <div className="text-sm">{selectedSymbol.name}</div></div>);
+    return overlays;
+  }
+
+  return (
+    <div className="min-h-screen bg-black text-white font-sans p-6" style={{fontFamily: 'Inter, system-ui, -apple-system, "Segoe UI", Roboto'}}>
+      {/* Header */}
+      <div className="max-w-5xl mx-auto">
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-2xl font-semibold tracking-tight">GiftChecker</h1>
+          <div className="flex gap-2 items-center">
+            <div className="text-sm text-white/70">{username}</div>
+            <div className="text-sm text-white/40">ID: {userId}</div>
+          </div>
+        </div>
+
+        {/* Loading overlay */}
+        {loading && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
+            <div className="w-full max-w-md p-8 bg-black/60 backdrop-blur-lg rounded-2xl border border-white/6 text-center pointer-events-auto">
+              <div className="text-3xl font-bold mb-6">FonChecker</div>
+              <div className="h-40 flex items-center justify-center">
+                <div className="w-32 h-32 rounded-xl bg-white/6 flex items-center justify-center">
+                  <img src={avatarUrl} alt="avatar" className="w-24 h-24 rounded-full object-cover" />
+                </div>
+              </div>
+              <div className="mt-6">
+                <div className="w-full bg-white/6 rounded-lg h-4 overflow-hidden">
+                  <div className="h-full rounded-lg bg-white" style={{width: `${progress}%`, transition: 'width 300ms linear'}}></div>
+                </div>
+                <div className="mt-2 text-sm text-white/60">Checking Telegram name, avatar, username...</div>
+              </div>
             </div>
-        </div>
-    </div>
-    <div class="main">
-        <div class="filters">
-            <button class="filter-button" onclick="openTab('gift')">Gifts <span class="arrow">▼▲</span></button>
-            <button class="filter-button" onclick="openTab('model')">Models <span class="arrow">▼▲</span></button>
-            <button class="filter-button" onclick="openTab('background')">Backgrounds <span class="arrow">▼▲</span></button>
-            <button class="filter-button" onclick="openTab('symbol')">Symbols <span class="arrow">▼▲</span></button>
-        </div>
-        <div id="gift-tab" class="tab">
-            <button class="close-tab" onclick="closeTab()">×</button>
-            <div class="tab-title">Gifts</div>
-            <div class="tab-subtitle">Choose one</div>
-            <input type="text" class="search-input" placeholder="Find a gift" oninput="filterList('gift-list', this.value)">
-            <div id="gift-list" class="list"></div>
-        </div>
-        <div id="model-tab" class="tab">
-            <button class="close-tab" onclick="closeTab()">×</button>
-            <div class="tab-title">Models</div>
-            <div class="tab-subtitle">Choose one</div>
-            <input type="text" class="search-input" placeholder="Find a model" oninput="filterList('model-list', this.value)">
-            <div id="model-list" class="list"></div>
-        </div>
-        <div id="background-tab" class="tab">
-            <button class="close-tab" onclick="closeTab()">×</button>
-            <div class="tab-title">Backgrounds</div>
-            <div class="tab-subtitle">Choose one</div>
-            <input type="text" class="search-input" placeholder="Find a background" oninput="filterList('background-list', this.value)">
-            <div id="background-list" class="list"></div>
-        </div>
-        <div id="symbol-tab" class="tab">
-            <button class="close-tab" onclick="closeTab()">×</button>
-            <div class="tab-title">Symbols</div>
-            <div class="tab-subtitle">Choose one</div>
-            <input type="text" class="search-input" placeholder="Find a symbol" oninput="filterList('symbol-list', this.value)">
-            <div id="symbol-list" class="list"></div>
-        </div>
-        <div class="preview" id="preview">
-            <img id="avatar" class="avatar" src="" alt="Avatar">
-            <div class="name" id="name"></div>
-            <div class="username-id">
-                <div id="username"></div>
-                <div id="user-id"></div>
+          </div>
+        )}
+
+        {/* Main card preview */}
+        <div className="mx-auto my-6 max-w-3xl">
+          <div className="relative bg-gray-900/70 border border-white/6 rounded-3xl p-8 pt-16 min-h-[220px] flex items-start justify-center">
+            {/* Avatar slightly overlapping */}
+            <div className="absolute -top-12 left-6">
+              <div className="w-28 h-28 rounded-xl overflow-hidden border-2 border-white/10 shadow-lg bg-gradient-to-br from-white/6 to-white/3">
+                <img src={avatarUrl} alt="avatar" className="w-full h-full object-cover" />
+              </div>
             </div>
-            <div class="symbol" id="symbol"></div>
+
+            {/* User info */}
+            <div className="text-left ml-36 w-full">
+              <div className="text-xl font-semibold">{displayName}</div>
+              <div className="flex items-center gap-3 mt-2">
+                <div className="text-sm text-white/60">{username}</div>
+                <div className="ml-auto text-sm text-white/40">ID: {userId}</div>
+              </div>
+
+              {/* Description / longish translucent rectangle */}
+              <div className="mt-6">
+                <div className="rounded-xl bg-white/4 p-4 text-sm text-white/60 backdrop-blur-sm min-h-[72px]">{verifiedUser && verifiedUser.bio ? verifiedUser.bio : 'No public description available.'}</div>
+              </div>
+
+              {/* Overlays for selected items (model/backdrop/symbol) */}
+              <div className="relative mt-4 h-40 rounded-xl overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60" />
+                {renderPreviewOverlays()}
+              </div>
+            </div>
+          </div>
         </div>
+
+        {/* Filters */}
+        <div className="flex gap-3 items-center mb-4">
+          {['gifts','models','backdrops','symbols'].map(f => (
+            <button key={f} onClick={()=>{setActiveFilter(f); setSearch('');}} className={`px-3 py-1 rounded-md text-sm font-medium ${activeFilter===f? 'bg-white text-black':'bg-white/6 text-white/80'}`}>
+              {f[0].toUpperCase()+f.slice(1)} <span className="ml-1 text-xs text-white/50">▾</span>
+            </button>
+          ))}
+
+          <div className="ml-auto max-w-xs w-full">
+            <input value={search} onChange={e=>setSearch(e.target.value)} placeholder={`Find a ${activeFilter.slice(0,-1)}`} className="w-full px-3 py-2 rounded-lg bg-white/5 outline-none placeholder-white/40 text-sm" />
+          </div>
+        </div>
+
+        {/* List header */}
+        <div className="bg-white/3 rounded-xl p-3">
+          <div className="grid grid-cols-[auto_1fr_auto] gap-4 items-center">
+            <div className="text-sm text-white/80">Select</div>
+            <div className="text-sm text-white/80">Name</div>
+            <div className="text-sm text-white/80">Price</div>
+          </div>
+        </div>
+
+        {/* Items list */}
+        <div className="mt-3 space-y-2">
+          {itemsForActiveFilter().map(item => (
+            <div key={item.id || item.slug || item.name} className="bg-black/60 rounded-xl p-3 border border-white/4 flex items-center gap-3">
+              <div className="w-8">
+                <button onClick={()=>handleSelect(item, activeFilter)} className="w-6 h-6 rounded-md bg-white/6 flex items-center justify-center">
+                  {((activeFilter==='models' && selectedModel===item) || (activeFilter==='gifts' && selectedGift===item) || (activeFilter==='backdrops' && selectedBackdrop===item) || (activeFilter==='symbols' && selectedSymbol===item)) ? '✓' : '+'}
+                </button>
+              </div>
+              <div className="flex items-center gap-3 flex-1">
+                {/* icon: gift icon or color dot */}
+                {activeFilter==='gifts' && (
+                  <div className="w-12 h-12 rounded-md bg-white/4 flex items-center justify-center">🎁</div>
+                )}
+                {activeFilter==='models' && (
+                  <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{background: item.color || '#444'}} />
+                )}
+                {activeFilter==='backdrops' && (
+                  <div className="w-12 h-12 rounded-md border border-white/6" style={{background: item.color || '#222'}} />
+                )}
+                {activeFilter==='symbols' && (
+                  <div className="w-12 h-12 rounded-md bg-white/4 flex items-center justify-center">★</div>
+                )}
+
+                <div>
+                  <div className="font-medium">{item.name}</div>
+                  <div className="text-xs text-white/50">{item.subtitle || ''}</div>
+                </div>
+              </div>
+              <div className="text-sm text-white/60">{priceText(item)}</div>
+            </div>
+          ))}
+
+          {itemsForActiveFilter().length===0 && (
+            <div className="text-center text-white/50 py-8">No items found. Make sure your fragment proxy (/api/fragment/...) is implemented and returning data.</div>
+          )}
+        </div>
+
+        {/* Footer / apply */}
+        <div className="mt-6 flex items-center justify-between">
+          <div className="text-sm text-white/50">Preview changes live on the card above. Choose gift, model, backdrop and symbol.</div>
+          <div className="flex gap-3">
+            <button className="px-4 py-2 rounded-xl bg-white/6">Reset</button>
+            <button className="px-4 py-2 rounded-xl bg-white text-black font-semibold">Apply</button>
+          </div>
+        </div>
+
+        {/* Tiny help & notes */}
+        <div className="mt-6 text-xs text-white/40 max-w-2xl">Notes: This WebApp uses the Telegram WebApp initData to read the user's name, username, id and (when available) photo_url. For complete and secure verification validate initData on your server. For the Fragment catalog we expect a server-side proxy to call Fragment GraphQL / API (see https://fragment.dev/api-reference). This keeps your API credentials safe and avoids CORS issues.</div>
+      </div>
     </div>
-    <script>
-        const tg = window.Telegram.WebApp;
-        tg.ready();
-        tg.expand();
-
-        const user = tg.initDataUnsafe.user || { first_name: 'Test', last_name: 'User', username: 'testuser', id: 123456, photo_url: '' };
-        let avatarUrl = user.photo_url || 'https://via.placeholder.com/120?text=Avatar';
-        const fullName = `${user.first_name || ''} ${user.last_name || ''}`.trim() || 'Unknown User';
-        const username = user.username ? `@${user.username}` : '@unknown';
-        const userId = `ID: ${user.id}`;
-
-        // Updated lists from web data and user examples
-        const gifts = [
-            {name: 'Artisan Bricks', slug: 'artisanbrick', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Astral Shards', slug: 'astralshard', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'B-Day Candles', slug: 'bdaycandle', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Berry Boxes', slug: 'berrybox', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Big Years', slug: 'bigyear', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Bonded Rings', slug: 'bondedring', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Bow Ties', slug: 'bowtie', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Bunny Muffins', slug: 'bunnymuffin', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Candy Canes', slug: 'candycane', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Cookie Hearts', slug: 'cookieheart', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Crystal Balls', slug: 'crystalball', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Cupid Charms', slug: 'cupidcharm', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Desk Calendars', slug: 'deskcalendar', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Diamond Rings', slug: 'diamondring', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Durov’s Caps', slug: 'durovscap', floorPrice: 'N/A', price: '5999 TON'},
-            {name: 'Easter Eggs', slug: 'easteregg', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Electric Skulls', slug: 'electricskull', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Eternal Candles', slug: 'eternalcandle', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Eternal Roses', slug: 'eternalrose', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Evil Eyes', slug: 'evileye', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Flying Brooms', slug: 'flyingbroom', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Gem Signets', slug: 'gemsignet', floorPrice: 'N/A', price: '15000 TON'},
-            {name: 'Genie Lamps', slug: 'genielamp', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Ginger Cookies', slug: 'gingercookie', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Hanging Stars', slug: 'hangingstar', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Heart Lockets', slug: 'heartlocket', floorPrice: 'N/A', price: '12733.88 TON'},
-            {name: 'Heroic Helmets', slug: 'heroichelmet', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Hex Pots', slug: 'hexpot', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Holiday Drinks', slug: 'holidaydrink', floorPrice: 'N/A', price: 'N/A'},
-            // Add more if needed from further data
-        ].sort((a, b) => a.name.localeCompare(b.name));
-
-        const models = [
-            'Art Nouveau', 'Polka Dots', 'Eggplant', 'Dipper', 'Spectrum', 'Gummy Frog', 'Poison Dart', 'Aqua Plush', 'Hue Jester', 'Yellow Hug',
-            'Tropical', 'Pink Galaxy', 'Amalgam', 'Pepemint', 'Pumpkin', 'Red Menace', 'Sunset', 'Birmingham', 'Cold Heart', 'Red Pepple',
-            'Yellow Purp', 'Stripes', 'Barcelona', 'Emo Boi', 'Princess', 'Two Face', 'Hothead', 'Milano', 'Pepe La Rana', 'Toading...',
-            'Christmas', 'Marble', 'Pink Latex', 'X-Ray', 'Sketchy', 'Santa Pepe', 'Bavaria', 'Kung Fu Pepe', 'Midas Pepe', 'Donatello',
-            'Frozen', 'Ninja Mike', 'Puppy Pug', 'Raphael', 'Steel Frog', 'Magnate', 'Gucci Leap', 'Emerald Plush', 'Fifty Shades',
-            'Leonardo', 'Louis Vuittoad', 'Cozy Galaxy', 'Apex Predator' // Added from search
-        ].sort();
-
-        const backgrounds = [
-            'Black', 'Lavender', 'Aquamarine', 'Malachite', 'Jade Green', 'Sapphire', 'Mystic Pearl', 'Indigo Dye', 'Emerald', 'Electric Purple',
-            'Fandango', 'Pine Green', 'French Blue', 'Grape', 'Lemongrass', 'Strawberry', 'Caramel', 'Neon Blue', 'Orange', 'Pacific Cyan',
-            'Battleship Grey', 'Navy Blue', 'Copper', 'Cobalt Blue', 'Rosewood', 'Midnight Blue', 'Platinum', 'Turquoise', 'Chocolate',
-            'Light Olive', 'Mint Green', 'Steel Grey', 'Cappuccino', 'Persimmon', 'Satin Gold', 'Carrot Juice', 'Electric Indigo',
-            'Burgundy', 'Moonstone', 'Onyx Black', 'Hunter Green', 'Khaki Green', 'Dark Lilac', 'Pistachio', 'Amber', 'Silver Blue',
-            'Coral Red', 'Desert Sand', 'Ivory White', 'Cyberpunk', 'Chestnut', 'English Violet', 'Purple', 'Pacific Green',
-            'Shamrock Green', 'Sky Blue', 'Pure Gold', 'Raspberry', 'Azure Blue', 'Roman Silver', 'Electric Indigo', 'Orange' // Duplicates removed
-        ].sort();
-
-        const symbols = [
-            'Planet', 'Lotus Flower', 'Candy', 'Cupid’s Arrow', 'Car', 'Coconut', 'Kitsune', 'Cupid', 'Sumerian Bird', 'Sauron', 'Spanner',
-            'Alarm', 'Champagne', 'Diamond', 'High Heels', 'Totem Bear', 'Bubble Tea', 'Cash', 'Flower Tulip', 'Fluffy Wolf', 'Heart Balloon',
-            'Ink Pen', 'Blood Drop', 'Boat', 'Celtic Wolf', 'Cunning Fox', 'Eagle', 'Romantic Cake', 'Yogi Shaman', 'Candle', 'Flirty Message',
-            'Gamepad', 'Genie Lamp', 'Guitar', 'Inca Sun', 'Lingerie', 'Love Dove', 'Mafdet', 'Melon', 'Moon', 'Moon Cross', 'Okami Wolf',
-            'Owl', 'Palette', 'Star', 'Star Crown', 'Toilet', 'Watermelon', 'White Deer', 'Wolf Rage', 'Bell Pepper', 'Cactus', 'Cap',
-            'Celtic Cross', 'Cursor', 'Eikthyrnir', 'Fehu Rune', 'Flower Cross', 'Love Lock', 'Lovebirds', 'Mask', 'Patched Heart',
-            'Pearl', 'Pegasus', 'Pencil', 'Rook', 'Spirit Impala', 'Twin Peaks', 'Anchor', 'Carrot', 'Cat Mask', 'Chili Pepper', 'Clover',
-            'Dice', 'Fire', 'Firebird', 'Flamingo', 'Hand of God', 'Hermit Shell', 'Key', 'Ladybug', 'Like', 'Lovely Rain', 'Mountain Goat',
-            'Mountain Lion', 'Nordic Wolf', 'Paw'
-        ].sort();
-
-        const colorMap = {
-            'Aquamarine': '#7fffd4',
-            'Azure Blue': '#f0ffff',
-            'Battleship Grey': '#848482',
-            'Black': '#000000',
-            'Burgundy': '#800020',
-            'Caramel': '#ffd59a',
-            'Carrot Juice': '#f28500',
-            'Chestnut': '#954535',
-            'Chocolate': '#d2691e',
-            'Cobalt Blue': '#0047ab',
-            'Copper': '#b87333',
-            'Coral Red': '#ff4040',
-            'Cyberpunk': '#ff00ff',
-            'Dark Lilac': '#9c51b6',
-            'Desert Sand': '#edc9af',
-            'Electric Indigo': '#6f00ff',
-            'Electric Purple': '#bf00ff',
-            'Emerald': '#50c878',
-            'English Violet': '#563c5c',
-            'Fandango': '#de5285',
-            'French Blue': '#0072bb',
-            'Grape': '#6f2da8',
-            'Hunter Green': '#355e3b',
-            'Indigo Dye': '#00416a',
-            'Ivory White': '#fffff0',
-            'Jade Green': '#00a86b',
-            'Khaki Green': '#728639',
-            'Lavender': '#e6e6fa',
-            'Lemongrass': '#b0c69a',
-            'Light Olive': '#acbf60',
-            'Malachite': '#0bda51',
-            'Midnight Blue': '#191970',
-            'Mint Green': '#98fb98',
-            'Moonstone': '#3aafd9',
-            'Mystic Pearl': '#d65282',
-            'Navy Blue': '#000080',
-            'Neon Blue': '#39ff14',
-            'Onyx Black': '#353839',
-            'Orange': '#ffa500',
-            'Pacific Cyan': '#1ca9c9',
-            'Pacific Green': '#00a693',
-            'Persimmon': '#ec5800',
-            'Pine Green': '#01796f',
-            'Pistachio': '#93c572',
-            'Platinum': '#e5e4e2',
-            'Pure Gold': '#ffd700',
-            'Purple': '#800080',
-            'Raspberry': '#e30b5c',
-            'Roman Silver': '#838996',
-            'Rosewood': '#65000b',
-            'Satin Gold': '#cba135',
-            'Sapphire': '#0f52ba',
-            'Shamrock Green': '#009e60',
-            'Silver Blue': '#acd5e0',
-            'Sky Blue': '#87ceeb',
-            'Steel Grey': '#71797e',
-            'Strawberry': '#ff5a5f',
-            'Turquoise': '#40e0d0'
-        };
-
-        let selectedGift = '';
-        let selectedModel = '';
-        let selectedBackground = '';
-        let selectedSymbol = '';
-
-        function simulateLoading() {
-            const progress = document.querySelector('.progress');
-            let width = 0;
-            const interval = setInterval(() => {
-                width += Math.random() * 10 + 5;
-                progress.style.width = `${Math.min(width, 100)}%`;
-                if (width >= 100) {
-                    clearInterval(interval);
-                    setTimeout(() => {
-                        document.querySelector('.loading').style.display = 'none';
-                        document.querySelector('.main').style.display = 'flex';
-                        updatePreview();
-                    }, 500);
-                }
-            }, 150);
-        }
-
-        function openTab(tabName) {
-            document.querySelectorAll('.tab').forEach(tab => tab.style.display = 'none');
-            const selectedTab = document.getElementById(`${tabName}-tab`);
-            selectedTab.style.display = 'block';
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeTab() {
-            document.querySelectorAll('.tab').forEach(tab => tab.style.display = 'none');
-            document.body.style.overflow = 'auto';
-        }
-
-        function filterList(listId, value) {
-            const list = document.getElementById(listId);
-            const items = list.querySelectorAll('.list-item');
-            items.forEach(item => {
-                const name = item.querySelector('.item-name').textContent.toLowerCase();
-                item.style.display = name.includes(value.toLowerCase()) ? 'flex' : 'none';
-            });
-        }
-
-        function populateList(listId, items, type, isString = false) {
-            const list = document.getElementById(listId);
-            list.innerHTML = '';
-            items.forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'list-item';
-                const name = isString ? item : item.name;
-                const priceInfo = !isString && type === 'gift' ? `${item.price}<br><small style="color: rgba(255,255,255,0.6);">Floor: ${item.floorPrice}</small>` : 'N/A TON';
-                const iconContent = type === 'background' ? '🎨' : type === 'symbol' ? '✨' : type === 'model' ? '🧩' : '🎁';
-                div.innerHTML = `
-                    <span class="check-mark">☐</span>
-                    <div class="item-icon">${iconContent}</div>
-                    <div class="item-name">${name}</div>
-                    <div class="item-price">${priceInfo}</div>
-                `;
-                div.onclick = () => selectItem(div, type, name);
-                list.appendChild(div);
-            });
-        }
-
-        function selectItem(element, type, value) {
-            const listId = `${type}-list`;
-            document.querySelectorAll(`#${listId} .list-item`).forEach(it => {
-                it.classList.remove('selected');
-                it.querySelector('.check-mark').textContent = '☐';
-            });
-            element.classList.add('selected');
-            element.querySelector('.check-mark').textContent = '☑';
-            if (type === 'gift') selectedGift = value;
-            if (type === 'model') selectedModel = value;
-            if (type === 'background') selectedBackground = value;
-            if (type === 'symbol') selectedSymbol = value;
-            updatePreview();
-            setTimeout(closeTab, 300);
-        }
-
-        function updatePreview() {
-            document.getElementById('avatar').src = avatarUrl;
-            const nameEl = document.getElementById('name');
-            let displayName = fullName;
-            if (selectedGift) {
-                displayName += ` <span class="gift-status">[${selectedGift}${selectedModel ? ` (${selectedModel})` : ''}]</span>`;
-            }
-            nameEl.innerHTML = displayName;
-            document.getElementById('username').textContent = username;
-            document.getElementById('user-id').textContent = userId;
-            const symbolEl = document.getElementById('symbol');
-            symbolEl.textContent = selectedSymbol ? `✦ ${selectedSymbol}` : '';
-            symbolEl.style.display = selectedSymbol ? 'block' : 'none';
-            const preview = document.getElementById('preview');
-            const bgColor = colorMap[selectedBackground] || '#333333';
-            preview.style.backgroundColor = bgColor;
-        }
-
-        // Initialize lists with corrected IDs
-        populateList('gift-list', gifts, 'gift');
-        populateList('model-list', models, 'model', true);
-        populateList('background-list', backgrounds, 'background', true);
-        populateList('symbol-list', symbols, 'symbol', true);
-
-        // Close tab on outside click
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.tab') && !e.target.closest('.filter-button')) {
-                closeTab();
-            }
-        });
-
-        simulateLoading();
-    </script>
-</body>
-</html>
+  );
+}
