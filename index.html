@@ -1,240 +1,407 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enchanted Forest Visual Novel</title>
+    <title>Бесконечное Приключение</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            color: #333;
+            overflow: hidden;
+            background-color: black;
+            color: white;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            overflow: hidden;
+            width: 100vw;
+            font-family: 'PT Sans', sans-serif;
         }
 
-        .overlay {
-            position: fixed;
+        #splash {
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            color: white;
+            background-color: black;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 2em;
-            transition: opacity 1s ease;
+            font-size: 48px;
+            font-weight: bold;
+            opacity: 0;
+            animation: fadeIn 1s forwards;
             z-index: 10;
         }
 
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            to { opacity: 0; }
+        }
+
         #menu {
-            text-align: center;
-            position: relative;
-            width: 100%;
-            height: 100%;
-            display: flex;
+            display: none;
             flex-direction: column;
+            align-items: center;
             justify-content: center;
+            height: 100%;
+            width: 100%;
+            background: url('https://example.com/summer-bg.jpg') no-repeat center/cover; /* Замените на реальное изображение в стиле Бесконечного Лета */
+            position: relative;
+            text-shadow: 1px 1px 2px black;
         }
 
         #menu button {
-            margin: 10px;
-            padding: 10px 20px;
-            font-size: 1.2em;
+            margin: 20px;
+            padding: 15px 30px;
+            font-size: 24px;
+            background-color: rgba(255, 220, 0, 0.8);
+            border: 2px solid white;
+            border-radius: 10px;
             cursor: pointer;
+            color: black;
+            font-weight: bold;
         }
 
-        #bottom-left {
-            position: absolute;
-            bottom: 10px;
-            left: 10px;
+        #menu button:hover {
+            background-color: rgba(255, 133, 27, 0.8);
         }
 
-        #bottom-right {
+        #footer {
             position: absolute;
-            bottom: 10px;
-            right: 10px;
+            bottom: 20px;
+            width: 100%;
             display: flex;
-            gap: 10px;
+            justify-content: space-between;
+            padding: 0 20px;
         }
 
-        .icon {
-            width: 30px;
-            height: 30px;
-            background-color: #ccc; /* Placeholder for icons */
-            cursor: pointer;
-            border-radius: 50%;
+        #footer img {
+            width: 40px;
+            height: 40px;
+            margin: 0 10px;
+            filter: drop-shadow(1px 1px 2px black);
         }
 
         #game {
-            width: 100%;
+            display: none;
             height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 20px;
-            box-sizing: border-box;
+            width: 100%;
+            position: relative;
         }
 
-        #game-text {
-            font-size: 1.1em;
-            margin-bottom: 20px;
+        #background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+        }
+
+        #character {
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            height: 70%;
+            z-index: 1;
+            display: none;
+        }
+
+        #dialogue-box {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 30%;
+            background: rgba(0, 0, 0, 0.6);
+            border-top: 2px solid white;
+            padding: 20px;
+            box-sizing: border-box;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #name {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ffdc00;
+            margin-bottom: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 5px 10px;
+            border-radius: 5px;
+            width: fit-content;
+        }
+
+        #text {
+            font-size: 18px;
+            line-height: 1.5;
         }
 
         #choices {
-            display: flex;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
             flex-direction: column;
-            gap: 10px;
+            align-items: center;
+            z-index: 3;
+            width: 80%;
         }
 
         #choices button {
-            padding: 10px;
-            font-size: 1em;
+            margin: 10px 0;
+            padding: 15px;
+            font-size: 20px;
+            background: rgba(0, 116, 217, 0.8);
+            border: 2px solid white;
+            border-radius: 10px;
+            color: white;
             cursor: pointer;
+            width: 100%;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        #choices button:hover {
+            background: rgba(127, 219, 255, 0.8);
+        }
+
+        .fade-out {
+            animation: fadeOut 1s forwards;
+        }
+
+        .typewriter {
+            overflow: hidden;
+            white-space: pre-wrap;
+            animation: typing 2s steps(40, end) forwards;
+        }
+
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
         }
     </style>
 </head>
 <body>
-    <div id="splash" class="overlay">Zerchi Games</div>
-    <div id="menu" style="display: none;">
-        <button onclick="startGame()">Play</button>
-        <button onclick="showSettings()">Settings</button>
-        <div id="bottom-left">
-            <div class="icon" onclick="openLink('https://www.youtube.com/c/KuplinovPlay')" title="Kuplinov Play"></div>
-        </div>
-        <div id="bottom-right">
-            <div class="icon" onclick="openLink('https://twitter.com/example')" title="Twitter"></div>
-            <div class="icon" onclick="openLink('https://instagram.com/example')" title="Instagram"></div>
-            <div class="icon" onclick="openLink('https://t.me/example')" title="Telegram"></div>
+    <div id="splash">Zerchi Games</div>
+    <div id="menu">
+        <button id="play">Играть</button>
+        <button id="settings">Настройки</button>
+        <div id="footer">
+            <div id="left">
+                <a href="https://www.youtube.com/c/kuplinovplay" target="_blank">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/YouTube_full-color_icon_%282017%29.svg/159px-YouTube_full-color_icon_%282017%29.svg.png" alt="Kuplinov Play YouTube">
+                </a>
+            </div>
+            <div id="right">
+                <a href="https://vk.com/kuplinovplay" target="_blank">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/f/f3/VK_Compact_Logo_%282021-present%29.svg" alt="VK">
+                </a>
+                <a href="https://twitter.com/AllKuplinov" target="_blank">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6f/Logo_of_Twitter.svg" alt="Twitter">
+                </a>
+                <a href="https://www.instagram.com/dm.kuplinov/" target="_blank">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram">
+                </a>
+            </div>
         </div>
     </div>
-    <div id="game" style="display: none;">
-        <div id="game-text"></div>
+    <div id="game">
+        <div id="background"></div>
+        <img id="character" src="" alt="Character">
+        <div id="dialogue-box">
+            <div id="name"></div>
+            <div id="text"></div>
+        </div>
         <div id="choices"></div>
     </div>
 
     <script>
         const WebApp = window.Telegram.WebApp;
         WebApp.ready();
-
-        // Request fullscreen if not already
-        if (!WebApp.isFullscreen) {
+        if (WebApp.version >= '8.0') {
             WebApp.requestFullscreen();
+            WebApp.lockOrientation();  // Locks to portrait (upright)
         }
 
-        // Lock orientation if not locked (locks to current; assume user starts in portrait)
-        if (!WebApp.isOrientationLocked) {
-            WebApp.lockOrientation();
-        }
+        // Splash screen
+        const splash = document.getElementById('splash');
+        const menu = document.getElementById('menu');
+        const game = document.getElementById('game');
+        const background = document.getElementById('background');
+        const character = document.getElementById('character');
+        const nameEl = document.getElementById('name');
+        const textEl = document.getElementById('text');
+        const choicesDiv = document.getElementById('choices');
 
-        // Start device orientation tracking (optional, for monitoring)
-        WebApp.DeviceOrientation.start();
-
-        // Splash screen logic: show for 5 seconds, then fade out
         setTimeout(() => {
-            const splash = document.getElementById('splash');
-            splash.style.opacity = 0;
+            splash.classList.add('fade-out');
             setTimeout(() => {
                 splash.style.display = 'none';
-                document.getElementById('menu').style.display = 'flex';
-            }, 1000); // Fade duration
+                menu.style.display = 'flex';
+            }, 1000);
         }, 5000);
 
-        function openLink(url) {
-            WebApp.openLink(url);
-        }
-
-        function showSettings() {
-            alert('Settings: No options available yet. (e.g., Sound On/Off)');
-        }
-
-        function startGame() {
-            // Create darkening overlay for menu transition
-            const overlay = document.createElement('div');
-            overlay.className = 'overlay';
-            overlay.style.opacity = 0;
-            document.body.appendChild(overlay);
-            overlay.style.opacity = 1; // Fade in
+        // Menu
+        document.getElementById('play').addEventListener('click', () => {
+            menu.classList.add('fade-out');
             setTimeout(() => {
-                document.getElementById('menu').style.display = 'none';
-                overlay.remove();
-                document.getElementById('game').style.display = 'flex';
-                renderScene('start');
-            }, 1000); // Fade duration
-        }
+                menu.style.display = 'none';
+                game.style.display = 'block';
+                startGame();
+            }, 1000);
+        });
 
-        // Mini scenario: "Lost in the Enchanted Forest"
-        // Simple branching story with choices and endings.
+        document.getElementById('settings').addEventListener('click', () => {
+            alert('Настройки не реализованы в этой мини-версии.');
+        });
+
+        // Visual Novel Structure
         const scenes = {
             start: {
-                text: "You wake up in a dense, enchanted forest. The trees seem to whisper secrets, and mist swirls around your feet. Ahead, the path splits: one trail leads left into shadowy woods, the other right toward a faint glow.",
+                background: 'https://example.com/forest-bg.jpg', // Замените на реальное изображение леса в стиле аниме
+                dialog: [
+                    { name: '', text: 'Вы просыпаетесь в загадочном заколдованном лесу. Деревья шепчут секреты вокруг вас.' },
+                    { name: 'Рассказчик', text: 'Впереди путь раздваивается: яркая, солнечная тропа и тёмная, тенистая.' },
+                    { name: '', text: 'Что вы выберете?' }
+                ],
+                character: '',
                 choices: [
-                    { text: "Go left into the shadows", next: "left" },
-                    { text: "Go right toward the glow", next: "right" }
+                    { text: 'Пойти по яркой тропе', next: 'bright' },
+                    { text: 'Пойти по тёмной тропе', next: 'dark' }
                 ]
             },
-            left: {
-                text: "As you venture left, you stumble upon a rushing river blocking your path. The water looks deep, but you spot a rickety bridge. Alternatively, you could follow the riverbank upstream.",
+            bright: {
+                background: 'https://example.com/sunny-path-bg.jpg',
+                dialog: [
+                    { name: 'Фея', text: 'Привет, странник! Я добрая фея. Хочешь, я проведу тебя домой?' },
+                    { name: '', character: 'https://example.com/fairy-sprite.png' } // Показать спрайт феи
+                ],
                 choices: [
-                    { text: "Cross the bridge", next: "cross" },
-                    { text: "Follow the riverbank", next: "follow" }
+                    { text: 'Принять помощь', next: 'happyEnd' }
                 ]
             },
-            right: {
-                text: "Heading right, you encounter a snarling wolf guarding a clearing. It eyes you warily. Do you try to run past it or stand your ground and attempt to befriend it?",
+            dark: {
+                background: 'https://example.com/dark-path-bg.jpg',
+                dialog: [
+                    { name: '', text: 'Вы углубляетесь в тёмную тропу и внезапно сталкиваетесь с яростным волком.' },
+                    { name: 'Волк', text: 'Грррр!' },
+                    { name: '', character: 'https://example.com/wolf-sprite.png' }
+                ],
                 choices: [
-                    { text: "Run past the wolf", next: "run" },
-                    { text: "Stand ground and befriend", next: "befriend" }
+                    { text: 'Убежать', next: 'run' },
+                    { text: 'Сразиться с волком', next: 'fight' }
                 ]
-            },
-            cross: {
-                text: "You cautiously cross the bridge, but it collapses midway! You fall into the river and are swept away, eventually washing up in a distant village. You've escaped the forest, but with a few bruises. THE END.",
-                choices: []
-            },
-            follow: {
-                text: "Following the riverbank leads you to a hidden waterfall with a cave behind it. Inside, you find a treasure chest filled with gold and a map out of the forest. Success! THE END.",
-                choices: []
             },
             run: {
-                text: "You dash past the wolf, but it chases you relentlessly. Exhausted, you trip and fall, and the wolf catches up. Unfortunately, this is the end of your adventure. THE END.",
-                choices: []
+                background: 'https://example.com/lost-forest-bg.jpg',
+                dialog: [
+                    { name: '', text: 'Вы бежите изо всех сил, но лес кажется бесконечным. Вы потерялись навсегда.' }
+                ],
+                choices: [
+                    { text: 'Начать заново', next: 'start' }
+                ]
             },
-            befriend: {
-                text: "Standing your ground, you speak softly to the wolf. Miraculously, it calms down and guides you through the clearing to a safe exit from the forest. You've made a new friend! THE END.",
-                choices: []
+            fight: {
+                background: 'https://example.com/treasure-bg.jpg',
+                dialog: [
+                    { name: '', text: 'С мужеством вы сражаетесь с волком и побеждаете его.' },
+                    { name: '', text: 'За ним вы находите скрытый сундук с сокровищами!' }
+                ],
+                choices: [
+                    { text: 'Забрать сокровища и уйти домой', next: 'richEnd' }
+                ]
+            },
+            happyEnd: {
+                background: 'https://example.com/home-bg.jpg',
+                dialog: [
+                    { name: '', text: 'Фея безопасно выводит вас из леса. Вы возвращаетесь домой с чудесными воспоминаниями.' },
+                    { name: '', text: 'Конец.' }
+                ],
+                choices: [
+                    { text: 'Играть снова', next: 'start' }
+                ]
+            },
+            richEnd: {
+                background: 'https://example.com/rich-bg.jpg',
+                dialog: [
+                    { name: '', text: 'Вы забираете сокровища и становитесь богатым за пределами мечт.' },
+                    { name: '', text: 'Конец.' }
+                ],
+                choices: [
+                    { text: 'Играть снова', next: 'start' }
+                ]
             }
         };
 
-        function renderScene(sceneId) {
-            const scene = scenes[sceneId];
-            if (!scene) return;
+        let currentScene = null;
+        let dialogIndex = 0;
 
-            document.getElementById('game-text').innerText = scene.text;
-            const choicesDiv = document.getElementById('choices');
-            choicesDiv.innerHTML = '';
-
-            scene.choices.forEach(choice => {
-                const button = document.createElement('button');
-                button.innerText = choice.text;
-                button.onclick = () => renderScene(choice.next);
-                choicesDiv.appendChild(button);
-            });
-
-            if (scene.choices.length === 0) {
-                const restartButton = document.createElement('button');
-                restartButton.innerText = 'Restart';
-                restartButton.onclick = () => renderScene('start');
-                choicesDiv.appendChild(restartButton);
+        function showNextDialog() {
+            if (dialogIndex < currentScene.dialog.length) {
+                const line = currentScene.dialog[dialogIndex];
+                nameEl.innerText = line.name || '';
+                textEl.innerText = line.text || '';
+                textEl.classList.add('typewriter');
+                if (line.character !== undefined) {
+                    character.src = line.character || '';
+                    character.style.display = line.character ? 'block' : 'none';
+                }
+                dialogIndex++;
+            } else {
+                showChoices();
             }
         }
+
+        function showChoices() {
+            choicesDiv.innerHTML = '';
+            if (currentScene.choices) {
+                currentScene.choices.forEach(choice => {
+                    const btn = document.createElement('button');
+                    btn.innerText = choice.text;
+                    btn.addEventListener('click', () => {
+                        choicesDiv.style.display = 'none';
+                        showScene(choice.next);
+                    });
+                    choicesDiv.appendChild(btn);
+                });
+                choicesDiv.style.display = 'flex';
+            }
+        }
+
+        function showScene(sceneId) {
+            currentScene = scenes[sceneId];
+            background.style.backgroundImage = `url('${currentScene.background}')`;
+            character.style.display = 'none';
+            choicesDiv.style.display = 'none';
+            dialogIndex = 0;
+            showNextDialog();
+        }
+
+        function startGame() {
+            showScene('start');
+        }
+
+        // Advance on click
+        game.addEventListener('click', (e) => {
+            if (choicesDiv.style.display !== 'flex' && !e.target.closest('#choices')) {
+                textEl.classList.remove('typewriter');
+                showNextDialog();
+            }
+        });
     </script>
 </body>
 </html>
