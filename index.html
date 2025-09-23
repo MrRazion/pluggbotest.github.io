@@ -3,586 +3,505 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Music Listener WebApp</title>
+    <title>GiftChecker</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        /* Global styles inspired by Telegram: clean, blue accents, modern UI */
         body {
+            background-color: #000;
+            color: #fff;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f0f2f5; /* Light gray background like Telegram */
-            color: #000;
             display: flex;
             flex-direction: column;
+            align-items: center;
+            justify-content: center;
             height: 100vh;
             overflow: hidden;
         }
-
-        /* Liquid glass style: glassmorphism with blur, transparency, rounded corners */
-        .glass-container {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 20px;
-            margin: 20px auto;
-            width: 90%;
-            max-width: 600px;
-        }
-
-        /* Search bar: square with rounded corners on top */
-        #search-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 10;
-            background: rgba(255, 255, 255, 0.8); /* Semi-transparent for glass effect */
-            backdrop-filter: blur(5px);
-            padding: 10px;
-            border-bottom-left-radius: 20px;
-            border-bottom-right-radius: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        #search-input {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.5);
-            font-size: 16px;
-            outline: none;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Suggestions list */
-        #suggestions {
-            margin-top: 60px; /* Below search bar */
-            overflow-y: auto;
-            height: calc(100vh - 200px); /* Leave space for player */
-            padding: 10px;
-        }
-
-        .suggestion-item {
+        .loading {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            padding: 10px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(5px);
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .suggestion-item:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        .suggestion-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            margin-right: 15px;
-            object-fit: cover;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
-
-        .suggestion-text {
-            flex: 1;
-        }
-
-        .suggestion-title {
-            font-weight: bold;
-            font-size: 16px;
-            color: #000;
-        }
-
-        .suggestion-artist {
-            font-size: 14px;
-            color: #666;
-        }
-
-        /* Music player like Telegram core: bottom bar */
-        #player {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(10px);
-            padding: 10px;
-            display: none;
-            align-items: center;
-            border-top-left-radius: 20px;
-            border-top-right-radius: 20px;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        #player-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-
-        #player-info {
-            flex: 1;
-        }
-
-        #player-title {
-            font-size: 14px;
-            font-weight: bold;
-        }
-
-        #player-artist {
-            font-size: 12px;
-            color: #666;
-        }
-
-        #player-controls {
-            display: flex;
-            align-items: center;
-        }
-
-        #play-pause {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            margin-right: 10px;
-        }
-
-        #progress {
-            width: 100px;
-            height: 4px;
-            background: #ddd;
-            border-radius: 2px;
-            position: relative;
-        }
-
-        #progress-bar {
+            justify-content: center;
             height: 100%;
-            background: #1a73e8; /* Telegram blue */
+            width: 100%;
+        }
+        .loading-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .progress-bar {
+            width: 200px;
+            height: 20px;
+            background-color: #333;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .progress {
             width: 0;
-            border-radius: 2px;
+            height: 100%;
+            background-color: #fff;
+            transition: width 0.1s linear;
         }
-
-        #track-list {
+        .main {
             display: none;
-            margin-top: 60px;
-            padding: 10px;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+        .filters {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .filter-button {
+            background-color: #fff;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 16px;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(255,255,255,0.2);
+            transition: transform 0.2s;
+        }
+        .filter-button:hover {
+            transform: scale(1.05);
+        }
+        .arrow {
+            font-size: 12px;
+            margin-left: 5px;
+        }
+        .tab {
+            display: none;
+            position: absolute;
+            top: 60px;
+            background-color: #222;
+            border-radius: 20px;
+            padding: 20px;
+            width: 80%;
+            max-height: 60%;
             overflow-y: auto;
-            height: calc(100vh - 200px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
-
-        /* Additional styles for responsiveness */
-        @media (max-width: 600px) {
-            .glass-container {
-                width: 95%;
-                padding: 10px;
-            }
+        .tab-title {
+            font-size: 20px;
+            margin-bottom: 10px;
         }
-
-        /* Animations for liquid glass feel */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .tab-subtitle {
+            font-size: 14px;
+            margin-bottom: 10px;
         }
-
-        .suggestion-item {
-            animation: fadeIn 0.3s ease-in-out;
+        .search-input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: none;
+            margin-bottom: 10px;
+            background-color: #333;
+            color: #fff;
+        }
+        .list-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #444;
+            cursor: pointer;
+        }
+        .list-item.selected {
+            background-color: #444;
+        }
+        .check-mark {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        .item-icon {
+            width: 30px;
+            height: 30px;
+            background-color: #555;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .item-name {
+            flex: 1;
+        }
+        .item-price {
+            text-align: right;
+        }
+        .preview {
+            background-color: #333;
+            border-radius: 20px;
+            padding: 20px;
+            width: 80%;
+            max-width: 400px;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(255,255,255,0.1);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: #555;
+            margin: 0 auto 10px;
+            display: block;
+            overflow: hidden;
+        }
+        .name {
+            font-size: 20px;
+            text-align: center;
+            margin-bottom: 5px;
+        }
+        .username-id {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .bio {
+            background-color: rgba(0,0,0,0.5);
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        .gift-status {
+            margin-left: 5px;
+            font-size: 18px;
+        }
+        .symbol {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
         }
     </style>
 </head>
 <body>
-    <div id="search-container" class="glass-container">
-        <input type="text" id="search-input" placeholder="Search for artists or tracks...">
-    </div>
-    <div id="suggestions"></div>
-    <div id="track-list"></div>
-    <div id="player">
-        <img id="player-icon" src="" alt="Track Icon">
-        <div id="player-info">
-            <div id="player-title"></div>
-            <div id="player-artist"></div>
+    <div class="loading">
+        <div class="loading-title">GiftChecker</div>
+        <div class="progress-bar">
+            <div class="progress"></div>
         </div>
-        <div id="player-controls">
-            <button id="play-pause">▶️</button>
-            <div id="progress">
-                <div id="progress-bar"></div>
+    </div>
+    <div class="main">
+        <div class="filters">
+            <button class="filter-button" onclick="openTab('gifts')">Gifts <span class="arrow">▼▲</span></button>
+            <button class="filter-button" onclick="openTab('models')">Models <span class="arrow">▼▲</span></button>
+            <button class="filter-button" onclick="openTab('backgrounds')">Backgrounds <span class="arrow">▼▲</span></button>
+            <button class="filter-button" onclick="openTab('symbols')">Symbols <span class="arrow">▼▲</span></button>
+        </div>
+        <div id="gifts-tab" class="tab">
+            <div class="tab-title">Gifts</div>
+            <div class="tab-subtitle">Choose one</div>
+            <input type="text" class="search-input" placeholder="Find a gift" oninput="filterList('gifts-list', this.value)">
+            <div id="gifts-list" class="list"></div>
+        </div>
+        <div id="models-tab" class="tab">
+            <div class="tab-title">Models</div>
+            <div class="tab-subtitle">Choose one</div>
+            <input type="text" class="search-input" placeholder="Find a model" oninput="filterList('models-list', this.value)">
+            <div id="models-list" class="list"></div>
+        </div>
+        <div id="backgrounds-tab" class="tab">
+            <div class="tab-title">Backgrounds</div>
+            <div class="tab-subtitle">Choose one</div>
+            <input type="text" class="search-input" placeholder="Find a background" oninput="filterList('backgrounds-list', this.value)">
+            <div id="backgrounds-list" class="list"></div>
+        </div>
+        <div id="symbols-tab" class="tab">
+            <div class="tab-title">Symbols</div>
+            <div class="tab-subtitle">Choose one</div>
+            <input type="text" class="search-input" placeholder="Find a symbol" oninput="filterList('symbols-list', this.value)">
+            <div id="symbols-list" class="list"></div>
+        </div>
+        <div class="preview" id="preview">
+            <img id="avatar" class="avatar" src="" alt="Avatar">
+            <div class="name" id="name"></div>
+            <div class="username-id">
+                <div id="username"></div>
+                <div id="user-id"></div>
             </div>
+            <div class="bio" id="bio">Bio goes here (not fetchable via WebApp API, placeholder)</div>
+            <div class="symbol" id="symbol"></div>
         </div>
     </div>
-    <audio id="audio-player"></audio>
-
     <script>
-        // JavaScript for functionality
-        const searchInput = document.getElementById('search-input');
-        const suggestionsDiv = document.getElementById('suggestions');
-        const trackListDiv = document.getElementById('track-list');
-        const player = document.getElementById('player');
-        const playerIcon = document.getElementById('player-icon');
-        const playerTitle = document.getElementById('player-title');
-        const playerArtist = document.getElementById('player-artist');
-        const playPauseBtn = document.getElementById('play-pause');
-        const progressBar = document.getElementById('progress-bar');
-        const audio = document.getElementById('audio-player');
+        const tg = window.Telegram.WebApp;
+        tg.ready();
 
-        let currentTrack = null;
-        let isPlaying = false;
-        let debounceTimer;
+        const user = tg.initDataUnsafe.user || { first_name: 'Test', last_name: 'User', username: 'testuser', id: 123456, photo_url: '' };
+        const avatarUrl = user.photo_url || 'https://placehold.co/100x100';
+        const fullName = `${user.first_name} ${user.last_name || ''}`.trim();
+        const username = `@${user.username || 'unknown'}`;
+        const userId = `Telegram User ID: ${user.id}`;
+        const bio = 'Your Telegram bio (cannot be fetched via WebApp, use placeholder or backend bot)';
 
-        // Debounce function for search input
-        function debounce(func, delay) {
-            return function(...args) {
-                clearTimeout(debounceTimer);
-                debounceTimer = setTimeout(() => func.apply(this, args), delay);
-            };
-        }
+        // Hardcoded lists from scraped data
+        const gifts = [
+            {name: 'Artisan Bricks', slug: 'artisanbrick', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Astral Shards', slug: 'astralshard', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'B-Day Candles', slug: 'bdaycandle', floorPrice: 'N/A', price: 'N/A'},
+            // Add all from the list, to make large code
+            {name: 'Berry Boxes', slug: 'berrybox', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Big Years', slug: 'bigyear', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Bonded Rings', slug: 'bondedring', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Bow Ties', slug: 'bowtie', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Bunny Muffins', slug: 'bunnymuffin', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Candy Canes', slug: 'candycane', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Cookie Hearts', slug: 'cookieheart', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Crystal Balls', slug: 'crystalball', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Cupid Charms', slug: 'cupidcharm', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Desk Calendars', slug: 'deskcalendar', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Diamond Rings', slug: 'diamondring', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Durov’s Caps', slug: 'durovscap', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Easter Eggs', slug: 'easteregg', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Electric Skulls', slug: 'electricskull', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Eternal Candles', slug: 'eternalcandle', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Eternal Roses', slug: 'eternalrose', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Evil Eyes', slug: 'evileye', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Flying Brooms', slug: 'flyingbroom', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Gem Signets', slug: 'gemsignet', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Genie Lamps', slug: 'genielamp', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Ginger Cookies', slug: 'gingercookie', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Hanging Stars', slug: 'hangingstar', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Heart Lockets', slug: 'heartlocket', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Heroic Helmets', slug: 'heroichelmet', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Hex Pots', slug: 'hexpot', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Holiday Drinks', slug: 'holidaydrink', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Homemade Cakes', slug: 'homemadecake', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Hypno Lollipops', slug: 'hypnolollipop', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Input Keys', slug: 'inputkey', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Ion Gems', slug: 'iongem', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Ionic Dryers', slug: 'ionicdryer', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Jacks-in-the-Box', slug: 'jackinthebox', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Jelly Bunnies', slug: 'jellybunny', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Jester Hats', slug: 'jesterhat', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Jingle Bells', slug: 'jinglebells', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Jolly Chimps', slug: 'jollychimp', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Joyful Bundles', slug: 'joyfulbundle', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Kissed Frogs', slug: 'kissedfrog', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Light Swords', slug: 'lightsword', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Lol Pops', slug: 'lolpop', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Loot Bags', slug: 'lootbag', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Love Candles', slug: 'lovecandle', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Love Potions', slug: 'lovepotion', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Low Riders', slug: 'lowrider', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Lunar Snakes', slug: 'lunarsnake', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Lush Bouquets', slug: 'lushbouquet', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Mad Pumpkins', slug: 'madpumpkin', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Magic Potions', slug: 'magicpotion', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Mighty Arms', slug: 'mightyarm', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Mini Oscars', slug: 'minioscar', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Moon Pendants', slug: 'moonpendant', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Nail Bracelets', slug: 'nailbracelet', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Neko Helmets', slug: 'nekohelmet', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Party Sparklers', slug: 'partysparkler', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Perfume Bottles', slug: 'perfumebottle', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Pet Snakes', slug: 'petsnake', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Plush Pepes', slug: 'plushpepe', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Precious Peaches', slug: 'preciouspeach', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Record Players', slug: 'recordplayer', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Restless Jars', slug: 'restlessjar', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Sakura Flowers', slug: 'sakuraflower', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Santa Hats', slug: 'santahat', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Scared Cats', slug: 'scaredcat', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Sharp Tongues', slug: 'sharptongue', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Signet Rings', slug: 'signetring', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Skull Flowers', slug: 'skullflower', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Sleigh Bells', slug: 'sleighbell', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Snake Boxes', slug: 'snakebox', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Snoop Cigars', slug: 'snoopcigar', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Snoop Doggs', slug: 'snoopdogg', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Snow Globes', slug: 'snowglobe', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Snow Mittens', slug: 'snowmittens', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Spiced Wines', slug: 'spicedwine', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Spy Agarics', slug: 'spyagaric', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Star Notepads', slug: 'starnotepad', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Stellar Rockets', slug: 'stellarrocket', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Swag Bags', slug: 'swagbag', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Swiss Watches', slug: 'swisswatch', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Tama Gadgets', slug: 'tamagadget', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Top Hats', slug: 'tophat', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Toy Bears', slug: 'toybear', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Trapped Hearts', slug: 'trappedheart', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Valentine Boxes', slug: 'valentinebox', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Vintage Cigars', slug: 'vintagecigar', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Voodoo Dolls', slug: 'voodoodoll', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Westside Signs', slug: 'westsidesign', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Whip Cupcakes', slug: 'whipcupcake', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Winter Wreaths', slug: 'winterwreath', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Witch Hats', slug: 'witchhat', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Xmas Stockings', slug: 'xmasstocking', floorPrice: 'N/A', price: 'N/A'}
+        ].sort((a, b) => a.name.localeCompare(b.name));
 
-        // Fetch suggestions from Deezer API (mixed artists and tracks)
-        async function fetchSuggestions(query) {
-            if (!query) {
-                suggestionsDiv.innerHTML = '';
-                trackListDiv.style.display = 'none';
-                return;
-            }
+        const models = [
+            'Spectrum', 'Gummy Frog', 'Poison Dart', 'Aqua Plush', 'Eggplant', 'Hue Jester', 'Polka Dots', 'Yellow Hug', 'Tropical', 'Pink Galaxy', 'Amalgam', 'Pepemint', 'Pumpkin', 'Red Menace', 'Sunset', 'Birmingham', 'Cold Heart', 'Red Pepple', 'Yellow Purp', 'Stripes', 'Barcelona', 'Emo Boi', 'Princess', 'Two Face', 'Hothead', 'Milano', 'Pepe La Rana', 'Toading...', 'Christmas', 'Marble', 'Pink Latex', 'X-Ray', 'Sketchy', 'Santa Pepe', 'Bavaria', 'Kung Fu Pepe', 'Midas Pepe', 'Donatello', 'Frozen', 'Ninja Mike', 'Puppy Pug', 'Raphael', 'Steel Frog', 'Magnate', 'Gucci Leap', 'Emerald Plush', 'Fifty Shades', 'Leonardo', 'Louis Vuittoad', 'Cozy Galaxy'
+        ].sort();
 
-            try {
-                // Fetch tracks
-                const trackRes = await fetch(`https://api.deezer.com/search/track?q=${encodeURIComponent(query)}&limit=10`);
-                const trackData = await trackRes.json();
-                const tracks = trackData.data || [];
+        const backgrounds = [
+            'Jade Green', 'Sapphire', 'Mystic Pearl', 'Indigo Dye', 'Emerald', 'Electric Purple', 'Fandango', 'Pine Green', 'French Blue', 'Grape', 'Lemongrass', 'Strawberry', 'Caramel', 'Malachite', 'Neon Blue', 'Orange', 'Pacific Cyan', 'Battleship Grey', 'Navy Blue', 'Copper', 'Lavender', 'Cobalt Blue', 'Rosewood', 'Midnight Blue', 'Platinum', 'Turquoise', 'Chocolate', 'Light Olive', 'Mint Green', 'Steel Grey', 'Cappuccino', 'Persimmon', 'Satin Gold', 'Carrot Juice', 'Electric Indigo', 'Burgundy', 'Moonstone', 'Onyx Black', 'Black', 'Hunter Green', 'Khaki Green', 'Dark Lilac', 'Pistachio', 'Amber', 'Silver Blue', 'Coral Red', 'Desert Sand', 'Ivory White', 'Cyberpunk', 'Chestnut', 'English Violet', 'Aquamarine', 'Purple', 'Pacific Green', 'Shamrock Green', 'Sky Blue', 'Pure Gold', 'Raspberry', 'Azure Blue', 'Roman Silver'
+        ].sort();
 
-                // Fetch artists
-                const artistRes = await fetch(`https://api.deezer.com/search/artist?q=${encodeURIComponent(query)}&limit=10`);
-                const artistData = await artistRes.json();
-                const artists = artistData.data || [];
+        const symbols = [
+            'Cupid’s Arrow', 'Car', 'Coconut', 'Kitsune', 'Cupid', 'Sumerian Bird', 'Sauron', 'Spanner', 'Alarm', 'Champagne', 'Diamond', 'High Heels', 'Totem Bear', 'Bubble Tea', 'Cash', 'Flower Tulip', 'Fluffy Wolf', 'Heart Balloon', 'Ink Pen', 'Blood Drop', 'Boat', 'Celtic Wolf', 'Cunning Fox', 'Eagle', 'Romantic Cake', 'Yogi Shaman', 'Candle', 'Flirty Message', 'Gamepad', 'Genie Lamp', 'Guitar', 'Inca Sun', 'Lingerie', 'Love Dove', 'Mafdet', 'Melon', 'Moon', 'Moon Cross', 'Okami Wolf', 'Owl', 'Palette', 'Planet', 'Star', 'Star Crown', 'Toilet', 'Watermelon', 'White Deer', 'Wolf Rage', 'Bell Pepper', 'Cactus', 'Cap', 'Celtic Cross', 'Cursor', 'Eikthyrnir', 'Fehu Rune', 'Flower Cross', 'Love Lock', 'Lovebirds', 'Mask', 'Patched Heart', 'Pearl', 'Pegasus', 'Pencil', 'Rook', 'Spirit Impala', 'Twin Peaks', 'Anchor', 'Carrot', 'Cat Mask', 'Chili Pepper', 'Clover', 'Dice', 'Fire', 'Firebird', 'Flamingo', 'Hand of God', 'Hermit Shell', 'Key', 'Ladybug', 'Like', 'Lovely Rain', 'Mountain Goat', 'Mountain Lion', 'Nordic Wolf', 'Paw'
+        ].sort();
 
-                // Display mixed suggestions
-                displaySuggestions(tracks, artists);
-            } catch (error) {
-                console.error('Error fetching suggestions:', error);
-                suggestionsDiv.innerHTML = '<p>Error loading suggestions. Please try again.</p>';
-            }
-        }
+        // Color map for backgrounds (approximate hex colors)
+        const colorMap = {
+            'Aquamarine': '#7FFFD4',
+            'Azure Blue': '#007FFF',
+            'Battleship Grey': '#848482',
+            'Black': '#000000',
+            'Burgundy': '#800020',
+            'Caramel': '#FFD59A',
+            'Carrot Juice': '#F28500',
+            'Chestnut': '#954535',
+            'Chocolate': '#D2691E',
+            'Cobalt Blue': '#0047AB',
+            'Copper': '#B87333',
+            'Coral Red': '#FF4040',
+            'Cyberpunk': '#FF00FF',
+            'Dark Lilac': '#9C51B6',
+            'Desert Sand': '#EDC9AF',
+            'Electric Indigo': '#6F00FF',
+            'Electric Purple': '#BF00FF',
+            'Emerald': '#50C878',
+            'English Violet': '#563C5C',
+            'Fandango': '#DE5285',
+            'French Blue': '#0072BB',
+            'Grape': '#6F2DA8',
+            'Hunter Green': '#355E3B',
+            'Indigo Dye': '#00416A',
+            'Ivory White': '#FFFFF0',
+            'Jade Green': '#00A86B',
+            'Khaki Green': '#728639',
+            'Lavender': '#E6E6FA',
+            'Lemongrass': '#B0C69A',
+            'Light Olive': '#ACBF60',
+            'Malachite': '#0BDA51',
+            'Midnight Blue': '#191970',
+            'Mint Green': '#98FB98',
+            'Moonstone': '#3AAFD9',
+            'Mystic Pearl': '#D65282',
+            'Navy Blue': '#000080',
+            'Neon Blue': '#00FFFF',
+            'Onyx Black': '#353839',
+            'Orange': '#FFA500',
+            'Pacific Cyan': '#1CA9C9',
+            'Pacific Green': '#00A693',
+            'Persimmon': '#EC5800',
+            'Pine Green': '#01796F',
+            'Pistachio': '#93C572',
+            'Platinum': '#E5E4E2',
+            'Pure Gold': '#FFD700',
+            'Purple': '#800080',
+            'Raspberry': '#E30B5C',
+            'Roman Silver': '#838996',
+            'Rosewood': '#65000B',
+            'Satin Gold': '#CBA135',
+            'Sapphire': '#0F52BA',
+            'Shamrock Green': '#009E60',
+            'Silver Blue': '#5A8DAA',
+            'Sky Blue': '#87CEEB',
+            'Steel Grey': '#71797E',
+            'Strawberry': '#FF5A5F',
+            'Turquoise': '#40E0D0',
+            // Add more if needed
+        };
 
-        // Display suggestions in list
-        function displaySuggestions(tracks, artists) {
-            suggestionsDiv.innerHTML = '';
-            trackListDiv.style.display = 'none';
+        let selectedGift = '';
+        let selectedModel = '';
+        let selectedBackground = '';
+        let selectedSymbol = '';
 
-            // Add artists first
-            artists.forEach(artist => {
-                const item = createSuggestionItem(artist.picture_medium, artist.name, 'Artist', true, artist);
-                suggestionsDiv.appendChild(item);
-            });
-
-            // Then tracks
-            tracks.forEach(track => {
-                const item = createSuggestionItem(track.album.cover_medium, track.title, track.artist.name);
-                suggestionsDiv.appendChild(item);
-            });
-
-            if (tracks.length === 0 && artists.length === 0) {
-                suggestionsDiv.innerHTML = '<p>No results found.</p>';
-            }
-        }
-
-        // Create suggestion item element
-        function createSuggestionItem(iconSrc, title, artist, isArtist = false, data) {
-            const div = document.createElement('div');
-            div.classList.add('suggestion-item');
-
-            const img = document.createElement('img');
-            img.src = iconSrc || 'https://via.placeholder.com/50'; // Fallback icon
-            img.classList.add('suggestion-icon');
-            img.alt = title;
-
-            const textDiv = document.createElement('div');
-            textDiv.classList.add('suggestion-text');
-
-            const titleSpan = document.createElement('span');
-            titleSpan.classList.add('suggestion-title');
-            titleSpan.textContent = title;
-
-            const artistSpan = document.createElement('span');
-            artistSpan.classList.add('suggestion-artist');
-            artistSpan.textContent = artist;
-
-            textDiv.appendChild(titleSpan);
-            textDiv.appendChild(artistSpan);
-
-            div.appendChild(img);
-            div.appendChild(textDiv);
-
-            // Click handler
-            div.addEventListener('click', () => {
-                if (isArtist) {
-                    // If artist, fetch and show tracks by artist
-                    fetchArtistTracks(data.name);
-                } else {
-                    // If track, play it
-                    playTrack({ title, artist: { name: artist }, preview: data.preview, album: { cover_medium: iconSrc } });
+        function simulateLoading() {
+            const progress = document.querySelector('.progress');
+            let width = 0;
+            const interval = setInterval(() => {
+                width += 10;
+                progress.style.width = `${width}%`;
+                if (width >= 100) {
+                    clearInterval(interval);
+                    document.querySelector('.loading').style.display = 'none';
+                    document.querySelector('.main').style.display = 'flex';
+                    updatePreview();
                 }
+            }, 200);
+            // During loading, we "check" user data (already done)
+        }
+
+        function openTab(tabName) {
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.style.display = 'none');
+            const selectedTab = document.getElementById(`${tabName}-tab`);
+            selectedTab.style.display = 'block';
+        }
+
+        function filterList(listId, value) {
+            const list = document.getElementById(listId);
+            const items = list.querySelectorAll('.list-item');
+            items.forEach(item => {
+                const name = item.querySelector('.item-name').textContent.toLowerCase();
+                item.style.display = name.includes(value.toLowerCase()) ? 'flex' : 'none';
             });
-
-            return div;
         }
 
-        // Fetch tracks for an artist
-        async function fetchArtistTracks(artistName) {
-            try {
-                const res = await fetch(`https://api.deezer.com/search/track?q=artist:"${encodeURIComponent(artistName)}"&limit=50`);
-                const data = await res.json();
-                const tracks = data.data || [];
-
-                displayTrackList(tracks);
-            } catch (error) {
-                console.error('Error fetching artist tracks:', error);
-                suggestionsDiv.innerHTML = '<p>Error loading tracks.</p>';
-            }
-        }
-
-        // Display list of tracks (many tracks with similar name or by artist)
-        function displayTrackList(tracks) {
-            suggestionsDiv.style.display = 'none';
-            trackListDiv.style.display = 'block';
-            trackListDiv.innerHTML = '';
-
-            tracks.forEach(track => {
-                const item = createSuggestionItem(track.album.cover_medium, track.title, track.artist.name, false, track);
-                trackListDiv.appendChild(item);
+        function populateList(listId, items, type) {
+            const list = document.getElementById(listId);
+            list.innerHTML = '';
+            items.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'list-item';
+                div.innerHTML = `
+                    <span class="check-mark">☐</span>
+                    <div class="item-icon"></div>
+                    <div class="item-name">${typeof item === 'string' ? item : item.name}</div>
+                    <div class="item-price">
+                        ${type === 'gifts' ? `${item.price} TON<br>Floor: ${item.floorPrice} TON` : ''}
+                    </div>
+                `;
+                div.onclick = () => {
+                    list.querySelectorAll('.list-item').forEach(it => it.classList.remove('selected'));
+                    div.classList.add('selected');
+                    div.querySelector('.check-mark').textContent = '☑';
+                    if (type === 'gifts') selectedGift = typeof item === 'string' ? item : item.name;
+                    else if (type === 'models') selectedModel = item;
+                    else if (type === 'backgrounds') selectedBackground = item;
+                    else if (type === 'symbols') selectedSymbol = item;
+                    updatePreview();
+                    openTab('none'); // Close tab
+                };
+                list.appendChild(div);
             });
-
-            if (tracks.length === 0) {
-                trackListDiv.innerHTML = '<p>No tracks found.</p>';
-            }
         }
 
-        // Play a track (using preview URL from Deezer)
-        function playTrack(track) {
-            currentTrack = track;
-            audio.src = track.preview; // 30s preview, as full tracks require premium
-            audio.play();
-            isPlaying = true;
-            updatePlayerUI();
-            player.style.display = 'flex';
-            playPauseBtn.textContent = '⏸️';
+        function updatePreview() {
+            document.getElementById('avatar').src = avatarUrl;
+            document.getElementById('name').innerHTML = `${fullName} <span class="gift-status">${selectedGift ? `[${selectedGift}${selectedModel ? ' (' + selectedModel + ')' : ''}]` : ''}</span>`;
+            document.getElementById('username').textContent = username;
+            document.getElementById('user-id').textContent = userId;
+            document.getElementById('bio').textContent = bio;
+            document.getElementById('symbol').textContent = selectedSymbol ? `[${selectedSymbol}]` : '';
+            const preview = document.getElementById('preview');
+            preview.style.backgroundColor = colorMap[selectedBackground] || '#333';
+            // For real image, you could add fetch here, but omitted due to limitations
         }
 
-        // Update player UI
-        function updatePlayerUI() {
-            playerIcon.src = currentTrack.album.cover_medium || 'https://via.placeholder.com/40';
-            playerTitle.textContent = currentTrack.title;
-            playerArtist.textContent = currentTrack.artist.name;
-        }
+        // Initialize lists
+        populateList('gifts-list', gifts, 'gifts');
+        populateList('models-list', models, 'models');
+        populateList('backgrounds-list', backgrounds, 'backgrounds');
+        populateList('symbols-list', symbols, 'symbols');
 
-        // Audio event listeners
-        audio.addEventListener('timeupdate', () => {
-            const progress = (audio.currentTime / audio.duration) * 100;
-            progressBar.style.width = `${progress}%`;
-        });
-
-        audio.addEventListener('ended', () => {
-            isPlaying = false;
-            playPauseBtn.textContent = '▶️';
-            progressBar.style.width = '0%';
-        });
-
-        // Play/pause button
-        playPauseBtn.addEventListener('click', () => {
-            if (isPlaying) {
-                audio.pause();
-                playPauseBtn.textContent = '▶️';
-            } else {
-                audio.play();
-                playPauseBtn.textContent = '⏸️';
-            }
-            isPlaying = !isPlaying;
-        });
-
-        // Search input listener with debounce
-        searchInput.addEventListener('input', debounce(() => {
-            const query = searchInput.value.trim();
-            fetchSuggestions(query);
-        }, 300));
-
-        // Back to suggestions if needed (optional feature)
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && trackListDiv.style.display === 'block') {
-                trackListDiv.style.display = 'none';
-                suggestionsDiv.style.display = 'block';
-            }
-        });
-
-        // Initialize Telegram WebApp if in Telegram context
-        if (window.Telegram && window.Telegram.WebApp) {
-            Telegram.WebApp.ready();
-            Telegram.WebApp.expand();
-            // Additional Telegram integrations if needed, like theme matching
-            const theme = Telegram.WebApp.themeParams;
-            if (theme) {
-                document.body.style.backgroundColor = theme.bg_color || '#f0f2f5';
-                // More theme adjustments...
-            }
-        }
-
-        // Additional functionality: Queue system (to make it more pumped)
-        let queue = [];
-        function addToQueue(track) {
-            queue.push(track);
-            if (!currentTrack) {
-                playNext();
-            }
-        }
-
-        function playNext() {
-            if (queue.length > 0) {
-                const nextTrack = queue.shift();
-                playTrack(nextTrack);
-            } else {
-                player.style.display = 'none';
-            }
-        }
-
-        audio.addEventListener('ended', playNext);
-
-        // Modify click handler to add to queue instead of direct play
-        // But for simplicity, keep direct play, add queue as optional
-
-        // More features: Volume control
-        const volumeSlider = document.createElement('input');
-        volumeSlider.type = 'range';
-        volumeSlider.min = 0;
-        volumeSlider.max = 1;
-        volumeSlider.step = 0.01;
-        volumeSlider.value = 1;
-        volumeSlider.style.width = '50px';
-        volumeSlider.addEventListener('input', () => {
-            audio.volume = parseFloat(volumeSlider.value);
-        });
-        document.getElementById('player-controls').appendChild(volumeSlider);
-
-        // Search history (local storage)
-        function saveSearch(query) {
-            let history = JSON.parse(localStorage.getItem('searchHistory')) || [];
-            if (!history.includes(query)) {
-                history.push(query);
-                localStorage.setItem('searchHistory', JSON.stringify(history));
-            }
-        }
-
-        // On search, save if enter pressed
-        searchInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                saveSearch(searchInput.value.trim());
-            }
-        });
-
-        // Display recent searches when input empty (extra feature)
-        function displayRecentSearches() {
-            const history = JSON.parse(localStorage.getItem('searchHistory')) || [];
-            if (history.length > 0) {
-                suggestionsDiv.innerHTML = '<h3>Recent Searches</h3>';
-                history.reverse().slice(0, 5).forEach(query => {
-                    const item = document.createElement('div');
-                    item.classList.add('suggestion-item');
-                    item.textContent = query;
-                    item.addEventListener('click', () => {
-                        searchInput.value = query;
-                        fetchSuggestions(query);
-                    });
-                    suggestionsDiv.appendChild(item);
-                });
-            }
-        }
-
-        searchInput.addEventListener('focus', () => {
-            if (!searchInput.value) {
-                displayRecentSearches();
-            }
-        });
-
-        // Error handling for API
-        function handleApiError(error) {
-            suggestionsDiv.innerHTML = `<p>Error: ${error.message}. Please check your connection.</p>`;
-        }
-
-        // Offline detection
-        window.addEventListener('offline', () => {
-            suggestionsDiv.innerHTML = '<p>You are offline. Connect to the internet to search music.</p>';
-        });
-
-        // More styling adjustments for liquid glass
-        document.querySelectorAll('.glass-container').forEach(el => {
-            el.style.transition = 'all 0.3s ease';
-        });
-
-        // Pumped functionality: Random playlist generator
-        async function generateRandomPlaylist() {
-            try {
-                const res = await fetch('https://api.deezer.com/playlist/908622995'); // Example popular playlist
-                const data = await res.json();
-                const tracks = data.tracks.data;
-                queue = [...tracks];
-                playNext();
-            } catch (error) {
-                console.error('Error generating playlist:', error);
-            }
-        }
-
-        // Add a button for random playlist
-        const randomBtn = document.createElement('button');
-        randomBtn.textContent = 'Random Playlist';
-        randomBtn.style.margin = '10px';
-        randomBtn.style.padding = '10px';
-        randomBtn.style.borderRadius = '10px';
-        randomBtn.style.background = '#1a73e8';
-        randomBtn.style.color = '#fff';
-        randomBtn.style.border = 'none';
-        randomBtn.style.cursor = 'pointer';
-        randomBtn.addEventListener('click', generateRandomPlaylist);
-        document.body.insertBefore(randomBtn, suggestionsDiv);
-
-        // Even more: Share track to Telegram
-        function shareTrack() {
-            if (currentTrack && Telegram.WebApp) {
-                Telegram.WebApp.shareUrl(`https://deezer.com/track/${currentTrack.id}`, `Listen to ${currentTrack.title} by ${currentTrack.artist.name}`);
-            }
-        }
-
-        const shareBtn = document.createElement('button');
-        shareBtn.textContent = 'Share';
-        shareBtn.style.fontSize = '20px';
-        shareBtn.style.background = 'none';
-        shareBtn.style.border = 'none';
-        shareBtn.style.cursor = 'pointer';
-        shareBtn.addEventListener('click', shareTrack);
-        document.getElementById('player-controls').appendChild(shareBtn);
-
-        // Final touches: Loading spinner
-        function showLoading() {
-            suggestionsDiv.innerHTML = '<p>Loading...</p>';
-        }
-
-        // Wrap fetch calls with loading
-        const originalFetchSuggestions = fetchSuggestions;
-        fetchSuggestions = async (query) => {
-            showLoading();
-            await originalFetchSuggestions(query);
-        };
-
-        const originalFetchArtistTracks = fetchArtistTracks;
-        fetchArtistTracks = async (artistName) => {
-            showLoading();
-            await originalFetchArtistTracks(artistName);
-        };
-
-        console.log('Music Listener WebApp initialized.');
+        simulateLoading();
     </script>
 </body>
 </html>
