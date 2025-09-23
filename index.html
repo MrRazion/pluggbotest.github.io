@@ -13,7 +13,7 @@
             box-sizing: border-box;
         }
         body {
-            background: linear-gradient(135deg, #000000 0%, #0a0a23 50%, #001133 100%);
+            background: #000000;
             color: #ffffff;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
@@ -33,8 +33,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at 20% 80%, rgba(0, 123, 255, 0.1) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 20%, rgba(0, 123, 255, 0.05) 0%, transparent 50%);
+            background: radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
             pointer-events: none;
             z-index: 0;
         }
@@ -57,7 +57,7 @@
         }
         @keyframes glow {
             from { text-shadow: 0 0 20px rgba(255, 255, 255, 0.3); }
-            to { text-shadow: 0 0 30px rgba(0, 123, 255, 0.5); }
+            to { text-shadow: 0 0 30px rgba(255, 255, 255, 0.5); }
         }
         .progress-container {
             background: rgba(255, 255, 255, 0.05);
@@ -81,7 +81,7 @@
         .progress {
             width: 0;
             height: 100%;
-            background: linear-gradient(90deg, #ffffff 0%, #007bff 100%);
+            background: linear-gradient(90deg, #ffffff 0%, #cccccc 100%);
             transition: width 0.3s ease;
             border-radius: 11px;
             position: relative;
@@ -120,7 +120,7 @@
             flex-wrap: wrap;
             position: sticky;
             top: 0;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.8);
             padding: 10px;
             border-radius: 20px;
             backdrop-filter: blur(20px);
@@ -159,8 +159,8 @@
         }
         .filter-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 123, 255, 0.3);
-            border-color: rgba(0, 123, 255, 0.5);
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
         }
         .arrow {
             font-size: 12px;
@@ -176,7 +176,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.9);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 25px;
             padding: 30px;
@@ -234,8 +234,8 @@
         }
         .search-input:focus {
             outline: none;
-            border-color: rgba(0, 123, 255, 0.5);
-            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.05);
         }
         .list {
             display: flex;
@@ -260,8 +260,8 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
         .list-item.selected {
-            background: rgba(0, 123, 255, 0.2);
-            border-color: rgba(0, 123, 255, 0.3);
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
         }
         .check-mark {
             margin-right: 15px;
@@ -270,19 +270,19 @@
             transition: color 0.3s;
         }
         .list-item.selected .check-mark {
-            color: #00ff88;
+            color: #ffffff;
         }
         .item-icon {
             width: 40px;
             height: 40px;
-            background: linear-gradient(135deg, #007bff, #00d4ff);
+            background: linear-gradient(135deg, #333333, #555555);
             border-radius: 50%;
             margin-right: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 20px;
-            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
         .item-name {
             flex: 1;
@@ -293,9 +293,6 @@
             font-size: 14px;
             color: rgba(255, 255, 255, 0.8);
             font-weight: 600;
-        }
-        .item-price br {
-            display: none;
         }
         .preview {
             background: rgba(255, 255, 255, 0.05);
@@ -313,7 +310,7 @@
         }
         .preview:hover {
             transform: scale(1.02);
-            box-shadow: 0 25px 70px rgba(0, 123, 255, 0.2);
+            box-shadow: 0 25px 70px rgba(255, 255, 255, 0.1);
         }
         .avatar {
             width: 120px;
@@ -339,7 +336,7 @@
         }
         .gift-status {
             font-size: 18px;
-            color: #00ff88;
+            color: #dddddd;
             font-weight: 500;
         }
         .username-id {
@@ -349,25 +346,13 @@
             font-size: 14px;
             color: rgba(255, 255, 255, 0.8);
         }
-        .bio {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 15px;
-            padding: 15px;
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            text-align: center;
-            line-height: 1.4;
-        }
         .symbol {
             position: absolute;
             top: 20px;
             right: 20px;
             font-size: 28px;
-            color: #ffd700;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
             animation: float 3s ease-in-out infinite;
         }
         @keyframes float {
@@ -401,38 +386,38 @@
     </div>
     <div class="main">
         <div class="filters">
-            <button class="filter-button" onclick="openTab('gifts')">Gifts <span class="arrow">▼▲</span></button>
-            <button class="filter-button" onclick="openTab('models')">Models <span class="arrow">▼▲</span></button>
-            <button class="filter-button" onclick="openTab('backgrounds')">Backgrounds <span class="arrow">▼▲</span></button>
-            <button class="filter-button" onclick="openTab('symbols')">Symbols <span class="arrow">▼▲</span></button>
+            <button class="filter-button" onclick="openTab('gift')">Gifts <span class="arrow">▼▲</span></button>
+            <button class="filter-button" onclick="openTab('model')">Models <span class="arrow">▼▲</span></button>
+            <button class="filter-button" onclick="openTab('background')">Backgrounds <span class="arrow">▼▲</span></button>
+            <button class="filter-button" onclick="openTab('symbol')">Symbols <span class="arrow">▼▲</span></button>
         </div>
-        <div id="gifts-tab" class="tab">
+        <div id="gift-tab" class="tab">
             <button class="close-tab" onclick="closeTab()">×</button>
             <div class="tab-title">Gifts</div>
             <div class="tab-subtitle">Choose one</div>
-            <input type="text" class="search-input" placeholder="Find a gift" oninput="filterList('gifts-list', this.value)">
-            <div id="gifts-list" class="list"></div>
+            <input type="text" class="search-input" placeholder="Find a gift" oninput="filterList('gift-list', this.value)">
+            <div id="gift-list" class="list"></div>
         </div>
-        <div id="models-tab" class="tab">
+        <div id="model-tab" class="tab">
             <button class="close-tab" onclick="closeTab()">×</button>
             <div class="tab-title">Models</div>
             <div class="tab-subtitle">Choose one</div>
-            <input type="text" class="search-input" placeholder="Find a model" oninput="filterList('models-list', this.value)">
-            <div id="models-list" class="list"></div>
+            <input type="text" class="search-input" placeholder="Find a model" oninput="filterList('model-list', this.value)">
+            <div id="model-list" class="list"></div>
         </div>
-        <div id="backgrounds-tab" class="tab">
+        <div id="background-tab" class="tab">
             <button class="close-tab" onclick="closeTab()">×</button>
             <div class="tab-title">Backgrounds</div>
             <div class="tab-subtitle">Choose one</div>
-            <input type="text" class="search-input" placeholder="Find a background" oninput="filterList('backgrounds-list', this.value)">
-            <div id="backgrounds-list" class="list"></div>
+            <input type="text" class="search-input" placeholder="Find a background" oninput="filterList('background-list', this.value)">
+            <div id="background-list" class="list"></div>
         </div>
-        <div id="symbols-tab" class="tab">
+        <div id="symbol-tab" class="tab">
             <button class="close-tab" onclick="closeTab()">×</button>
             <div class="tab-title">Symbols</div>
             <div class="tab-subtitle">Choose one</div>
-            <input type="text" class="search-input" placeholder="Find a symbol" oninput="filterList('symbols-list', this.value)">
-            <div id="symbols-list" class="list"></div>
+            <input type="text" class="search-input" placeholder="Find a symbol" oninput="filterList('symbol-list', this.value)">
+            <div id="symbol-list" class="list"></div>
         </div>
         <div class="preview" id="preview">
             <img id="avatar" class="avatar" src="" alt="Avatar">
@@ -441,7 +426,6 @@
                 <div id="username"></div>
                 <div id="user-id"></div>
             </div>
-            <div class="bio" id="bio">Your Telegram bio (cannot be fetched via WebApp API, use placeholder or integrate with a backend bot for real checks)</div>
             <div class="symbol" id="symbol"></div>
         </div>
     </div>
@@ -455,103 +439,39 @@
         const fullName = `${user.first_name || ''} ${user.last_name || ''}`.trim() || 'Unknown User';
         const username = user.username ? `@${user.username}` : '@unknown';
         const userId = `ID: ${user.id}`;
-        const bio = 'Your bio description here... (Real bio requires bot integration via Telegram Bot API)';
 
-        // Enhanced hardcoded lists with sample prices (in real app, fetch from fragment.com API or scrape)
+        // Updated lists from web data and user examples
         const gifts = [
-            {name: 'Artisan Bricks', slug: 'artisanbrick', floorPrice: '15.2', price: '20 TON'},
-            {name: 'Astral Shards', slug: 'astralshard', floorPrice: '8.5', price: '12 TON'},
-            {name: 'B-Day Candles', slug: 'bdaycandle', floorPrice: '5.1', price: '7 TON'},
-            {name: 'Berry Boxes', slug: 'berrybox', floorPrice: '22.3', price: '25 TON'},
-            {name: 'Big Years', slug: 'bigyear', floorPrice: '3.9', price: '5 TON'},
-            {name: 'Bonded Rings', slug: 'bondedring', floorPrice: '45.7', price: '50 TON'},
-            {name: 'Bow Ties', slug: 'bowtie', floorPrice: '12.4', price: '15 TON'},
-            {name: 'Bunny Muffins', slug: 'bunnymuffin', floorPrice: '18.6', price: '22 TON'},
-            {name: 'Candy Canes', slug: 'candycane', floorPrice: '6.8', price: '9 TON'},
-            {name: 'Cookie Hearts', slug: 'cookieheart', floorPrice: '14.2', price: '18 TON'},
-            {name: 'Crystal Balls', slug: 'crystalball', floorPrice: '30.1', price: '35 TON'},
-            {name: 'Cupid Charms', slug: 'cupidcharm', floorPrice: '9.3', price: '12 TON'},
-            {name: 'Desk Calendars', slug: 'deskcalendar', floorPrice: '7.5', price: '10 TON'},
-            {name: 'Diamond Rings', slug: 'diamondring', floorPrice: '100.0', price: '120 TON'},
-            {name: 'Durov’s Caps', slug: 'durovscap', floorPrice: '25.4', price: '30 TON'},
-            {name: 'Easter Eggs', slug: 'easteregg', floorPrice: '4.2', price: '6 TON'},
-            {name: 'Electric Skulls', slug: 'electricskull', floorPrice: '35.8', price: '40 TON'},
-            {name: 'Eternal Candles', slug: 'eternalcandle', floorPrice: '11.9', price: '15 TON'},
-            {name: 'Eternal Roses', slug: 'eternalrose', floorPrice: '28.7', price: '32 TON'},
-            {name: 'Evil Eyes', slug: 'evileye', floorPrice: '16.5', price: '20 TON'},
-            {name: 'Flying Brooms', slug: 'flyingbroom', floorPrice: '13.1', price: '16 TON'},
-            {name: 'Gem Signets', slug: 'gemsignet', floorPrice: '42.3', price: '48 TON'},
-            {name: 'Genie Lamps', slug: 'genielamp', floorPrice: '19.8', price: '24 TON'},
-            {name: 'Ginger Cookies', slug: 'gingercookie', floorPrice: '5.6', price: '8 TON'},
-            {name: 'Hanging Stars', slug: 'hangingstar', floorPrice: '21.4', price: '25 TON'},
-            {name: 'Heart Lockets', slug: 'heartlocket', floorPrice: '33.2', price: '38 TON'},
-            {name: 'Heroic Helmets', slug: 'heroichelmet', floorPrice: '55.9', price: '62 TON'},
-            {name: 'Hex Pots', slug: 'hexpot', floorPrice: '10.7', price: '14 TON'},
-            {name: 'Holiday Drinks', slug: 'holidaydrink', floorPrice: '8.9', price: '11 TON'},
-            {name: 'Homemade Cakes', slug: 'homemadecake', floorPrice: '17.3', price: '20 TON'},
-            {name: 'Hypno Lollipops', slug: 'hypnolollipop', floorPrice: '24.6', price: '28 TON'},
-            {name: 'Input Keys', slug: 'inputkey', floorPrice: '6.4', price: '9 TON'},
-            {name: 'Ion Gems', slug: 'iongem', floorPrice: '29.1', price: '34 TON'},
-            {name: 'Ionic Dryers', slug: 'ionicdryer', floorPrice: '12.8', price: '16 TON'},
-            {name: 'Jacks-in-the-Box', slug: 'jackinthebox', floorPrice: '38.5', price: '44 TON'},
-            {name: 'Jelly Bunnies', slug: 'jellybunny', floorPrice: '7.2', price: '10 TON'},
-            {name: 'Jester Hats', slug: 'jesterhat', floorPrice: '15.9', price: '19 TON'},
-            {name: 'Jingle Bells', slug: 'jinglebells', floorPrice: '4.8', price: '7 TON'},
-            {name: 'Jolly Chimps', slug: 'jollychimp', floorPrice: '26.7', price: '31 TON'},
-            {name: 'Joyful Bundles', slug: 'joyfulbundle', floorPrice: '31.4', price: '36 TON'},
-            {name: 'Kissed Frogs', slug: 'kissedfrog', floorPrice: '9.7', price: '13 TON'},
-            {name: 'Light Swords', slug: 'lightsword', floorPrice: '47.2', price: '53 TON'},
-            {name: 'Lol Pops', slug: 'lolpop', floorPrice: '11.5', price: '15 TON'},
-            {name: 'Loot Bags', slug: 'lootbag', floorPrice: '20.3', price: '24 TON'},
-            {name: 'Love Candles', slug: 'lovecandle', floorPrice: '14.1', price: '18 TON'},
-            {name: 'Love Potions', slug: 'lovepotion', floorPrice: '23.8', price: '27 TON'},
-            {name: 'Low Riders', slug: 'lowrider', floorPrice: '36.9', price: '42 TON'},
-            {name: 'Lunar Snakes', slug: 'lunarsnake', floorPrice: '18.4', price: '22 TON'},
-            {name: 'Lush Bouquets', slug: 'lushbouquet', floorPrice: '27.6', price: '32 TON'},
-            {name: 'Mad Pumpkins', slug: 'madpumpkin', floorPrice: '5.3', price: '8 TON'},
-            {name: 'Magic Potions', slug: 'magicpotion', floorPrice: '41.2', price: '46 TON'},
-            {name: 'Mighty Arms', slug: 'mightyarm', floorPrice: '13.7', price: '17 TON'},
-            {name: 'Mini Oscars', slug: 'minioscar', floorPrice: '64.5', price: '70 TON'},
-            {name: 'Moon Pendants', slug: 'moonpendant', floorPrice: '22.1', price: '26 TON'},
-            {name: 'Nail Bracelets', slug: 'nailbracelet', floorPrice: '8.6', price: '12 TON'},
-            {name: 'Neko Helmets', slug: 'nekohelmet', floorPrice: '39.8', price: '45 TON'},
-            {name: 'Party Sparklers', slug: 'partysparkler', floorPrice: '6.9', price: '10 TON'},
-            {name: 'Perfume Bottles', slug: 'perfumebottle', floorPrice: '19.2', price: '23 TON'},
-            {name: 'Pet Snakes', slug: 'petsnake', floorPrice: '34.7', price: '39 TON'},
-            {name: 'Plush Pepes', slug: 'plushpepe', floorPrice: '28.4', price: '33 TON'},
-            {name: 'Precious Peaches', slug: 'preciouspeach', floorPrice: '16.8', price: '20 TON'},
-            {name: 'Record Players', slug: 'recordplayer', floorPrice: '52.3', price: '58 TON'},
-            {name: 'Restless Jars', slug: 'restlessjar', floorPrice: '10.4', price: '14 TON'},
-            {name: 'Sakura Flowers', slug: 'sakuraflower', floorPrice: '21.9', price: '25 TON'},
-            {name: 'Santa Hats', slug: 'santahat', floorPrice: '7.1', price: '9 TON'},
-            {name: 'Scared Cats', slug: 'scaredcat', floorPrice: '44.6', price: '50 TON'},
-            {name: 'Sharp Tongues', slug: 'sharptongue', floorPrice: '12.0', price: '15 TON'},
-            {name: 'Signet Rings', slug: 'signetring', floorPrice: '37.5', price: '42 TON'},
-            {name: 'Skull Flowers', slug: 'skullflower', floorPrice: '14.9', price: '18 TON'},
-            {name: 'Sleigh Bells', slug: 'sleighbell', floorPrice: '5.7', price: '8 TON'},
-            {name: 'Snake Boxes', slug: 'snakebox', floorPrice: '29.3', price: '34 TON'},
-            {name: 'Snoop Cigars', slug: 'snoopcigar', floorPrice: '48.2', price: '54 TON'},
-            {name: 'Snoop Doggs', slug: 'snoopdogg', floorPrice: '61.8', price: '68 TON'},
-            {name: 'Snow Globes', slug: 'snowglobe', floorPrice: '17.6', price: '21 TON'},
-            {name: 'Snow Mittens', slug: 'snowmittens', floorPrice: '9.4', price: '12 TON'},
-            {name: 'Spiced Wines', slug: 'spicedwine', floorPrice: '23.1', price: '27 TON'},
-            {name: 'Spy Agarics', slug: 'spyagaric', floorPrice: '31.7', price: '36 TON'},
-            {name: 'Star Notepads', slug: 'starnotepad', floorPrice: '11.2', price: '15 TON'},
-            {name: 'Stellar Rockets', slug: 'stellarrocket', floorPrice: '56.4', price: '62 TON'},
-            {name: 'Swag Bags', slug: 'swagbag', floorPrice: '18.9', price: '22 TON'},
-            {name: 'Swiss Watches', slug: 'swisswatch', floorPrice: '73.5', price: '80 TON'},
-            {name: 'Tama Gadgets', slug: 'tamagadget', floorPrice: '25.8', price: '30 TON'},
-            {name: 'Top Hats', slug: 'tophat', floorPrice: '32.1', price: '37 TON'},
-            {name: 'Toy Bears', slug: 'toybear', floorPrice: '6.3', price: '9 TON'},
-            {name: 'Trapped Hearts', slug: 'trappedheart', floorPrice: '40.7', price: '46 TON'},
-            {name: 'Valentine Boxes', slug: 'valentinebox', floorPrice: '13.5', price: '17 TON'},
-            {name: 'Vintage Cigars', slug: 'vintagecigar', floorPrice: '27.9', price: '32 TON'},
-            {name: 'Voodoo Dolls', slug: 'voodoodoll', floorPrice: '49.6', price: '55 TON'},
-            {name: 'Westside Signs', slug: 'westsidesign', floorPrice: '15.3', price: '19 TON'},
-            {name: 'Whip Cupcakes', slug: 'whipcupcake', floorPrice: '8.2', price: '11 TON'},
-            {name: 'Winter Wreaths', slug: 'winterwreath', floorPrice: '19.5', price: '23 TON'},
-            {name: 'Witch Hats', slug: 'witchhat', floorPrice: '34.8', price: '39 TON'},
-            {name: 'Xmas Stockings', slug: 'xmasstocking', floorPrice: '7.9', price: '10 TON'}
+            {name: 'Artisan Bricks', slug: 'artisanbrick', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Astral Shards', slug: 'astralshard', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'B-Day Candles', slug: 'bdaycandle', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Berry Boxes', slug: 'berrybox', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Big Years', slug: 'bigyear', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Bonded Rings', slug: 'bondedring', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Bow Ties', slug: 'bowtie', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Bunny Muffins', slug: 'bunnymuffin', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Candy Canes', slug: 'candycane', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Cookie Hearts', slug: 'cookieheart', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Crystal Balls', slug: 'crystalball', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Cupid Charms', slug: 'cupidcharm', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Desk Calendars', slug: 'deskcalendar', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Diamond Rings', slug: 'diamondring', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Durov’s Caps', slug: 'durovscap', floorPrice: 'N/A', price: '5999 TON'},
+            {name: 'Easter Eggs', slug: 'easteregg', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Electric Skulls', slug: 'electricskull', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Eternal Candles', slug: 'eternalcandle', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Eternal Roses', slug: 'eternalrose', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Evil Eyes', slug: 'evileye', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Flying Brooms', slug: 'flyingbroom', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Gem Signets', slug: 'gemsignet', floorPrice: 'N/A', price: '15000 TON'},
+            {name: 'Genie Lamps', slug: 'genielamp', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Ginger Cookies', slug: 'gingercookie', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Hanging Stars', slug: 'hangingstar', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Heart Lockets', slug: 'heartlocket', floorPrice: 'N/A', price: '12733.88 TON'},
+            {name: 'Heroic Helmets', slug: 'heroichelmet', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Hex Pots', slug: 'hexpot', floorPrice: 'N/A', price: 'N/A'},
+            {name: 'Holiday Drinks', slug: 'holidaydrink', floorPrice: 'N/A', price: 'N/A'},
+            // Add more if needed from further data
         ].sort((a, b) => a.name.localeCompare(b.name));
 
         const models = [
@@ -560,7 +480,7 @@
             'Yellow Purp', 'Stripes', 'Barcelona', 'Emo Boi', 'Princess', 'Two Face', 'Hothead', 'Milano', 'Pepe La Rana', 'Toading...',
             'Christmas', 'Marble', 'Pink Latex', 'X-Ray', 'Sketchy', 'Santa Pepe', 'Bavaria', 'Kung Fu Pepe', 'Midas Pepe', 'Donatello',
             'Frozen', 'Ninja Mike', 'Puppy Pug', 'Raphael', 'Steel Frog', 'Magnate', 'Gucci Leap', 'Emerald Plush', 'Fifty Shades',
-            'Leonardo', 'Louis Vuittoad', 'Cozy Galaxy'
+            'Leonardo', 'Louis Vuittoad', 'Cozy Galaxy', 'Apex Predator' // Added from search
         ].sort();
 
         const backgrounds = [
@@ -570,7 +490,7 @@
             'Light Olive', 'Mint Green', 'Steel Grey', 'Cappuccino', 'Persimmon', 'Satin Gold', 'Carrot Juice', 'Electric Indigo',
             'Burgundy', 'Moonstone', 'Onyx Black', 'Hunter Green', 'Khaki Green', 'Dark Lilac', 'Pistachio', 'Amber', 'Silver Blue',
             'Coral Red', 'Desert Sand', 'Ivory White', 'Cyberpunk', 'Chestnut', 'English Violet', 'Purple', 'Pacific Green',
-            'Shamrock Green', 'Sky Blue', 'Pure Gold', 'Raspberry', 'Azure Blue', 'Roman Silver'
+            'Shamrock Green', 'Sky Blue', 'Pure Gold', 'Raspberry', 'Azure Blue', 'Roman Silver', 'Electric Indigo', 'Orange' // Duplicates removed
         ].sort();
 
         const symbols = [
@@ -585,7 +505,6 @@
             'Mountain Lion', 'Nordic Wolf', 'Paw'
         ].sort();
 
-        // Enhanced color map for backgrounds
         const colorMap = {
             'Aquamarine': '#7fffd4',
             'Azure Blue': '#f0ffff',
@@ -623,7 +542,7 @@
             'Moonstone': '#3aafd9',
             'Mystic Pearl': '#d65282',
             'Navy Blue': '#000080',
-            'Neon Blue': '#39ff14', // Adjusted for visibility
+            'Neon Blue': '#39ff14',
             'Onyx Black': '#353839',
             'Orange': '#ffa500',
             'Pacific Cyan': '#1ca9c9',
@@ -645,7 +564,6 @@
             'Steel Grey': '#71797e',
             'Strawberry': '#ff5a5f',
             'Turquoise': '#40e0d0'
-            // Extend as needed
         };
 
         let selectedGift = '';
@@ -656,18 +574,8 @@
         function simulateLoading() {
             const progress = document.querySelector('.progress');
             let width = 0;
-            const steps = [
-                {percent: 25, text: 'Fetching user profile...'},
-                {percent: 50, text: 'Checking avatar and name...'},
-                {percent: 75, text: 'Verifying username and bio...'},
-                {percent: 100, text: 'Ready!'}
-            ];
-            let stepIndex = 0;
             const interval = setInterval(() => {
                 width += Math.random() * 10 + 5;
-                if (width > steps[stepIndex].percent) {
-                    stepIndex++;
-                }
                 progress.style.width = `${Math.min(width, 100)}%`;
                 if (width >= 100) {
                     clearInterval(interval);
@@ -675,8 +583,6 @@
                         document.querySelector('.loading').style.display = 'none';
                         document.querySelector('.main').style.display = 'flex';
                         updatePreview();
-                        // Simulate real check: if changes detected, update
-                        // In real: use Telegram Bot API to fetch latest
                     }, 500);
                 }
             }, 150);
@@ -684,7 +590,7 @@
 
         function openTab(tabName) {
             document.querySelectorAll('.tab').forEach(tab => tab.style.display = 'none');
-            const selectedTab = document.getElementById(`${tabName}s-tab`);
+            const selectedTab = document.getElementById(`${tabName}-tab`);
             selectedTab.style.display = 'block';
             document.body.style.overflow = 'hidden';
         }
@@ -701,48 +607,40 @@
                 const name = item.querySelector('.item-name').textContent.toLowerCase();
                 item.style.display = name.includes(value.toLowerCase()) ? 'flex' : 'none';
             });
-            if (value) {
-                // Add highlight
-                items.forEach(item => {
-                    if (item.style.display !== 'none') {
-                        const nameEl = item.querySelector('.item-name');
-                        nameEl.innerHTML = nameEl.textContent.replace(new RegExp(value, 'gi'), '<span style="background: rgba(0,123,255,0.3); padding: 2px 4px; border-radius: 4px;">$&</span>');
-                    }
-                });
-            }
         }
 
         function populateList(listId, items, type, isString = false) {
             const list = document.getElementById(listId);
             list.innerHTML = '';
-            items.forEach((item, index) => {
+            items.forEach(item => {
                 const div = document.createElement('div');
                 div.className = 'list-item';
                 const name = isString ? item : item.name;
-                const priceInfo = !isString && type === 'gifts' ? `${item.price}<br><small style="color: rgba(255,255,255,0.6);">Floor: ${item.floorPrice} TON</small>` : '';
-                const iconContent = type === 'backgrounds' ? '🎨' : type === 'symbols' ? '✨' : type === 'models' ? '🧩' : '🎁';
+                const priceInfo = !isString && type === 'gift' ? `${item.price}<br><small style="color: rgba(255,255,255,0.6);">Floor: ${item.floorPrice}</small>` : 'N/A TON';
+                const iconContent = type === 'background' ? '🎨' : type === 'symbol' ? '✨' : type === 'model' ? '🧩' : '🎁';
                 div.innerHTML = `
                     <span class="check-mark">☐</span>
                     <div class="item-icon">${iconContent}</div>
                     <div class="item-name">${name}</div>
-                    <div class="item-price">${priceInfo || ''}</div>
+                    <div class="item-price">${priceInfo}</div>
                 `;
-                div.onclick = () => selectItem(div, type, isString ? item : item.name);
+                div.onclick = () => selectItem(div, type, name);
                 list.appendChild(div);
             });
         }
 
         function selectItem(element, type, value) {
-            document.querySelectorAll(`#${type}s-list .list-item`).forEach(it => {
+            const listId = `${type}-list`;
+            document.querySelectorAll(`#${listId} .list-item`).forEach(it => {
                 it.classList.remove('selected');
                 it.querySelector('.check-mark').textContent = '☐';
             });
             element.classList.add('selected');
             element.querySelector('.check-mark').textContent = '☑';
-            if (type === 'gifts') selectedGift = value;
-            else if (type === 'models') selectedModel = value;
-            else if (type === 'backgrounds') selectedBackground = value;
-            else if (type === 'symbols') selectedSymbol = value;
+            if (type === 'gift') selectedGift = value;
+            if (type === 'model') selectedModel = value;
+            if (type === 'background') selectedBackground = value;
+            if (type === 'symbol') selectedSymbol = value;
             updatePreview();
             setTimeout(closeTab, 300);
         }
@@ -757,24 +655,19 @@
             nameEl.innerHTML = displayName;
             document.getElementById('username').textContent = username;
             document.getElementById('user-id').textContent = userId;
-            document.getElementById('bio').textContent = bio;
             const symbolEl = document.getElementById('symbol');
             symbolEl.textContent = selectedSymbol ? `✦ ${selectedSymbol}` : '';
             symbolEl.style.display = selectedSymbol ? 'block' : 'none';
             const preview = document.getElementById('preview');
-            const bgColor = colorMap[selectedBackground] || 'rgba(51, 51, 51, 0.3)';
-            preview.style.background = `rgba(${parseInt(bgColor.slice(1,3),16)},${parseInt(bgColor.slice(3,5),16)},${parseInt(bgColor.slice(5,7),16)},0.1)`;
-            // In real app, fetch and apply gift image via Fragment API or images
-            if (selectedGift) {
-                // Simulate: avatarUrl = `https://fragment.com/gift/${selectedGift.toLowerCase().replace(/[^a-z]/g,'')}-123?attr...`;
-            }
+            const bgColor = colorMap[selectedBackground] || '#333333';
+            preview.style.backgroundColor = bgColor;
         }
 
-        // Initialize
-        populateList('gifts-list', gifts, 'gifts');
-        populateList('models-list', models, 'models', true);
-        populateList('backgrounds-list', backgrounds, 'backgrounds', true);
-        populateList('symbols-list', symbols, 'symbols', true);
+        // Initialize lists with corrected IDs
+        populateList('gift-list', gifts, 'gift');
+        populateList('model-list', models, 'model', true);
+        populateList('background-list', backgrounds, 'background', true);
+        populateList('symbol-list', symbols, 'symbol', true);
 
         // Close tab on outside click
         document.addEventListener('click', (e) => {
