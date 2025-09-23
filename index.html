@@ -1,295 +1,509 @@
-import React, {useEffect, useState, useRef} from "react";
-
-/*
-  GiftChecker - Telegram WebApp
-  Single-file React component meant to be used inside a Telegram WebApp (bot / mini app).
-  - TailwindCSS classes are used for styling. Make sure Tailwind is present in the build.
-  - This component reads window.Telegram.WebApp.initDataUnsafe to get the user (name, username, id, photo_url)
-    (photo_url is provided by Telegram Web Apps when user's privacy allows it; otherwise avatar will be placeholder.)
-  - For Fragment data (gifts, models, backdrops, symbols) this component calls a placeholder API
-    at /api/fragment/* which you should implement server-side (because Fragment's official API requires auth
-    and CORS; a server-side proxy is recommended). Example endpoints used below:
-      GET /api/fragment/catalog?type=gifts
-      GET /api/fragment/catalog?type=models
-      GET /api/fragment/catalog?type=backdrops
-      GET /api/fragment/catalog?type=symbols
-  - The UI follows the user's design requirements: dark/black design, Telegram-like font (replace with a Telegram font import if desired),
-    liquid-glass cards, progress loader that verifies real Telegram user data from initDataUnsafe.
-
-  Notes on "real checks":
-  - A Telegram WebApp running inside a user's Telegram client receives and signs initialization data (initData).
-    We trust initDataUnsafe for quick display, and for security you may validate initData on your server using the bot token
-    and the initData hash if you need cryptographic verification.
-  - The WebApp cannot magically "poll" Telegram for changes without a reload; we show a simulated progress that reads
-    the current initData on load and treats it as the verified source. If you want live monitoring of profile changes,
-    you'll need to implement a bot-side check (server) that compares user data over time.
-*/
-
-// Simple placeholder fallback avatar
-const FALLBACK_AVATAR = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='512' height='512'><rect width='100%' height='100%' fill='%23333333'/><text x='50%' y='54%' font-size='120' text-anchor='middle' fill='%23ffffff' font-family='sans-serif'>U</text></svg>";
-
-export default function GiftChecker() {
-  const [loading, setLoading] = useState(true);
-  const [progress, setProgress] = useState(0);
-  const [telegramUser, setTelegramUser] = useState(null);
-  const [verifiedUser, setVerifiedUser] = useState(null);
-  const [catalog, setCatalog] = useState({gifts: [], models: [], backdrops: [], symbols: []});
-  const [activeFilter, setActiveFilter] = useState("gifts");
-  const [search, setSearch] = useState("");
-  const [selectedGift, setSelectedGift] = useState(null);
-  const [selectedModel, setSelectedModel] = useState(null);
-  const [selectedBackdrop, setSelectedBackdrop] = useState(null);
-  const [selectedSymbol, setSelectedSymbol] = useState(null);
-  const progressRef = useRef(null);
-
-  // Utility to read Telegram WebApp user data (initDataUnsafe)
-  function readTelegramUser() {
-    try {
-      if (window.Telegram && window.Telegram.WebApp) {
-        const w = window.Telegram.WebApp;
-        // initDataUnsafe.user is a JS object with user info if available
-        const u = w.initDataUnsafe && w.initDataUnsafe.user ? w.initDataUnsafe.user : null;
-        return u;
-      }
-    } catch (e) {
-      console.warn("Telegram WebApp not available", e);
-    }
-    return null;
-  }
-
-  // Background progress + checks
-  useEffect(() => {
-    const user = readTelegramUser();
-    setTelegramUser(user);
-
-    // Simulate progressive checking bar while performing 'real' checks (reading initData and fetching catalog)
-    let p = 0;
-    setProgress(0);
-    setLoading(true);
-
-    progressRef.current = setInterval(() => {
-      p += Math.random() * 12;
-      if (p >= 98) p = 98; // wait until network calls finish
-      setProgress(Math.round(p));
-    }, 400);
-
-    // fetch catalog data (server-side proxy recommended)
-    async function loadAllCatalogs() {
-      try {
-        const endpoints = [
-          {key: 'gifts', url: '/api/fragment/catalog?type=gifts'},
-          {key: 'models', url: '/api/fragment/catalog?type=models'},
-          {key: 'backdrops', url: '/api/fragment/catalog?type=backdrops'},
-          {key: 'symbols', url: '/api/fragment/catalog?type=symbols'},
-        ];
-        const results = {};
-        await Promise.all(endpoints.map(async (ep) => {
-          try {
-            const resp = await fetch(ep.url);
-            if (!resp.ok) throw new Error('network');
-            const json = await resp.json();
-            results[ep.key] = Array.isArray(json) ? json : json.items || [];
-          } catch (e) {
-            console.warn('Could not load', ep.url, e);
-            results[ep.key] = [];
-          }
-        }));
-
-        setCatalog(prev => ({...prev, ...results}));
-      } catch (e) {
-        console.error('Catalog load failed', e);
-      }
-    }
-
-    loadAllCatalogs().finally(() => {
-      // finish progress
-      clearInterval(progressRef.current);
-      setProgress(100);
-      // small delay for UX
-      setTimeout(() => {
-        setVerifiedUser(user); // 'real check' result is whatever initDataUnsafe provided
-        setLoading(false);
-      }, 350);
-    });
-
-    return () => clearInterval(progressRef.current);
-  }, []);
-
-  // Derived display name
-  const displayName = verifiedUser ? `${verifiedUser.first_name || ''} ${verifiedUser.last_name || ''}`.trim() : 'Unknown';
-  const username = verifiedUser ? (verifiedUser.username ? `@${verifiedUser.username}` : '(no username)') : '';
-  const userId = verifiedUser ? verifiedUser.id : '';
-  const avatarUrl = verifiedUser && verifiedUser.photo_url ? verifiedUser.photo_url : FALLBACK_AVATAR;
-
-  // Filtering logic
-  function itemsForActiveFilter() {
-    const list = catalog[activeFilter] || [];
-    if (!search) return list.sort((a,b)=> (a.name||'').localeCompare(b.name||''));
-    return list.filter(i => (i.name||'').toLowerCase().includes(search.toLowerCase())).sort((a,b)=> (a.name||'').localeCompare(b.name||''));
-  }
-
-  // When selecting gift/model/backdrop/symbol, update preview
-  function handleSelect(item, kind) {
-    if (kind === 'gifts') setSelectedGift(item);
-    if (kind === 'models') setSelectedModel(item);
-    if (kind === 'backdrops') setSelectedBackdrop(item);
-    if (kind === 'symbols') setSelectedSymbol(item);
-  }
-
-  // Simple Price display helper (expects price object or number)
-  function priceText(item) {
-    if (!item) return '';
-    if (typeof item.price === 'number') return `${item.price} TON`;
-    if (item.price && item.price.amount) return `${item.price.amount} TON`;
-    if (item.floor_price) return `${item.floor_price} TON`;
-    return item.price_text || '';
-  }
-
-  // Preview computed composite: combine selected model/backdrop/symbol into a display
-  function renderPreviewOverlays() {
-    const overlays = [];
-    if (selectedBackdrop) overlays.push(<div key="backdrop" className="absolute inset-0 rounded-2xl mix-blend-multiply opacity-60" style={{background: selectedBackdrop.color || 'transparent'}} />);
-    if (selectedModel) overlays.push(<div key="model" className="absolute left-4 top-4 p-2 rounded-full border border-white/8 backdrop-blur-sm"> <div className="text-xs">{selectedModel.name}</div></div>);
-    if (selectedSymbol) overlays.push(<div key="symbol" className="absolute right-3 bottom-3 p-1 rounded-md bg-white/6"> <div className="text-sm">{selectedSymbol.name}</div></div>);
-    return overlays;
-  }
-
-  return (
-    <div className="min-h-screen bg-black text-white font-sans p-6" style={{fontFamily: 'Inter, system-ui, -apple-system, "Segoe UI", Roboto'}}>
-      {/* Header */}
-      <div className="max-w-5xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-semibold tracking-tight">GiftChecker</h1>
-          <div className="flex gap-2 items-center">
-            <div className="text-sm text-white/70">{username}</div>
-            <div className="text-sm text-white/40">ID: {userId}</div>
-          </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GiftChecker</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        /* Dark theme with liquid glass effect */
+        :root {
+            --primary-bg: #0a0a0a;
+            --card-bg: #1a1a1a;
+            --accent-blue: #0088cc;
+            --text-white: #f0f0f0;
+            --progress-bar: #ffffff;
+        }
+        
+        body {
+            background-color: var(--primary-bg);
+            color: var(--text-white);
+            font-family: 'Telegram Font', -apple-system, BlinkMacSystemFont, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+            transition: background-color 0.3s;
+        }
+        
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--primary-bg);
+            z-index: 1000;
+        }
+        
+        .app-name {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #0088cc, #6c5ce7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 10px rgba(0, 136, 204, 0.2);
+        }
+        
+        .progress-bar-container {
+            width: 80%;
+            max-width: 300px;
+            height: 12px;
+            background-color: #333;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent-blue), #6c5ce7);
+            border-radius: 6px;
+            transition: width 0.3s ease;
+        }
+        
+        .main-content {
+            display: none;
+            padding: 20px;
+            height: 100vh;
+        }
+        
+        .user-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px;
+            margin: 0 auto;
+            max-width: 400px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .user-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 136, 204, 0.1) 0%, transparent 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        .user-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 18px;
+            object-fit: cover;
+            margin: 0 auto 15px;
+            display: block;
+            border: 3px solid var(--accent-blue);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .user-name {
+            text-align: center;
+            font-size: 1.4rem;
+            margin: 10px 0;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .user-details {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+            font-size: 0.9rem;
+            color: #aaa;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .bio-container {
+            background: rgba(30, 30, 30, 0.7);
+            border-radius: 15px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .filters {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+        
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+        
+        .filter-btn.active {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+        }
+        
+        .search-bar {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 10px 15px;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .search-bar input {
+            background: transparent;
+            border: none;
+            color: white;
+            width: 100%;
+            font-size: 1rem;
+            outline: none;
+        }
+        
+        .gift-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .gift-item {
+            background: rgba(30, 30, 30, 0.7);
+            border-radius: 15px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: transform 0.2s, background 0.2s;
+        }
+        
+        .gift-item:hover {
+            background: rgba(0, 136, 204, 0.2);
+            transform: translateX(5px);
+        }
+        
+        .gift-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            background: var(--accent-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .gift-info {
+            flex: 1;
+        }
+        
+        .gift-name {
+            font-weight: 500;
+            margin-bottom: 3px;
+        }
+        
+        .gift-price {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: #aaa;
+        }
+        
+        .ton-price {
+            color: white;
+            font-weight: 600;
+        }
+        
+        .floor-price {
+            background: rgba(0, 136, 204, 0.2);
+            color: var(--accent-blue);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen">
+        <div class="app-name">GiftChecker</div>
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar"></div>
         </div>
-
-        {/* Loading overlay */}
-        {loading && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
-            <div className="w-full max-w-md p-8 bg-black/60 backdrop-blur-lg rounded-2xl border border-white/6 text-center pointer-events-auto">
-              <div className="text-3xl font-bold mb-6">FonChecker</div>
-              <div className="h-40 flex items-center justify-center">
-                <div className="w-32 h-32 rounded-xl bg-white/6 flex items-center justify-center">
-                  <img src={avatarUrl} alt="avatar" className="w-24 h-24 rounded-full object-cover" />
-                </div>
-              </div>
-              <div className="mt-6">
-                <div className="w-full bg-white/6 rounded-lg h-4 overflow-hidden">
-                  <div className="h-full rounded-lg bg-white" style={{width: `${progress}%`, transition: 'width 300ms linear'}}></div>
-                </div>
-                <div className="mt-2 text-sm text-white/60">Checking Telegram name, avatar, username...</div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Main card preview */}
-        <div className="mx-auto my-6 max-w-3xl">
-          <div className="relative bg-gray-900/70 border border-white/6 rounded-3xl p-8 pt-16 min-h-[220px] flex items-start justify-center">
-            {/* Avatar slightly overlapping */}
-            <div className="absolute -top-12 left-6">
-              <div className="w-28 h-28 rounded-xl overflow-hidden border-2 border-white/10 shadow-lg bg-gradient-to-br from-white/6 to-white/3">
-                <img src={avatarUrl} alt="avatar" className="w-full h-full object-cover" />
-              </div>
-            </div>
-
-            {/* User info */}
-            <div className="text-left ml-36 w-full">
-              <div className="text-xl font-semibold">{displayName}</div>
-              <div className="flex items-center gap-3 mt-2">
-                <div className="text-sm text-white/60">{username}</div>
-                <div className="ml-auto text-sm text-white/40">ID: {userId}</div>
-              </div>
-
-              {/* Description / longish translucent rectangle */}
-              <div className="mt-6">
-                <div className="rounded-xl bg-white/4 p-4 text-sm text-white/60 backdrop-blur-sm min-h-[72px]">{verifiedUser && verifiedUser.bio ? verifiedUser.bio : 'No public description available.'}</div>
-              </div>
-
-              {/* Overlays for selected items (model/backdrop/symbol) */}
-              <div className="relative mt-4 h-40 rounded-xl overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60" />
-                {renderPreviewOverlays()}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Filters */}
-        <div className="flex gap-3 items-center mb-4">
-          {['gifts','models','backdrops','symbols'].map(f => (
-            <button key={f} onClick={()=>{setActiveFilter(f); setSearch('');}} className={`px-3 py-1 rounded-md text-sm font-medium ${activeFilter===f? 'bg-white text-black':'bg-white/6 text-white/80'}`}>
-              {f[0].toUpperCase()+f.slice(1)} <span className="ml-1 text-xs text-white/50">▾</span>
-            </button>
-          ))}
-
-          <div className="ml-auto max-w-xs w-full">
-            <input value={search} onChange={e=>setSearch(e.target.value)} placeholder={`Find a ${activeFilter.slice(0,-1)}`} className="w-full px-3 py-2 rounded-lg bg-white/5 outline-none placeholder-white/40 text-sm" />
-          </div>
-        </div>
-
-        {/* List header */}
-        <div className="bg-white/3 rounded-xl p-3">
-          <div className="grid grid-cols-[auto_1fr_auto] gap-4 items-center">
-            <div className="text-sm text-white/80">Select</div>
-            <div className="text-sm text-white/80">Name</div>
-            <div className="text-sm text-white/80">Price</div>
-          </div>
-        </div>
-
-        {/* Items list */}
-        <div className="mt-3 space-y-2">
-          {itemsForActiveFilter().map(item => (
-            <div key={item.id || item.slug || item.name} className="bg-black/60 rounded-xl p-3 border border-white/4 flex items-center gap-3">
-              <div className="w-8">
-                <button onClick={()=>handleSelect(item, activeFilter)} className="w-6 h-6 rounded-md bg-white/6 flex items-center justify-center">
-                  {((activeFilter==='models' && selectedModel===item) || (activeFilter==='gifts' && selectedGift===item) || (activeFilter==='backdrops' && selectedBackdrop===item) || (activeFilter==='symbols' && selectedSymbol===item)) ? '✓' : '+'}
-                </button>
-              </div>
-              <div className="flex items-center gap-3 flex-1">
-                {/* icon: gift icon or color dot */}
-                {activeFilter==='gifts' && (
-                  <div className="w-12 h-12 rounded-md bg-white/4 flex items-center justify-center">🎁</div>
-                )}
-                {activeFilter==='models' && (
-                  <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{background: item.color || '#444'}} />
-                )}
-                {activeFilter==='backdrops' && (
-                  <div className="w-12 h-12 rounded-md border border-white/6" style={{background: item.color || '#222'}} />
-                )}
-                {activeFilter==='symbols' && (
-                  <div className="w-12 h-12 rounded-md bg-white/4 flex items-center justify-center">★</div>
-                )}
-
-                <div>
-                  <div className="font-medium">{item.name}</div>
-                  <div className="text-xs text-white/50">{item.subtitle || ''}</div>
-                </div>
-              </div>
-              <div className="text-sm text-white/60">{priceText(item)}</div>
-            </div>
-          ))}
-
-          {itemsForActiveFilter().length===0 && (
-            <div className="text-center text-white/50 py-8">No items found. Make sure your fragment proxy (/api/fragment/...) is implemented and returning data.</div>
-          )}
-        </div>
-
-        {/* Footer / apply */}
-        <div className="mt-6 flex items-center justify-between">
-          <div className="text-sm text-white/50">Preview changes live on the card above. Choose gift, model, backdrop and symbol.</div>
-          <div className="flex gap-3">
-            <button className="px-4 py-2 rounded-xl bg-white/6">Reset</button>
-            <button className="px-4 py-2 rounded-xl bg-white text-black font-semibold">Apply</button>
-          </div>
-        </div>
-
-        {/* Tiny help & notes */}
-        <div className="mt-6 text-xs text-white/40 max-w-2xl">Notes: This WebApp uses the Telegram WebApp initData to read the user's name, username, id and (when available) photo_url. For complete and secure verification validate initData on your server. For the Fragment catalog we expect a server-side proxy to call Fragment GraphQL / API (see https://fragment.dev/api-reference). This keeps your API credentials safe and avoids CORS issues.</div>
-      </div>
     </div>
-  );
-}
+    
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <div class="user-card" id="userCard">
+            <img src="" alt="User Avatar" class="user-avatar" id="userAvatar">
+            <div class="user-name" id="userName">Loading...</div>
+            <div class="user-details">
+                <div id="userUsername">@username</div>
+                <div id="userUserId">ID: 0000000</div>
+            </div>
+            <div class="bio-container" id="userBio">
+                Loading account description...
+            </div>
+        </div>
+        
+        <div class="filters">
+            <button class="filter-btn active" data-filter="gifts">Gifts ▲▼</button>
+            <button class="filter-btn" data-filter="models">Models ▲▼</button>
+            <button class="filter-btn" data-filter="backgrounds">Backgrounds ▲▼</button>
+            <button class="filter-btn" data-filter="symbols">Symbols ▲▼</button>
+        </div>
+        
+        <div class="search-bar">
+            <input type="text" placeholder="Find a gift..." id="searchInput">
+        </div>
+        
+        <div class="gift-list" id="giftList">
+            <!-- Gifts will be populated here -->
+        </div>
+    </div>
+
+    <script>
+        // Initialize Telegram WebApp
+        const Telegram = window.Telegram || {};
+        Telegram.WebApp.expand();
+        
+        // User data object
+        let userData = {
+            id: null,
+            firstName: '',
+            lastName: '',
+            username: '',
+            photoUrl: '',
+            bio: ''
+        };
+        
+        // Initialize loading process
+        document.addEventListener('DOMContentLoaded', () => {
+            const progressBar = document.getElementById('progressBar');
+            const mainContent = document.getElementById('mainContent');
+            const loadingScreen = document.querySelector('.loading-screen');
+            
+            // Simulate loading process with real Telegram WebApp data
+            let progress = 0;
+            
+            // First, get Telegram user data
+            const updateUserProgress = (value, message) => {
+                progress = value;
+                progressBar.style.width = `${progress}%`;
+                
+                if (progress >= 100) {
+                    // Hide loading screen and show main content
+                    setTimeout(() => {
+                        loadingScreen.style.display = 'none';
+                        mainContent.style.display = 'block';
+                        
+                        // Initialize UI with user data
+                        initUserData();
+                        initGifts();
+                    }, 300);
+                }
+            };
+            
+            // Get user data from Telegram WebApp
+            const initUserData = () => {
+                if (Telegram.WebApp.initDataUnsafe && Telegram.WebApp.initDataUnsafe.user) {
+                    const user = Telegram.WebApp.initDataUnsafe.user;
+                    
+                    userData = {
+                        id: user.id,
+                        firstName: user.first_name || '',
+                        lastName: user.last_name || '',
+                        username: user.username ? `@${user.username}` : 'No username',
+                        photoUrl: user.photo_url || '',
+                        bio: Telegram.WebApp.initDataUnsafe.user.bio || 'No bio available'
+                    };
+                    
+                    // Update UI elements
+                    document.getElementById('userAvatar').src = userData.photoUrl || 'https://via.placeholder.com/100';
+                    document.getElementById('userName').textContent = `${userData.firstName} ${userData.lastName}`.trim();
+                    document.getElementById('userUsername').textContent = userData.username;
+                    document.getElementById('userUserId').textContent = `ID: ${userData.id}`;
+                    document.getElementById('userBio').textContent = userData.bio;
+                } else {
+                    // Fallback for testing
+                    userData = {
+                        id: 123456789,
+                        firstName: 'John',
+                        lastName: 'Doe',
+                        username: '@johndoe',
+                        photoUrl: 'https://via.placeholder.com/100',
+                        bio: 'Telegram user interested in gifts and collectibles'
+                    };
+                    
+                    document.getElementById('userAvatar').src = userData.photoUrl;
+                    document.getElementById('userName').textContent = `${userData.firstName} ${userData.lastName}`;
+                    document.getElementById('userUsername').textContent = userData.username;
+                    document.getElementById('userUserId').textContent = `ID: ${userData.id}`;
+                    document.getElementById('userBio').textContent = userData.bio;
+                }
+            };
+            
+            // Simulate loading steps
+            setTimeout(() => updateUserProgress(20, "Checking Telegram account..."), 300);
+            setTimeout(() => updateUserProgress(40, "Verifying user details..."), 700);
+            setTimeout(() => updateUserProgress(60, "Fetching account information..."), 1200);
+            setTimeout(() => updateUserProgress(80, "Validating user data..."), 1800);
+            setTimeout(() => updateUserProgress(100, "Ready!"), 2500);
+            
+            // Initialize gift data
+            const initGifts = () => {
+                // This is where we would normally fetch from Fragment.com
+                // Since there's no official API, we'll simulate with sample data
+                
+                const gifts = [
+                    { id: 1, name: "Astral Sharp", type: "gift", price: "30", floor: "25", icon: "🌌" },
+                    { id: 2, name: "Plush Pepe", type: "gift", price: "48,000", floor: "45,000", icon: "🐸" },
+                    { id: 3, name: "Durov Cap", type: "gift", price: "52.11", floor: "50", icon: "🧢" },
+                    { id: 4, name: "Art Nouveau", type: "model", price: "6", floor: "5", icon: "🎨" },
+                    { id: 5, name: "Eggplant", type: "model", price: "400", floor: "380", icon: "🍆" },
+                    { id: 6, name: "Dipper", type: "model", price: "52.11", floor: "50", icon: "💧" },
+                    { id: 7, name: "Black", type: "background", price: "122", floor: "120", icon: "⬛" },
+                    { id: 8, name: "Lavender", type: "background", price: "400", floor: "380", icon: "🟣" },
+                    { id: 9, name: "Malachite", type: "background", price: "52.11", floor: "50", icon: "🟢" },
+                    { id: 10, name: "Planet", type: "symbol", price: "122", floor: "120", icon: "🪐" },
+                    { id: 11, name: "Lotus Flower", type: "symbol", price: "400", floor: "380", icon: "🪷" },
+                    { id: 12, name: "Candy", type: "symbol", price: "6", floor: "5", icon: "🍬" }
+                ];
+                
+                renderGifts(gifts);
+                
+                // Filter functionality
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        
+                        const filterType = btn.getAttribute('data-filter');
+                        const filteredGifts = gifts.filter(gift => {
+                            if (filterType === 'gifts') return gift.type === 'gift';
+                            if (filterType === 'models') return gift.type === 'model';
+                            if (filterType === 'backgrounds') return gift.type === 'background';
+                            if (filterType === 'symbols') return gift.type === 'symbol';
+                            return true;
+                        });
+                        
+                        renderGifts(filteredGifts);
+                    });
+                });
+                
+                // Search functionality
+                document.getElementById('searchInput').addEventListener('input', (e) => {
+                    const searchTerm = e.target.value.toLowerCase();
+                    const activeFilter = document.querySelector('.filter-btn.active').getAttribute('data-filter');
+                    const gifts = getGiftsByFilter(activeFilter);
+                    
+                    const filteredGifts = gifts.filter(gift => 
+                        gift.name.toLowerCase().includes(searchTerm)
+                    );
+                    
+                    renderGifts(filteredGifts);
+                });
+            };
+            
+            const getGiftsByFilter = (filterType) => {
+                const gifts = [
+                    { id: 1, name: "Astral Sharp", type: "gift", price: "30", floor: "25", icon: "🌌" },
+                    { id: 2, name: "Plush Pepe", type: "gift", price: "48,000", floor: "45,000", icon: "🐸" },
+                    { id: 3, name: "Durov Cap", type: "gift", price: "52.11", floor: "50", icon: "🧢" },
+                    { id: 4, name: "Art Nouveau", type: "model", price: "6", floor: "5", icon: "🎨" },
+                    { id: 5, name: "Eggplant", type: "model", price: "400", floor: "380", icon: "🍆" },
+                    { id: 6, name: "Dipper", type: "model", price: "52.11", floor: "50", icon: "💧" },
+                    { id: 7, name: "Black", type: "background", price: "122", floor: "120", icon: "⬛" },
+                    { id: 8, name: "Lavender", type: "background", price: "400", floor: "380", icon: "🟣" },
+                    { id: 9, name: "Malachite", type: "background", price: "52.11", floor: "50", icon: "🟢" },
+                    { id: 10, name: "Planet", type: "symbol", price: "122", floor: "120", icon: "🪐" },
+                    { id: 11, name: "Lotus Flower", type: "symbol", price: "400", floor: "380", icon: "🪷" },
+                    { id: 12, name: "Candy", type: "symbol", price: "6", floor: "5", icon: "🍬" }
+                ];
+                
+                if (filterType === 'gifts') return gifts.filter(g => g.type === 'gift');
+                if (filterType === 'models') return gifts.filter(g => g.type === 'model');
+                if (filterType === 'backgrounds') return gifts.filter(g => g.type === 'background');
+                if (filterType === 'symbols') return gifts.filter(g => g.type === 'symbol');
+                return gifts;
+            };
+            
+            const renderGifts = (gifts) => {
+                const giftList = document.getElementById('giftList');
+                giftList.innerHTML = '';
+                
+                gifts.forEach(gift => {
+                    const giftItem = document.createElement('div');
+                    giftItem.className = 'gift-item';
+                    giftItem.innerHTML = `
+                        <div class="gift-icon">${gift.icon}</div>
+                        <div class="gift-info">
+                            <div class="gift-name">${gift.name}</div>
+                            <div class="gift-price">
+                                <span class="ton-price">${gift.price} TON</span>
+                                <span class="floor-price">Floor: ${gift.floor}</span>
+                            </div>
+                        </div>
+                    `;
+                    
+                    giftItem.addEventListener('click', () => {
+                        // In a real implementation, this would show details or apply the gift
+                        alert(`Selected: ${gift.name}\nPrice: ${gift.price} TON\nFloor: ${gift.floor} TON`);
+                        
+                        // If it's a background, change the user card background
+                        if (gift.type === 'background') {
+                            const userCard = document.getElementById('userCard');
+                            if (gift.name === 'Lavender') {
+                                userCard.style.background = 'linear-gradient(135deg, #e6e6fa, #d8bfd8)';
+                            } else if (gift.name === 'Black') {
+                                userCard.style.background = 'linear-gradient(135deg, #1a1a1a, #0a0a0a)';
+                            } else if (gift.name === 'Malachite') {
+                                userCard.style.background = 'linear-gradient(135deg, #4a7b53, #2e5234)';
+                            }
+                        }
+                        
+                        // If it's a symbol, show the symbol on the user card
+                        if (gift.type === 'symbol') {
+                            const userCard = document.getElementById('userCard');
+                            const symbolElement = document.createElement('div');
+                            symbolElement.style.position = 'absolute';
+                            symbolElement.style.top = '15px';
+                            symbolElement.style.right = '15px';
+                            symbolElement.style.fontSize = '24px';
+                            symbolElement.textContent = gift.icon;
+                            symbolElement.style.zIndex = '2';
+                            userCard.appendChild(symbolElement);
+                        }
+                    });
+                    
+                    giftList.appendChild(giftItem);
+                });
+            };
+        });
+    </script>
+</body>
+</html>
