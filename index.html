@@ -3,694 +3,238 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GiftChecker</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <title>Enchanted Forest Visual Novel</title>
     <style>
         body {
-            background-color: #000;
-            color: #fff;
-            font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             overflow: hidden;
         }
 
-        #loading {
-            position: absolute;
+        .overlay {
+            position: fixed;
             top: 0;
             left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
+            transition: opacity 1s ease;
+            z-index: 10;
+        }
+
+        #menu {
+            text-align: center;
+            position: relative;
             width: 100%;
             height: 100%;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            align-items: center;
-            background: linear-gradient(135deg, #000, #333);
-            z-index: 10;
         }
 
-        #title {
-            font-size: 2em;
-            margin-bottom: 20px;
-        }
-
-        #progress-bar {
-            width: 80%;
-            height: 20px;
-            background-color: rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        #progress {
-            width: 0;
-            height: 100%;
-            background-color: #fff;
-            transition: width 0.5s;
-        }
-
-        #main {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            height: 100%;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        #filters {
-            display: flex;
-            justify-content: space-around;
-            width: 100%;
-            margin-bottom: 20px;
-        }
-
-        .filter-button {
-            background-color: #fff;
-            color: #000;
-            border: none;
+        #menu button {
+            margin: 10px;
             padding: 10px 20px;
-            border-radius: 20px;
+            font-size: 1.2em;
             cursor: pointer;
-            font-weight: bold;
-            position: relative;
         }
 
-        .filter-button::after {
-            content: '▼ ▲';
-            font-size: 0.5em;
+        #bottom-left {
             position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
+            bottom: 10px;
+            left: 10px;
         }
 
-        #preview-square {
-            background-color: rgba(128, 128, 128, 0.5);
-            border-radius: 20px;
-            width: 80%;
-            max-width: 400px;
-            padding: 20px;
+        #bottom-right {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .icon {
+            width: 30px;
+            height: 30px;
+            background-color: #ccc; /* Placeholder for icons */
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+        #game {
+            width: 100%;
+            height: 100%;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            position: relative;
-            backdrop-filter: blur(10px);
-            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
-            border: 1px solid rgba(255,255,255,0.2);
-            box-shadow: 0 4px 30px rgba(0,0,0,0.1);
-        }
-
-        #avatar {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            margin-bottom: 10px;
-        }
-
-        #name {
-            font-size: 1.5em;
-            margin-bottom: 5px;
-        }
-
-        #username-id {
-            display: flex;
             justify-content: space-between;
-            width: 100%;
-            margin-bottom: 10px;
-        }
-
-        #account-desc {
-            background-color: rgba(0,0,0,0.5);
-            border-radius: 10px;
-            padding: 10px;
-            width: 90%;
-            text-align: center;
-            backdrop-filter: blur(5px);
-        }
-
-        .tab {
-            display: none;
-            position: absolute;
-            top: 100px;
-            left: 0;
-            width: 100%;
-            height: calc(100% - 100px);
-            background: rgba(0,0,0,0.8);
-            z-index: 5;
-            overflow-y: auto;
             padding: 20px;
             box-sizing: border-box;
-            backdrop-filter: blur(10px);
         }
 
-        .tab-title {
-            font-size: 1.5em;
-            margin-bottom: 10px;
+        #game-text {
+            font-size: 1.1em;
+            margin-bottom: 20px;
         }
 
-        .tab-instruction {
-            font-size: 1em;
-            margin-bottom: 10px;
-        }
-
-        #search-input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 10px;
-            border: none;
-            background: rgba(255,255,255,0.1);
-            color: #fff;
-        }
-
-        .item-list {
+        #choices {
             display: flex;
             flex-direction: column;
+            gap: 10px;
         }
 
-        .item {
-            display: flex;
-            align-items: center;
-            background: rgba(255,255,255,0.05);
-            border-radius: 10px;
+        #choices button {
             padding: 10px;
-            margin-bottom: 10px;
+            font-size: 1em;
             cursor: pointer;
-        }
-
-        .select-icon {
-            width: 20px;
-            height: 20px;
-            border: 1px solid #fff;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-
-        .selected .select-icon {
-            background: #fff url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" stroke="%23000" stroke-width="2" fill="none"/></svg>') center/contain no-repeat;
-        }
-
-        .gift-icon {
-            width: 40px;
-            height: 40px;
-            background: #fff;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-
-        .item-info {
-            flex: 1;
-        }
-
-        .item-name {
-            font-weight: bold;
-        }
-
-        .item-price {
-            font-size: 0.8em;
-        }
-
-        .color-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-
-        #gift-status {
-            position: absolute;
-            top: 120px;
-            right: 20px;
-            font-size: 2em;
-        }
-
-        #symbols {
-            position: absolute;
-            bottom: 50px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 2em;
         }
     </style>
 </head>
 <body>
-    <div id="loading">
-        <div id="title">GiftChecker</div>
-        <div id="progress-bar">
-            <div id="progress"></div>
+    <div id="splash" class="overlay">Zerchi Games</div>
+    <div id="menu" style="display: none;">
+        <button onclick="startGame()">Play</button>
+        <button onclick="showSettings()">Settings</button>
+        <div id="bottom-left">
+            <div class="icon" onclick="openLink('https://www.youtube.com/c/KuplinovPlay')" title="Kuplinov Play"></div>
+        </div>
+        <div id="bottom-right">
+            <div class="icon" onclick="openLink('https://twitter.com/example')" title="Twitter"></div>
+            <div class="icon" onclick="openLink('https://instagram.com/example')" title="Instagram"></div>
+            <div class="icon" onclick="openLink('https://t.me/example')" title="Telegram"></div>
         </div>
     </div>
-    <div id="main">
-        <div id="filters">
-            <button class="filter-button" onclick="openTab('gifts')">Gifts</button>
-            <button class="filter-button" onclick="openTab('models')">Models</button>
-            <button class="filter-button" onclick="openTab('backgrounds')">Backgrounds</button>
-            <button class="filter-button" onclick="openTab('symbols')">Symbols</button>
-        </div>
-        <div id="preview-square">
-            <img id="avatar" src="" alt="Avatar">
-            <div id="name"></div>
-            <div id="gift-status"></div>
-            <div id="username-id">
-                <span id="username"></span>
-                <span id="user-id"></span>
-            </div>
-            <div id="account-desc"></div>
-            <div id="symbols"></div>
-        </div>
-    </div>
-
-    <div id="gifts-tab" class="tab">
-        <div class="tab-title">Gifts</div>
-        <div class="tab-instruction">Choose one and many</div>
-        <input id="gifts-search" type="text" placeholder="Find a gift" oninput="filterItems('gifts')">
-        <div id="gifts-list" class="item-list"></div>
-    </div>
-
-    <div id="models-tab" class="tab">
-        <div class="tab-title">Models</div>
-        <div class="tab-instruction">Choose one and many</div>
-        <input id="models-search" type="text" placeholder="Find a model" oninput="filterItems('models')">
-        <div id="models-list" class="item-list"></div>
-    </div>
-
-    <div id="backgrounds-tab" class="tab">
-        <div class="tab-title">Backgrounds</div>
-        <div class="tab-instruction">Choose one and many</div>
-        <input id="backgrounds-search" type="text" placeholder="Find a background" oninput="filterItems('backgrounds')">
-        <div id="backgrounds-list" class="item-list"></div>
-    </div>
-
-    <div id="symbols-tab" class="tab">
-        <div class="tab-title">Symbols</div>
-        <div class="tab-instruction">Choose one and many</div>
-        <input id="symbols-search" type="text" placeholder="Find a symbol" oninput="filterItems('symbols')">
-        <div id="symbols-list" class="item-list"></div>
+    <div id="game" style="display: none;">
+        <div id="game-text"></div>
+        <div id="choices"></div>
     </div>
 
     <script>
-        // Data arrays - hardcoded from fragment.com/gifts and examples
-        const gifts = [
-            {name: 'Artisan Bricks', price: 30, floor: 25, icon: '#fff'}, // Placeholder icon color
-            {name: 'Astral Shards', price: 40, floor: 35},
-            {name: 'B-Day Candles', price: 20, floor: 15},
-            {name: 'Berry Boxes', price: 25, floor: 20},
-            {name: 'Big Years', price: 35, floor: 30},
-            {name: 'Bonded Rings', price: 45, floor: 40},
-            {name: 'Bow Ties', price: 15, floor: 10},
-            {name: 'Bunny Muffins', price: 25, floor: 20},
-            {name: 'Candy Canes', price: 20, floor: 15},
-            {name: 'Cookie Hearts', price: 30, floor: 25},
-            {name: 'Crystal Balls', price: 40, floor: 35},
-            {name: 'Cupid Charms', price: 35, floor: 30},
-            {name: 'Desk Calendars', price: 25, floor: 20},
-            {name: 'Diamond Rings', price: 50, floor: 45},
-            {name: 'Durov’s Caps', price: 40, floor: 35},
-            {name: 'Easter Eggs', price: 20, floor: 15},
-            {name: 'Electric Skulls', price: 30, floor: 25},
-            {name: 'Eternal Candles', price: 35, floor: 30},
-            {name: 'Eternal Roses', price: 45, floor: 40},
-            {name: 'Evil Eyes', price: 25, floor: 20},
-            {name: 'Flying Brooms', price: 30, floor: 25},
-            {name: 'Gem Signets', price: 40, floor: 35},
-            {name: 'Genie Lamps', price: 35, floor: 30},
-            {name: 'Ginger Cookies', price: 20, floor: 15},
-            {name: 'Hanging Stars', price: 25, floor: 20},
-            {name: 'Heart Lockets', price: 30, floor: 25},
-            {name: 'Heroic Helmets', price: 40, floor: 35},
-            {name: 'Hex Pots', price: 25, floor: 20},
-            {name: 'Holiday Drinks', price: 20, floor: 15},
-            {name: 'Homemade Cakes', price: 30, floor: 25},
-            {name: 'Hypno Lollipops', price: 25, floor: 20},
-            {name: 'Input Keys', price: 35, floor: 30},
-            {name: 'Ion Gems', price: 40, floor: 35},
-            {name: 'Ionic Dryers', price: 30, floor: 25},
-            {name: 'Jacks-in-the-Box', price: 25, floor: 20},
-            {name: 'Jelly Bunnies', price: 20, floor: 15},
-            {name: 'Jester Hats', price: 30, floor: 25},
-            {name: 'Jingle Bells', price: 25, floor: 20},
-            {name: 'Jolly Chimps', price: 35, floor: 30},
-            {name: 'Joyful Bundles', price: 40, floor: 35},
-            {name: 'Kissed Frogs', price: 30, floor: 25},
-            {name: 'Light Swords', price: 35, floor: 30},
-            {name: 'Lol Pops', price: 20, floor: 15},
-            {name: 'Loot Bags', price: 25, floor: 20},
-            {name: 'Love Candles', price: 30, floor: 25},
-            {name: 'Love Potions', price: 35, floor: 30},
-            {name: 'Low Riders', price: 40, floor: 35},
-            {name: 'Lunar Snakes', price: 25, floor: 20},
-            {name: 'Lush Bouquets', price: 30, floor: 25},
-            {name: 'Mad Pumpkins', price: 25, floor: 20},
-            {name: 'Magic Potions', price: 35, floor: 30},
-            {name: 'Mighty Arms', price: 40, floor: 35},
-            {name: 'Mini Oscars', price: 30, floor: 25},
-            {name: 'Moon Pendants', price: 35, floor: 30},
-            {name: 'Nail Bracelets', price: 25, floor: 20},
-            {name: 'Neko Helmets', price: 30, floor: 25},
-            {name: 'Party Sparklers', price: 20, floor: 15},
-            {name: 'Perfume Bottles', price: 35, floor: 30},
-            {name: 'Pet Snakes', price: 25, floor: 20},
-            {name: 'Plush Pepes', price: 40, floor: 35},
-            {name: 'Precious Peaches', price: 30, floor: 25},
-            {name: 'Record Players', price: 35, floor: 30},
-            {name: 'Restless Jars', price: 25, floor: 20},
-            {name: 'Sakura Flowers', price: 30, floor: 25},
-            {name: 'Santa Hats', price: 20, floor: 15},
-            {name: 'Scared Cats', price: 25, floor: 20},
-            {name: 'Sharp Tongues', price: 30, floor: 25},
-            {name: 'Signet Rings', price: 35, floor: 30},
-            {name: 'Skull Flowers', price: 25, floor: 20},
-            {name: 'Sleigh Bells', price: 30, floor: 25},
-            {name: 'Snake Boxes', price: 25, floor: 20},
-            {name: 'Snoop Cigars', price: 35, floor: 30},
-            {name: 'Snoop Doggs', price: 40, floor: 35},
-            {name: 'Snow Globes', price: 30, floor: 25},
-            {name: 'Snow Mittens', price: 25, floor: 20},
-            {name: 'Spiced Wines', price: 30, floor: 25},
-            {name: 'Spy Agarics', price: 20, floor: 15},
-            {name: 'Star Notepads', price: 25, floor: 20},
-            {name: 'Stellar Rockets', price: 35, floor: 30},
-            {name: 'Swag Bags', price: 30, floor: 25},
-            {name: 'Swiss Watches', price: 40, floor: 35},
-            {name: 'Tama Gadgets', price: 35, floor: 30},
-            {name: 'Top Hats', price: 30, floor: 25},
-            {name: 'Toy Bears', price: 25, floor: 20},
-            {name: 'Trapped Hearts', price: 30, floor: 25},
-            {name: 'Valentine Boxes', price: 20, floor: 15},
-            {name: 'Vintage Cigars', price: 35, floor: 30},
-            {name: 'Voodoo Dolls', price: 25, floor: 20},
-            {name: 'Westside Signs', price: 30, floor: 25},
-            {name: 'Whip Cupcakes', price: 25, floor: 20},
-            {name: 'Winter Wreaths', price: 30, floor: 25},
-            {name: 'Witch Hats', price: 25, floor: 20},
-            {name: 'Xmas Stockings', price: 20, floor: 15}
-            // Add more if needed, but this is long list
-        ].sort((a, b) => a.name.localeCompare(b.name));
+        const WebApp = window.Telegram.WebApp;
+        WebApp.ready();
 
-        const models = [
-            {name: 'Art Nouveau', price: 10, floor: 8, color: '#FFD700'},
-            {name: 'Eggplant', price: 15, floor: 12, color: '#9932CC'},
-            {name: 'Dipper', price: 20, floor: 18, color: '#00BFFF'},
-            {name: 'Polka Dots', price: 12, floor: 10, color: '#FF69B4'},
-            {name: 'Stripes', price: 14, floor: 11, color: '#FF0000'},
-            {name: 'Checkered', price: 16, floor: 13, color: '#0000FF'},
-            {name: 'Plain', price: 10, floor: 8, color: '#808080'},
-            {name: 'Floral', price: 18, floor: 15, color: '#FFC0CB'},
-            {name: 'Geometric', price: 20, floor: 17, color: '#00FF00'},
-            {name: 'Abstract', price: 22, floor: 19, color: '#FFFF00'},
-            {name: 'Vintage', price: 15, floor: 12, color: '#A52A2A'},
-            {name: 'Modern', price: 17, floor: 14, color: '#FFFFFF'},
-            {name: 'Retro', price: 19, floor: 16, color: '#000000'},
-            {name: 'Futuristic', price: 21, floor: 18, color: '#C0C0C0'},
-            {name: 'Classic', price: 13, floor: 10, color: '#FFDAB9'},
-            // More to make longer
-            {name: 'Baroque', price: 25, floor: 22, color: '#DAA520'},
-            {name: 'Rococo', price: 27, floor: 24, color: '#FFB6C1'},
-            {name: 'Minimalist', price: 11, floor: 9, color: '#F5F5F5'},
-            {name: 'Industrial', price: 23, floor: 20, color: '#808080'},
-            {name: 'Bohemian', price: 26, floor: 23, color: '#FF4500'}
-        ].sort((a, b) => a.name.localeCompare(b.name));
-
-        const backgrounds = [
-            {name: 'Black', price: 5, floor: 4, color: '#000000'},
-            {name: 'Lavender', price: 6, floor: 5, color: '#E6E6FA'},
-            {name: 'Aquamarine', price: 7, floor: 6, color: '#7FFFD4'},
-            {name: 'Malachite', price: 8, floor: 7, color: '#0BDA51'},
-            {name: 'Purple', price: 5, floor: 4, color: '#800080'},
-            {name: 'Red', price: 6, floor: 5, color: '#FF0000'},
-            {name: 'Blue', price: 7, floor: 6, color: '#0000FF'},
-            {name: 'Green', price: 8, floor: 7, color: '#008000'},
-            {name: 'Yellow', price: 5, floor: 4, color: '#FFFF00'},
-            {name: 'Orange', price: 6, floor: 5, color: '#FFA500'},
-            {name: 'Pink', price: 7, floor: 6, color: '#FFC0CB'},
-            {name: 'White', price: 8, floor: 7, color: '#FFFFFF'},
-            {name: 'Gray', price: 5, floor: 4, color: '#808080'},
-            // More
-            {name: 'Indigo', price: 9, floor: 8, color: '#4B0082'},
-            {name: 'Violet', price: 10, floor: 9, color: '#EE82EE'},
-            {name: 'Cyan', price: 6, floor: 5, color: '#00FFFF'},
-            {name: 'Magenta', price: 7, floor: 6, color: '#FF00FF'},
-            {name: 'Teal', price: 8, floor: 7, color: '#008080'}
-        ].sort((a, b) => a.name.localeCompare(b.name));
-
-        const symbols = [
-            {name: 'Planet', price: 10, floor: 8, symbol: '🪐'},
-            {name: 'Lotus Flower', price: 12, floor: 10, symbol: '🌸'},
-            {name: 'Candy', price: 15, floor: 12, symbol: '🍬'},
-            {name: 'Star', price: 10, floor: 8, symbol: '⭐'},
-            {name: 'Heart', price: 12, floor: 10, symbol: '❤️'},
-            {name: 'Skull', price: 15, floor: 12, symbol: '💀'},
-            {name: 'Moon', price: 10, floor: 8, symbol: '🌙'},
-            {name: 'Sun', price: 12, floor: 10, symbol: '☀️'},
-            {name: 'Flower', price: 15, floor: 12, symbol: '🌺'},
-            {name: 'Diamond', price: 10, floor: 8, symbol: '💎'},
-            {name: 'Lock', price: 12, floor: 10, symbol: '🔒'},
-            {name: 'Key', price: 15, floor: 12, symbol: '🔑'},
-            // More
-            {name: 'Bell', price: 10, floor: 8, symbol: '🔔'},
-            {name: 'Gift', price: 12, floor: 10, symbol: '🎁'},
-            {name: 'Cake', price: 15, floor: 12, symbol: '🍰'},
-            {name: 'Ring', price: 10, floor: 8, symbol: '💍'},
-            {name: 'Crown', price: 12, floor: 10, symbol: '👑'}
-        ].sort((a, b) => a.name.localeCompare(b.name));
-
-        // Selected items
-        let selectedGift = null;
-        let selectedModel = null;
-        let selectedBackground = null;
-        let selectedSymbol = null;
-
-        // Function to validate user data
-        function validateUserData(user) {
-            if (!user) {
-                throw new Error('User data not available');
-            }
-            if (typeof user.id !== 'number') {
-                throw new Error('Invalid user ID');
-            }
-            if (typeof user.first_name !== 'string') {
-                throw new Error('Invalid first name');
-            }
-            if (user.username && typeof user.username !== 'string') {
-                throw new Error('Invalid username');
-            }
-            if (user.photo_url && typeof user.photo_url !== 'string') {
-                throw new Error('Invalid photo URL');
-            }
-            // More checks
-            if (user.id < 0) {
-                throw new Error('User ID cannot be negative');
-            }
-            if (user.first_name.length > 100) {
-                throw new Error('First name too long');
-            }
-            if (user.last_name && user.last_name.length > 100) {
-                throw new Error('Last name too long');
-            }
-            if (user.username && !/^[a-zA-Z0-9_]+$/.test(user.username)) {
-                throw new Error('Invalid username format');
-            }
-            // Avatar check: ensure URL is https
-            if (user.photo_url && !user.photo_url.startsWith('https://')) {
-                console.warn('Avatar URL not secure');
-            }
-            return true;
+        // Request fullscreen if not already
+        if (!WebApp.isFullscreen) {
+            WebApp.requestFullscreen();
         }
 
-        // Function to verify initData signature (requires bot token, placeholder)
-        function verifyInitData(initData) {
-            // In real app, use HMAC-SHA256 with bot token to verify
-            // For demo, assume valid
-            console.log('Verifying initData...');
-            // Simulate check
-            const parts = initData.split('&');
-            if (parts.length < 1) {
-                throw new Error('Invalid initData');
-            }
-            // More detailed checks
-            const hashIndex = parts.findIndex(p => p.startsWith('hash='));
-            if (hashIndex === -1) {
-                throw new Error('Missing hash in initData');
-            }
-            // Assume valid for now
-            return true;
+        // Lock orientation if not locked (locks to current; assume user starts in portrait)
+        if (!WebApp.isOrientationLocked) {
+            WebApp.lockOrientation();
         }
 
-        // Function to simulate real checks with delays
-        function performChecks(user, callback) {
-            // Check name
-            console.log('Checking name...');
+        // Start device orientation tracking (optional, for monitoring)
+        WebApp.DeviceOrientation.start();
+
+        // Splash screen logic: show for 5 seconds, then fade out
+        setTimeout(() => {
+            const splash = document.getElementById('splash');
+            splash.style.opacity = 0;
             setTimeout(() => {
-                // Check avatar
-                console.log('Checking avatar...');
-                setTimeout(() => {
-                    // Check username
-                    console.log('Checking username...');
-                    setTimeout(() => {
-                        // Check account data
-                        console.log('Checking account...');
-                        setTimeout(() => {
-                            callback();
-                        }, 1000);
-                    }, 1000);
-                }, 1000);
-            }, 1000);
+                splash.style.display = 'none';
+                document.getElementById('menu').style.display = 'flex';
+            }, 1000); // Fade duration
+        }, 5000);
+
+        function openLink(url) {
+            WebApp.openLink(url);
         }
 
-        // Animate progress bar
-        function animateProgress() {
-            const progress = document.getElementById('progress');
-            let width = 0;
-            const interval = setInterval(() => {
-                if (width >= 100) {
-                    clearInterval(interval);
-                    showMain();
-                } else {
-                    width += 10;
-                    progress.style.width = width + '%';
-                }
-            }, 500); // Slow for checks
+        function showSettings() {
+            alert('Settings: No options available yet. (e.g., Sound On/Off)');
         }
 
-        // Show main after loading
-        function showMain() {
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('main').style.display = 'flex';
+        function startGame() {
+            // Create darkening overlay for menu transition
+            const overlay = document.createElement('div');
+            overlay.className = 'overlay';
+            overlay.style.opacity = 0;
+            document.body.appendChild(overlay);
+            overlay.style.opacity = 1; // Fade in
+            setTimeout(() => {
+                document.getElementById('menu').style.display = 'none';
+                overlay.remove();
+                document.getElementById('game').style.display = 'flex';
+                renderScene('start');
+            }, 1000); // Fade duration
         }
 
-        // Open tab
-        function openTab(type) {
-            const tabs = document.querySelectorAll('.tab');
-            tabs.forEach(tab => tab.style.display = 'none');
-            document.getElementById(type + '-tab').style.display = 'block';
-        }
-
-        // Close tabs on click outside
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.filter-button') && !e.target.closest('.tab')) {
-                const tabs = document.querySelectorAll('.tab');
-                tabs.forEach(tab => tab.style.display = 'none');
+        // Mini scenario: "Lost in the Enchanted Forest"
+        // Simple branching story with choices and endings.
+        const scenes = {
+            start: {
+                text: "You wake up in a dense, enchanted forest. The trees seem to whisper secrets, and mist swirls around your feet. Ahead, the path splits: one trail leads left into shadowy woods, the other right toward a faint glow.",
+                choices: [
+                    { text: "Go left into the shadows", next: "left" },
+                    { text: "Go right toward the glow", next: "right" }
+                ]
+            },
+            left: {
+                text: "As you venture left, you stumble upon a rushing river blocking your path. The water looks deep, but you spot a rickety bridge. Alternatively, you could follow the riverbank upstream.",
+                choices: [
+                    { text: "Cross the bridge", next: "cross" },
+                    { text: "Follow the riverbank", next: "follow" }
+                ]
+            },
+            right: {
+                text: "Heading right, you encounter a snarling wolf guarding a clearing. It eyes you warily. Do you try to run past it or stand your ground and attempt to befriend it?",
+                choices: [
+                    { text: "Run past the wolf", next: "run" },
+                    { text: "Stand ground and befriend", next: "befriend" }
+                ]
+            },
+            cross: {
+                text: "You cautiously cross the bridge, but it collapses midway! You fall into the river and are swept away, eventually washing up in a distant village. You've escaped the forest, but with a few bruises. THE END.",
+                choices: []
+            },
+            follow: {
+                text: "Following the riverbank leads you to a hidden waterfall with a cave behind it. Inside, you find a treasure chest filled with gold and a map out of the forest. Success! THE END.",
+                choices: []
+            },
+            run: {
+                text: "You dash past the wolf, but it chases you relentlessly. Exhausted, you trip and fall, and the wolf catches up. Unfortunately, this is the end of your adventure. THE END.",
+                choices: []
+            },
+            befriend: {
+                text: "Standing your ground, you speak softly to the wolf. Miraculously, it calms down and guides you through the clearing to a safe exit from the forest. You've made a new friend! THE END.",
+                choices: []
             }
-        });
+        };
 
-        // Filter items
-        function filterItems(type) {
-            const search = document.getElementById(type + '-search').value.toLowerCase();
-            const list = document.getElementById(type + '-list');
-            list.innerHTML = '';
-            const data = window[type];
-            data.filter(item => item.name.toLowerCase().includes(search))
-                .forEach(item => {
-                    const div = createItemDiv(item, type);
-                    list.appendChild(div);
-                });
-        }
+        function renderScene(sceneId) {
+            const scene = scenes[sceneId];
+            if (!scene) return;
 
-        // Create item div
-        function createItemDiv(item, type) {
-            const div = document.createElement('div');
-            div.className = 'item';
-            div.innerHTML = `
-                <div class="select-icon"></div>
-                ${type === 'gifts' || type === 'models' ? `<div class="gift-icon" style="background-color: ${item.color || '#fff'};"></div>` : ''}
-                ${type === 'backgrounds' ? `<div class="color-icon" style="background-color: ${item.color};"></div>` : ''}
-                <div class="item-info">
-                    <div class="item-name">${item.name}</div>
-                    <div class="item-price">${item.price} TON (Floor: ${item.floor})</div>
-                </div>
-            `;
-            div.onclick = () => selectItem(item, type, div);
-            return div;
-        }
+            document.getElementById('game-text').innerText = scene.text;
+            const choicesDiv = document.getElementById('choices');
+            choicesDiv.innerHTML = '';
 
-        // Select item
-        function selectItem(item, type, div) {
-            // Allow one selection per type for simplicity
-            if (type === 'gifts') selectedGift = item;
-            else if (type === 'models') selectedModel = item;
-            else if (type === 'backgrounds') selectedBackground = item;
-            else if (type === 'symbols') selectedSymbol = item;
-
-            const items = document.querySelectorAll(`#${type}-list .item`);
-            items.forEach(i => i.classList.remove('selected'));
-            div.classList.add('selected');
-
-            updatePreview();
-        }
-
-        // Update preview
-        function updatePreview() {
-            if (selectedGift) {
-                document.getElementById('gift-status').textContent = selectedGift.name; // Placeholder for icon
-            }
-            if (selectedModel) {
-                // Change gift appearance, simulate with color
-                document.getElementById('gift-status').style.color = selectedModel.color || '#fff';
-            }
-            if (selectedBackground) {
-                document.getElementById('preview-square').style.backgroundColor = selectedBackground.color;
-            }
-            if (selectedSymbol) {
-                document.getElementById('symbols').textContent = selectedSymbol.symbol;
-            }
-        }
-
-        // Populate lists
-        function populateList(type, data, listId) {
-            const list = document.getElementById(listId);
-            data.forEach(item => {
-                const div = createItemDiv(item, type);
-                list.appendChild(div);
-            });
-        }
-
-        // Init
-        window.addEventListener('load', () => {
-            Telegram.WebApp.ready();
-            const initData = Telegram.WebApp.initData;
-            try {
-                verifyInitData(initData);
-            } catch (e) {
-                console.error('Init data verification failed:', e);
-                // Handle error, perhaps default
-            }
-
-            const user = Telegram.WebApp.initDataUnsafe.user;
-            try {
-                validateUserData(user);
-            } catch (e) {
-                console.error('User data validation failed:', e);
-                // Set defaults
-                user.first_name = 'Unknown';
-                user.username = 'unknown';
-                user.id = 0;
-                user.photo_url = '';
-            }
-
-            performChecks(user, () => {
-                // After checks, set data
-                document.getElementById('avatar').src = user.photo_url || 'https://via.placeholder.com/100';
-                document.getElementById('name').textContent = (user.first_name + (user.last_name ? ' ' + user.last_name : '')) || 'Unknown User';
-                document.getElementById('username').textContent = user.username ? '@' + user.username : '@unknown';
-                document.getElementById('user-id').textContent = user.id || 'Unknown ID';
-                document.getElementById('account-desc').textContent = 'Verified Telegram Account: ID ' + user.id + ', Username: ' + (user.username || 'none') + ', Name: ' + user.first_name;
-
-                // Populate lists
-                populateList('gifts', gifts, 'gifts-list');
-                populateList('models', models, 'models-list');
-                populateList('backgrounds', backgrounds, 'backgrounds-list');
-                populateList('symbols', symbols, 'symbols-list');
+            scene.choices.forEach(choice => {
+                const button = document.createElement('button');
+                button.innerText = choice.text;
+                button.onclick = () => renderScene(choice.next);
+                choicesDiv.appendChild(button);
             });
 
-            animateProgress();
-        });
+            if (scene.choices.length === 0) {
+                const restartButton = document.createElement('button');
+                restartButton.innerText = 'Restart';
+                restartButton.onclick = () => renderScene('start');
+                choicesDiv.appendChild(restartButton);
+            }
+        }
     </script>
 </body>
 </html>
