@@ -5,11 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GiftChecker</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        * {
+            box-sizing: border-box;
+        }
         body {
-            background-color: #000;
-            color: #fff;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #000000 0%, #0a0a23 50%, #001133 100%);
+            color: #ffffff;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
             padding: 0;
             display: flex;
@@ -18,6 +24,19 @@
             justify-content: center;
             height: 100vh;
             overflow: hidden;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 80%, rgba(0, 123, 255, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(0, 123, 255, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
         }
         .loading {
             display: flex;
@@ -26,23 +45,61 @@
             justify-content: center;
             height: 100%;
             width: 100%;
+            z-index: 10;
+            position: relative;
         }
         .loading-title {
-            font-size: 24px;
-            margin-bottom: 20px;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 40px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        @keyframes glow {
+            from { text-shadow: 0 0 20px rgba(255, 255, 255, 0.3); }
+            to { text-shadow: 0 0 30px rgba(0, 123, 255, 0.5); }
+        }
+        .progress-container {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 4px;
+            width: 250px;
+            height: 25px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
         .progress-bar {
-            width: 200px;
-            height: 20px;
-            background-color: #333;
-            border-radius: 10px;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 11px;
             overflow: hidden;
+            position: relative;
         }
         .progress {
             width: 0;
             height: 100%;
-            background-color: #fff;
-            transition: width 0.1s linear;
+            background: linear-gradient(90deg, #ffffff 0%, #007bff 100%);
+            transition: width 0.3s ease;
+            border-radius: 11px;
+            position: relative;
+            overflow: hidden;
+        }
+        .progress::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: shimmer 1.5s infinite;
+        }
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
         }
         .main {
             display: none;
@@ -50,145 +107,296 @@
             align-items: center;
             width: 100%;
             height: 100%;
+            position: relative;
+            z-index: 5;
+            padding: 20px;
+            overflow-y: auto;
         }
         .filters {
             display: flex;
             justify-content: center;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            z-index: 10;
         }
         .filter-button {
-            background-color: #fff;
-            color: #000;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 12px 24px;
+            border-radius: 25px;
             cursor: pointer;
             font-size: 16px;
+            font-weight: 500;
             position: relative;
-            box-shadow: 0 4px 10px rgba(255,255,255,0.2);
-            transition: transform 0.2s;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        .filter-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        .filter-button:hover::before {
+            left: 100%;
         }
         .filter-button:hover {
-            transform: scale(1.05);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 123, 255, 0.3);
+            border-color: rgba(0, 123, 255, 0.5);
         }
         .arrow {
             font-size: 12px;
-            margin-left: 5px;
+            margin-left: 8px;
+            transition: transform 0.3s;
+        }
+        .filter-button:hover .arrow {
+            transform: scale(1.2);
         }
         .tab {
             display: none;
-            position: absolute;
-            top: 60px;
-            background-color: #222;
-            border-radius: 20px;
-            padding: 20px;
-            width: 80%;
-            max-height: 60%;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80%;
             overflow-y: auto;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            animation: slideIn 0.3s ease-out;
+            z-index: 20;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translate(-50%, -60%); }
+            to { opacity: 1; transform: translate(-50%, -50%); }
+        }
+        .tab::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
         }
         .tab-title {
-            font-size: 20px;
+            font-size: 24px;
+            font-weight: 600;
             margin-bottom: 10px;
+            text-align: center;
+            color: #ffffff;
         }
         .tab-subtitle {
             font-size: 14px;
-            margin-bottom: 10px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 20px;
+            text-align: center;
         }
         .search-input {
             width: 100%;
-            padding: 10px;
-            border-radius: 10px;
-            border: none;
-            margin-bottom: 10px;
-            background-color: #333;
-            color: #fff;
+            padding: 15px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: rgba(0, 123, 255, 0.5);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+        }
+        .list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
         .list-item {
             display: flex;
             align-items: center;
-            padding: 10px;
-            border-bottom: 1px solid #444;
+            padding: 15px;
+            border-radius: 15px;
             cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        .list-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
         .list-item.selected {
-            background-color: #444;
+            background: rgba(0, 123, 255, 0.2);
+            border-color: rgba(0, 123, 255, 0.3);
         }
         .check-mark {
-            margin-right: 10px;
+            margin-right: 15px;
             font-size: 20px;
+            color: rgba(255, 255, 255, 0.5);
+            transition: color 0.3s;
+        }
+        .list-item.selected .check-mark {
+            color: #00ff88;
         }
         .item-icon {
-            width: 30px;
-            height: 30px;
-            background-color: #555;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #007bff, #00d4ff);
             border-radius: 50%;
-            margin-right: 10px;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
         }
         .item-name {
             flex: 1;
+            font-weight: 500;
         }
         .item-price {
             text-align: right;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 600;
+        }
+        .item-price br {
+            display: none;
         }
         .preview {
-            background-color: #333;
-            border-radius: 20px;
-            padding: 20px;
-            width: 80%;
-            max-width: 400px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            padding: 30px;
+            width: 90%;
+            max-width: 450px;
             position: relative;
-            box-shadow: 0 4px 20px rgba(255,255,255,0.1);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            transition: all 0.5s ease;
+            margin: 20px auto;
+        }
+        .preview:hover {
+            transform: scale(1.02);
+            box-shadow: 0 25px 70px rgba(0, 123, 255, 0.2);
         }
         .avatar {
-            width: 100px;
-            height: 100px;
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
-            background-color: #555;
-            margin: 0 auto 10px;
+            background: linear-gradient(135deg, #333, #555);
+            margin: 0 auto 20px;
             display: block;
             overflow: hidden;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+        .avatar:hover {
+            transform: scale(1.05);
         }
         .name {
-            font-size: 20px;
+            font-size: 24px;
             text-align: center;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+        .gift-status {
+            font-size: 18px;
+            color: #00ff88;
+            font-weight: 500;
         }
         .username-id {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
         }
         .bio {
-            background-color: rgba(0,0,0,0.5);
-            border-radius: 10px;
-            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 15px;
             font-size: 14px;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
-        .gift-status {
-            margin-left: 5px;
-            font-size: 18px;
+            color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: center;
+            line-height: 1.4;
         }
         .symbol {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: 20px;
+            right: 20px;
+            font-size: 28px;
+            color: #ffd700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+        .close-tab {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.5);
             font-size: 24px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .close-tab:hover {
+            color: #ffffff;
         }
     </style>
 </head>
 <body>
     <div class="loading">
         <div class="loading-title">GiftChecker</div>
-        <div class="progress-bar">
-            <div class="progress"></div>
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress"></div>
+            </div>
         </div>
     </div>
     <div class="main">
@@ -199,24 +407,28 @@
             <button class="filter-button" onclick="openTab('symbols')">Symbols <span class="arrow">▼▲</span></button>
         </div>
         <div id="gifts-tab" class="tab">
+            <button class="close-tab" onclick="closeTab()">×</button>
             <div class="tab-title">Gifts</div>
             <div class="tab-subtitle">Choose one</div>
             <input type="text" class="search-input" placeholder="Find a gift" oninput="filterList('gifts-list', this.value)">
             <div id="gifts-list" class="list"></div>
         </div>
         <div id="models-tab" class="tab">
+            <button class="close-tab" onclick="closeTab()">×</button>
             <div class="tab-title">Models</div>
             <div class="tab-subtitle">Choose one</div>
             <input type="text" class="search-input" placeholder="Find a model" oninput="filterList('models-list', this.value)">
             <div id="models-list" class="list"></div>
         </div>
         <div id="backgrounds-tab" class="tab">
+            <button class="close-tab" onclick="closeTab()">×</button>
             <div class="tab-title">Backgrounds</div>
             <div class="tab-subtitle">Choose one</div>
             <input type="text" class="search-input" placeholder="Find a background" oninput="filterList('backgrounds-list', this.value)">
             <div id="backgrounds-list" class="list"></div>
         </div>
         <div id="symbols-tab" class="tab">
+            <button class="close-tab" onclick="closeTab()">×</button>
             <div class="tab-title">Symbols</div>
             <div class="tab-subtitle">Choose one</div>
             <input type="text" class="search-input" placeholder="Find a symbol" oninput="filterList('symbols-list', this.value)">
@@ -229,192 +441,211 @@
                 <div id="username"></div>
                 <div id="user-id"></div>
             </div>
-            <div class="bio" id="bio">Bio goes here (not fetchable via WebApp API, placeholder)</div>
+            <div class="bio" id="bio">Your Telegram bio (cannot be fetched via WebApp API, use placeholder or integrate with a backend bot for real checks)</div>
             <div class="symbol" id="symbol"></div>
         </div>
     </div>
     <script>
         const tg = window.Telegram.WebApp;
         tg.ready();
+        tg.expand();
 
         const user = tg.initDataUnsafe.user || { first_name: 'Test', last_name: 'User', username: 'testuser', id: 123456, photo_url: '' };
-        const avatarUrl = user.photo_url || 'https://placehold.co/100x100';
-        const fullName = `${user.first_name} ${user.last_name || ''}`.trim();
-        const username = `@${user.username || 'unknown'}`;
-        const userId = `Telegram User ID: ${user.id}`;
-        const bio = 'Your Telegram bio (cannot be fetched via WebApp, use placeholder or backend bot)';
+        let avatarUrl = user.photo_url || 'https://via.placeholder.com/120?text=Avatar';
+        const fullName = `${user.first_name || ''} ${user.last_name || ''}`.trim() || 'Unknown User';
+        const username = user.username ? `@${user.username}` : '@unknown';
+        const userId = `ID: ${user.id}`;
+        const bio = 'Your bio description here... (Real bio requires bot integration via Telegram Bot API)';
 
-        // Hardcoded lists from scraped data
+        // Enhanced hardcoded lists with sample prices (in real app, fetch from fragment.com API or scrape)
         const gifts = [
-            {name: 'Artisan Bricks', slug: 'artisanbrick', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Astral Shards', slug: 'astralshard', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'B-Day Candles', slug: 'bdaycandle', floorPrice: 'N/A', price: 'N/A'},
-            // Add all from the list, to make large code
-            {name: 'Berry Boxes', slug: 'berrybox', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Big Years', slug: 'bigyear', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Bonded Rings', slug: 'bondedring', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Bow Ties', slug: 'bowtie', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Bunny Muffins', slug: 'bunnymuffin', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Candy Canes', slug: 'candycane', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Cookie Hearts', slug: 'cookieheart', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Crystal Balls', slug: 'crystalball', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Cupid Charms', slug: 'cupidcharm', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Desk Calendars', slug: 'deskcalendar', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Diamond Rings', slug: 'diamondring', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Durov’s Caps', slug: 'durovscap', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Easter Eggs', slug: 'easteregg', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Electric Skulls', slug: 'electricskull', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Eternal Candles', slug: 'eternalcandle', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Eternal Roses', slug: 'eternalrose', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Evil Eyes', slug: 'evileye', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Flying Brooms', slug: 'flyingbroom', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Gem Signets', slug: 'gemsignet', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Genie Lamps', slug: 'genielamp', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Ginger Cookies', slug: 'gingercookie', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Hanging Stars', slug: 'hangingstar', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Heart Lockets', slug: 'heartlocket', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Heroic Helmets', slug: 'heroichelmet', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Hex Pots', slug: 'hexpot', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Holiday Drinks', slug: 'holidaydrink', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Homemade Cakes', slug: 'homemadecake', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Hypno Lollipops', slug: 'hypnolollipop', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Input Keys', slug: 'inputkey', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Ion Gems', slug: 'iongem', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Ionic Dryers', slug: 'ionicdryer', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Jacks-in-the-Box', slug: 'jackinthebox', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Jelly Bunnies', slug: 'jellybunny', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Jester Hats', slug: 'jesterhat', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Jingle Bells', slug: 'jinglebells', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Jolly Chimps', slug: 'jollychimp', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Joyful Bundles', slug: 'joyfulbundle', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Kissed Frogs', slug: 'kissedfrog', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Light Swords', slug: 'lightsword', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Lol Pops', slug: 'lolpop', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Loot Bags', slug: 'lootbag', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Love Candles', slug: 'lovecandle', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Love Potions', slug: 'lovepotion', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Low Riders', slug: 'lowrider', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Lunar Snakes', slug: 'lunarsnake', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Lush Bouquets', slug: 'lushbouquet', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Mad Pumpkins', slug: 'madpumpkin', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Magic Potions', slug: 'magicpotion', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Mighty Arms', slug: 'mightyarm', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Mini Oscars', slug: 'minioscar', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Moon Pendants', slug: 'moonpendant', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Nail Bracelets', slug: 'nailbracelet', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Neko Helmets', slug: 'nekohelmet', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Party Sparklers', slug: 'partysparkler', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Perfume Bottles', slug: 'perfumebottle', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Pet Snakes', slug: 'petsnake', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Plush Pepes', slug: 'plushpepe', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Precious Peaches', slug: 'preciouspeach', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Record Players', slug: 'recordplayer', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Restless Jars', slug: 'restlessjar', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Sakura Flowers', slug: 'sakuraflower', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Santa Hats', slug: 'santahat', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Scared Cats', slug: 'scaredcat', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Sharp Tongues', slug: 'sharptongue', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Signet Rings', slug: 'signetring', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Skull Flowers', slug: 'skullflower', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Sleigh Bells', slug: 'sleighbell', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Snake Boxes', slug: 'snakebox', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Snoop Cigars', slug: 'snoopcigar', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Snoop Doggs', slug: 'snoopdogg', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Snow Globes', slug: 'snowglobe', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Snow Mittens', slug: 'snowmittens', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Spiced Wines', slug: 'spicedwine', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Spy Agarics', slug: 'spyagaric', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Star Notepads', slug: 'starnotepad', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Stellar Rockets', slug: 'stellarrocket', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Swag Bags', slug: 'swagbag', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Swiss Watches', slug: 'swisswatch', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Tama Gadgets', slug: 'tamagadget', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Top Hats', slug: 'tophat', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Toy Bears', slug: 'toybear', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Trapped Hearts', slug: 'trappedheart', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Valentine Boxes', slug: 'valentinebox', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Vintage Cigars', slug: 'vintagecigar', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Voodoo Dolls', slug: 'voodoodoll', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Westside Signs', slug: 'westsidesign', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Whip Cupcakes', slug: 'whipcupcake', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Winter Wreaths', slug: 'winterwreath', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Witch Hats', slug: 'witchhat', floorPrice: 'N/A', price: 'N/A'},
-            {name: 'Xmas Stockings', slug: 'xmasstocking', floorPrice: 'N/A', price: 'N/A'}
+            {name: 'Artisan Bricks', slug: 'artisanbrick', floorPrice: '15.2', price: '20 TON'},
+            {name: 'Astral Shards', slug: 'astralshard', floorPrice: '8.5', price: '12 TON'},
+            {name: 'B-Day Candles', slug: 'bdaycandle', floorPrice: '5.1', price: '7 TON'},
+            {name: 'Berry Boxes', slug: 'berrybox', floorPrice: '22.3', price: '25 TON'},
+            {name: 'Big Years', slug: 'bigyear', floorPrice: '3.9', price: '5 TON'},
+            {name: 'Bonded Rings', slug: 'bondedring', floorPrice: '45.7', price: '50 TON'},
+            {name: 'Bow Ties', slug: 'bowtie', floorPrice: '12.4', price: '15 TON'},
+            {name: 'Bunny Muffins', slug: 'bunnymuffin', floorPrice: '18.6', price: '22 TON'},
+            {name: 'Candy Canes', slug: 'candycane', floorPrice: '6.8', price: '9 TON'},
+            {name: 'Cookie Hearts', slug: 'cookieheart', floorPrice: '14.2', price: '18 TON'},
+            {name: 'Crystal Balls', slug: 'crystalball', floorPrice: '30.1', price: '35 TON'},
+            {name: 'Cupid Charms', slug: 'cupidcharm', floorPrice: '9.3', price: '12 TON'},
+            {name: 'Desk Calendars', slug: 'deskcalendar', floorPrice: '7.5', price: '10 TON'},
+            {name: 'Diamond Rings', slug: 'diamondring', floorPrice: '100.0', price: '120 TON'},
+            {name: 'Durov’s Caps', slug: 'durovscap', floorPrice: '25.4', price: '30 TON'},
+            {name: 'Easter Eggs', slug: 'easteregg', floorPrice: '4.2', price: '6 TON'},
+            {name: 'Electric Skulls', slug: 'electricskull', floorPrice: '35.8', price: '40 TON'},
+            {name: 'Eternal Candles', slug: 'eternalcandle', floorPrice: '11.9', price: '15 TON'},
+            {name: 'Eternal Roses', slug: 'eternalrose', floorPrice: '28.7', price: '32 TON'},
+            {name: 'Evil Eyes', slug: 'evileye', floorPrice: '16.5', price: '20 TON'},
+            {name: 'Flying Brooms', slug: 'flyingbroom', floorPrice: '13.1', price: '16 TON'},
+            {name: 'Gem Signets', slug: 'gemsignet', floorPrice: '42.3', price: '48 TON'},
+            {name: 'Genie Lamps', slug: 'genielamp', floorPrice: '19.8', price: '24 TON'},
+            {name: 'Ginger Cookies', slug: 'gingercookie', floorPrice: '5.6', price: '8 TON'},
+            {name: 'Hanging Stars', slug: 'hangingstar', floorPrice: '21.4', price: '25 TON'},
+            {name: 'Heart Lockets', slug: 'heartlocket', floorPrice: '33.2', price: '38 TON'},
+            {name: 'Heroic Helmets', slug: 'heroichelmet', floorPrice: '55.9', price: '62 TON'},
+            {name: 'Hex Pots', slug: 'hexpot', floorPrice: '10.7', price: '14 TON'},
+            {name: 'Holiday Drinks', slug: 'holidaydrink', floorPrice: '8.9', price: '11 TON'},
+            {name: 'Homemade Cakes', slug: 'homemadecake', floorPrice: '17.3', price: '20 TON'},
+            {name: 'Hypno Lollipops', slug: 'hypnolollipop', floorPrice: '24.6', price: '28 TON'},
+            {name: 'Input Keys', slug: 'inputkey', floorPrice: '6.4', price: '9 TON'},
+            {name: 'Ion Gems', slug: 'iongem', floorPrice: '29.1', price: '34 TON'},
+            {name: 'Ionic Dryers', slug: 'ionicdryer', floorPrice: '12.8', price: '16 TON'},
+            {name: 'Jacks-in-the-Box', slug: 'jackinthebox', floorPrice: '38.5', price: '44 TON'},
+            {name: 'Jelly Bunnies', slug: 'jellybunny', floorPrice: '7.2', price: '10 TON'},
+            {name: 'Jester Hats', slug: 'jesterhat', floorPrice: '15.9', price: '19 TON'},
+            {name: 'Jingle Bells', slug: 'jinglebells', floorPrice: '4.8', price: '7 TON'},
+            {name: 'Jolly Chimps', slug: 'jollychimp', floorPrice: '26.7', price: '31 TON'},
+            {name: 'Joyful Bundles', slug: 'joyfulbundle', floorPrice: '31.4', price: '36 TON'},
+            {name: 'Kissed Frogs', slug: 'kissedfrog', floorPrice: '9.7', price: '13 TON'},
+            {name: 'Light Swords', slug: 'lightsword', floorPrice: '47.2', price: '53 TON'},
+            {name: 'Lol Pops', slug: 'lolpop', floorPrice: '11.5', price: '15 TON'},
+            {name: 'Loot Bags', slug: 'lootbag', floorPrice: '20.3', price: '24 TON'},
+            {name: 'Love Candles', slug: 'lovecandle', floorPrice: '14.1', price: '18 TON'},
+            {name: 'Love Potions', slug: 'lovepotion', floorPrice: '23.8', price: '27 TON'},
+            {name: 'Low Riders', slug: 'lowrider', floorPrice: '36.9', price: '42 TON'},
+            {name: 'Lunar Snakes', slug: 'lunarsnake', floorPrice: '18.4', price: '22 TON'},
+            {name: 'Lush Bouquets', slug: 'lushbouquet', floorPrice: '27.6', price: '32 TON'},
+            {name: 'Mad Pumpkins', slug: 'madpumpkin', floorPrice: '5.3', price: '8 TON'},
+            {name: 'Magic Potions', slug: 'magicpotion', floorPrice: '41.2', price: '46 TON'},
+            {name: 'Mighty Arms', slug: 'mightyarm', floorPrice: '13.7', price: '17 TON'},
+            {name: 'Mini Oscars', slug: 'minioscar', floorPrice: '64.5', price: '70 TON'},
+            {name: 'Moon Pendants', slug: 'moonpendant', floorPrice: '22.1', price: '26 TON'},
+            {name: 'Nail Bracelets', slug: 'nailbracelet', floorPrice: '8.6', price: '12 TON'},
+            {name: 'Neko Helmets', slug: 'nekohelmet', floorPrice: '39.8', price: '45 TON'},
+            {name: 'Party Sparklers', slug: 'partysparkler', floorPrice: '6.9', price: '10 TON'},
+            {name: 'Perfume Bottles', slug: 'perfumebottle', floorPrice: '19.2', price: '23 TON'},
+            {name: 'Pet Snakes', slug: 'petsnake', floorPrice: '34.7', price: '39 TON'},
+            {name: 'Plush Pepes', slug: 'plushpepe', floorPrice: '28.4', price: '33 TON'},
+            {name: 'Precious Peaches', slug: 'preciouspeach', floorPrice: '16.8', price: '20 TON'},
+            {name: 'Record Players', slug: 'recordplayer', floorPrice: '52.3', price: '58 TON'},
+            {name: 'Restless Jars', slug: 'restlessjar', floorPrice: '10.4', price: '14 TON'},
+            {name: 'Sakura Flowers', slug: 'sakuraflower', floorPrice: '21.9', price: '25 TON'},
+            {name: 'Santa Hats', slug: 'santahat', floorPrice: '7.1', price: '9 TON'},
+            {name: 'Scared Cats', slug: 'scaredcat', floorPrice: '44.6', price: '50 TON'},
+            {name: 'Sharp Tongues', slug: 'sharptongue', floorPrice: '12.0', price: '15 TON'},
+            {name: 'Signet Rings', slug: 'signetring', floorPrice: '37.5', price: '42 TON'},
+            {name: 'Skull Flowers', slug: 'skullflower', floorPrice: '14.9', price: '18 TON'},
+            {name: 'Sleigh Bells', slug: 'sleighbell', floorPrice: '5.7', price: '8 TON'},
+            {name: 'Snake Boxes', slug: 'snakebox', floorPrice: '29.3', price: '34 TON'},
+            {name: 'Snoop Cigars', slug: 'snoopcigar', floorPrice: '48.2', price: '54 TON'},
+            {name: 'Snoop Doggs', slug: 'snoopdogg', floorPrice: '61.8', price: '68 TON'},
+            {name: 'Snow Globes', slug: 'snowglobe', floorPrice: '17.6', price: '21 TON'},
+            {name: 'Snow Mittens', slug: 'snowmittens', floorPrice: '9.4', price: '12 TON'},
+            {name: 'Spiced Wines', slug: 'spicedwine', floorPrice: '23.1', price: '27 TON'},
+            {name: 'Spy Agarics', slug: 'spyagaric', floorPrice: '31.7', price: '36 TON'},
+            {name: 'Star Notepads', slug: 'starnotepad', floorPrice: '11.2', price: '15 TON'},
+            {name: 'Stellar Rockets', slug: 'stellarrocket', floorPrice: '56.4', price: '62 TON'},
+            {name: 'Swag Bags', slug: 'swagbag', floorPrice: '18.9', price: '22 TON'},
+            {name: 'Swiss Watches', slug: 'swisswatch', floorPrice: '73.5', price: '80 TON'},
+            {name: 'Tama Gadgets', slug: 'tamagadget', floorPrice: '25.8', price: '30 TON'},
+            {name: 'Top Hats', slug: 'tophat', floorPrice: '32.1', price: '37 TON'},
+            {name: 'Toy Bears', slug: 'toybear', floorPrice: '6.3', price: '9 TON'},
+            {name: 'Trapped Hearts', slug: 'trappedheart', floorPrice: '40.7', price: '46 TON'},
+            {name: 'Valentine Boxes', slug: 'valentinebox', floorPrice: '13.5', price: '17 TON'},
+            {name: 'Vintage Cigars', slug: 'vintagecigar', floorPrice: '27.9', price: '32 TON'},
+            {name: 'Voodoo Dolls', slug: 'voodoodoll', floorPrice: '49.6', price: '55 TON'},
+            {name: 'Westside Signs', slug: 'westsidesign', floorPrice: '15.3', price: '19 TON'},
+            {name: 'Whip Cupcakes', slug: 'whipcupcake', floorPrice: '8.2', price: '11 TON'},
+            {name: 'Winter Wreaths', slug: 'winterwreath', floorPrice: '19.5', price: '23 TON'},
+            {name: 'Witch Hats', slug: 'witchhat', floorPrice: '34.8', price: '39 TON'},
+            {name: 'Xmas Stockings', slug: 'xmasstocking', floorPrice: '7.9', price: '10 TON'}
         ].sort((a, b) => a.name.localeCompare(b.name));
 
         const models = [
-            'Spectrum', 'Gummy Frog', 'Poison Dart', 'Aqua Plush', 'Eggplant', 'Hue Jester', 'Polka Dots', 'Yellow Hug', 'Tropical', 'Pink Galaxy', 'Amalgam', 'Pepemint', 'Pumpkin', 'Red Menace', 'Sunset', 'Birmingham', 'Cold Heart', 'Red Pepple', 'Yellow Purp', 'Stripes', 'Barcelona', 'Emo Boi', 'Princess', 'Two Face', 'Hothead', 'Milano', 'Pepe La Rana', 'Toading...', 'Christmas', 'Marble', 'Pink Latex', 'X-Ray', 'Sketchy', 'Santa Pepe', 'Bavaria', 'Kung Fu Pepe', 'Midas Pepe', 'Donatello', 'Frozen', 'Ninja Mike', 'Puppy Pug', 'Raphael', 'Steel Frog', 'Magnate', 'Gucci Leap', 'Emerald Plush', 'Fifty Shades', 'Leonardo', 'Louis Vuittoad', 'Cozy Galaxy'
+            'Art Nouveau', 'Polka Dots', 'Eggplant', 'Dipper', 'Spectrum', 'Gummy Frog', 'Poison Dart', 'Aqua Plush', 'Hue Jester', 'Yellow Hug',
+            'Tropical', 'Pink Galaxy', 'Amalgam', 'Pepemint', 'Pumpkin', 'Red Menace', 'Sunset', 'Birmingham', 'Cold Heart', 'Red Pepple',
+            'Yellow Purp', 'Stripes', 'Barcelona', 'Emo Boi', 'Princess', 'Two Face', 'Hothead', 'Milano', 'Pepe La Rana', 'Toading...',
+            'Christmas', 'Marble', 'Pink Latex', 'X-Ray', 'Sketchy', 'Santa Pepe', 'Bavaria', 'Kung Fu Pepe', 'Midas Pepe', 'Donatello',
+            'Frozen', 'Ninja Mike', 'Puppy Pug', 'Raphael', 'Steel Frog', 'Magnate', 'Gucci Leap', 'Emerald Plush', 'Fifty Shades',
+            'Leonardo', 'Louis Vuittoad', 'Cozy Galaxy'
         ].sort();
 
         const backgrounds = [
-            'Jade Green', 'Sapphire', 'Mystic Pearl', 'Indigo Dye', 'Emerald', 'Electric Purple', 'Fandango', 'Pine Green', 'French Blue', 'Grape', 'Lemongrass', 'Strawberry', 'Caramel', 'Malachite', 'Neon Blue', 'Orange', 'Pacific Cyan', 'Battleship Grey', 'Navy Blue', 'Copper', 'Lavender', 'Cobalt Blue', 'Rosewood', 'Midnight Blue', 'Platinum', 'Turquoise', 'Chocolate', 'Light Olive', 'Mint Green', 'Steel Grey', 'Cappuccino', 'Persimmon', 'Satin Gold', 'Carrot Juice', 'Electric Indigo', 'Burgundy', 'Moonstone', 'Onyx Black', 'Black', 'Hunter Green', 'Khaki Green', 'Dark Lilac', 'Pistachio', 'Amber', 'Silver Blue', 'Coral Red', 'Desert Sand', 'Ivory White', 'Cyberpunk', 'Chestnut', 'English Violet', 'Aquamarine', 'Purple', 'Pacific Green', 'Shamrock Green', 'Sky Blue', 'Pure Gold', 'Raspberry', 'Azure Blue', 'Roman Silver'
+            'Black', 'Lavender', 'Aquamarine', 'Malachite', 'Jade Green', 'Sapphire', 'Mystic Pearl', 'Indigo Dye', 'Emerald', 'Electric Purple',
+            'Fandango', 'Pine Green', 'French Blue', 'Grape', 'Lemongrass', 'Strawberry', 'Caramel', 'Neon Blue', 'Orange', 'Pacific Cyan',
+            'Battleship Grey', 'Navy Blue', 'Copper', 'Cobalt Blue', 'Rosewood', 'Midnight Blue', 'Platinum', 'Turquoise', 'Chocolate',
+            'Light Olive', 'Mint Green', 'Steel Grey', 'Cappuccino', 'Persimmon', 'Satin Gold', 'Carrot Juice', 'Electric Indigo',
+            'Burgundy', 'Moonstone', 'Onyx Black', 'Hunter Green', 'Khaki Green', 'Dark Lilac', 'Pistachio', 'Amber', 'Silver Blue',
+            'Coral Red', 'Desert Sand', 'Ivory White', 'Cyberpunk', 'Chestnut', 'English Violet', 'Purple', 'Pacific Green',
+            'Shamrock Green', 'Sky Blue', 'Pure Gold', 'Raspberry', 'Azure Blue', 'Roman Silver'
         ].sort();
 
         const symbols = [
-            'Cupid’s Arrow', 'Car', 'Coconut', 'Kitsune', 'Cupid', 'Sumerian Bird', 'Sauron', 'Spanner', 'Alarm', 'Champagne', 'Diamond', 'High Heels', 'Totem Bear', 'Bubble Tea', 'Cash', 'Flower Tulip', 'Fluffy Wolf', 'Heart Balloon', 'Ink Pen', 'Blood Drop', 'Boat', 'Celtic Wolf', 'Cunning Fox', 'Eagle', 'Romantic Cake', 'Yogi Shaman', 'Candle', 'Flirty Message', 'Gamepad', 'Genie Lamp', 'Guitar', 'Inca Sun', 'Lingerie', 'Love Dove', 'Mafdet', 'Melon', 'Moon', 'Moon Cross', 'Okami Wolf', 'Owl', 'Palette', 'Planet', 'Star', 'Star Crown', 'Toilet', 'Watermelon', 'White Deer', 'Wolf Rage', 'Bell Pepper', 'Cactus', 'Cap', 'Celtic Cross', 'Cursor', 'Eikthyrnir', 'Fehu Rune', 'Flower Cross', 'Love Lock', 'Lovebirds', 'Mask', 'Patched Heart', 'Pearl', 'Pegasus', 'Pencil', 'Rook', 'Spirit Impala', 'Twin Peaks', 'Anchor', 'Carrot', 'Cat Mask', 'Chili Pepper', 'Clover', 'Dice', 'Fire', 'Firebird', 'Flamingo', 'Hand of God', 'Hermit Shell', 'Key', 'Ladybug', 'Like', 'Lovely Rain', 'Mountain Goat', 'Mountain Lion', 'Nordic Wolf', 'Paw'
+            'Planet', 'Lotus Flower', 'Candy', 'Cupid’s Arrow', 'Car', 'Coconut', 'Kitsune', 'Cupid', 'Sumerian Bird', 'Sauron', 'Spanner',
+            'Alarm', 'Champagne', 'Diamond', 'High Heels', 'Totem Bear', 'Bubble Tea', 'Cash', 'Flower Tulip', 'Fluffy Wolf', 'Heart Balloon',
+            'Ink Pen', 'Blood Drop', 'Boat', 'Celtic Wolf', 'Cunning Fox', 'Eagle', 'Romantic Cake', 'Yogi Shaman', 'Candle', 'Flirty Message',
+            'Gamepad', 'Genie Lamp', 'Guitar', 'Inca Sun', 'Lingerie', 'Love Dove', 'Mafdet', 'Melon', 'Moon', 'Moon Cross', 'Okami Wolf',
+            'Owl', 'Palette', 'Star', 'Star Crown', 'Toilet', 'Watermelon', 'White Deer', 'Wolf Rage', 'Bell Pepper', 'Cactus', 'Cap',
+            'Celtic Cross', 'Cursor', 'Eikthyrnir', 'Fehu Rune', 'Flower Cross', 'Love Lock', 'Lovebirds', 'Mask', 'Patched Heart',
+            'Pearl', 'Pegasus', 'Pencil', 'Rook', 'Spirit Impala', 'Twin Peaks', 'Anchor', 'Carrot', 'Cat Mask', 'Chili Pepper', 'Clover',
+            'Dice', 'Fire', 'Firebird', 'Flamingo', 'Hand of God', 'Hermit Shell', 'Key', 'Ladybug', 'Like', 'Lovely Rain', 'Mountain Goat',
+            'Mountain Lion', 'Nordic Wolf', 'Paw'
         ].sort();
 
-        // Color map for backgrounds (approximate hex colors)
+        // Enhanced color map for backgrounds
         const colorMap = {
-            'Aquamarine': '#7FFFD4',
-            'Azure Blue': '#007FFF',
+            'Aquamarine': '#7fffd4',
+            'Azure Blue': '#f0ffff',
             'Battleship Grey': '#848482',
             'Black': '#000000',
             'Burgundy': '#800020',
-            'Caramel': '#FFD59A',
-            'Carrot Juice': '#F28500',
+            'Caramel': '#ffd59a',
+            'Carrot Juice': '#f28500',
             'Chestnut': '#954535',
-            'Chocolate': '#D2691E',
-            'Cobalt Blue': '#0047AB',
-            'Copper': '#B87333',
-            'Coral Red': '#FF4040',
-            'Cyberpunk': '#FF00FF',
-            'Dark Lilac': '#9C51B6',
-            'Desert Sand': '#EDC9AF',
-            'Electric Indigo': '#6F00FF',
-            'Electric Purple': '#BF00FF',
-            'Emerald': '#50C878',
-            'English Violet': '#563C5C',
-            'Fandango': '#DE5285',
-            'French Blue': '#0072BB',
-            'Grape': '#6F2DA8',
-            'Hunter Green': '#355E3B',
-            'Indigo Dye': '#00416A',
-            'Ivory White': '#FFFFF0',
-            'Jade Green': '#00A86B',
+            'Chocolate': '#d2691e',
+            'Cobalt Blue': '#0047ab',
+            'Copper': '#b87333',
+            'Coral Red': '#ff4040',
+            'Cyberpunk': '#ff00ff',
+            'Dark Lilac': '#9c51b6',
+            'Desert Sand': '#edc9af',
+            'Electric Indigo': '#6f00ff',
+            'Electric Purple': '#bf00ff',
+            'Emerald': '#50c878',
+            'English Violet': '#563c5c',
+            'Fandango': '#de5285',
+            'French Blue': '#0072bb',
+            'Grape': '#6f2da8',
+            'Hunter Green': '#355e3b',
+            'Indigo Dye': '#00416a',
+            'Ivory White': '#fffff0',
+            'Jade Green': '#00a86b',
             'Khaki Green': '#728639',
-            'Lavender': '#E6E6FA',
-            'Lemongrass': '#B0C69A',
-            'Light Olive': '#ACBF60',
-            'Malachite': '#0BDA51',
+            'Lavender': '#e6e6fa',
+            'Lemongrass': '#b0c69a',
+            'Light Olive': '#acbf60',
+            'Malachite': '#0bda51',
             'Midnight Blue': '#191970',
-            'Mint Green': '#98FB98',
-            'Moonstone': '#3AAFD9',
-            'Mystic Pearl': '#D65282',
+            'Mint Green': '#98fb98',
+            'Moonstone': '#3aafd9',
+            'Mystic Pearl': '#d65282',
             'Navy Blue': '#000080',
-            'Neon Blue': '#00FFFF',
+            'Neon Blue': '#39ff14', // Adjusted for visibility
             'Onyx Black': '#353839',
-            'Orange': '#FFA500',
-            'Pacific Cyan': '#1CA9C9',
-            'Pacific Green': '#00A693',
-            'Persimmon': '#EC5800',
-            'Pine Green': '#01796F',
-            'Pistachio': '#93C572',
-            'Platinum': '#E5E4E2',
-            'Pure Gold': '#FFD700',
+            'Orange': '#ffa500',
+            'Pacific Cyan': '#1ca9c9',
+            'Pacific Green': '#00a693',
+            'Persimmon': '#ec5800',
+            'Pine Green': '#01796f',
+            'Pistachio': '#93c572',
+            'Platinum': '#e5e4e2',
+            'Pure Gold': '#ffd700',
             'Purple': '#800080',
-            'Raspberry': '#E30B5C',
+            'Raspberry': '#e30b5c',
             'Roman Silver': '#838996',
-            'Rosewood': '#65000B',
-            'Satin Gold': '#CBA135',
-            'Sapphire': '#0F52BA',
-            'Shamrock Green': '#009E60',
-            'Silver Blue': '#5A8DAA',
-            'Sky Blue': '#87CEEB',
-            'Steel Grey': '#71797E',
-            'Strawberry': '#FF5A5F',
-            'Turquoise': '#40E0D0',
-            // Add more if needed
+            'Rosewood': '#65000b',
+            'Satin Gold': '#cba135',
+            'Sapphire': '#0f52ba',
+            'Shamrock Green': '#009e60',
+            'Silver Blue': '#acd5e0',
+            'Sky Blue': '#87ceeb',
+            'Steel Grey': '#71797e',
+            'Strawberry': '#ff5a5f',
+            'Turquoise': '#40e0d0'
+            // Extend as needed
         };
 
         let selectedGift = '';
@@ -425,24 +656,42 @@
         function simulateLoading() {
             const progress = document.querySelector('.progress');
             let width = 0;
+            const steps = [
+                {percent: 25, text: 'Fetching user profile...'},
+                {percent: 50, text: 'Checking avatar and name...'},
+                {percent: 75, text: 'Verifying username and bio...'},
+                {percent: 100, text: 'Ready!'}
+            ];
+            let stepIndex = 0;
             const interval = setInterval(() => {
-                width += 10;
-                progress.style.width = `${width}%`;
+                width += Math.random() * 10 + 5;
+                if (width > steps[stepIndex].percent) {
+                    stepIndex++;
+                }
+                progress.style.width = `${Math.min(width, 100)}%`;
                 if (width >= 100) {
                     clearInterval(interval);
-                    document.querySelector('.loading').style.display = 'none';
-                    document.querySelector('.main').style.display = 'flex';
-                    updatePreview();
+                    setTimeout(() => {
+                        document.querySelector('.loading').style.display = 'none';
+                        document.querySelector('.main').style.display = 'flex';
+                        updatePreview();
+                        // Simulate real check: if changes detected, update
+                        // In real: use Telegram Bot API to fetch latest
+                    }, 500);
                 }
-            }, 200);
-            // During loading, we "check" user data (already done)
+            }, 150);
         }
 
         function openTab(tabName) {
-            const tabs = document.querySelectorAll('.tab');
-            tabs.forEach(tab => tab.style.display = 'none');
-            const selectedTab = document.getElementById(`${tabName}-tab`);
+            document.querySelectorAll('.tab').forEach(tab => tab.style.display = 'none');
+            const selectedTab = document.getElementById(`${tabName}s-tab`);
             selectedTab.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeTab() {
+            document.querySelectorAll('.tab').forEach(tab => tab.style.display = 'none');
+            document.body.style.overflow = 'auto';
         }
 
         function filterList(listId, value) {
@@ -452,54 +701,87 @@
                 const name = item.querySelector('.item-name').textContent.toLowerCase();
                 item.style.display = name.includes(value.toLowerCase()) ? 'flex' : 'none';
             });
+            if (value) {
+                // Add highlight
+                items.forEach(item => {
+                    if (item.style.display !== 'none') {
+                        const nameEl = item.querySelector('.item-name');
+                        nameEl.innerHTML = nameEl.textContent.replace(new RegExp(value, 'gi'), '<span style="background: rgba(0,123,255,0.3); padding: 2px 4px; border-radius: 4px;">$&</span>');
+                    }
+                });
+            }
         }
 
-        function populateList(listId, items, type) {
+        function populateList(listId, items, type, isString = false) {
             const list = document.getElementById(listId);
             list.innerHTML = '';
-            items.forEach(item => {
+            items.forEach((item, index) => {
                 const div = document.createElement('div');
                 div.className = 'list-item';
+                const name = isString ? item : item.name;
+                const priceInfo = !isString && type === 'gifts' ? `${item.price}<br><small style="color: rgba(255,255,255,0.6);">Floor: ${item.floorPrice} TON</small>` : '';
+                const iconContent = type === 'backgrounds' ? '🎨' : type === 'symbols' ? '✨' : type === 'models' ? '🧩' : '🎁';
                 div.innerHTML = `
                     <span class="check-mark">☐</span>
-                    <div class="item-icon"></div>
-                    <div class="item-name">${typeof item === 'string' ? item : item.name}</div>
-                    <div class="item-price">
-                        ${type === 'gifts' ? `${item.price} TON<br>Floor: ${item.floorPrice} TON` : ''}
-                    </div>
+                    <div class="item-icon">${iconContent}</div>
+                    <div class="item-name">${name}</div>
+                    <div class="item-price">${priceInfo || ''}</div>
                 `;
-                div.onclick = () => {
-                    list.querySelectorAll('.list-item').forEach(it => it.classList.remove('selected'));
-                    div.classList.add('selected');
-                    div.querySelector('.check-mark').textContent = '☑';
-                    if (type === 'gifts') selectedGift = typeof item === 'string' ? item : item.name;
-                    else if (type === 'models') selectedModel = item;
-                    else if (type === 'backgrounds') selectedBackground = item;
-                    else if (type === 'symbols') selectedSymbol = item;
-                    updatePreview();
-                    openTab('none'); // Close tab
-                };
+                div.onclick = () => selectItem(div, type, isString ? item : item.name);
                 list.appendChild(div);
             });
         }
 
+        function selectItem(element, type, value) {
+            document.querySelectorAll(`#${type}s-list .list-item`).forEach(it => {
+                it.classList.remove('selected');
+                it.querySelector('.check-mark').textContent = '☐';
+            });
+            element.classList.add('selected');
+            element.querySelector('.check-mark').textContent = '☑';
+            if (type === 'gifts') selectedGift = value;
+            else if (type === 'models') selectedModel = value;
+            else if (type === 'backgrounds') selectedBackground = value;
+            else if (type === 'symbols') selectedSymbol = value;
+            updatePreview();
+            setTimeout(closeTab, 300);
+        }
+
         function updatePreview() {
             document.getElementById('avatar').src = avatarUrl;
-            document.getElementById('name').innerHTML = `${fullName} <span class="gift-status">${selectedGift ? `[${selectedGift}${selectedModel ? ' (' + selectedModel + ')' : ''}]` : ''}</span>`;
+            const nameEl = document.getElementById('name');
+            let displayName = fullName;
+            if (selectedGift) {
+                displayName += ` <span class="gift-status">[${selectedGift}${selectedModel ? ` (${selectedModel})` : ''}]</span>`;
+            }
+            nameEl.innerHTML = displayName;
             document.getElementById('username').textContent = username;
             document.getElementById('user-id').textContent = userId;
             document.getElementById('bio').textContent = bio;
-            document.getElementById('symbol').textContent = selectedSymbol ? `[${selectedSymbol}]` : '';
+            const symbolEl = document.getElementById('symbol');
+            symbolEl.textContent = selectedSymbol ? `✦ ${selectedSymbol}` : '';
+            symbolEl.style.display = selectedSymbol ? 'block' : 'none';
             const preview = document.getElementById('preview');
-            preview.style.backgroundColor = colorMap[selectedBackground] || '#333';
-            // For real image, you could add fetch here, but omitted due to limitations
+            const bgColor = colorMap[selectedBackground] || 'rgba(51, 51, 51, 0.3)';
+            preview.style.background = `rgba(${parseInt(bgColor.slice(1,3),16)},${parseInt(bgColor.slice(3,5),16)},${parseInt(bgColor.slice(5,7),16)},0.1)`;
+            // In real app, fetch and apply gift image via Fragment API or images
+            if (selectedGift) {
+                // Simulate: avatarUrl = `https://fragment.com/gift/${selectedGift.toLowerCase().replace(/[^a-z]/g,'')}-123?attr...`;
+            }
         }
 
-        // Initialize lists
+        // Initialize
         populateList('gifts-list', gifts, 'gifts');
-        populateList('models-list', models, 'models');
-        populateList('backgrounds-list', backgrounds, 'backgrounds');
-        populateList('symbols-list', symbols, 'symbols');
+        populateList('models-list', models, 'models', true);
+        populateList('backgrounds-list', backgrounds, 'backgrounds', true);
+        populateList('symbols-list', symbols, 'symbols', true);
+
+        // Close tab on outside click
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.tab') && !e.target.closest('.filter-button')) {
+                closeTab();
+            }
+        });
 
         simulateLoading();
     </script>
