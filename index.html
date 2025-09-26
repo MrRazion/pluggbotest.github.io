@@ -1,406 +1,1228 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Бесконечное Приключение</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <title>Liquid Glass Experience | Modern UI Showcase</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            background-color: black;
-            color: white;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            width: 100vw;
-            font-family: 'PT Sans', sans-serif;
+        /* ===== CSS VARIABLES & RESET ===== */
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.25);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            --glass-backdrop: blur(12px);
+            --glass-highlight: rgba(255, 255, 255, 0.12);
+            --glass-text: rgba(255, 255, 255, 0.92);
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #8b5cf6;
+            --accent: #ec4899;
+            --dark-bg: #0f172a;
+            --light-bg: #f1f5f9;
+            --transition: all 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --animation-speed: 0.6s;
         }
 
-        #splash {
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--dark-bg), #1e293b);
+            color: var(--glass-text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+            background-attachment: fixed;
+        }
+
+        /* ===== LIQUID GLASS EFFECT UTILITY CLASSES ===== */
+        .liquid-glass {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: var(--glass-backdrop);
+            -webkit-backdrop-filter: var(--glass-backdrop);
+            box-shadow: var(--glass-shadow);
+            border-radius: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .liquid-glass::before {
+            content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: black;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 48px;
-            font-weight: bold;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: var(--glass-highlight);
+            transform: rotate(25deg) translate(0, -35%);
+            pointer-events: none;
             opacity: 0;
-            animation: fadeIn 1s forwards;
-            z-index: 10;
+            transition: var(--transition);
+        }
+
+        .liquid-glass:hover::before {
+            opacity: 0.6;
+            animation: glassHighlight 4s infinite alternate;
+        }
+
+        /* ===== ANIMATIONS & KEYFRAMES ===== */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(99, 102, 241, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
+        }
+
+        @keyframes glassHighlight {
+            0% { transform: rotate(25deg) translate(0, -35%); opacity: 0.3; }
+            50% { transform: rotate(35deg) translate(10%, -25%); opacity: 0.6; }
+            100% { transform: rotate(25deg) translate(0, -35%); opacity: 0.3; }
         }
 
         @keyframes fadeIn {
-            to { opacity: 1; }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes fadeOut {
-            to { opacity: 0; }
+        @keyframes slideInTabs {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
 
-        #menu {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            width: 100%;
-            background: url('https://example.com/summer-bg.jpg') no-repeat center/cover; /* Замените на реальное изображение в стиле Бесконечного Лета */
-            position: relative;
-            text-shadow: 1px 1px 2px black;
+        @keyframes liquidWave {
+            0% { background-position: 0% 0%; }
+            50% { background-position: 100% 100%; }
+            100% { background-position: 0% 0%; }
         }
 
-        #menu button {
-            margin: 20px;
-            padding: 15px 30px;
-            font-size: 24px;
-            background-color: rgba(255, 220, 0, 0.8);
-            border: 2px solid white;
-            border-radius: 10px;
-            cursor: pointer;
-            color: black;
-            font-weight: bold;
+        /* ===== MAIN LAYOUT ===== */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
         }
 
-        #menu button:hover {
-            background-color: rgba(255, 133, 27, 0.8);
+        /* ===== NAVIGATION ===== */
+        nav {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            width: 90%;
+            max-width: 800px;
         }
 
-        #footer {
-            position: absolute;
-            bottom: 20px;
-            width: 100%;
+        .nav-container {
             display: flex;
             justify-content: space-between;
-            padding: 0 20px;
+            align-items: center;
+            padding: 1.2rem 2rem;
         }
 
-        #footer img {
-            width: 40px;
-            height: 40px;
-            margin: 0 10px;
-            filter: drop-shadow(1px 1px 2px black);
+        .logo {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 1.8rem;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(99, 102, 241, 0.2);
+            letter-spacing: -0.5px;
         }
 
-        #game {
-            display: none;
-            height: 100%;
-            width: 100%;
+        .nav-tabs {
+            display: flex;
+            gap: 0.5rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: var(--glass-backdrop);
+            -webkit-backdrop-filter: var(--glass-backdrop);
+            border-radius: 50px;
+            padding: 0.6rem;
+            box-shadow: var(--glass-shadow);
+        }
+
+        .tab {
+            padding: 0.8rem 1.8rem;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
             position: relative;
+            z-index: 2;
+            color: rgba(255, 255, 255, 0.75);
+            font-size: 1.05rem;
         }
 
-        #background {
+        .tab.active, .tab:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            box-shadow: 0 0 15px var(--accent);
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 4rem 1rem;
+            position: relative;
+            overflow: hidden;
+            margin-top: 4rem;
+        }
+
+        .hero::before {
+            content: '';
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-size: cover;
-            background-position: center;
+            background: radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.15), transparent 40%),
+                        radial-gradient(circle at 80% 70%, rgba(236, 72, 153, 0.15), transparent 40%);
+            z-index: -1;
         }
 
-        #character {
-            position: absolute;
-            top: 10%;
-            left: 50%;
-            transform: translateX(-50%);
-            height: 70%;
+        .hero-content {
+            max-width: 800px;
+            animation: fadeIn var(--animation-speed) ease-out;
+        }
+
+        .hero h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 4.5rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(90deg, #ffffff, #e0e7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero p {
+            font-size: 1.4rem;
+            margin-bottom: 2.5rem;
+            opacity: 0.9;
+            max-width: 650px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1.2rem 2.8rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.2rem;
+            text-decoration: none;
+            box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.4);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
             z-index: 1;
-            display: none;
+            letter-spacing: 0.5px;
         }
 
-        #dialogue-box {
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px -5px rgba(79, 70, 229, 0.5);
+            animation: pulse 1.5s infinite;
+        }
+
+        .cta-button::after {
+            content: '';
             position: absolute;
-            bottom: 0;
+            top: 0;
             left: 0;
             width: 100%;
-            height: 30%;
-            background: rgba(0, 0, 0, 0.6);
-            border-top: 2px solid white;
-            padding: 20px;
-            box-sizing: border-box;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transform: translateX(-100%);
+            z-index: -1;
+        }
+
+        .cta-button:hover::after {
+            animation: liquidWave 1.5s;
+        }
+
+        /* ===== TAB CONTENT SECTIONS ===== */
+        .tab-content {
+            display: none;
+            animation: slideInTabs 0.8s ease-out;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .section {
+            margin: 6rem 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+        }
+
+        .section-header h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 1.2rem;
+            background: linear-gradient(90deg, #ffffff, #c7d2fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-header p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+            opacity: 0.8;
+        }
+
+        .section-header::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 2px;
+        }
+
+        /* ===== FEATURES GRID ===== */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            padding: 2.5rem;
+            @extend .liquid-glass;
+            height: 100%;
+            transform: translateY(0);
+            transition: var(--transition);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.25);
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(99, 102, 241, 0.15);
+            border-radius: 18px;
+            margin-bottom: 1.8rem;
+            font-size: 1.8rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.6rem;
+            margin-bottom: 1.2rem;
+            color: white;
+        }
+
+        .feature-card p {
+            opacity: 0.85;
+            line-height: 1.7;
+        }
+
+        /* ===== LIQUID GLASS CARDS SECTION ===== */
+        .glass-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+
+        .glass-card {
+            @extend .liquid-glass;
+            padding: 2.5rem;
+            height: 100%;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .glass-card:hover {
+            transform: scale(1.03);
+        }
+
+        .glass-card-content {
+            position: relative;
             z-index: 2;
+        }
+
+        .glass-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1.2rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .glass-card h3::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 70%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 2px;
+        }
+
+        .glass-card p {
+            margin-bottom: 1.8rem;
+            opacity: 0.9;
+            line-height: 1.7;
+        }
+
+        /* ===== INTERACTIVE LIQUID GLASS ELEMENT ===== */
+        .interactive-glass {
+            @extend .liquid-glass;
+            padding: 3rem;
+            text-align: center;
+            height: 400px;
             display: flex;
             flex-direction: column;
-        }
-
-        #name {
-            font-size: 20px;
-            font-weight: bold;
-            color: #ffdc00;
-            margin-bottom: 10px;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 5px 10px;
-            border-radius: 5px;
-            width: fit-content;
-        }
-
-        #text {
-            font-size: 18px;
-            line-height: 1.5;
-        }
-
-        #choices {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            display: none;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            z-index: 3;
-            width: 80%;
-        }
-
-        #choices button {
-            margin: 10px 0;
-            padding: 15px;
-            font-size: 20px;
-            background: rgba(0, 116, 217, 0.8);
-            border: 2px solid white;
-            border-radius: 10px;
-            color: white;
             cursor: pointer;
-            width: 100%;
-            text-align: center;
-            font-weight: bold;
-        }
-
-        #choices button:hover {
-            background: rgba(127, 219, 255, 0.8);
-        }
-
-        .fade-out {
-            animation: fadeOut 1s forwards;
-        }
-
-        .typewriter {
+            position: relative;
             overflow: hidden;
-            white-space: pre-wrap;
-            animation: typing 2s steps(40, end) forwards;
         }
 
-        @keyframes typing {
-            from { width: 0; }
-            to { width: 100%; }
+        .interactive-glass h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            z-index: 2;
         }
+
+        .interactive-glass p {
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            z-index: 2;
+            opacity: 0.9;
+        }
+
+        .liquid-effect {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: var(--transition);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .interactive-glass:hover .liquid-effect {
+            opacity: 1;
+            animation: liquidWave 8s infinite linear;
+        }
+
+        /* ===== SURPRISE ELEMENT - HOVER REVEAL ===== */
+        .surprise-container {
+            position: relative;
+            margin: 4rem auto;
+            max-width: 800px;
+        }
+
+        .surprise-trigger {
+            @extend .liquid-glass;
+            padding: 2.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .surprise-trigger:hover {
+            transform: scale(1.02);
+        }
+
+        .surprise-trigger h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.2rem;
+            margin-bottom: 1.2rem;
+            background: linear-gradient(90deg, #ffffff, #f9a8d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .surprise-trigger p {
+            opacity: 0.85;
+            font-size: 1.15rem;
+        }
+
+        .surprise-content {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: var(--glass-backdrop);
+            -webkit-backdrop-filter: var(--glass-backdrop);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-top: 1rem;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: var(--transition);
+            z-index: 10;
+        }
+
+        .surprise-trigger:hover .surprise-content {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .surprise-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.2rem;
+            margin-top: 1.5rem;
+        }
+
+        .surprise-item {
+            @extend .liquid-glass;
+            padding: 1.2rem;
+            text-align: center;
+            font-weight: 500;
+            transition: var(--transition);
+            font-size: 0.95rem;
+        }
+
+        .surprise-item:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* ===== TESTIMONIALS ===== */
+        .testimonials {
+            display: flex;
+            overflow-x: auto;
+            gap: 1.8rem;
+            padding: 1rem 0;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+        }
+
+        .testimonials::-webkit-scrollbar {
+            display: none;
+        }
+
+        .testimonial-card {
+            @extend .liquid-glass;
+            min-width: 350px;
+            padding: 2.2rem;
+            scroll-snap-align: start;
+            transition: var(--transition);
+        }
+
+        .testimonial-card:hover {
+            transform: scale(1.03);
+        }
+
+        .testimonial-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .avatar {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1.2rem;
+            font-weight: bold;
+            font-size: 1.4rem;
+        }
+
+        .testimonial-author h4 {
+            font-size: 1.3rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .testimonial-author p {
+            opacity: 0.7;
+            font-size: 0.95rem;
+        }
+
+        .testimonial-content {
+            font-style: italic;
+            line-height: 1.8;
+            position: relative;
+        }
+
+        .testimonial-content::before {
+            content: """;
+            position: absolute;
+            top: -25px;
+            left: -15px;
+            font-size: 6rem;
+            color: var(--primary);
+            opacity: 0.15;
+            font-family: serif;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            margin-top: 6rem;
+            padding: 3rem 0 4rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            @extend .liquid-glass;
+            padding: 2.5rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1.8rem 0;
+        }
+
+        .footer-link {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .footer-link:hover {
+            color: white;
+        }
+
+        .footer-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: var(--transition);
+        }
+
+        .footer-link:hover::after {
+            width: 100%;
+        }
+
+        .copyright {
+            opacity: 0.6;
+            font-size: 0.95rem;
+            margin-top: 2rem;
+        }
+
+        /* ===== FLOATING ELEMENTS ===== */
+        .floating-element {
+            position: absolute;
+            z-index: -1;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .floating-1 {
+            top: 15%;
+            left: 10%;
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, var(--primary), transparent 70%);
+            opacity: 0.15;
+            animation-delay: 0s;
+        }
+
+        .floating-2 {
+            bottom: 20%;
+            right: 10%;
+            width: 180px;
+            height: 180px;
+            background: radial-gradient(circle, var(--accent), transparent 70%);
+            opacity: 0.1;
+            animation-delay: 2s;
+            animation-duration: 10s;
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 3.5rem;
+            }
+            
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1.5rem;
+            }
+            
+            .nav-tabs {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            :root {
+                --animation-speed: 0.4s;
+            }
+            
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+            
+            .hero p {
+                font-size: 1.15rem;
+            }
+            
+            .section-header h2 {
+                font-size: 2.2rem;
+            }
+            
+            .surprise-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .container {
+                padding: 1.2rem;
+            }
+            
+            nav {
+                top: 1rem;
+            }
+            
+            .hero {
+                padding: 3rem 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .cta-button {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .testimonials {
+                display: block;
+                overflow: visible;
+                white-space: normal;
+            }
+            
+            .testimonial-card {
+                min-width: 100%;
+                margin-bottom: 1.5rem;
+            }
+        }
+
+        /* ===== SURPRISE ANIMATION FOR SPECIAL INTERACTION ===== */
+        .confetti-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            display: none;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 20px;
+            opacity: 0;
+        }
+
+        /* Apple's Liquid Glass design features complex refraction that distorts content beneath UI elements [[7]] */
+        /* Translucent materials with real-time backdrop blur are essential for authentic liquid glass effect [[5]] */
+        /* The liquid glass effect uses transparency, blur, depth, and subtle highlights to create a smooth, glass-like surface [[8]] */
     </style>
 </head>
 <body>
-    <div id="splash">Zerchi Games</div>
-    <div id="menu">
-        <button id="play">Играть</button>
-        <button id="settings">Настройки</button>
-        <div id="footer">
-            <div id="left">
-                <a href="https://www.youtube.com/c/kuplinovplay" target="_blank">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/YouTube_full-color_icon_%282017%29.svg/159px-YouTube_full-color_icon_%282017%29.svg.png" alt="Kuplinov Play YouTube">
-                </a>
-            </div>
-            <div id="right">
-                <a href="https://vk.com/kuplinovplay" target="_blank">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/f/f3/VK_Compact_Logo_%282021-present%29.svg" alt="VK">
-                </a>
-                <a href="https://twitter.com/AllKuplinov" target="_blank">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6f/Logo_of_Twitter.svg" alt="Twitter">
-                </a>
-                <a href="https://www.instagram.com/dm.kuplinov/" target="_blank">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram">
-                </a>
+    <!-- Floating decorative elements for depth -->
+    <div class="floating-element floating-1"></div>
+    <div class="floating-element floating-2"></div>
+
+    <!-- Navigation -->
+    <nav class="liquid-glass">
+        <div class="nav-container">
+            <div class="logo">LiquidGlass</div>
+            <div class="nav-tabs">
+                <div class="tab active" data-tab="home">Home</div>
+                <div class="tab" data-tab="features">Features</div>
+                <div class="tab" data-tab="design">Design</div>
+                <div class="tab" data-tab="testimonials">Testimonials</div>
             </div>
         </div>
-    </div>
-    <div id="game">
-        <div id="background"></div>
-        <img id="character" src="" alt="Character">
-        <div id="dialogue-box">
-            <div id="name"></div>
-            <div id="text"></div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Liquid Glass Experience</h1>
+                <p>A modern UI showcase featuring smooth animations, glassmorphism design, and interactive elements that bring your interface to life.</p>
+                <a href="#" class="cta-button">Experience the Magic</a>
+            </div>
+        </section>
+
+        <!-- Tab Content Sections -->
+        <div class="tab-content active" id="home-content">
+            <!-- Interactive Liquid Glass Element -->
+            <section class="section">
+                <div class="interactive-glass">
+                    <div class="liquid-effect"></div>
+                    <div class="glass-card-content">
+                        <h2>Interactive Glass Panel</h2>
+                        <p>Hover over this panel to see the liquid effect in action. The subtle wave animation creates a dynamic glass-like surface that responds to your interaction.</p>
+                        <div class="cta-button" style="background: linear-gradient(135deg, #8b5cf6, #ec4899);">Try Me</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Surprise Element -->
+            <section class="section">
+                <div class="surprise-container">
+                    <div class="surprise-trigger">
+                        <h2>Hover for a Surprise</h2>
+                        <p>Did you know Apple's Liquid Glass design gives the UI a dynamic, almost 3D feel with cleaner fonts and layered glass-like panels? [[4]]</p>
+                        <div class="surprise-content">
+                            <p>Move your cursor slowly across this panel to reveal hidden interactive elements. The liquid glass effect creates mesmerizing fluid distortions and smooth transparency that respond to your movements. [[1]]</p>
+                            <div class="surprise-grid">
+                                <div class="surprise-item">Smooth Transitions</div>
+                                <div class="surprise-item">Real-time Blur</div>
+                                <div class="surprise-item">Dynamic Highlights</div>
+                                <div class="surprise-item">Depth Effects</div>
+                                <div class="surprise-item">Fluid Motion</div>
+                                <div class="surprise-item">Glass Refraction</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
-        <div id="choices"></div>
+
+        <div class="tab-content" id="features-content">
+            <section class="section">
+                <div class="section-header">
+                    <h2>Advanced Features</h2>
+                    <p>Explore the cutting-edge features that make this Liquid Glass design stand out from conventional glassmorphism.</p>
+                </div>
+                
+                <div class="features-grid">
+                    <div class="feature-card liquid-glass">
+                        <div class="feature-icon">💧</div>
+                        <h3>Liquid Distortion</h3>
+                        <p>Advanced CSS techniques create authentic liquid distortion effects that mimic real glass refraction, giving depth to your UI elements.</p>
+                    </div>
+                    
+                    <div class="feature-card liquid-glass">
+                        <div class="feature-icon">✨</div>
+                        <h3>Dynamic Highlights</h3>
+                        <p>Subtle specular highlights move across glass surfaces as you interact, creating a realistic sense of depth and materiality. [[5]]</p>
+                    </div>
+                    
+                    <div class="feature-card liquid-glass">
+                        <div class="feature-icon">🌀</div>
+                        <h3>Smooth Animations</h3>
+                        <p>Fluid motion graphics and seamless transitions give the UI a dynamic, almost 3D feel that enhances user experience. [[4]]</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="tab-content" id="design-content">
+            <section class="section">
+                <div class="section-header">
+                    <h2>Design Philosophy</h2>
+                    <p>Understanding the principles behind Liquid Glass design and how to implement them effectively.</p>
+                </div>
+                
+                <div class="glass-cards">
+                    <div class="glass-card">
+                        <div class="glass-card-content">
+                            <h3>Material Depth</h3>
+                            <p>Liquid Glass design uses multiple translucent layers to create a sense of depth. The backdrop-filter property is essential for achieving the authentic blurred background effect.</p>
+                            <a href="#" class="cta-button" style="padding: 0.8rem 1.5rem; width: auto;">Learn More</a>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card">
+                        <div class="glass-card-content">
+                            <h3>Animation Principles</h3>
+                            <p>Smooth, natural animations are key to Liquid Glass. Avoid abrupt changes—use cubic-bezier timing functions to create fluid, organic motion that feels alive.</p>
+                            <a href="#" class="cta-button" style="padding: 0.8rem 1.5rem; width: auto;">Learn More</a>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card">
+                        <div class="glass-card-content">
+                            <h3>Typography & Color</h3>
+                            <p>Choose cleaner fonts and subtle color gradients that enhance readability against translucent backgrounds. High contrast text ensures accessibility while maintaining aesthetics.</p>
+                            <a href="#" class="cta-button" style="padding: 0.8rem 1.5rem; width: auto;">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="tab-content" id="testimonials-content">
+            <section class="section">
+                <div class="section-header">
+                    <h2>User Experiences</h2>
+                    <p>What designers and developers say about implementing Liquid Glass design in their projects.</p>
+                </div>
+                
+                <div class="testimonials">
+                    <div class="testimonial-card">
+                        <div class="testimonial-header">
+                            <div class="avatar">JS</div>
+                            <div class="testimonial-author">
+                                <h4>Jennifer Smith</h4>
+                                <p>UI/UX Designer</p>
+                            </div>
+                        </div>
+                        <div class="testimonial-content">
+                            The Liquid Glass effect transformed our application's user experience. Users consistently mention how the smooth animations and depth create a premium feel.
+                        </div>
+                    </div>
+                    
+                    <div class="testimonial-card">
+                        <div class="testimonial-header">
+                            <div class="avatar">MR</div>
+                            <div class="testimonial-author">
+                                <h4>Michael Rodriguez</h4>
+                                <p>Frontend Developer</p>
+                            </div>
+                        </div>
+                        <div class="testimonial-content">
+                            Implementing the backdrop-filter with proper fallbacks was challenging, but the result is worth it. Our bounce rate decreased by 22% after adding these subtle glass effects.
+                        </div>
+                    </div>
+                    
+                    <div class="testimonial-card">
+                        <div class="testimonial-header">
+                            <div class="avatar">AK</div>
+                            <div class="testimonial-author">
+                                <h4>Alex Kim</h4>
+                                <p>Product Manager</p>
+                            </div>
+                        </div>
+                        <div class="testimonial-content">
+                            The liquid glass design gave our UI a dynamic, almost 3D feel that users love. It's not just pretty—it actually improves engagement metrics significantly.
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
     </div>
+
+    <!-- Confetti Container for Surprise Interaction -->
+    <div class="confetti-container" id="confetti-container"></div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content liquid-glass">
+            <div class="footer-logo">LiquidGlass</div>
+            <p>A modern implementation of Apple's Liquid Glass design philosophy using pure CSS and JavaScript.</p>
+            
+            <div class="footer-links">
+                <a href="#" class="footer-link">Documentation</a>
+                <a href="#" class="footer-link">GitHub</a>
+                <a href="#" class="footer-link">Community</a>
+                <a href="#" class="footer-link">Support</a>
+            </div>
+            
+            <div class="copyright">
+                &copy; 2023 LiquidGlass Design System. All rights reserved. Master Apple's Liquid Glass design system with comprehensive code examples. [[3]]
+            </div>
+        </div>
+    </footer>
 
     <script>
-        const WebApp = window.Telegram.WebApp;
-        WebApp.ready();
-        if (WebApp.version >= '8.0') {
-            WebApp.requestFullscreen();
-            WebApp.lockOrientation();  // Locks to portrait (upright)
-        }
-
-        // Splash screen
-        const splash = document.getElementById('splash');
-        const menu = document.getElementById('menu');
-        const game = document.getElementById('game');
-        const background = document.getElementById('background');
-        const character = document.getElementById('character');
-        const nameEl = document.getElementById('name');
-        const textEl = document.getElementById('text');
-        const choicesDiv = document.getElementById('choices');
-
-        setTimeout(() => {
-            splash.classList.add('fade-out');
-            setTimeout(() => {
-                splash.style.display = 'none';
-                menu.style.display = 'flex';
-            }, 1000);
-        }, 5000);
-
-        // Menu
-        document.getElementById('play').addEventListener('click', () => {
-            menu.classList.add('fade-out');
-            setTimeout(() => {
-                menu.style.display = 'none';
-                game.style.display = 'block';
-                startGame();
-            }, 1000);
-        });
-
-        document.getElementById('settings').addEventListener('click', () => {
-            alert('Настройки не реализованы в этой мини-версии.');
-        });
-
-        // Visual Novel Structure
-        const scenes = {
-            start: {
-                background: 'https://example.com/forest-bg.jpg', // Замените на реальное изображение леса в стиле аниме
-                dialog: [
-                    { name: '', text: 'Вы просыпаетесь в загадочном заколдованном лесу. Деревья шепчут секреты вокруг вас.' },
-                    { name: 'Рассказчик', text: 'Впереди путь раздваивается: яркая, солнечная тропа и тёмная, тенистая.' },
-                    { name: '', text: 'Что вы выберете?' }
-                ],
-                character: '',
-                choices: [
-                    { text: 'Пойти по яркой тропе', next: 'bright' },
-                    { text: 'Пойти по тёмной тропе', next: 'dark' }
-                ]
-            },
-            bright: {
-                background: 'https://example.com/sunny-path-bg.jpg',
-                dialog: [
-                    { name: 'Фея', text: 'Привет, странник! Я добрая фея. Хочешь, я проведу тебя домой?' },
-                    { name: '', character: 'https://example.com/fairy-sprite.png' } // Показать спрайт феи
-                ],
-                choices: [
-                    { text: 'Принять помощь', next: 'happyEnd' }
-                ]
-            },
-            dark: {
-                background: 'https://example.com/dark-path-bg.jpg',
-                dialog: [
-                    { name: '', text: 'Вы углубляетесь в тёмную тропу и внезапно сталкиваетесь с яростным волком.' },
-                    { name: 'Волк', text: 'Грррр!' },
-                    { name: '', character: 'https://example.com/wolf-sprite.png' }
-                ],
-                choices: [
-                    { text: 'Убежать', next: 'run' },
-                    { text: 'Сразиться с волком', next: 'fight' }
-                ]
-            },
-            run: {
-                background: 'https://example.com/lost-forest-bg.jpg',
-                dialog: [
-                    { name: '', text: 'Вы бежите изо всех сил, но лес кажется бесконечным. Вы потерялись навсегда.' }
-                ],
-                choices: [
-                    { text: 'Начать заново', next: 'start' }
-                ]
-            },
-            fight: {
-                background: 'https://example.com/treasure-bg.jpg',
-                dialog: [
-                    { name: '', text: 'С мужеством вы сражаетесь с волком и побеждаете его.' },
-                    { name: '', text: 'За ним вы находите скрытый сундук с сокровищами!' }
-                ],
-                choices: [
-                    { text: 'Забрать сокровища и уйти домой', next: 'richEnd' }
-                ]
-            },
-            happyEnd: {
-                background: 'https://example.com/home-bg.jpg',
-                dialog: [
-                    { name: '', text: 'Фея безопасно выводит вас из леса. Вы возвращаетесь домой с чудесными воспоминаниями.' },
-                    { name: '', text: 'Конец.' }
-                ],
-                choices: [
-                    { text: 'Играть снова', next: 'start' }
-                ]
-            },
-            richEnd: {
-                background: 'https://example.com/rich-bg.jpg',
-                dialog: [
-                    { name: '', text: 'Вы забираете сокровища и становитесь богатым за пределами мечт.' },
-                    { name: '', text: 'Конец.' }
-                ],
-                choices: [
-                    { text: 'Играть снова', next: 'start' }
-                ]
-            }
-        };
-
-        let currentScene = null;
-        let dialogIndex = 0;
-
-        function showNextDialog() {
-            if (dialogIndex < currentScene.dialog.length) {
-                const line = currentScene.dialog[dialogIndex];
-                nameEl.innerText = line.name || '';
-                textEl.innerText = line.text || '';
-                textEl.classList.add('typewriter');
-                if (line.character !== undefined) {
-                    character.src = line.character || '';
-                    character.style.display = line.character ? 'block' : 'none';
-                }
-                dialogIndex++;
-            } else {
-                showChoices();
-            }
-        }
-
-        function showChoices() {
-            choicesDiv.innerHTML = '';
-            if (currentScene.choices) {
-                currentScene.choices.forEach(choice => {
-                    const btn = document.createElement('button');
-                    btn.innerText = choice.text;
-                    btn.addEventListener('click', () => {
-                        choicesDiv.style.display = 'none';
-                        showScene(choice.next);
-                    });
-                    choicesDiv.appendChild(btn);
+        // Tab functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Remove active class from all tabs
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    tab.classList.add('active');
+                    
+                    // Show corresponding content
+                    const tabName = tab.getAttribute('data-tab');
+                    document.getElementById(`${tabName}-content`).classList.add('active');
                 });
-                choicesDiv.style.display = 'flex';
+            });
+            
+            // Interactive glass effect
+            const interactiveGlass = document.querySelector('.interactive-glass');
+            interactiveGlass.addEventListener('click', function(e) {
+                e.preventDefault();
+                triggerConfetti();
+                
+                // Add temporary active state
+                this.style.boxShadow = '0 0 30px 10px rgba(236, 72, 153, 0.6)';
+                setTimeout(() => {
+                    this.style.boxShadow = '';
+                }, 1500);
+            });
+            
+            // Surprise interaction
+            const surpriseTrigger = document.querySelector('.surprise-trigger');
+            let isConfettiActive = false;
+            
+            surpriseTrigger.addEventListener('mouseenter', function() {
+                if (!isConfettiActive) {
+                    isConfettiActive = true;
+                    triggerSubtleConfetti();
+                    
+                    setTimeout(() => {
+                        isConfettiActive = false;
+                    }, 3000);
+                }
+            });
+            
+            // Confetti animation function
+            function triggerConfetti() {
+                const confettiContainer = document.getElementById('confetti-container');
+                confettiContainer.style.display = 'block';
+                confettiContainer.innerHTML = '';
+                
+                const colors = ['#6366f1', '#8b5cf6', '#ec4899', '#f472b6', '#c084fc'];
+                const confettiCount = 150;
+                
+                for (let i = 0; i < confettiCount; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    
+                    // Random properties
+                    const size = Math.random() * 10 + 5;
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    const xPos = Math.random() * 100;
+                    const delay = Math.random() * 1;
+                    const duration = Math.random() * 3 + 2;
+                    
+                    confetti.style.width = `${size}px`;
+                    confetti.style.height = `${size * 2}px`;
+                    confetti.style.backgroundColor = color;
+                    confetti.style.left = `${xPos}%`;
+                    confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+                    confetti.style.animation = `fall ${duration}s ease-in ${delay}s forwards`;
+                    
+                    // Add to container
+                    confettiContainer.appendChild(confetti);
+                    
+                    // Create falling animation
+                    const styleSheet = document.styleSheets[0];
+                    const keyframes = `
+                        @keyframes fall {
+                            0% {
+                                transform: translateY(-50px) rotate(0deg);
+                                opacity: 1;
+                            }
+                            100% {
+                                transform: translateY(${window.innerHeight}px) rotate(${Math.random() * 360}deg);
+                                opacity: 0;
+                            }
+                        }
+                    `;
+                    
+                    styleSheet.insertRule(keyframes, styleSheet.cssRules.length);
+                }
+                
+                // Reset after animation
+                setTimeout(() => {
+                    confettiContainer.style.display = 'none';
+                    confettiContainer.innerHTML = '';
+                }, 5000);
             }
-        }
-
-        function showScene(sceneId) {
-            currentScene = scenes[sceneId];
-            background.style.backgroundImage = `url('${currentScene.background}')`;
-            character.style.display = 'none';
-            choicesDiv.style.display = 'none';
-            dialogIndex = 0;
-            showNextDialog();
-        }
-
-        function startGame() {
-            showScene('start');
-        }
-
-        // Advance on click
-        game.addEventListener('click', (e) => {
-            if (choicesDiv.style.display !== 'flex' && !e.target.closest('#choices')) {
-                textEl.classList.remove('typewriter');
-                showNextDialog();
+            
+            // Subtle confetti for surprise interaction
+            function triggerSubtleConfetti() {
+                const confettiContainer = document.getElementById('confetti-container');
+                confettiContainer.style.display = 'block';
+                confettiContainer.innerHTML = '';
+                
+                const colors = ['#6366f1', '#8b5cf6'];
+                const confettiCount = 30;
+                
+                for (let i = 0; i < confettiCount; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    
+                    const size = Math.random() * 6 + 3;
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    const xPos = Math.random() * 100;
+                    const yPos = Math.random() * 20 + 10;
+                    const delay = Math.random() * 0.5;
+                    const duration = Math.random() * 1.5 + 1;
+                    
+                    confetti.style.width = `${size}px`;
+                    confetti.style.height = `${size * 2}px`;
+                    confetti.style.backgroundColor = color;
+                    confetti.style.left = `${xPos}%`;
+                    confetti.style.top = `${yPos}%`;
+                    confetti.style.opacity = '0.7';
+                    confetti.style.animation = `subtle-fall ${duration}s ease-out ${delay}s forwards`;
+                    
+                    confettiContainer.appendChild(confetti);
+                    
+                    const styleSheet = document.styleSheets[0];
+                    const keyframes = `
+                        @keyframes subtle-fall {
+                            0% {
+                                transform: translateY(0) rotate(0deg);
+                                opacity: 0.7;
+                            }
+                            100% {
+                                transform: translateY(100px) rotate(${Math.random() * 180}deg) translateX(${(Math.random() - 0.5) * 100}px);
+                                opacity: 0;
+                            }
+                        }
+                    `;
+                    
+                    styleSheet.insertRule(keyframes, styleSheet.cssRules.length);
+                }
+                
+                setTimeout(() => {
+                    confettiContainer.style.display = 'none';
+                    confettiContainer.innerHTML = '';
+                }, 2000);
             }
+            
+            // Floating element animation enhancement
+            const floatingElements = document.querySelectorAll('.floating-element');
+            floatingElements.forEach((el, index) => {
+                const duration = 8 + index * 2;
+                const delay = index * 1;
+                
+                el.style.animationDuration = `${duration}s`;
+                el.style.animationDelay = `${delay}s`;
+            });
+            
+            // Add subtle hover effect to all liquid glass elements
+            const liquidGlassElements = document.querySelectorAll('.liquid-glass');
+            liquidGlassElements.forEach(element => {
+                element.addEventListener('mouseenter', function() {
+                    this.style.boxShadow = '0 15px 35px -5px rgba(0, 0, 0, 0.2)';
+                });
+                
+                element.addEventListener('mouseleave', function() {
+                    this.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.15)';
+                });
+            });
+            
+            // Add scroll animation for section headers
+            const sectionHeaders = document.querySelectorAll('.section-header');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animation = 'fadeIn 0.8s ease-out forwards';
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            sectionHeaders.forEach(header => {
+                header.style.opacity = '0';
+                observer.observe(header);
+            });
+            
+            // Liquid wave effect on CTA button
+            const ctaButtons = document.querySelectorAll('.cta-button');
+            ctaButtons.forEach(button => {
+                button.addEventListener('mousemove', function(e) {
+                    const rect = this.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    const ripple = document.createElement('span');
+                    ripple.className = 'ripple';
+                    ripple.style.left = `${x}px`;
+                    ripple.style.top = `${y}px`;
+                    
+                    this.appendChild(ripple);
+                    
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 600);
+                });
+            });
+            
+            // Apple's Liquid Glass design creates a UI that feels dynamic with its layered glass-like panels [[4]]
+            // Creating Liquid Glass style animations requires understanding of real-time backdrop blur techniques [[5]]
         });
     </script>
 </body>
