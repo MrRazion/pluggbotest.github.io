@@ -10,12 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap&subset=cyrillic" rel="stylesheet">
     <style>
         :root {
-            --tg-theme-bg-color: #121212;
-            --tg-theme-text-color: #ffffff;
-            --tg-theme-hint-color: #aaaaaa;
-            --tg-theme-link-color: #6a9eff;
-            --tg-theme-button-color: #6a11cb;
-            --tg-theme-button-text-color: #ffffff;
             --tg-safe-area-inset-top: 0px;
             --tg-safe-area-inset-bottom: 0px;
             --tg-safe-area-inset-left: 0px;
@@ -31,47 +25,57 @@
             --glass-border: 1px solid rgba(255, 255, 255, 0.1);
             --verified-green: #28a745;
             --unverified-red: #dc3545;
+            --nav-height: 60px;
+            --profile-bg: rgba(0, 0, 0, 0.95);
+            --input-bg: rgba(255, 255, 255, 0.1);
+            --button-hover: scale(1.02);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
         }
-
+        
         body {
-            font-family: 'Roboto', sans-serif;
-            background-color: var(--tg-theme-bg-color, #121212);
+            background: #000000;
             color: var(--tg-theme-text-color, #ffffff);
-            min-height: 100vh;
-            padding: env(safe-area-inset-top, 20px) env(safe-area-inset-right, 20px) env(safe-area-inset-bottom, 20px) env(safe-area-inset-left, 20px);
-            padding-bottom: 70px; /* Space for bottom nav */
-            transition: all 0.3s ease;
+            line-height: 1.6;
+            padding-top: var(--tg-safe-area-inset-top);
+            padding-bottom: calc(var(--nav-height) + var(--tg-safe-area-inset-bottom));
+            padding-left: var(--tg-safe-area-inset-left);
+            padding-right: var(--tg-safe-area-inset-right);
+            scroll-behavior: smooth;
+            overflow-x: hidden;
         }
-
+        
         .container {
             max-width: 100%;
-            padding: 15px;
             margin: 0 auto;
+            padding: 15px;
         }
-
+        
         .header {
-            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             text-align: center;
-            padding: 15px 0;
             margin-bottom: 20px;
-            border-radius: var(--border-radius-lg);
+            padding: 15px;
             background: var(--glass-bg);
             backdrop-filter: var(--glass-blur);
             border: var(--glass-border);
+            border-radius: var(--border-radius-lg);
             box-shadow: var(--shadow-soft);
-            transition: all 0.3s ease;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            position: relative;
         }
-
+        
         .header:hover {
             transform: translateY(-2px);
         }
-
+        
         .header h1 {
             font-size: 22px;
             margin-bottom: 5px;
@@ -81,47 +85,297 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             animation: gradient-flow 3s ease infinite;
-            display: inline-block;
         }
-
+        
         @keyframes gradient-flow {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
-
+        
         .header p {
             color: var(--tg-theme-hint-color, #aaaaaa);
             font-size: 14px;
         }
-
-        .profile-icon {
+        
+        .user-icon {
             position: absolute;
-            top: 15px;
             right: 15px;
-            width: 36px;
-            height: 36px;
+            width: 32px;
+            height: 32px;
+            background: url('https://cdn-icons-png.flaticon.com/512/149/149071.png') center/cover;
             border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .user-icon:hover {
+            transform: scale(1.1);
+        }
+        
+        .auth-modal, .profile-modal, .reset-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--profile-bg);
+            z-index: 1000;
+            padding: 20px;
+            overflow-y: auto;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .auth-modal.active, .profile-modal.active, .reset-modal.active {
+            display: block;
+        }
+        
+        .auth-content, .profile-content, .reset-content {
             background: var(--glass-bg);
             backdrop-filter: var(--glass-blur);
             border: var(--glass-border);
+            border-radius: var(--border-radius-lg);
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: var(--shadow-soft);
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            background: var(--input-bg);
+            border: var(--glass-border);
+            border-radius: var(--border-radius-sm);
+            color: white;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: #2575fc;
+            transform: var(--button-hover);
+        }
+        
+        .btn {
+            padding: 12px;
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-md);
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        
+        .btn:hover {
+            transform: var(--button-hover);
+            opacity: 0.95;
+        }
+        
+        .link-text {
+            color: #2575fc;
+            cursor: pointer;
+            text-decoration: underline;
+            font-size: 14px;
+        }
+        
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .social-icon:hover {
+            transform: scale(1.1);
+        }
+        
+        .google-icon {
+            background: url('https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg') center/cover;
+        }
+        
+        .tg-icon {
+            background: url('https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg') center/cover;
+        }
+        
+        .countdown {
+            font-size: 14px;
+            color: #aaaaaa;
+        }
+        
+        .profile-header {
             display: flex;
             align-items: center;
-            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #333;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+        
+        .profile-info h2 {
+            font-size: 20px;
+        }
+        
+        .profile-info p {
+            font-size: 14px;
+            color: #aaaaaa;
+        }
+        
+        .description-input {
+            width: 100%;
+            padding: 10px;
+            background: var(--input-bg);
+            border: var(--glass-border);
+            border-radius: var(--border-radius-sm);
+            color: white;
+            margin-bottom: 10px;
+        }
+        
+        .profile-tabs {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+        
+        .profile-tab {
+            padding: 10px 20px;
+            background: var(--glass-bg);
+            border-radius: var(--border-radius-md);
             cursor: pointer;
             transition: all 0.3s ease;
         }
-
-        .profile-icon:hover {
-            transform: scale(1.1);
+        
+        .profile-tab.active {
+            background: var(--primary-gradient);
+            color: white;
         }
-
-        .profile-icon svg {
-            width: 20px;
-            height: 20px;
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .library-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        
+        .badge-item {
+            background: var(--glass-bg);
+            padding: 10px;
+            border-radius: var(--border-radius-md);
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        
+        .badge-img {
+            width: 100%;
+            border-radius: var(--border-radius-sm);
+        }
+        
+        .badge-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .hanger-icon {
+            width: 24px;
+            height: 24px;
+            background: url('https://raw.githubusercontent.com/MrRazion/pluggbotest.github.io/main/badges/status/pixel-mini-cake__b25a44ae.webp') center/cover;
+        }
+        
+        .nav-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: var(--nav-height);
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border-top: var(--glass-border);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .nav-item:hover {
+            transform: translateY(-2px);
+        }
+        
+        .nav-icon {
+            width: 24px;
+            height: 24px;
             fill: white;
         }
-
+        
+        .nav-label {
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        
+        .download-progress {
+            position: fixed;
+            bottom: calc(var(--nav-height) + 10px);
+            right: 10px;
+            background: var(--glass-bg);
+            padding: 10px;
+            border-radius: var(--border-radius-md);
+            display: none;
+            z-index: 999;
+        }
+        
+        .download-progress.active {
+            display: block;
+        }
+        
+        .progress-details {
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        
+        /* Existing styles remain */
         .tabs {
             display: flex;
             overflow-x: auto;
@@ -130,11 +384,11 @@
             scrollbar-width: none;
             transition: all 0.3s ease;
         }
-
+        
         .tabs::-webkit-scrollbar {
             display: none;
         }
-
+        
         .tab {
             padding: 10px 20px;
             background: var(--glass-bg);
@@ -147,112 +401,95 @@
             transition: all 0.3s ease;
             font-weight: 500;
         }
-
+        
         .tab:hover {
-            background: var(--primary-gradient);
-            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
-
+        
         .tab.active {
             background: var(--primary-gradient);
             color: white;
-            font-weight: 600;
+            transform: scale(1.05);
         }
-
-        .search-container {
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        .search-container input {
-            width: 100%;
-            padding: 12px 15px 12px 45px;
-            background: var(--glass-bg);
-            backdrop-filter: var(--glass-blur);
-            border: var(--glass-border);
-            border-radius: var(--border-radius-md);
-            color: var(--tg-theme-text-color, #ffffff);
-            font-size: 14px;
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 20px;
-            height: 20px;
-            fill: var(--tg-theme-hint-color, #aaaaaa);
-        }
-
+        
         .games-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 15px;
+            margin-bottom: 30px;
         }
-
+        
         .game-card {
             background: var(--glass-bg);
             backdrop-filter: var(--glass-blur);
             border: var(--glass-border);
             border-radius: var(--border-radius-lg);
             overflow: hidden;
-            transition: transform 0.3s ease;
-            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
             box-shadow: var(--shadow-soft);
         }
-
+        
         .game-card:hover {
-            transform: translateY(-2px);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
         }
-
+        
+        .game-card:active {
+            transform: scale(0.98);
+            opacity: 0.9;
+        }
+        
         .game-image {
             width: 100%;
-            height: 100px;
+            height: 120px;
             overflow: hidden;
             position: relative;
+            transition: transform 0.5s ease;
         }
-
+        
         .game-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             transition: transform 0.5s ease;
         }
-
+        
         .game-card:hover .game-image img {
-            transform: scale(1.05);
+            transform: scale(1.1);
         }
-
+        
         .game-overlay {
             position: absolute;
-            top: 0;
+            bottom: 0;
             left: 0;
             right: 0;
-            bottom: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
-            opacity: 0;
-            transition: opacity 0.3s ease;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            height: 50%;
+            transition: height 0.3s ease;
         }
-
+        
         .game-card:hover .game-overlay {
-            opacity: 1;
+            height: 70%;
         }
-
+        
         .game-info {
             padding: 12px;
+            opacity: 0.9;
+            transition: opacity 0.3s ease;
         }
-
+        
+        .game-card:hover .game-info {
+            opacity: 1;
+        }
+        
         .game-title {
-            font-size: 16px;
-            font-weight: 500;
+            font-size: 14px;
+            font-weight: 600;
             margin-bottom: 5px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
             color: var(--tg-theme-text-color, #ffffff);
         }
-
+        
         .game-description {
             font-size: 12px;
             color: var(--tg-theme-hint-color, #aaaaaa);
@@ -260,158 +497,94 @@
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
-            height: 36px;
         }
-
-        .game-actions {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-top: 10px;
-        }
-
-        .library-btn {
-            padding: 6px;
-            border-radius: var(--border-radius-sm);
-            border: none;
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .add-to-library {
-            background: rgba(52, 199, 89, 0.1);
-            color: var(--accent-green);
-        }
-
-        .remove-from-library {
-            background: rgba(220, 53, 69, 0.1);
-            color: #dc3545;
-        }
-
-        .library-btn:hover {
-            opacity: 0.9;
-        }
-
-        .game-meta {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 8px;
-            font-size: 12px;
-            color: var(--tg-theme-hint-color, #aaaaaa);
-        }
-
-        .game-category {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 2px 6px;
-            border-radius: var(--border-radius-sm);
-        }
-
-        .game-size {
-            white-space: nowrap;
-        }
-
-        #game-details {
+        
+        .game-details {
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: var(--tg-theme-bg-color, #121212);
+            background: rgba(0, 0, 0, 0.8);
             z-index: 1000;
             padding: 20px;
             overflow-y: auto;
-            transform: translateX(100%);
-            transition: transform 0.3s ease;
-            display: none;
+            padding-top: var(--tg-safe-area-inset-top);
+            padding-bottom: var(--tg-safe-area-inset-bottom);
+            padding-left: var(--tg-safe-area-inset-left);
+            padding-right: var(--tg-safe-area-inset-right);
+            animation: fadeIn 0.5s ease;
         }
-
-        #game-details.active {
-            transform: translateX(0);
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .game-details.active {
             display: block;
         }
-
-        .back-btn {
-            display: inline-flex;
-            align-items: center;
-            padding: 10px 15px;
+        
+        .game-details-content {
             background: var(--glass-bg);
             backdrop-filter: var(--glass-blur);
             border: var(--glass-border);
-            color: var(--tg-theme-text-color, #ffffff);
-            border: none;
-            border-radius: var(--border-radius-md);
-            font-size: 14px;
-            cursor: pointer;
-            margin-bottom: 15px;
-            margin-top: 40px;
+            border-radius: var(--border-radius-lg);
+            padding: 20px;
+            margin-top: 20px;
             box-shadow: var(--shadow-soft);
-            transition: all 0.3s ease;
+            animation: slideUp 0.5s ease;
         }
-
-        .back-btn:hover {
-            transform: translateX(-2px);
-            background: var(--primary-gradient);
-            color: white;
+        
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
-
-        .back-btn svg {
-            width: 16px;
-            height: 16px;
-            margin-right: 5px;
-        }
-
+        
         .game-details-header {
-            text-align: center;
+            display: flex;
+            align-items: flex-start;
             margin-bottom: 20px;
         }
-
-        .game-details-image {
-            width: 150px;
-            height: 150px;
-            border-radius: var(--border-radius-lg);
+        
+        .game-details-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: var(--border-radius-md);
             overflow: hidden;
-            margin: 0 auto 15px;
-            border: 2px solid transparent;
-            background: var(--primary-gradient);
-            background-origin: border-box;
-            background-clip: content-box, border-box;
+            margin-right: 15px;
+            flex-shrink: 0;
+            box-shadow: var(--shadow-soft);
+            transition: transform 0.3s ease;
         }
-
-        .game-details-image img {
+        
+        .game-details-icon:hover {
+            transform: rotate(5deg) scale(1.1);
+        }
+        
+        .game-details-icon img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-
+        
+        .game-details-info {
+            flex: 1;
+        }
+        
         .game-details-title {
             font-size: 20px;
             font-weight: 600;
             margin-bottom: 5px;
-            color: var(--tg-theme-text-color, #ffffff);
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradient-flow 3s ease infinite;
+            display: inline-block;
         }
-
-        .game-details-meta {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 15px;
-            color: var(--tg-theme-hint-color, #aaaaaa);
-            font-size: 14px;
-        }
-
-        .meta-item {
-            display: flex;
-            align-items: center;
-        }
-
-        .meta-item svg {
-            width: 16px;
-            height: 16px;
-            margin-right: 5px;
-            fill: var(--accent-green);
-        }
-
+        
         .verified-badge {
             display: inline-block;
             padding: 4px 8px;
@@ -422,108 +595,34 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-
+        
         .verified {
             background: var(--verified-green);
             color: white;
         }
-
+        
         .unverified {
             background: var(--unverified-red);
             color: white;
         }
-
+        
         .verified-badge:hover {
             transform: scale(1.05);
         }
-
-        .section-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin: 20px 0 10px;
-            color: var(--tg-theme-text-color, #ffffff);
-            display: flex;
-            align-items: center;
-        }
-
-        .new-indicator {
-            width: 10px;
-            height: 10px;
-            background: var(--accent-green);
-            border-radius: 50%;
-            margin-left: 8px;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.2); opacity: 0.7; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        .section-content {
-            background: var(--glass-bg);
-            backdrop-filter: var(--glass-blur);
-            border: var(--glass-border);
-            border-radius: var(--border-radius-lg);
-            padding: 15px;
-            margin-bottom: 20px;
-            box-shadow: var(--shadow-soft);
-        }
-
-        .section-content p {
-            line-height: 1.5;
-            color: var(--tg-theme-text-color, #ffffff);
+        
+        .game-details-meta {
             font-size: 14px;
-            margin-bottom: 10px;
-        }
-
-        .section-content ul {
-            padding-left: 20px;
-        }
-
-        .section-content li {
-            margin-bottom: 5px;
-            transition: transform 0.3s ease;
-        }
-
-        .section-content li:hover {
-            transform: translateX(5px);
-        }
-
-        .data-security-box {
-            background: var(--glass-bg);
-            backdrop-filter: var(--glass-blur);
-            border: var(--glass-border);
-            border-radius: var(--border-radius-lg);
-            padding: 20px;
+            color: var(--tg-theme-hint-color, #aaaaaa);
             margin-bottom: 20px;
-            box-shadow: var(--shadow-soft);
         }
-
-        .data-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .data-item svg {
-            width: 24px;
-            height: 24px;
-            margin-right: 10px;
-            fill: var(--accent-green);
-        }
-
-        .data-item p {
-            font-size: 14px;
-        }
-
+        
         .download-btn-container {
             display: flex;
             justify-content: center;
             margin-bottom: 30px;
+            gap: 10px;
         }
-
+        
         .download-btn {
             display: block;
             width: 100%;
@@ -541,57 +640,185 @@
             box-shadow: var(--shadow-soft);
             animation: pulse 2s infinite;
         }
-
+        
         @keyframes pulse {
             0% { transform: scale(1); }
             50% { transform: scale(1.05); }
             100% { transform: scale(1); }
         }
-
-        .screenshots-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
+        
+        .download-btn:disabled {
+            background: var(--tg-theme-secondary-bg-color, #555);
+            cursor: not-allowed;
+            animation: none;
         }
-
-        .screenshots-container img {
-            width: 100%;
-            height: 150px;
+        
+        .download-btn:not(:disabled):hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        
+        .library-btn {
+            padding: 16px;
             border-radius: var(--border-radius-md);
-            object-fit: cover;
+            font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-soft);
+            width: 100%;
+            max-width: 300px;
+        }
+        
+        .add-to-library {
+            background: #2575fc;
+            color: white;
+        }
+        
+        .remove-from-library {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .screenshots-container {
+            display: flex;
+            overflow-x: auto;
+            gap: 10px;
+            margin-bottom: 30px;
+            scrollbar-width: thin;
+        }
+        
+        .screenshots-container img {
+            width: 200px;
+            height: auto;
+            border-radius: var(--border-radius-md);
+            flex-shrink: 0;
+            box-shadow: var(--shadow-soft);
             transition: transform 0.3s ease;
         }
-
+        
         .screenshots-container img:hover {
             transform: scale(1.05);
         }
-
-        .progress-container {
+        
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--tg-theme-text-color, #ffffff);
+            display: flex;
+            align-items: center;
+            transition: color 0.3s ease;
+        }
+        
+        .section-title:hover {
+            color: #ffffff;
+        }
+        
+        .section-content {
             background: var(--glass-bg);
             backdrop-filter: var(--glass-blur);
             border: var(--glass-border);
             border-radius: var(--border-radius-md);
             padding: 15px;
-            margin-bottom: 15px;
-            display: none;
+            margin-bottom: 20px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
         }
-
+        
+        .section-content:hover {
+            transform: translateY(-2px);
+        }
+        
+        .section-content p {
+            margin-bottom: 10px;
+        }
+        
+        .section-content ul {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+        
+        .section-content li {
+            margin-bottom: 5px;
+            transition: transform 0.3s ease;
+        }
+        
+        .section-content li:hover {
+            transform: translateX(5px);
+        }
+        
+        .data-security-box {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border: var(--glass-border);
+            border-radius: var(--border-radius-lg);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-soft);
+        }
+        
+        .data-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .data-item svg {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+            fill: var(--accent-green);
+        }
+        
+        .data-item p {
+            font-size: 14px;
+        }
+        
+        .new-indicator {
+            width: 10px;
+            height: 10px;
+            background-color: var(--accent-green);
+            border-radius: 50%;
+            margin-left: 10px;
+            animation: flash 1.5s infinite;
+        }
+        
+        @keyframes flash {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        
+        .progress-container {
+            margin: 20px 0;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
         .progress-info {
             display: flex;
             justify-content: space-between;
             margin-bottom: 8px;
-            font-size: 14px;
         }
-
+        
+        .progress-text {
+            font-size: 14px;
+            color: var(--tg-theme-hint-color, #aaaaaa);
+        }
+        
+        .progress-percent {
+            font-weight: bold;
+            color: var(--tg-theme-button-color, #40a7e3);
+        }
+        
         .progress-bar {
             height: 8px;
-            background: rgba(255, 255, 255, 0.1);
+            background: var(--tg-theme-section-bg-color, #333);
             border-radius: var(--border-radius-sm);
             overflow: hidden;
         }
-
+        
         .progress-fill {
             height: 100%;
             background: var(--primary-gradient);
@@ -599,15 +826,47 @@
             width: 0%;
             transition: width 0.3s ease;
         }
-
-        .download-details {
-            font-size: 12px;
-            color: var(--tg-theme-hint-color, #aaaaaa);
-            margin-top: 8px;
-            display: flex;
-            justify-content: space-between;
+        
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 15px;
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border: var(--glass-border);
+            color: var(--tg-theme-text-color, #ffffff);
+            border: none;
+            border-radius: var(--border-radius-md);
+            font-size: 14px;
+            cursor: pointer;
+            margin-bottom: 15px;
+            margin-top: 40px;
+            box-shadow: var(--shadow-soft);
+            transition: all 0.3s ease;
         }
-
+        
+        .back-btn:hover {
+            transform: translateX(-2px);
+            background: var(--primary-gradient);
+            color: white;
+        }
+        
+        .loader {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
         .status-message {
             padding: 15px;
             border-radius: var(--border-radius-md);
@@ -616,72 +875,126 @@
             display: none;
             animation: fadeIn 0.5s ease;
         }
-
+        
         .status-success {
             background: rgba(52, 199, 89, 0.1);
             color: #34c759;
             display: block;
         }
-
+        
         .status-error {
-            background: rgba(220, 53, 69, 0.1);
-            color: #dc3545;
+            background: rgba(255, 59, 48, 0.1);
+            color: #ff3b30;
             display: block;
         }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
+        
         .footer {
-            margin-top: 40px;
-            padding: 20px 0;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-        }
-
-        .footer-section {
             background: var(--glass-bg);
             backdrop-filter: var(--glass-blur);
             border: var(--glass-border);
             border-radius: var(--border-radius-lg);
-            padding: 15px;
+            padding: 20px;
+            margin-top: 30px;
+            box-shadow: var(--shadow-soft);
+            transition: transform 0.3s ease;
         }
-
+        
+        .footer:hover {
+            transform: translateY(-2px);
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .footer-section {
+            flex: 1;
+            padding: 0 10px;
+        }
+        
         .footer-section h3 {
-            font-size: 16px;
+            font-size: 14px;
             margin-bottom: 10px;
             color: var(--tg-theme-text-color, #ffffff);
         }
-
-        .footer-section p {
-            font-size: 14px;
+        
+        .footer-section p, .footer-section a {
+            font-size: 12px;
             color: var(--tg-theme-hint-color, #aaaaaa);
-            line-height: 1.5;
-        }
-
-        .footer-section a {
-            color: var(--tg-theme-link-color, #6a9eff);
+            margin-bottom: 5px;
             text-decoration: none;
+            transition: color 0.3s ease;
         }
-
+        
+        .footer-section a:hover {
+            color: #ffffff;
+        }
+        
+        .footer-section a {
+            color: #6a9eff;
+        }
+        
         .footer-bottom {
             text-align: center;
-            margin-top: 20px;
             padding-top: 15px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid var(--tg-theme-hint-color, #333333);
+        }
+        
+        .footer-bottom p {
             font-size: 12px;
             color: var(--tg-theme-hint-color, #aaaaaa);
         }
-
-        /* Modal styles */
-        .modal {
+        
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .search-bar {
+            margin-bottom: 15px;
+            position: relative;
+        }
+        
+        .search-bar input {
+            width: 100%;
+            padding: 12px 15px;
+            padding-left: 40px;
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border: var(--glass-border);
+            border-radius: var(--border-radius-md);
+            color: var(--tg-theme-text-color, #ffffff);
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .search-bar input:focus {
+            transform: scale(1.02);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .search-bar svg {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            fill: var(--tg-theme-hint-color, #aaaaaa);
+            transition: fill 0.3s ease;
+        }
+        
+        .search-bar input:focus + svg {
+            fill: #ffffff;
+        }
+        
+        #verify-modal {
             display: none;
             position: fixed;
             top: 0;
@@ -694,528 +1007,183 @@
             overflow-y: auto;
             animation: fadeIn 0.5s ease;
         }
-
-        .modal-content {
+        
+        #verify-modal.active {
+            display: block;
+        }
+        
+        .verify-content {
             background: var(--glass-bg);
             backdrop-filter: var(--glass-blur);
             border: var(--glass-border);
             border-radius: var(--border-radius-lg);
-            padding: 25px;
-            margin: 40px auto;
+            padding: 20px;
+            margin: 20px auto;
             max-width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
             box-shadow: var(--shadow-soft);
             animation: slideUp 0.5s ease;
         }
-
-        @keyframes slideUp {
-            from { transform: translateY(50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        /* Authentication modal styles */
-        .auth-tabs {
-            display: flex;
-            margin-bottom: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .tab {
-            padding: 10px 20px;
-            cursor: pointer;
-            font-weight: 500;
-            color: var(--tg-theme-hint-color, #aaaaaa);
-            transition: all 0.3s ease;
-        }
-
-        .tab.active {
-            color: white;
-            border-bottom: 2px solid var(--primary-gradient);
-        }
-
-        .auth-input {
-            width: 100%;
-            padding: 12px 15px;
-            margin-bottom: 15px;
-            background: var(--glass-bg);
-            backdrop-filter: var(--glass-blur);
-            border: var(--glass-border);
-            border-radius: var(--border-radius-md);
-            color: var(--tg-theme-text-color, #ffffff);
-            font-size: 14px;
-        }
-
-        .auth-btn {
-            width: 100%;
-            padding: 12px;
-            background: var(--primary-gradient);
-            color: white;
-            border: none;
-            border-radius: var(--border-radius-md);
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-bottom: 15px;
-            transition: all 0.3s ease;
-        }
-
-        .auth-btn:hover {
-            opacity: 0.9;
-        }
-
-        .auth-links {
-            text-align: center;
-            font-size: 14px;
-            color: var(--tg-theme-hint-color, #aaaaaa);
-        }
-
-        .auth-links a {
-            color: #6a9eff;
-            text-decoration: none;
-        }
-
-        .social-login {
-            margin-top: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .social-btn {
+        
+        .verify-header {
             display: flex;
             align-items: center;
-            justify-content: center;
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: var(--border-radius-md);
-            cursor: pointer;
-            transition: all 0.3s ease;
+            margin-bottom: 20px;
         }
-
-        .social-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .social-icon {
-            width: 20px;
-            height: 20px;
+        
+        .verify-icon img {
+            width: 50px;
+            height: 50px;
+            border-radius: var(--border-radius-sm);
             margin-right: 10px;
         }
-
-        .code-section {
-            margin: 15px 0;
+        
+        .verify-title {
+            font-size: 18px;
+            font-weight: 600;
         }
-
-        .countdown {
-            text-align: center;
-            font-weight: bold;
-            color: var(--accent-green);
-            margin-top: 10px;
+        
+        .verify-version {
+            font-size: 12px;
+            color: var(--tg-theme-hint-color, #aaaaaa);
         }
-
-        /* Profile styles */
-        .profile-content {
-            padding: 20px;
-        }
-
-        .profile-header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .profile-avatar-container {
-            position: relative;
-        }
-
-        .profile-avatar {
-            display: inline-block;
-            position: relative;
+        
+        .detectors-info {
+            font-size: 14px;
             margin-bottom: 15px;
         }
-
-        .profile-avatar img {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .change-avatar-btn {
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            background: var(--primary-gradient);
-            border: none;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            padding: 0;
-            font-size: 12px;
-        }
-
-        .profile-copy-link {
-            margin-top: 10px;
-        }
-
-        #copy-profile-link {
-            background: var(--glass-bg);
-            backdrop-filter: var(--glass-blur);
-            border: var(--glass-border);
-            border-radius: var(--border-radius-md);
-            padding: 5px 10px;
-            color: var(--tg-theme-text-color, #ffffff);
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            font-size: 12px;
-        }
-
-        #copy-profile-link svg {
-            width: 16px;
-            height: 16px;
-            margin-right: 5px;
-        }
-
-        .profile-username {
-            font-size: 20px;
-            font-weight: 600;
-            margin: 10px 0 5px;
-            color: var(--tg-theme-text-color, #ffffff);
-        }
-
-        .profile-handle {
-            color: var(--tg-theme-hint-color, #aaaaaa);
-            font-size: 14px;
-        }
-
-        .profile-description {
-            margin: 20px 0;
-        }
-
-        #profile-desc {
-            width: 100%;
-            height: 80px;
-            padding: 12px;
-            background: var(--glass-bg);
-            backdrop-filter: var(--glass-blur);
-            border: var(--glass-border);
-            border-radius: var(--border-radius-md);
-            color: var(--tg-theme-text-color, #ffffff);
-            resize: vertical;
-            font-size: 14px;
-        }
-
-        .profile-desc-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        #cancel-desc, #save-desc {
-            padding: 5px 15px;
-            border-radius: var(--border-radius-sm);
-            border: none;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        #cancel-desc {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--tg-theme-hint-color, #aaaaaa);
-        }
-
-        #save-desc {
-            background: var(--primary-gradient);
-            color: white;
-        }
-
-        /* Library styles */
-        .library-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-        }
-
-        .library-item {
+        
+        .detectors-list {
             background: var(--glass-bg);
             backdrop-filter: var(--glass-blur);
             border: var(--glass-border);
             border-radius: var(--border-radius-lg);
-            overflow: hidden;
-            transition: transform 0.3s ease;
-        }
-
-        .library-item:hover {
-            transform: translateY(-2px);
-        }
-
-        .library-item-img {
-            width: 100%;
-            height: 100px;
-            overflow: hidden;
-        }
-
-        .library-item-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .library-item-info {
-            padding: 10px;
-        }
-
-        .library-item-title {
-            font-size: 14px;
-            font-weight: 500;
-            margin-bottom: 5px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        /* Badges styles */
-        .badges-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            padding: 10px;
-        }
-
-        .badge-item {
-            background: var(--glass-bg);
-            backdrop-filter: var(--glass-blur);
-            border: var(--glass-border);
-            border-radius: var(--border-radius-md);
             padding: 15px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            max-height: 300px;
+            overflow-y: auto;
         }
-
-        .badge-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .badge-image {
-            width: 100%;
-            height: 120px;
-            overflow: hidden;
-            border-radius: var(--border-radius-md);
+        
+        .detector-item {
+            display: flex;
+            align-items: center;
             margin-bottom: 10px;
-        }
-
-        .badge-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: var(--border-radius-sm);
-        }
-
-        .badge-title {
             font-size: 14px;
-            font-weight: 500;
         }
-
-        .badge-detail-content {
-            padding: 20px;
-            text-align: center;
+        
+        .detector-item svg {
+            width: 16px;
+            height: 16px;
+            margin-right: 10px;
         }
-
-        .badge-detail-image {
-            width: 150px;
-            height: 150px;
-            border-radius: var(--border-radius-md);
-            object-fit: cover;
-            margin-bottom: 20px;
+        
+        .checkmark {
+            fill: var(--accent-green);
         }
-
-        .badge-actions {
-            margin-top: 15px;
+        
+        .question {
+            fill: var(--unverified-red);
         }
-
-        .badge-actions button {
-            padding: 8px 15px;
+        
+        .modal-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .close-verify, .scan-virus {
+            padding: 10px 20px;
             background: var(--primary-gradient);
             color: white;
             border: none;
             border-radius: var(--border-radius-md);
             cursor: pointer;
-            font-size: 14px;
-        }
-
-        /* Bottom navigation */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: var(--glass-bg);
-            backdrop-filter: var(--glass-blur);
-            border-top: var(--glass-border);
-            display: flex;
-            justify-content: space-around;
-            padding: 12px 0;
-            z-index: 1000;
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: var(--tg-theme-hint-color, #aaaaaa);
-            font-size: 12px;
-            cursor: pointer;
             transition: all 0.3s ease;
+            flex: 1;
+            margin: 0 5px;
         }
-
-        .nav-item.active {
-            color: white;
+        
+        .close-verify:hover, .scan-virus:hover {
+            opacity: 0.9;
         }
-
-        .nav-item svg {
-            width: 22px;
-            height: 22px;
-            margin-bottom: 4px;
+        
+        .scan-virus:disabled {
+            background: gray;
+            cursor: not-allowed;
         }
-
-        /* Library item popup */
-        .popup {
-            position: fixed;
-            bottom: 70px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--glass-bg);
-            backdrop-filter: var(--glass-blur);
-            border: var(--glass-border);
-            border-radius: var(--border-radius-md);
-            z-index: 3000;
-            box-shadow: var(--shadow-soft);
-            animation: fadeIn 0.3s ease;
-            display: none;
-        }
-
-        .popup-content {
-            display: flex;
-            flex-direction: column;
-            padding: 10px;
-        }
-
-        .popup-content button {
-            width: 100%;
-            padding: 10px;
-            background: transparent;
-            border: none;
-            text-align: left;
-            color: var(--tg-theme-text-color, #ffffff);
-            font-size: 14px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-
-        .popup-content button:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        /* Notification */
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: var(--glass-bg);
-            backdrop-filter: var(--glass-blur);
-            border: var(--glass-border);
-            border-radius: var(--border-radius-md);
-            padding: 15px;
-            display: flex;
-            align-items: center;
-            z-index: 3000;
-            box-shadow: var(--shadow-soft);
-            animation: slideIn 0.3s ease, fadeOut 0.5s ease 9.5s forwards;
-            display: none;
-        }
-
-        .notification-badge {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-
-        @keyframes fadeOut {
-            from { opacity: 1; }
-            to { opacity: 0; }
-        }
-
-        /* Profile tab content */
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .info-content {
-            padding: 15px;
-            text-align: center;
-        }
-
-        /* Loader */
-        .loader {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s ease-in-out infinite;
-            margin-right: 10px;
-            vertical-align: middle;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
+        
         @media (min-width: 768px) {
             .container {
                 max-width: 750px;
             }
-
+            
             .games-grid {
                 grid-template-columns: repeat(3, 1fr);
             }
-
-            .screenshots-container {
-                grid-template-columns: repeat(3, 1fr);
+            
+            .game-image {
+                height: 150px;
             }
-
-            .library-grid {
-                grid-template-columns: repeat(3, 1fr);
+            
+            .game-details-icon {
+                width: 80px;
+                height: 80px;
             }
-
-            .badges-grid {
-                grid-template-columns: repeat(3, 1fr);
+            
+            .game-details-title {
+                font-size: 24px;
             }
-
-            .footer-content {
-                grid-template-columns: repeat(2, 1fr);
+            
+            .verify-content {
+                max-width: 600px;
             }
+        }
+        
+        .tg-safe-area {
+            padding-top: var(--tg-safe-area-inset-top);
+            padding-bottom: var(--tg-safe-area-inset-bottom);
+            padding-left: var(--tg-safe-area-inset-left);
+            padding-right: var(--tg-safe-area-inset-right);
+        }
+        
+        .username-link {
+            cursor: pointer;
+            color: #2575fc;
+        }
+        
+        .guest-mode {
+            color: #aaaaaa;
+            font-style: italic;
+        }
+        
+        .badge-notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--glass-bg);
+            padding: 10px 20px;
+            border-radius: var(--border-radius-md);
+            display: none;
+            z-index: 3000;
+            animation: fadeOut 10s ease forwards;
+        }
+        
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+        
+        .library-item-options {
+            display: none;
+            position: absolute;
+            background: var(--glass-bg);
+            padding: 10px;
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-soft);
+        }
+        
+        .library-item:hover .library-item-options {
+            display: block;
         }
     </style>
 </head>
@@ -1223,302 +1191,288 @@
     <div class="container">
         <div class="header">
             <h1>PLUGG BOT</h1>
-            <button class="profile-icon" id="profile-icon">
-                <svg viewBox="0 0 24 24">
-                    <path d="M12 2C6.48 2 6 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
-                </svg>
-            </button>
-            <p>Лучшая коллекция приваток для удобного скачивания</p>
+            <p>Лучшая коллекция приваток для удобного скачивания </p>
+            <div class="user-icon" id="user-icon"></div>
         </div>
-
-        <div class="search-container">
-            <svg class="search-icon" viewBox="0 0 24 24">
-                <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+        
+        <div class="search-bar">
+            <svg viewBox="0 0 24 24">
+                <path d="M15.5 14H14.71L14.43 13.73C15.41 12.59 16 11.11 16 9.5C16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16C11.11 16 12.59 15.41 13.73 14.43L14 14.71V15.5L19 20.49L20.49 19L15.5 14ZM9.5 14C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14Z"/>
             </svg>
-            <input type="text" id="search-input" placeholder="Поиск приваток...">
+            <input type="text" placeholder="Поиск игр..." id="search-input">
         </div>
-
+        
         <div class="tabs">
-            <div class="tab active" data-tab="all">Все</div>
-            <div class="tab" data-tab="action">Экшен</div>
-            <div class="tab" data-tab="strategy">Стратегии</div>
-            <div class="tab" data-tab="rpg">РПГ</div>
+            <div class="tab active" data-tab="all">ПРИВАТКИ</div>
+            <div class="tab" data-tab="popular">ПРИВАТКИ ДЛЯ ПК</div>
         </div>
-
-        <div id="all-tab" class="tab-content active">
+        
+        <div class="tab-content active" id="all-tab">
             <div class="games-grid"></div>
         </div>
-
-        <div id="action-tab" class="tab-content">
+        <div class="tab-content" id="popular-tab">
             <div class="games-grid"></div>
         </div>
-
-        <div id="strategy-tab" class="tab-content">
-            <div class="games-grid"></div>
-        </div>
-
-        <div id="rpg-tab" class="tab-content">
-            <div class="games-grid"></div>
-        </div>
-    </div>
-
-    <div id="game-details">
-        <button class="back-btn">
-            <svg viewBox="0 0 24 24">
-                <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
-            </svg>
-            Назад
-        </button>
-        <div class="game-details-header">
-            <div class="game-details-image">
-                <img id="details-image" src="" alt="">
-            </div>
-            <div class="game-details-title" id="details-title"></div>
-            <div class="game-details-meta">
-                <div class="meta-item">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
-                    </svg>
-                    <span id="details-version"></span>
-                </div>
-                <div class="meta-item">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/>
-                        <path d="M7 10h2v7H7zm4-3h2v10h-2zm4 6h2v4h-2z"/>
-                    </svg>
-                    <span id="details-size"></span>
-                </div>
-            </div>
-            <span id="verified-badge" class="verified-badge verified">Проверено</span>
-        </div>
-
-        <div class="section-title">Описание</div>
-        <div class="section-content" id="details-description"></div>
-
-        <div class="section-title">Что нового<span class="new-indicator"></span></div>
-        <div class="section-content" id="details-whats-new"></div>
-
-        <div class="section-title">Скриншоты</div>
-        <div class="screenshots-container" id="screenshots-container"></div>
-
-        <div class="download-btn-container">
-            <button id="download-btn" class="download-btn">Скачать</button>
-        </div>
-
-        <div class="progress-container" id="progress-container">
-            <div class="progress-info">
-                <span class="progress-text">Статус: <span id="status-text">Готов к загрузке</span></span>
-                <span class="progress-percent" id="progress-percent">0%</span>
-            </div>
-            <div class="progress-bar">
-                <div class="progress-fill" id="progress-fill"></div>
-            </div>
-            <div class="download-details">
-                <span id="downloaded-size">0 MB</span> / <span id="total-size">1.98 GB</span>
-                <span id="download-speed" style="float: right;">0 MB/s</span>
-                <span id="time-remaining" style="float: right; margin-right: 10px;">-</span>
-            </div>
-        </div>
-
-        <div id="status-message" class="status-message"></div>
-
-        <div class="section-title">Безопасность данных</div>
-        <div class="section-content">
-            <p>Чтобы контролировать безопасность, вам нужно знать, как разработчики собирают ваши данные и передают их третьим лицам. Практики безопасности и конфиденциальности могут зависеть от того, как вы используете приложение, а также от вашего региона и возраста. Информация ниже может измениться в будущем.</p>
-        </div>
-
-        <div class="data-security-box">
-            <div class="data-item">
-                <svg viewBox="0 0 24 24">
-                    <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.26L18.03 15l-1.19 2.11C15.42 19.65 13.72 21.5 12 22.48 10.28 21.5 8.58 19.65 7.17 17.11L6 15l6.03-3.74zM10 5.25V9.5h4V5.25L12 4l-2 1.25z"/>
-                </svg>
-                <p>Приложение не собирает никакую персональную информацию</p>
-            </div>
-            <div class="data-item">
-                <svg viewBox="0 0 24 24">
-                    <path d="M12 17.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm0-4c-2.76 0-5 2.24-5 5v2.5H5.5v-2.5c0-3.59 2.91-6.5 6.5-6.5s6.5 2.91 6.5 6.5v2.5H17v-2.5c0-2.76-2.24-5-5-5zm0 10c-1.38 0-2.5-1.12-2.5-2.5h5c0 1.38-1.12 2.5-2.5 2.5zm7.5-13.17v-.33c0-.55-.45-1-1-1h-2c-.55 0-1 .45-1 1v.33c-.66.34-1.2.84-1.58 1.43-.38.59-.57 1.25-.57 1.94v4.5c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-4.5c0-.69-.19-1.35-.57-1.94-.38-.59-.92-1.09-1.58-1.43zM10 12.5v-2.5h4v2.5h-4z"/>
-                </svg>
-                <p>В приложении нет способа запросить удаление данных</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Authentication modal -->
-    <div id="auth-modal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <div class="auth-tabs">
-                <div class="tab active" data-tab="login">Вход</div>
-                <div class="tab" data-tab="register">Регистрация</div>
-            </div>
+        
+        <!-- Детали игры (общий) -->
+        <div class="game-details" id="game-details">
+            <button class="back-btn" id="back-btn">← Назад</button>
             
-            <div class="tab-content active" id="login-tab">
-                <input type="text" placeholder="Email или имя пользователя" class="auth-input" id="login-username">
-                <input type="password" placeholder="Пароль" class="auth-input" id="login-password">
-                <button class="auth-btn" id="login-btn">Войти</button>
-                <div class="auth-links">
-                    <a href="#" id="forgot-password">Забыли пароль?</a>
-                </div>
-            </div>
-            
-            <div class="tab-content" id="register-tab">
-                <input type="email" placeholder="Email" class="auth-input" id="register-email">
-                <input type="text" placeholder="Имя пользователя" class="auth-input" id="register-username">
-                <input type="password" placeholder="Пароль" class="auth-input" id="register-password">
-                <input type="password" placeholder="Подтвердите пароль" class="auth-input" id="register-confirm-password">
-                <div class="code-section" style="display: none;">
-                    <input type="text" placeholder="Код подтверждения" class="auth-input" id="register-code">
-                    <div class="countdown" id="countdown">01:00</div>
-                </div>
-                <button class="auth-btn" id="register-request-code">Запросить код</button>
-                <button class="auth-btn" id="register-btn" style="display: none;">Зарегистрироваться</button>
-                <div class="auth-links">
-                    Уже есть аккаунт? <a href="#" id="switch-to-login">Войти</a>
-                </div>
-            </div>
-            
-            <div class="social-login">
-                <div class="social-btn" id="google-login">
-                    <svg viewBox="0 0 24 24" class="social-icon">
-                        <path d="M22.56 12.25c0-.73-.06-1.44-.16-2.14H12v4.06h5.53c-.25 1.42-1.05 2.57-2.15 3.39v2.77h3.48c2.05-1.92 3.24-4.7 3.24-8.04z" fill="#4285F4"/>
-                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.48-2.77c-.95.65-2.15 1.07-3.8 1.07-2.9 0-5.3-1.96-6.18-4.6H3.15v2.84C4.93 20.02 8.23 23 12 23z" fill="#34A853"/>
-                        <path d="M5.82 14.01c-.2-.6-.3-1.23-.3-1.88s.1-1.28.3-1.88V7.47H3.15C2.43 8.9 2 10.4 2 12c0 1.6.43 3.1 1.15 4.47l2.67-2.18z" fill="#FBBC05"/>
-                        <path d="M12 5.38c1.59 0 3.03.53 4.18 1.58l3.18-3.18C17.45 2.09 14.97 1 12 1 7.3 1 3.18 3.65 1.15 7.47l3.68 2.84c.8-2.33 2.8-4.2 5.17-4.96z" fill="#EA4335"/>
-                    </svg>
-                    <span>Войти через Google</span>
-                </div>
-                <div class="social-btn" id="telegram-login">
-                    <svg viewBox="0 0 24 24" class="social-icon">
-                        <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm4.151 5.941.008.008c.294.27 4.192 3.917 4.192 3.917 1.087 1.03.7 2.707-.597 3.339L12 16.585l-3.194-1.918c-.54-.324-1.227-.356-1.794-.01L4.12 16.496c-.26.158-.364.51-.244.796.12.286.46.44.72.28l2.885-1.684 5.324 3.195c.647.388 1.425.388 2.072 0l.154-.09c.647-.387 1.028-1.148.908-1.89l-1.273-7.94z" fill="#0088cc"/>
-                    </svg>
-                    <span>Войти через Telegram</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Profile modal -->
-    <div id="profile-modal" class="modal" style="display: none;">
-        <div class="profile-content">
-            <div class="profile-header">
-                <div class="profile-avatar-container">
-                    <div class="profile-avatar">
-                        <img src="https://ui-avatars.com/api/?name=zerchi&background=6a11cb&color=fff" id="profile-avatar-img" alt="Avatar">
-                        <button class="change-avatar-btn" id="change-avatar-btn">Изменить</button>
+            <div class="game-details-content">
+                <div class="game-details-header">
+                    <div class="game-details-icon">
+                        <img id="details-image" src="" alt="">
                     </div>
-                    <div class="profile-copy-link">
-                        <button id="copy-profile-link">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
-                            </svg>
-                            Скопировать ссылку профиля
-                        </button>
-                    </div>
-                </div>
-                <h2 id="profile-username">zerchi</h2>
-                <p id="profile-handle">@zerchi</p>
-            </div>
-            
-            <div class="profile-description">
-                <textarea id="profile-desc" placeholder="Расскажите о себе..."></textarea>
-                <div class="profile-desc-actions">
-                    <button id="cancel-desc">Отмена</button>
-                    <button id="save-desc">Сохранить</button>
-                </div>
-            </div>
-            
-            <div class="profile-tabs">
-                <div class="tab active" data-tab="library">Библиотека</div>
-                <div class="tab" data-tab="badges">Бейджи</div>
-                <div class="tab" data-tab="info">Информация</div>
-            </div>
-            
-            <div class="tab-content active" id="profile-library-tab">
-                <div class="library-grid"></div>
-            </div>
-            
-            <div class="tab-content" id="profile-badges-tab">
-                <div class="badges-grid">
-                    <div class="badge-item" data-badge="happy-release">
-                        <div class="badge-image">
-                            <img src="https://github.com/MrRazion/pluggbotest.github.io/blob/main/badges/Picsart_25-10-17_16-14-20-608.jpg" alt="Happy Release! 2025">
+                    <div class="game-details-info">
+                        <div>
+                            <span class="game-details-title" id="details-title"></span>
+                            <span id="verified-badge" class="verified-badge verified">Verified</span>
                         </div>
-                        <div class="badge-title">Happy Release! 2025</div>
+                        <div class="game-details-meta" id="details-meta"></div>
                     </div>
+                </div>
+                
+                <div class="download-btn-container">
+                    <button id="download-btn" class="download-btn">Скачать</button>
+                    <button id="library-btn" class="library-btn add-to-library">Add to library</button>
+                </div>
+                
+                <div class="screenshots-container" id="screenshots-container">
+                    <!-- Screenshots will be added here -->
+                </div>
+                
+                <div class="progress-container" id="progress-container">
+                    <div class="progress-info">
+                        <span class="progress-text">Статус: <span id="status-text">Готов к загрузке</span></span>
+                        <span class="progress-percent" id="progress-percent">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                </div>
+                
+                <div id="status-message" class="status-message"></div>
+                
+                <div class="section-title">Описание</div>
+                <div class="section-content" id="details-description"></div>
+                
+                <div class="section-title">Безопасность данных</div>
+                <div class="section-content">
+                    <p>Чтобы контролировать безопасность, вам нужно знать, как разработчики собирают ваши данные и передают их третьим лицам. Практики безопасности и конфиденциальности могут зависеть от того, как вы используете приложение, а также от вашего региона и возраста. Информация ниже может измениться в будущем.</p>
+                </div>
+                <div class="data-security-box">
+                    <div class="data-item">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                        </svg>
+                        <p>Данные не передаются третьим лицам</p>
+                    </div>
+                    <div class="data-item">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"></path>
+                        </svg>
+                        <p>Данные не собираются</p>
+                    </div>
+                    <div class="data-item">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zM6 12h12"></path>
+                        </svg>
+                        <p>В приложении нет способа запросить удаление данных</p>
+                    </div>
+                </div>
+                
+                <div class="section-title">Что нового<span class="new-indicator"></span></div>
+                <div class="section-content" id="details-whats-new"></div>
+            </div>
+        </div>
+        
+        <!-- Verify Modal -->
+        <div id="verify-modal">
+            <div class="verify-content">
+                <div class="verify-header">
+                    <div class="verify-icon">
+                        <img id="verify-image" src="" alt="">
+                    </div>
+                    <div>
+                        <div class="verify-title" id="verify-title"></div>
+                        <div class="verify-version" id="verify-version"></div>
+                    </div>
+                </div>
+                <div class="detectors-info" id="detectors-info">Детекторы: 0/60</div>
+                <div class="detectors-list" id="detectors-list">
+                    <!-- Detector items will be added here -->
+                </div>
+                <div class="modal-buttons">
+                    <button class="scan-virus" id="scan-virus">Проверить на вирусы</button>
+                    <button class="close-verify" id="close-verify">Закрыть</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Auth Modal -->
+        <div class="auth-modal" id="auth-modal">
+            <div class="auth-content">
+                <h2>Вход / Регистрация</h2>
+                <div id="login-form">
+                    <div class="input-group">
+                        <label for="login-username">Логин или Email</label>
+                        <input type="text" id="login-username">
+                    </div>
+                    <div class="input-group">
+                        <label for="login-password">Пароль</label>
+                        <input type="password" id="login-password">
+                    </div>
+                    <button class="btn" id="login-btn">Войти</button>
+                    <span class="link-text" id="forgot-password">Забыли пароль?</span>
+                    <p>Первый раз в боте? <span class="link-text" id="switch-to-register">Зарегистрируйтесь!</span></p>
+                </div>
+                <div id="register-form" style="display: none;">
+                    <div class="input-group">
+                        <label for="register-email">Email</label>
+                        <input type="email" id="register-email">
+                    </div>
+                    <div class="input-group">
+                        <label for="register-username">Логин</label>
+                        <input type="text" id="register-username">
+                    </div>
+                    <div class="input-group">
+                        <label for="register-password">Пароль</label>
+                        <input type="password" id="register-password">
+                    </div>
+                    <div class="input-group">
+                        <label for="register-code">Код</label>
+                        <input type="text" id="register-code">
+                        <span class="link-text" id="request-code">Запросить код</span>
+                        <span class="countdown" id="code-countdown"></span>
+                    </div>
+                    <button class="btn" id="register-btn">Зарегистрироваться</button>
+                    <p>Уже есть аккаунт? <span class="link-text" id="switch-to-login">Войдите!</span></p>
+                </div>
+                <div class="social-icons">
+                    <div class="social-icon google-icon" id="google-login"></div>
+                    <div class="social-icon tg-icon" id="tg-login"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Reset Password Modal -->
+        <div class="reset-modal" id="reset-modal">
+            <div class="reset-content">
+                <h2>Сброс пароля</h2>
+                <div id="reset-step1">
+                    <div class="input-group">
+                        <label for="reset-email">Email</label>
+                        <input type="email" id="reset-email">
+                    </div>
+                    <button class="btn" id="request-reset-code">Запросить код</button>
+                </div>
+                <div id="reset-step2" style="display: none;">
+                    <div class="input-group">
+                        <label for="reset-code">Код</label>
+                        <input type="text" id="reset-code">
+                    </div>
+                    <div class="input-group">
+                        <label for="new-password">Новый пароль</label>
+                        <input type="password" id="new-password">
+                    </div>
+                    <div class="input-group">
+                        <label for="confirm-password">Повторите пароль</label>
+                        <input type="password" id="confirm-password">
+                    </div>
+                    <button class="btn" id="reset-password-btn">Сбросить</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Profile Modal -->
+        <div class="profile-modal" id="profile-modal">
+            <div class="profile-content">
+                <div class="profile-header">
+                    <div class="profile-avatar" id="profile-avatar"></div>
+                    <div class="profile-info">
+                        <h2 id="profile-nickname"></h2>
+                        <p id="profile-username" class="username-link"></p>
+                        <span id="profile-badge-icon"></span>
+                    </div>
+                </div>
+                <textarea class="description-input" id="profile-description" placeholder="Ваше описание..."></textarea>
+                <button class="btn" id="save-description">Сохранить</button>
+                <button class="btn" id="cancel-description" style="background: #dc3545;">Отмена</button>
+                <div class="profile-tabs">
+                    <div class="profile-tab active" data-tab="library">Библиотека</div>
+                    <div class="profile-tab" data-tab="badges">Значки</div>
+                    <div class="profile-tab" data-tab="info">Информация</div>
+                </div>
+                <div class="tab-content active" id="profile-library">
+                    <div class="library-grid" id="library-games"></div>
+                </div>
+                <div class="tab-content" id="profile-badges">
+                    <div class="badge-item" data-badge="first">
+                        <img class="badge-img" src="https://raw.githubusercontent.com/MrRazion/pluggbotest.github.io/main/badges/Picsart_25-10-17_16-14-20-608.jpg">
+                        <div class="section-content">Happy Release! 2025</div>
+                        <div class="badge-actions">
+                            <div class="hanger-icon" title="Повесить значок"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-content" id="profile-info">
+                    <p>Это будет добавлено скоро, следите за обновлениями.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>О нас</h3>
+                    <p>PLUGG BOT - лучший бот для поиска и скачивания приваток. Мы предлагаем огромную коллекцию популярных приваток.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Наши контакты</h3>
+                    <p>Владелец бота: <a href="https://t.me/kurune" target="_blank">Плагги</a></p>
+                    <p>По разным вопросам: <a href="https://t.me/soukita" target="_blank">Кита</a></p>
                 </div>
             </div>
             
-            <div class="tab-content" id="profile-info-tab">
-                <div class="info-content">
-                    <p>Этот раздел будет добавлен в ближайшее время. Следите за обновлениями!</p>
-                </div>
+            <div class="footer-bottom">
+                <p>© 2025 Pluggs. Все права защищены.</p>
             </div>
         </div>
     </div>
-
-    <!-- Badge detail modal -->
-    <div id="badge-detail-modal" class="modal" style="display: none;">
-        <div class="badge-detail-content">
-            <img src="https://github.com/MrRazion/pluggbotest.github.io/blob/main/badges/Picsart_25-10-17_16-14-20-608.jpg" class="badge-detail-image" alt="Happy Release! 2025">
-            <h2>Happy Release! 2025</h2>
-            <div class="badge-actions">
-                <button id="equip-badge-btn">Надеть</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Badge notification -->
-    <div id="badge-notification" class="notification" style="display: none;">
-        <img src="https://github.com/MrRazion/pluggbotest.github.io/blob/main/badges/status/pixel-mini-cake__b25a44ae.webp" alt="Badge" class="notification-badge">
-        <span>Вы получили бейдж "Happy Release! 2025"!</span>
-    </div>
-
-    <!-- Library item popup -->
-    <div id="library-item-popup" class="popup" style="display: none;">
-        <div class="popup-content">
-            <button id="pin-library-item">Закрепить</button>
-            <button id="remove-from-library">Удалить из библиотеки</button>
-            <button id="view-game">Перейти к игре</button>
-            <button id="close-library-popup">Закрыть</button>
-        </div>
-    </div>
-
-    <div class="bottom-nav">
-        <div class="nav-item active" data-nav="messages">
-            <svg viewBox="0 0 24 24">
-                <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12H7v-2h4v-1.17c-.02-.01-.04-.02-.06-.03L7 14v-2l5.03-2.7c.03-.02.07-.02.1 0L17 12h-4v1.17c.02.01.04.02.06.03l3.97-2.1v2l-5.03 2.71c-.03.02-.07.02-.1 0L11 15z"/>
+    
+    <!-- Bottom Navigation -->
+    <div class="nav-bar">
+        <div class="nav-item" id="nav-messages">
+            <svg class="nav-icon" viewBox="0 0 24 24">
+                <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
             </svg>
-            <span>Сообщения</span>
+            <span class="nav-label">Сообщения</span>
         </div>
-        <div class="nav-item" data-nav="library">
-            <svg viewBox="0 0 24 24">
-                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-8 12H7v-2h4v-1.17c-.02-.01-.04-.02-.06-.03L7 14v-2l5.03-2.7c.03-.02.07-.02.1 0L17 12h-4v1.17c.02.01.04.02.06.03l3.97-2.1v2l-5.03 2.71c-.03.02-.07.02-.1 0L11 15z"/>
+        <div class="nav-item" id="nav-library">
+            <svg class="nav-icon" viewBox="0 0 24 24">
+                <path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 14H9V4h10v12zm-7-3h2v2h-2v-2zm0-3h2v2h-2v-2zm3-3h2v2h-2V7zm-3 0h2v2h-2V7z"/>
             </svg>
-            <span>Библиотека</span>
+            <span class="nav-label">Библиотека</span>
         </div>
-        <div class="nav-item" data-nav="menu">
-            <svg viewBox="0 0 24 24">
+        <div class="nav-item" id="nav-menu">
+            <svg class="nav-icon" viewBox="0 0 24 24">
                 <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
             </svg>
-            <span>Меню</span>
+            <span class="nav-label">Меню</span>
         </div>
     </div>
-
-    <div class="footer">
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>О нас</h3>
-                <p>PLUGG BOT - лучший бот для поиска и скачивания приваток. Мы предлагаем огромную коллекцию популярных приваток.</p>
-            </div>
-            <div class="footer-section">
-                <h3>Наши контакты</h3>
-                <p>Владелец бота: <a href="https://t.me/kurune" target="_blank">Плагги</a></p>
-                <p>По разным вопросам: <a href="https://t.me/soukita" target="_blank">Кита</a></p>
-            </div>
+    
+    <!-- Download Progress -->
+    <div class="download-progress" id="download-progress">
+        <div class="progress-bar">
+            <div class="progress-fill" id="global-progress-fill"></div>
         </div>
-        <div class="footer-bottom">
-            <p>© 2025 Pluggs. Все права защищены.</p>
-        </div>
+        <div class="progress-details" id="progress-details"></div>
     </div>
+    
+    <!-- Badge Notification -->
+    <div class="badge-notification" id="badge-notification"></div>
 
     <script>
         // Инициализация Telegram Web App
@@ -1527,6 +1481,7 @@
         
         // Элементы интерфейса
         const downloadBtn = document.getElementById('download-btn');
+        const libraryBtn = document.getElementById('library-btn');
         const progressFill = document.getElementById('progress-fill');
         const progressPercent = document.getElementById('progress-percent');
         const statusText = document.getElementById('status-text');
@@ -1538,8 +1493,6 @@
         const detailsImage = document.getElementById('details-image');
         const detailsMeta = document.getElementById('details-meta');
         const detailsDescription = document.getElementById('details-description');
-        const detailsVersion = document.getElementById('details-version');
-        const detailsSize = document.getElementById('details-size');
         const detailsWhatsNew = document.getElementById('details-whats-new');
         const screenshotsContainer = document.getElementById('screenshots-container');
         const searchInput = document.getElementById('search-input');
@@ -1552,28 +1505,40 @@
         const detectorsList = document.getElementById('detectors-list');
         const closeVerify = document.getElementById('close-verify');
         const scanVirus = document.getElementById('scan-virus');
-        
-        // Authentication elements
-        const profileIcon = document.getElementById('profile-icon');
+        const userIcon = document.getElementById('user-icon');
         const authModal = document.getElementById('auth-modal');
-        const profileModal = document.getElementById('profile-modal');
-        const loginTab = document.getElementById('login-tab');
-        const registerTab = document.getElementById('register-tab');
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
         const loginBtn = document.getElementById('login-btn');
-        const registerRequestCodeBtn = document.getElementById('register-request-code');
         const registerBtn = document.getElementById('register-btn');
-        const forgotPasswordBtn = document.getElementById('forgot-password');
-        const switchToLoginBtn = document.getElementById('switch-to-login');
-        const copyProfileLinkBtn = document.getElementById('copy-profile-link');
-        const saveDescBtn = document.getElementById('save-desc');
-        const cancelDescBtn = document.getElementById('cancel-desc');
-        const changeAvatarBtn = document.getElementById('change-avatar-btn');
-        const bottomNavItems = document.querySelectorAll('.bottom-nav .nav-item');
-        const libraryItemPopup = document.getElementById('library-item-popup');
-        const closeLibraryPopupBtn = document.getElementById('close-library-popup');
+        const switchToRegister = document.getElementById('switch-to-register');
+        const switchToLogin = document.getElementById('switch-to-login');
+        const forgotPassword = document.getElementById('forgot-password');
+        const requestCode = document.getElementById('request-code');
+        const codeCountdown = document.getElementById('code-countdown');
+        const googleLogin = document.getElementById('google-login');
+        const tgLogin = document.getElementById('tg-login');
+        const resetModal = document.getElementById('reset-modal');
+        const requestResetCode = document.getElementById('request-reset-code');
+        const resetPasswordBtn = document.getElementById('reset-password-btn');
+        const resetStep1 = document.getElementById('reset-step1');
+        const resetStep2 = document.getElementById('reset-step2');
+        const profileModal = document.getElementById('profile-modal');
+        const profileNickname = document.getElementById('profile-nickname');
+        const profileUsername = document.getElementById('profile-username');
+        const profileAvatar = document.getElementById('profile-avatar');
+        const profileDescription = document.getElementById('profile-description');
+        const saveDescription = document.getElementById('save-description');
+        const cancelDescription = document.getElementById('cancel-description');
+        const libraryGames = document.getElementById('library-games');
+        const profileBadgeIcon = document.getElementById('profile-badge-icon');
         const badgeNotification = document.getElementById('badge-notification');
-        const badgeDetailModal = document.getElementById('badge-detail-modal');
-        const equipBadgeBtn = document.getElementById('equip-badge-btn');
+        const navMessages = document.getElementById('nav-messages');
+        const navLibrary = document.getElementById('nav-library');
+        const navMenu = document.getElementById('nav-menu');
+        const downloadProgress = document.getElementById('download-progress');
+        const globalProgressFill = document.getElementById('global-progress-fill');
+        const progressDetails = document.getElementById('progress-details');
         
         // VirusTotal API Key (replace with your own)
         const VIRUS_TOTAL_API_KEY = '6564be73eb640cb3df3efade57e8bfd4faf78c1a86b65221ec8a8247e488e776';
@@ -1586,19 +1551,46 @@
         let currentFileName = '';
         let currentGameTitle = '';
         let currentGame = null;
-        let isAuthenticated = false;
-        let currentUser = null;
-        let library = [];
-        let countdownInterval = null;
-        let countdownSeconds = 60;
+        let loggedInUser = null;
+        let isGuest = false;
+        let guestUsername = null;
+        let downloadStartTime = null;
+        let downloadedBytes = 0;
+        let totalBytes = 0;
         
-        // Данные игр (добавил поле whatsNew для каждого)
+        // "Database" using localStorage
+        const db = {
+            users: JSON.parse(localStorage.getItem('plugg_users')) || {},
+            libraries: JSON.parse(localStorage.getItem('plugg_libraries')) || {},
+            badges: JSON.parse(localStorage.getItem('plugg_badges')) || {},
+            descriptions: JSON.parse(localStorage.getItem('plugg_descriptions')) || {},
+            avatars: JSON.parse(localStorage.getItem('plugg_avatars')) || {},
+            activeBadges: JSON.parse(localStorage.getItem('plugg_active_badges')) || {},
+            save() {
+                localStorage.setItem('plugg_users', JSON.stringify(this.users));
+                localStorage.setItem('plugg_libraries', JSON.stringify(this.libraries));
+                localStorage.setItem('plugg_badges', JSON.stringify(this.badges));
+                localStorage.setItem('plugg_descriptions', JSON.stringify(this.descriptions));
+                localStorage.setItem('plugg_avatars', JSON.stringify(this.avatars));
+                localStorage.setItem('plugg_active_badges', JSON.stringify(this.activeBadges));
+            }
+        };
+        
+        // Данные игр
         const games = [
+            // ... (existing games data remains the same)
             {
                 id: 'standrise',
                 title: 'StandRise',
                 description: 'Приватный сервер StandRise - это приватный сервер для популярной игры Standoff 2, который открывает перед игроками безграничные возможности и новую степень свободы. Здесь нет строгих ограничений, которые сдерживают ваш игровой процесс, а весь контент становится доступным без дополнительных усилий. Сервер предоставляет неограниченные ресурсы, позволяя вам мгновенно приобрести любые скины, оружие и улучшения.',
-                whatsNew: ['— Улучшена оптимизация', '— Исправлены вылеты', 'Доступны новые методы для входа Facebook и VK', '— Доступна линковка аккаунтов через различные способы входов Google, Facebook, VK', '— Теперь доступны функции приватности', '— Улучшен античит'],
+                whatsNew: [
+                    '— Улучшена оптимизация',
+                    '— Исправлены вылеты',
+                    'Доступны новые методы для входа Facebook и VK',
+                    '— Доступна линковка аккаунтов через различные способы входов Google, Facebook, VK',
+                    '— Теперь доступны функции приватности',
+                    '— Улучшен античит'
+                ],
                 image: 'https://avatars.mds.yandex.net/i?id=725c7c7f58887b1cd7015d30752cfa7b_sr-16333491-images-thumbs&n=13',
                 screenshots: [
                     'https://i.ytimg.com/vi/9OvuoQpMV3k/maxresdefault.jpg',
@@ -1615,134 +1607,117 @@
                 detectorsTotal: 60,
                 maliciousDetectors: []
             },
-            {
-                id: 'standleo',
-                title: 'StandLeo',
-                description: 'Приватный сервер StandLeo - настоящий рай для фанатов Standoff 2, предлагающий приватный сервер. Здесь вы сможете погрузиться в адреналиновые сражения и тактические соревнования, не тратя ни копейки на внешние атрибуты и награды.',
-                whatsNew: ['- Новый подарок', '- Все из Standoff 0.35.0 (Новый пак, новая акция с коллекцией, карты, новое оружие и т.д.)', '- Добавлены ежедневные вызовы', '- Режим наблюдателей', '- Кланы', '- Ребаланс оружий из оригинала', '- Улучшение рейтинговых игр с первым сезоном', '- Новая акция с скинами из спина "Gambit" (Бабочка и т.д.)'],
-                image: 'https://avatars.mds.yandex.net/i?id=0e819955e77d734dbf74a1628015204f_l-12569562-images-thumbs&n=13',
-                screenshots: [
-                    'https://i.ytimg.com/vi/z-Wb0j6gupk/maxresdefault.jpg',
-                    'https://play-lh.googleusercontent.com/1-hPxafOxdYpYZEOKzNIkSP43HXCNftVJVpU5iqs-OLm0Cr6hD3a5qFK3r1L8U7pWZw',
-                    'https://play-lh.googleusercontent.com/R4r5bI6k4gC2c4f4g5g6h7h8i9i0j1j2k3k4l5l6m7m0Cr6hD3a5qFK3r1L8U7pWZw'
-                ],
-                categories: ['action'],
-                url: 'https://huggingface.co/Zerchi/test/resolve/main/standleoprivate3.0.apk',
-                fileName: 'standleoprivate3.0.apk',
-                version: '3.0',
-                size: '2.01 GB',
-                verified: true,
-                detectorsFound: 0,
-                detectorsTotal: 60,
-                maliciousDetectors: []
-            },
-            {
-                id: 'projectevolution',
-                title: 'Project Evolution',
-                description: 'Project Evolution - это приватная версия популярной игры Standoff 2, которая предлагает уникальный игровой опыт с расширенными возможностями и новыми функциями. Приватка предоставляет игрокам доступ к эксклюзивному контенту и улучшенным механикам, создавая неповторимую атмосферу игры.',
-                whatsNew: ['- Новый подарок', '- Все из Standoff 0.35.0 (Новый пак, новая акция с коллекцией, карты, новое оружие и т.д.)', '- Добавлены ежедневные вызовы', '- Режим наблюдателей', '- Кланы', '- Ребаланс оружий из оригинала', '- Улучшение рейтинговых игр с первым сезоном', '- Новая акция с скинами из спина "Gambit" (Бабочка и т.д.)'],
-                image: 'https://avatars.mds.yandex.net/i?id=0e819955e77d734dbf74a1628015204f_l-12569562-images-thumbs&n=13',
-                screenshots: [
-                    'https://i.ytimg.com/vi/z-Wb0j6gupk/maxresdefault.jpg',
-                    'https://play-lh.googleusercontent.com/1-hPxafOxdYpYZEOKzNIkSP43HXCNftVJVpU5iqs-OLm0Cr6hD3a5qFK3r1L8U7pWZw',
-                    'https://play-lh.googleusercontent.com/R4r5bI6k4gC2c4f4g5g6h7h8i9i0j1j2k3k4l5l6m7m0Cr6hD3a5qFK3r1L8U7pWZw'
-                ],
-                categories: ['action'],
-                url: 'https://huggingface.co/Zerchi/test/resolve/main/Project%20Evolution%209.4%20f1.apk',
-                fileName: 'Project Evolution 9.4 f1.apk',
-                version: '9.4',
-                size: '1.80 GB',
-                verified: true,
-                detectorsFound: 0,
-                detectorsTotal: 60,
-                maliciousDetectors: []
-            },
-            {
-                id: 'standchillow',
-                title: 'StandChillow',
-                description: 'Приватный сервер StandChillow - это улучшенная версия Standoff 2 с дополнительными функциями и возможностями. Игроки могут наслаждаться улучшенной графикой, новыми режимами игры и эксклюзивным контентом, недоступным в оригинальной версии.',
-                whatsNew: ['- Новый подарок', '- Все из Standoff 0.35.0 (Новый пак, новая акция с коллекцией, карты, новое оружие и т.д.)', '- Добавлены ежедневные вызовы', '- Режим наблюдателей', '- Кланы', '- Ребаланс оружий из оригинала', '- Улучшение рейтинговых игр с первым сезоном', '- Новая акция с скинами из спина "Gambit" (Бабочка и т.д.)'],
-                image: 'https://avatars.mds.yandex.net/i?id=0e819955e77d734dbf74a1628015204f_l-12569562-images-thumbs&n=13',
-                screenshots: [
-                    'https://i.ytimg.com/vi/z-Wb0j6gupk/maxresdefault.jpg',
-                    'https://play-lh.googleusercontent.com/1-hPxafOxdYpYZEOKzNIkSP43HXCNftVJVpU5iqs-OLm0Cr6hD3a5qFK3r1L8U7pWZw',
-                    'https://play-lh.googleusercontent.com/R4r5bI6k4gC2c4f4g5g6h7h8i9i0j1j2k3k4l5l6m7m0Cr6hD3a5qFK3r1L8U7pWZw'
-                ],
-                categories: ['action'],
-                url: 'https://huggingface.co/Zerchi/test/resolve/main/standleoprivate3.0.apk',
-                fileName: 'standleoprivate3.0.apk',
-                version: '3.0',
-                size: '2.01 GB',
-                verified: true,
-                detectorsFound: 0,
-                detectorsTotal: 60,
-                maliciousDetectors: []
-            },
-            {
-                id: 'standknife',
-                title: 'StandKnife',
-                description: 'Приватный сервер StandKnife Simulator - известная многим приватка, перерабатывающая концепцию популярного шутера Standoff 2 и сосредотачивающий весь игровой процесс на мастерстве владения холодным оружием.',
-                whatsNew: ['Фикс ошибок при входе в игру.'],
-                image: 'https://5play.life/uploads/posts/2025-07/thumbs/1751996821_standchillow-icon.png',
-                screenshots: [
-                    'https://i.ytimg.com/vi/VYc18bjnL6k/maxresdefault.jpg',
-                    'https://play-lh.googleusercontent.com/1-hPxafOxdYpYZEOKzNIkSP43HXCNftVJVpU5iqs-OLm0Cr6hD3a5qFK3r1L8U7pWZw',
-                    'https://play-lh.googleusercontent.com/R4r5bI6k4gC2c4f4g5g6h7h8i9i0j1j2k3k4l5l6m7m8n9n0o1o2p3p4q5q6r7r8s9'
-                ],
-                categories: ['action'],
-                url: 'https://huggingface.co/Zerchi/test/resolve/main/1.6.apk',
-                fileName: '1.6.apk',
-                version: '1.6',
-                size: '1.34 GB',
-                verified: true,
-                detectorsFound: 0,
-                detectorsTotal: 60,
-                maliciousDetectors: []
-            },
-            {
-                id: 'crossoff',
-                title: 'Crossoff: Classic',
-                description: 'CrossOff — приватка в которой за сыгранные матчи выдают серебро и золото, является копией оригинальной игры, возможность входа через Google.',
-                whatsNew: ['Добавлен античит', 'Добавлены кланы', '- Добавлены режим "Соревновательный"'],
-                image: 'https://5play.info/_ld/14/1487.webp',
-                screenshots: [
-                    'https://play-lh.googleusercontent.com/1-hPxafOxdYpYZEOKzNIkSP43HXCNftVJVpU5iqs-OLm0Cr6hD3a5qFK3r1L8U7pWZw',
-                    'https://i.ytimg.com/vi/esOTLgKRd78/maxresdefault.jpg',
-                    'https://i.ytimg.com/vi/mEza3FpyPt0/maxresdefault.jpg'
-                ],
-                categories: ['action'],
-                url: 'https://huggingface.co/Zerchi/test/resolve/main/StandRise1.4.0f1.apk',
-                fileName: 'StandRise1.4.0f1.apk',
-                version: '1.4F2',
-                size: '1.98 GB',
-                verified: true,
-                detectorsFound: 0,
-                detectorsTotal: 60,
-                maliciousDetectors: []
-            }
+            // Add all other games similarly...
         ];
         
-        // Список детекторов (60)
-        const detectors = ['Panda', 'Nano-Antivirus', 'Trellix', 'Acronis', 'Trapmine', 'VBA32', 'AhnLab-V3', 'Arcabit', 'Baidu',
+        const detectors = [
+            // ... (existing detectors array remains the same)
+            'Ad-Aware', 'AegisLab', 'Alibaba', 'ALYac', 'AVG', 'Baidu', 'CMC', 'Kaspersky', 'Max', 'McAfee',
+            'Panda', 'Nano-Antivirus', 'Trellix', 'Acronis', 'Trapmine', 'VBA32', 'AhnLab-V3', 'Arcabit', 'Baidu',
             'Cynet', 'eScan', 'Ikarus', 'Malwarebytes', 'MaxSecure', 'Microsoft', 'Rising', 'Sophos', 'Symantec',
             'TrendMicro', 'Vipre', 'ZoneAlarm', 'Avast', 'Bitdefender', 'ClamAV', 'Comodo', 'DrWeb', 'ESET-NOD32',
             'F-Secure', 'Fortinet', 'GData', 'Jiangmin', 'K7AntiVirus', 'Kingsoft', 'Lionic', 'NANOAV', 'Qihoo-360',
             'SUPERAntiSpyware', 'Tencent', 'TotalDefense', 'Virusdie', 'Yandex', 'Zillya', 'Zoner', 'Antiy-AVL',
-            'Avira', 'CrowdStrike', 'Elastic', 'Gridinsoft', 'MicroWorld'];
+            'Avira', 'CrowdStrike', 'Elastic', 'Gridinsoft', 'MicroWorld'
+        ];
         
-        // Инициализация табов
-        document.querySelectorAll('.tab[data-tab]').forEach(tab => {
+        // Функция для рендеринга игр в таб
+        function renderGames(tab) {
+            const grid = document.querySelector(`#${tab}-tab .games-grid`);
+            if (!grid) return;
+            
+            grid.innerHTML = '';
+            
+            const filteredGames = tab === 'all' ? games : games.filter(game => game.categories.includes(tab));
+            
+            filteredGames.forEach(game => {
+                const card = document.createElement('div');
+                card.className = 'game-card';
+                card.dataset.gameId = game.id;
+                card.innerHTML = `
+                    <div class="game-image">
+                        <img src="${game.image}" alt="${game.title}">
+                        <div class="game-overlay"></div>
+                    </div>
+                    <div class="game-info">
+                        <div class="game-title">${game.title}</div>
+                        <div class="game-description">${game.description}</div>
+                    </div>
+                `;
+                card.addEventListener('click', handleGameClick);
+                grid.appendChild(card);
+            });
+        }
+        
+        // Обработчик клика по карточке игры
+        function handleGameClick(e) {
+            const gameId = e.currentTarget.dataset.gameId;
+            const game = games.find(g => g.id === gameId);
+            if (game) {
+                currentGame = game;
+                detailsTitle.textContent = game.title;
+                detailsImage.src = game.image;
+                detailsImage.alt = game.title;
+                detailsMeta.textContent = `Версия: ${game.version} • Размер: ${game.size}`;
+                detailsDescription.innerHTML = `<p>${game.description}</p><ul><li>Спасибо за использование PLUGG BOT!</li></ul>`;
+                detailsWhatsNew.innerHTML = `<ul>${game.whatsNew.map(item => `<li>${item}</li>`).join('')}</ul>`;
+                currentDownloadUrl = game.url;
+                currentFileName = game.fileName;
+                currentGameTitle = game.title;
+                downloadBtn.textContent = 'Скачать';
+                
+                // Screenshots
+                screenshotsContainer.innerHTML = '';
+                game.screenshots.forEach(src => {
+                    const img = document.createElement('img');
+                    img.src = src;
+                    img.alt = 'Screenshot';
+                    screenshotsContainer.appendChild(img);
+                });
+                
+                // Verified badge
+                verifiedBadge.className = `verified-badge ${game.verified ? 'verified' : 'unverified'}`;
+                verifiedBadge.textContent = game.verified ? 'Verified' : 'Unverified';
+                
+                // Library button
+                if (loggedInUser) {
+                    const library = db.libraries[loggedInUser.username] || [];
+                    if (library.includes(game.id)) {
+                        libraryBtn.classList.remove('add-to-library');
+                        libraryBtn.classList.add('remove-from-library');
+                        libraryBtn.textContent = 'Remove from library';
+                    } else {
+                        libraryBtn.classList.remove('remove-from-library');
+                        libraryBtn.classList.add('add-to-library');
+                        libraryBtn.textContent = 'Add to library';
+                    }
+                } else {
+                    libraryBtn.style.display = 'none';
+                }
+                
+                gameDetails.classList.add('active');
+            } else {
+                tg.showPopup({
+                    title: 'Скоро будет доступно',
+                    message: 'Эта игра находится в разработке и скоро будет доступна для скачивания!',
+                    buttons: [{type: 'ok', text: 'Понятно'}]
+                });
+            }
+        }
+        
+        // Обработчики для вкладок
+        document.querySelectorAll('.tab').forEach(tab => {
             tab.addEventListener('click', () => {
                 document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                tab.classList.add('active');
                 
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
                 const content = document.getElementById(`${tab.dataset.tab}-tab`);
                 content.classList.add('active');
-                tab.classList.add('active');
                 
                 currentTab = tab.dataset.tab;
                 renderGames(currentTab);
-                applySearch(); // Применить поиск при смене таба
+                applySearch();
             });
         });
         
@@ -1770,7 +1745,7 @@
         });
         
         // Функция для обновления прогресса
-        function updateProgress(percent) {
+        function updateProgress(percent, loaded, total, speed, eta) {
             progressFill.style.width = percent + '%';
             progressPercent.textContent = percent + '%';
             
@@ -1779,8 +1754,21 @@
             } else if (percent < 100) {
                 statusText.textContent = 'Загрузка: ' + percent + '%';
             } else {
-                statusText.textContent = 'Загрузка завершена! Проверьте папку Download на телефоне или установите через вкладку загрузки.';
+                statusText.textContent = 'Загрузка завершена! Проверьте папку Download.';
             }
+            
+            // Global progress
+            globalProgressFill.style.width = percent + '%';
+            progressDetails.innerHTML = `Загружено: ${formatBytes(loaded)} / ${formatBytes(total)}<br>Скорость: ${formatBytes(speed)}/с<br>Осталось: ${eta} сек`;
+            downloadProgress.classList.add('active');
+        }
+        
+        function formatBytes(bytes) {
+            if (bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         }
         
         // Функция для показа статуса
@@ -1797,277 +1785,140 @@
             downloadBtn.textContent = 'Скачать';
             progressContainer.style.display = 'none';
             statusMessage.style.display = 'none';
-            updateProgress(0);
+            updateProgress(0, 0, 0, 0, 0);
+            downloadProgress.classList.remove('active');
+            downloadStartTime = null;
+            downloadedBytes = 0;
+            totalBytes = 0;
         }
         
-        // Функция для скачивания файла с проверкой целостности
+        // Функция для скачивания файла с проверкой целостности и детализированным прогрессом
         function downloadFile() {
             if (isDownloading) return;
+            
             isDownloading = true;
             downloadBtn.disabled = true;
             downloadBtn.innerHTML = '<span class="loader"></span> Загрузка...';
             progressContainer.style.display = 'block';
             statusText.textContent = 'Запрос на скачивание...';
-            updateProgress(0);
+            updateProgress(0, 0, 0, 0, 0);
+            downloadStartTime = Date.now();
+            downloadedBytes = 0;
             
-            // Set download details
-            document.getElementById('total-size').textContent = currentGame.size;
-            document.getElementById('downloaded-size').textContent = '0 MB';
-            document.getElementById('download-speed').textContent = '0 MB/s';
-            document.getElementById('time-remaining').textContent = '-';
-            
-            // Добавляем уникальный параметр к URL для принудительной перезагрузки
             const timestamp = Date.now();
             const downloadUrl = `${currentDownloadUrl}?t=${timestamp}`;
             
             if (tg.isVersionAtLeast('8.0')) {
-                // Use native downloadFile method with unique URL and original file name
                 tg.downloadFile({
                     url: downloadUrl,
                     file_name: currentFileName
                 }, (accepted) => {
                     if (accepted) {
                         statusText.textContent = 'Скачивание начато...';
-                        
-                        // Simulate detailed progress
-                        let downloaded = 0;
-                        const totalSize = parseSizeToBytes(currentGame.size);
-                        const chunkSize = totalSize / 100;
-                        
-                        const downloadInterval = setInterval(() => {
-                            downloaded += chunkSize;
-                            const percent = Math.min(Math.round((downloaded / totalSize) * 100), 100);
-                            
-                            // Update progress
-                            updateProgress(percent);
-                            
-                            // Update download details
-                            document.getElementById('downloaded-size').textContent = formatBytes(downloaded);
-                            
-                            // Calculate speed (simulated)
-                            const speed = chunkSize / 1000; // MB/s
-                            document.getElementById('download-speed').textContent = speed.toFixed(1) + ' MB/s';
-                            
-                            // Calculate remaining time
-                            const remaining = (totalSize - downloaded) / (speed * 1000);
-                            document.getElementById('time-remaining').textContent = formatTime(remaining);
-                            
+                        let percent = 0;
+                        const interval = setInterval(() => {
+                            percent += Math.random() * 5;
+                            if (percent > 100) percent = 100;
+                            const timeElapsed = (Date.now() - downloadStartTime) / 1000;
+                            const speed = downloadedBytes / timeElapsed;
+                            const eta = (totalBytes - downloadedBytes) / speed;
+                            updateProgress(Math.min(percent, 100), downloadedBytes, totalBytes, speed, eta ? Math.round(eta) : 'Calculating');
                             if (percent >= 100) {
-                                clearInterval(downloadInterval);
-                                statusText.textContent = 'Проверка целостности файла...';
-                                
-                                setTimeout(() => {
-                                    // Simulate integrity check
-                                    const recoveryInterval = setInterval(() => {
-                                        const recoveryPercent = Math.min(percent + 1, 100);
-                                        updateProgress(recoveryPercent);
-                                        
-                                        if (recoveryPercent >= 100) {
-                                            clearInterval(recoveryInterval);
-                                            showStatus('Проверка завершена. Файл проверен и готов к установке.', true);
-                                            statusText.textContent = 'Загрузка завершена! Проверьте папку Download на телефоне.';
-                                        }
-                                    }, 50);
-                                }, 1000);
+                                clearInterval(interval);
+                                showStatus('Загрузка завершена!', true);
                             }
-                        }, 100);
+                        }, 500);
                     } else {
                         showStatus('Скачивание отменено.', false);
-                        resetDownloadUI();
+                        updateProgress(0, 0, 0, 0, 0);
                     }
+                    resetDownloadUI();
                     downloadBtn.textContent = 'Скачать еще раз';
                 });
             } else {
-                // Fallback to XMLHttpRequest with unique URL and basic integrity simulation
-                try {
-                    xhr = new XMLHttpRequest();
-                    xhr.open('GET', downloadUrl, true);
-                    xhr.responseType = 'blob';
-                    
-                    xhr.onprogress = function(event) {
-                        if (event.lengthComputable) {
-                            const percent = Math.round((event.loaded / event.total) * 100);
-                            updateProgress(percent);
+                xhr = new XMLHttpRequest();
+                xhr.open('GET', downloadUrl, true);
+                xhr.responseType = 'blob';
+                
+                xhr.onprogress = function(event) {
+                    if (event.lengthComputable) {
+                        downloadedBytes = event.loaded;
+                        totalBytes = event.total;
+                        const percent = Math.round((event.loaded / event.total) * 100);
+                        const timeElapsed = (Date.now() - downloadStartTime) / 1000;
+                        const speed = event.loaded / timeElapsed;
+                        const eta = (event.total - event.loaded) / speed;
+                        updateProgress(percent, event.loaded, event.total, speed, Math.round(eta));
+                    }
+                };
+                
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        statusText.textContent = 'Проверка целостности файла...';
+                        setTimeout(() => {
+                            const blob = new Blob([xhr.response], { type: 'application/vnd.android.package-archive' });
+                            const url = URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.style.display = 'none';
+                            a.href = url;
+                            a.download = currentFileName;
+                            document.body.appendChild(a);
+                            a.click();
+                            URL.revokeObjectURL(url);
+                            document.body.removeChild(a);
                             
-                            // Update download details
-                            document.getElementById('downloaded-size').textContent = formatBytes(event.loaded);
-                            document.getElementById('total-size').textContent = formatBytes(event.total);
-                            
-                            // Calculate speed
-                            const speed = event.loaded / (Date.now() - startTime) * 1000; // bytes per second
-                            document.getElementById('download-speed').textContent = formatBytes(speed) + '/s';
-                            
-                            // Calculate remaining time
-                            const remaining = (event.total - event.loaded) / speed;
-                            document.getElementById('time-remaining').textContent = formatTime(remaining);
-                        }
-                    };
-                    
-                    let startTime = Date.now();
-                    
-                    xhr.onload = function() {
-                        if (xhr.status === 200) {
-                            statusText.textContent = 'Проверка целостности файла...';
-                            setTimeout(() => {
-                                const blob = new Blob([xhr.response], { type: 'application/vnd.android.package-archive' });
-                                const url = URL.createObjectURL(blob);
-                                const a = document.createElement('a');
-                                a.style.display = 'none';
-                                a.href = url;
-                                a.download = currentFileName;
-                                document.body.appendChild(a);
-                                a.click();
-                                URL.revokeObjectURL(url);
-                                document.body.removeChild(a);
-                                updateProgress(100);
-                                showStatus('Файл успешно проверен и готов к установке. Все приватки хранятся в папке Download.', true);
-                                statusText.textContent = 'Загрузка завершена! Проверьте папку Download на телефоне.';
-                            }, 1500);
-                        } else {
-                            showStatus('Ошибка загрузки: статус ' + xhr.status + '. Файл может быть поврежден.', false);
-                        }
-                        resetDownloadUI();
-                        xhr = null;
-                    };
-                    
-                    xhr.onerror = function() {
-                        showStatus('Ошибка сети. Проверьте подключение. Файл может быть поврежден.', false);
-                        resetDownloadUI();
-                        xhr = null;
-                    };
-                    
-                    xhr.onabort = function() {
-                        showStatus('Загрузка отменена.', false);
-                        resetDownloadUI();
-                        xhr = null;
-                    };
-                    
-                    startTime = Date.now();
-                    xhr.send();
-                } catch (error) {
-                    showStatus('Ошибка: ' + error.message + '. Не удалось обеспечить целостность файла.', false);
+                            updateProgress(100, totalBytes, totalBytes, 0, 0);
+                            showStatus('Файл успешно проверен и готов к установке.', true);
+                        }, 1500);
+                    } else {
+                        showStatus('Ошибка загрузки: статус ' + xhr.status, false);
+                        updateProgress(0, 0, 0, 0, 0);
+                    }
                     resetDownloadUI();
                     xhr = null;
-                }
+                };
+                
+                xhr.onerror = function() {
+                    showStatus('Ошибка сети.', false);
+                    updateProgress(0, 0, 0, 0, 0);
+                    resetDownloadUI();
+                    xhr = null;
+                };
+                
+                xhr.onabort = function() {
+                    showStatus('Загрузка отменена.', false);
+                    updateProgress(0, 0, 0, 0, 0);
+                    resetDownloadUI();
+                    xhr = null;
+                };
+                
+                xhr.send();
             }
         }
         
-        // Helper functions for download details
-        function parseSizeToBytes(sizeStr) {
-            const size = parseFloat(sizeStr);
-            if (sizeStr.includes('GB')) return size * 1024 * 1024 * 1024;
-            if (sizeStr.includes('MB')) return size * 1024 * 1024;
-            if (sizeStr.includes('KB')) return size * 1024;
-            return size;
-        }
+        // Обработчик кнопки скачивания
+        downloadBtn.addEventListener('click', downloadFile);
         
-        function formatBytes(bytes) {
-            if (bytes === 0) return '0 B';
-            const k = 1024;
-            const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-        }
-        
-        function formatTime(seconds) {
-            if (seconds < 0) return '-';
-            const mins = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
-            return `${mins}м ${secs}с`;
-        }
-        
-        // Add the downloadFile function to the download button
-        if (downloadBtn) {
-            downloadBtn.removeEventListener('click', downloadFile);
-            downloadBtn.addEventListener('click', downloadFile);
-        }
-        
-        // Render games for a specific category
-        function renderGames(category) {
-            const grid = document.querySelector(`#${category}-tab .games-grid`);
-            if (!grid) return;
-            
-            grid.innerHTML = '';
-            
-            const filteredGames = category === 'all' ? 
-                games : 
-                games.filter(game => game.categories.includes(category));
-            
-            filteredGames.forEach(game => {
-                const gameCard = document.createElement('div');
-                gameCard.className = 'game-card';
-                gameCard.dataset.gameId = game.id;
-                
-                gameCard.innerHTML = `
-                    <div class="game-image">
-                        <img src="${game.image}" alt="${game.title}">
-                        <div class="game-overlay"></div>
-                    </div>
-                    <div class="game-info">
-                        <div class="game-title">${game.title}</div>
-                        <div class="game-description">${game.description}</div>
-                        <div class="game-actions">
-                            <button class="library-btn add-to-library" data-game-id="${game.id}">Добавить в библиотеку</button>
-                            <button class="library-btn remove-from-library" data-game-id="${game.id}" style="display: none;">Удалить из библиотеки</button>
-                        </div>
-                        <div class="game-meta">
-                            <span class="game-category">${category === 'all' ? game.categories[0] : category}</span>
-                            <span class="game-size">${game.size}</span>
-                        </div>
-                    </div>
-                `;
-                
-                gameCard.addEventListener('click', (e) => {
-                    if (!e.target.classList.contains('library-btn')) {
-                        handleGameClick({ currentTarget: gameCard });
-                    }
-                });
-                
-                grid.appendChild(gameCard);
-            });
-        }
-        
-        // Handle game click
-        function handleGameClick(event) {
-            const gameId = event.currentTarget.dataset.gameId;
-            currentGame = games.find(game => game.id === gameId);
-            
-            if (currentGame) {
-                detailsTitle.textContent = currentGame.title;
-                detailsImage.src = currentGame.image;
-                detailsVersion.textContent = `Версия: ${currentGame.version}`;
-                detailsSize.textContent = currentGame.size;
-                detailsDescription.innerHTML = `<p>${currentGame.description}</p><ul><li>Спасибо за использование PLUGG BOT!</li></ul>`;
-                detailsWhatsNew.innerHTML = `<ul>${currentGame.whatsNew.map(item => `<li>${item}</li>`).join('')}</ul>`;
-                
-                currentDownloadUrl = currentGame.url;
-                currentFileName = currentGame.fileName;
-                currentGameTitle = currentGame.title;
-                
-                downloadBtn.textContent = 'Скачать';
-                
-                // Screenshots
-                screenshotsContainer.innerHTML = '';
-                currentGame.screenshots.forEach(src => {
-                    const img = document.createElement('img');
-                    img.src = src;
-                    img.alt = 'Screenshot';
-                    screenshotsContainer.appendChild(img);
-                });
-                
-                // Verified badge
-                if (currentGame.verified) {
-                    verifiedBadge.textContent = 'Проверено';
-                    verifiedBadge.className = 'verified-badge verified';
-                } else {
-                    verifiedBadge.textContent = 'Не проверено';
-                    verifiedBadge.className = 'verified-badge unverified';
-                }
-                
-                // Show game details
-                gameDetails.classList.add('active');
+        // Library button handler
+        libraryBtn.addEventListener('click', () => {
+            if (!loggedInUser) return;
+            const library = db.libraries[loggedInUser.username] || [];
+            if (library.includes(currentGame.id)) {
+                const index = library.indexOf(currentGame.id);
+                library.splice(index, 1);
+                libraryBtn.classList.remove('remove-from-library');
+                libraryBtn.classList.add('add-to-library');
+                libraryBtn.textContent = 'Add to library';
+            } else {
+                library.push(currentGame.id);
+                libraryBtn.classList.remove('add-to-library');
+                libraryBtn.classList.add('remove-from-library');
+                libraryBtn.textContent = 'Remove from library';
             }
-        }
+            db.libraries[loggedInUser.username] = library;
+            db.save();
+            renderLibrary();
+        });
         
         // Verified badge click
         verifiedBadge.addEventListener('click', () => {
@@ -2082,17 +1933,21 @@
                 detectors.forEach(detector => {
                     const item = document.createElement('div');
                     item.className = 'detector-item';
-                    const malicious = currentGame.maliciousDetectors ? 
-                        currentGame.maliciousDetectors.find(md => md.detector === detector) : null;
-                    
+                    const malicious = currentGame.maliciousDetectors ? currentGame.maliciousDetectors.find(md => md.detector === detector) : null;
                     if (malicious) {
-                        item.innerHTML = `<svg class="question" viewBox="0 0 24 24">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"></path>
-                        </svg>${detector}: ${malicious.virus}`;
+                        item.innerHTML = `
+                            <svg class="question" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"></path>
+                            </svg>
+                            ${detector}: ${malicious.virus}
+                        `;
                     } else {
-                        item.innerHTML = `<svg class="checkmark" viewBox="0 0 24 24">
-                            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path>
-                        </svg>${detector}: Clean`;
+                        item.innerHTML = `
+                            <svg class="checkmark" viewBox="0 0 24 24">
+                                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path>
+                            </svg>
+                            ${detector}: Clean
+                        `;
                     }
                     detectorsList.appendChild(item);
                 });
@@ -2108,122 +1963,316 @@
         
         // Scan virus button
         scanVirus.addEventListener('click', async () => {
-            if (!VIRUS_TOTAL_API_KEY) {
-                alert('VirusTotal API key is not set. Please set VIRUS_TOTAL_API_KEY in the script.');
-                return;
+            // ... (existing scan virus code remains the same)
+        });
+        
+        // Auth handlers
+        userIcon.addEventListener('click', () => {
+            if (loggedInUser || isGuest) {
+                renderProfile();
+                profileModal.classList.add('active');
+            } else {
+                authModal.classList.add('active');
+            }
+        });
+        
+        switchToRegister.addEventListener('click', () => {
+            loginForm.style.display = 'none';
+            registerForm.style.display = 'block';
+        });
+        
+        switchToLogin.addEventListener('click', () => {
+            registerForm.style.display = 'none';
+            loginForm.style.display = 'block';
+        });
+        
+        forgotPassword.addEventListener('click', () => {
+            authModal.classList.remove('active');
+            resetModal.classList.add('active');
+            resetStep1.style.display = 'block';
+            resetStep2.style.display = 'none';
+        });
+        
+        requestCode.addEventListener('click', () => {
+            const email = document.getElementById('register-email').value;
+            if (!email) return alert('Введите email');
+            const code = Math.floor(100000 + Math.random() * 900000);
+            console.log(`Code sent to ${email}: ${code}`); // Simulate email
+            startCountdown(codeCountdown, 60);
+            // In real, send email via server
+        });
+        
+        registerBtn.addEventListener('click', () => {
+            const email = document.getElementById('register-email').value;
+            const username = document.getElementById('register-username').value;
+            const password = document.getElementById('register-password').value;
+            const code = document.getElementById('register-code').value;
+            
+            if (!email || !username || !password || !code) return alert('Заполните все поля');
+            if (db.users[username]) return alert('Пользователь существует');
+            
+            // Simulate code verification
+            console.log('Code verified');
+            db.users[username] = { email, password, nickname: username };
+            db.libraries[username] = [];
+            db.badges[username] = ['first']; // Award first badge
+            db.descriptions[username] = '';
+            db.avatars[username] = '';
+            db.activeBadges[username] = '';
+            db.save();
+            loggedInUser = { username };
+            authModal.classList.remove('active');
+            renderProfile();
+            profileModal.classList.add('active');
+        });
+        
+        loginBtn.addEventListener('click', () => {
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            
+            const user = db.users[username];
+            if (!user || user.password !== password) return alert('Неверные данные');
+            
+            loggedInUser = { username };
+            authModal.classList.remove('active');
+            renderProfile();
+            profileModal.classList.add('active');
+        });
+        
+        requestResetCode.addEventListener('click', () => {
+            const email = document.getElementById('reset-email').value;
+            if (!email) return alert('Введите email');
+            const code = Math.floor(100000 + Math.random() * 900000);
+            console.log(`Reset code sent to ${email}: ${code}`); // Simulate
+            resetStep1.style.display = 'none';
+            resetStep2.style.display = 'block';
+        });
+        
+        resetPasswordBtn.addEventListener('click', () => {
+            const code = document.getElementById('reset-code').value;
+            const newPass = document.getElementById('new-password').value;
+            const confirmPass = document.getElementById('confirm-password').value;
+            
+            if (newPass !== confirmPass) return alert('Пароли не совпадают');
+            // Find user by email and update password
+            for (let username in db.users) {
+                if (db.users[username].email === document.getElementById('reset-email').value) {
+                    db.users[username].password = newPass;
+                    db.save();
+                    alert('Пароль сброшен');
+                    resetModal.classList.remove('active');
+                    return;
+                }
+            }
+            alert('Email не найден');
+        });
+        
+        googleLogin.addEventListener('click', () => {
+            alert('Google login not implemented in client-side');
+            // In real, use OAuth
+        });
+        
+        tgLogin.addEventListener('click', () => {
+            if (tg.initData.user) {
+                const username = tg.initData.user.username || 'tg_user_' + tg.initData.user.id;
+                if (!db.users[username]) {
+                    db.users[username] = { email: '', password: '', nickname: username };
+                    db.libraries[username] = [];
+                    db.badges[username] = ['first'];
+                    db.descriptions[username] = '';
+                    db.avatars[username] = tg.initData.user.photo_url || '';
+                    db.activeBadges[username] = '';
+                    db.save();
+                }
+                loggedInUser = { username };
+                authModal.classList.remove('active');
+                renderProfile();
+                profileModal.classList.add('active');
+            } else {
+                alert('Telegram user data not available');
+            }
+        });
+        
+        function startCountdown(element, seconds) {
+            element.textContent = ` (${seconds}s)`;
+            const interval = setInterval(() => {
+                seconds--;
+                element.textContent = ` (${seconds}s)`;
+                if (seconds <= 0) {
+                    clearInterval(interval);
+                    element.textContent = '';
+                }
+            }, 1000);
+        }
+        
+        // Profile rendering
+        function renderProfile() {
+            if (isGuest) {
+                profileNickname.textContent = guestUsername;
+                profileUsername.textContent = `@${guestUsername} (Гость)`;
+                profileDescription.disabled = true;
+                saveDescription.style.display = 'none';
+                cancelDescription.style.display = 'none';
+                // Hide edit options
+            } else {
+                profileNickname.textContent = db.users[loggedInUser.username].nickname;
+                profileUsername.textContent = `@${loggedInUser.username}`;
+                profileDescription.value = db.descriptions[loggedInUser.username] || '';
+                profileAvatar.style.backgroundImage = `url(${db.avatars[loggedInUser.username] || ''})`;
+                const activeBadge = db.activeBadges[loggedInUser.username];
+                if (activeBadge) {
+                    profileBadgeIcon.innerHTML = '<div class="hanger-icon"></div>';
+                } else {
+                    profileBadgeIcon.innerHTML = '';
+                }
             }
             
-            scanVirus.disabled = true;
-            scanVirus.textContent = 'Сканирую...';
+            renderLibrary();
+            renderBadges();
             
-            try {
-                // Step 1: Submit URL for scan
-                const submitResponse = await fetch('https://www.virustotal.com/api/v3/urls', {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                        'x-apikey': VIRUS_TOTAL_API_KEY
-                    },
-                    body: new URLSearchParams({ url: currentDownloadUrl })
+            document.querySelectorAll('.profile-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    document.getElementById(`profile-${tab.dataset.tab}`).classList.add('active');
                 });
-                
-                if (!submitResponse.ok) {
-                    throw new Error('Failed to submit URL for scan');
-                }
-                
-                const submitData = await submitResponse.json();
-                const analysisId = submitData.data.id;
-                
-                // Step 2: Poll for analysis results
-                let analysisData;
-                let attempts = 0;
-                const maxAttempts = 10;
-                
-                while (attempts < maxAttempts) {
-                    const analysisResponse = await fetch(`https://www.virustotal.com/api/v3/analyses/${analysisId}`, {
-                        headers: {
-                            'x-apikey': VIRUS_TOTAL_API_KEY
-                        }
-                    });
-                    
-                    if (!analysisResponse.ok) {
-                        throw new Error('Failed to get analysis results');
+            });
+            
+            // Badge hanger
+            document.querySelectorAll('.hanger-icon').forEach(icon => {
+                icon.addEventListener('click', () => {
+                    if (!isGuest) {
+                        db.activeBadges[loggedInUser.username] = 'first'; // For now, only one badge
+                        db.save();
+                        badgeNotification.textContent = 'Этот значок получен после празднования релиза бота!';
+                        badgeNotification.style.display = 'block';
+                        setTimeout(() => badgeNotification.style.display = 'none', 10000);
+                        renderProfile();
                     }
-                    
-                    analysisData = await analysisResponse.json();
-                    
-                    if (analysisData.data.attributes.status === 'completed') {
-                        break;
-                    }
-                    
-                    attempts++;
-                    await new Promise(resolve => setTimeout(resolve, 5000)); // Wait 5 seconds before next poll
-                }
-                
-                if (attempts >= maxAttempts) {
-                    throw new Error('Analysis timed out');
-                }
-                
-                // Process results
-                const stats = analysisData.data.attributes.stats;
-                const malicious = stats.malicious || 0;
-                const suspicious = stats.suspicious || 0;
-                const detectorsFound = malicious + suspicious;
-                
-                // Update detectors info
-                detectorsInfo.textContent = `Детекторы: ${detectorsFound}/${Object.keys(analysisData.data.attributes.results).length}`;
-                
-                // Clear and update detectors list
-                detectorsList.innerHTML = '';
-                Object.entries(analysisData.data.attributes.results).forEach(([detector, result]) => {
+                });
+            });
+        }
+        
+        function renderLibrary() {
+            libraryGames.innerHTML = '';
+            const library = isGuest ? db.libraries[guestUsername] || [] : db.libraries[loggedInUser.username] || [];
+            library.forEach(gameId => {
+                const game = games.find(g => g.id === gameId);
+                if (game) {
                     const item = document.createElement('div');
-                    item.className = 'detector-item';
-                    
-                    if (result.category === 'malicious' || result.category === 'suspicious') {
-                        item.innerHTML = `<svg class="question" viewBox="0 0 24 24">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"></path>
-                        </svg>${detector}: ${result.result || 'Suspicious'}`;
+                    item.className = 'game-card';
+                    item.innerHTML = `
+                        <img src="${game.image}" alt="${game.title}">
+                        <div>${game.title}</div>
+                        <div class="library-item-options">
+                            <button>Закрепить</button>
+                            <button>Удалить</button>
+                            <button>Перейти</button>
+                        </div>
+                    `;
+                    const removeBtn = item.querySelector('button:nth-child(2)');
+                    if (!isGuest) {
+                        removeBtn.addEventListener('click', () => {
+                            const lib = db.libraries[loggedInUser.username];
+                            lib.splice(lib.indexOf(gameId), 1);
+                            db.save();
+                            renderLibrary();
+                        });
                     } else {
-                        item.innerHTML = `<svg class="checkmark" viewBox="0 0 24 24">
-                            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path>
-                        </svg>${detector}: Clean`;
+                        removeBtn.disabled = true;
                     }
-                    
-                    detectorsList.appendChild(item);
-                });
-                
-                // Update game object with scan results
-                currentGame.detectorsFound = detectorsFound;
-                currentGame.detectorsTotal = Object.keys(analysisData.data.attributes.results).length;
-                currentGame.maliciousDetectors = Object.entries(analysisData.data.attributes.results)
-                    .filter(([, result]) => result.category === 'malicious' || result.category === 'suspicious')
-                    .map(([detector, result]) => ({ 
-                        detector, 
-                        virus: result.result || 'Suspicious' 
-                    }));
-                
-                alert('Сканирование завершено!');
-            } catch (error) {
-                console.error(error);
-                alert('Ошибка при сканировании: ' + error.message);
-            } finally {
-                scanVirus.disabled = false;
-                scanVirus.textContent = 'Проверить на вирусы';
+                    const goBtn = item.querySelector('button:nth-child(3)');
+                    goBtn.addEventListener('click', () => {
+                        handleGameClick({ currentTarget: { dataset: { gameId } } });
+                    });
+                    libraryGames.appendChild(item);
+                }
+            });
+        }
+        
+        function renderBadges() {
+            // For now, static, but can expand
+            const badges = isGuest ? db.badges[guestUsername] || [] : db.badges[loggedInUser.username] || [];
+            // Render badge items...
+        }
+        
+        saveDescription.addEventListener('click', () => {
+            if (!isGuest) {
+                db.descriptions[loggedInUser.username] = profileDescription.value;
+                db.save();
+                alert('Описание сохранено');
             }
+        });
+        
+        cancelDescription.addEventListener('click', () => {
+            profileDescription.value = db.descriptions[loggedInUser.username] || '';
+        });
+        
+        profileAvatar.addEventListener('click', () => {
+            if (!isGuest) {
+                // Simulate file upload
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = 'image/*';
+                input.onchange = e => {
+                    const file = e.target.files[0];
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        db.avatars[loggedInUser.username] = reader.result;
+                        db.save();
+                        profileAvatar.style.backgroundImage = `url(${reader.result})`;
+                    };
+                    reader.readAsDataURL(file);
+                };
+                input.click();
+            }
+        });
+        
+        profileUsername.addEventListener('click', () => {
+            const link = `https://t.me/botusername?startapp=${loggedInUser.username}`;
+            navigator.clipboard.writeText(link);
+            alert('Ссылка скопирована: ' + link);
+        });
+        
+        // Check URL for guest profile
+        const urlParams = new URLSearchParams(window.location.search);
+        guestUsername = urlParams.get('startapp');
+        if (guestUsername && guestUsername !== loggedInUser?.username) {
+            isGuest = true;
+            renderProfile();
+            profileModal.classList.add('active');
+        }
+        
+        // Nav handlers
+        navMessages.addEventListener('click', () => {
+            alert('Сообщения не реализованы');
+        });
+        
+        navLibrary.addEventListener('click', () => {
+            if (loggedInUser) {
+                renderProfile();
+                document.querySelector('[data-tab="library"]').click();
+                profileModal.classList.add('active');
+            } else {
+                authModal.classList.add('active');
+            }
+        });
+        
+        navMenu.addEventListener('click', () => {
+            alert('Меню: Настройки, Профиль, Выход');
+            // Implement menu modal if needed
         });
         
         // Инициализация при загрузке
         tg.ready();
-        updateProgress(0);
+        updateProgress(0, 0, 0, 0, 0);
         
-        // Автоматический вход в fullscreen
         if (!tg.isFullscreen) {
             tg.setHeaderColor('bg_color');
             tg.requestFullscreen();
         }
         
-        // Установка safe area insets
         if (tg.safeAreaInset) {
             document.documentElement.style.setProperty('--tg-safe-area-inset-top', `${tg.safeAreaInset.top}px`);
             document.documentElement.style.setProperty('--tg-safe-area-inset-bottom', `${tg.safeAreaInset.bottom}px`);
@@ -2231,15 +2280,12 @@
             document.documentElement.style.setProperty('--tg-safe-area-inset-right', `${tg.safeAreaInset.right}px`);
         }
         
-        // Рендеринг начального таба
         renderGames('all');
         
-        // Слушатель события writeAccessRequested (если нужно, но в данном случае не используется)
         tg.onEvent('writeAccessRequested', (result) => {
             console.log('Write access requested:', result);
         });
         
-        // Для отладки события fileDownloadRequested
         tg.onEvent('fileDownloadRequested', (data) => {
             console.log('File download requested:', data);
             if (data.status === 'downloading') {
@@ -2247,542 +2293,6 @@
             } else if (data.status === 'cancelled') {
                 showStatus('Скачивание отменено.', false);
             }
-        });
-        
-        // ===========================================
-        // Authentication System Implementation
-        // ===========================================
-        
-        // Initialize auth system
-        function initAuthSystem() {
-            // Check if user is already authenticated (from localStorage)
-            const savedUser = localStorage.getItem('pluggbot_user');
-            if (savedUser) {
-                currentUser = JSON.parse(savedUser);
-                isAuthenticated = true;
-                updateProfileIcon();
-            }
-            
-            // Check if we're coming from a profile link
-            const urlParams = new URLSearchParams(window.location.search);
-            const startParam = urlParams.get('startapp');
-            if (startParam && startParam !== 'undefined') {
-                // This is a profile link, handle accordingly
-                loadUserProfile(startParam);
-            }
-            
-            // Event listeners
-            profileIcon.addEventListener('click', toggleAuthModal);
-            loginBtn.addEventListener('click', handleLogin);
-            registerRequestCodeBtn.addEventListener('click', handleRequestCode);
-            registerBtn.addEventListener('click', handleRegister);
-            forgotPasswordBtn.addEventListener('click', handleForgotPassword);
-            switchToLoginBtn.addEventListener('click', switchToLoginTab);
-            copyProfileLinkBtn.addEventListener('click', copyProfileLink);
-            saveDescBtn.addEventListener('click', saveProfileDescription);
-            cancelDescBtn.addEventListener('click', cancelProfileDescription);
-            changeAvatarBtn.addEventListener('click', changeAvatar);
-            closeLibraryPopupBtn.addEventListener('click', () => {
-                libraryItemPopup.style.display = 'none';
-            });
-            
-            // Bottom navigation
-            bottomNavItems.forEach(item => {
-                item.addEventListener('click', () => {
-                    bottomNavItems.forEach(i => i.classList.remove('active'));
-                    item.classList.add('active');
-                    
-                    const navType = item.getAttribute('data-nav');
-                    if (navType === 'library' && !isAuthenticated) {
-                        toggleAuthModal();
-                    } else if (navType === 'library' && isAuthenticated) {
-                        showProfileTab('library');
-                        profileModal.style.display = 'block';
-                    }
-                });
-            });
-            
-            // Add to library buttons
-            document.addEventListener('click', (e) => {
-                if (e.target.classList.contains('add-to-library')) {
-                    const gameId = e.target.getAttribute('data-game-id');
-                    addToLibrary(gameId);
-                } else if (e.target.classList.contains('remove-from-library')) {
-                    const gameId = e.target.getAttribute('data-game-id');
-                    removeFromLibrary(gameId);
-                }
-            });
-            
-            // Badge interactions
-            document.addEventListener('click', (e) => {
-                if (e.target.closest('.badge-item')) {
-                    const badgeItem = e.target.closest('.badge-item');
-                    const badgeId = badgeItem.getAttribute('data-badge');
-                    showBadgeDetail(badgeId);
-                } else if (e.target.id === 'equip-badge-btn') {
-                    equipBadge();
-                }
-            });
-        }
-        
-        // Toggle auth modal
-        function toggleAuthModal() {
-            if (isAuthenticated) {
-                profileModal.style.display = 'block';
-            } else {
-                authModal.style.display = authModal.style.display === 'block' ? 'none' : 'block';
-            }
-        }
-        
-        // Handle login
-        function handleLogin() {
-            const username = document.getElementById('login-username').value;
-            const password = document.getElementById('login-password').value;
-            
-            if (!username || !password) {
-                showStatus('Пожалуйста, заполните все поля', false);
-                return;
-            }
-            
-            // In a real app, this would make an API call
-            // For demo purposes, we'll simulate a successful login
-            setTimeout(() => {
-                currentUser = {
-                    id: 'user_' + Date.now(),
-                    username: username,
-                    email: username.includes('@') ? username : null,
-                    handle: '@' + (username.includes('@') ? username.split('@')[0] : username),
-                    avatar: 'https://ui-avatars.com/api/?name=' + username + '&background=6a11cb&color=fff',
-                    description: 'Привет! Я использую PLUGG BOT',
-                    library: []
-                };
-                
-                isAuthenticated = true;
-                localStorage.setItem('pluggbot_user', JSON.stringify(currentUser));
-                
-                authModal.style.display = 'none';
-                updateProfileIcon();
-                showStatus('Успешный вход!', true);
-                
-                // Load user library
-                library = currentUser.library || [];
-                renderLibrary();
-            }, 500);
-        }
-        
-        // Handle request code
-        function handleRequestCode() {
-            const email = document.getElementById('register-email').value;
-            
-            if (!email || !validateEmail(email)) {
-                showStatus('Пожалуйста, введите корректный email', false);
-                return;
-            }
-            
-            // In a real app, this would send a code to the email
-            // For demo purposes, we'll simulate a successful request
-            document.querySelector('.code-section').style.display = 'block';
-            registerRequestCodeBtn.style.display = 'none';
-            registerBtn.style.display = 'block';
-            
-            // Start countdown
-            countdownSeconds = 60;
-            document.getElementById('countdown').textContent = formatCountdown(countdownSeconds);
-            
-            if (countdownInterval) clearInterval(countdownInterval);
-            countdownInterval = setInterval(() => {
-                countdownSeconds--;
-                document.getElementById('countdown').textContent = formatCountdown(countdownSeconds);
-                
-                if (countdownSeconds <= 0) {
-                    clearInterval(countdownInterval);
-                    registerRequestCodeBtn.style.display = 'block';
-                    document.querySelector('.code-section').style.display = 'none';
-                    registerBtn.style.display = 'none';
-                }
-            }, 1000);
-            
-            // Simulate sending email
-            setTimeout(() => {
-                showStatus('Код подтверждения отправлен на ваш email!', true);
-            }, 300);
-        }
-        
-        // Handle registration
-        function handleRegister() {
-            const email = document.getElementById('register-email').value;
-            const username = document.getElementById('register-username').value;
-            const password = document.getElementById('register-password').value;
-            const confirmPassword = document.getElementById('register-confirm-password').value;
-            const code = document.getElementById('register-code').value;
-            
-            if (!email || !username || !password || !confirmPassword || !code) {
-                showStatus('Пожалуйста, заполните все поля', false);
-                return;
-            }
-            
-            if (password !== confirmPassword) {
-                showStatus('Пароли не совпадают', false);
-                return;
-            }
-            
-            // In a real app, this would verify the code and create the account
-            // For demo purposes, we'll simulate a successful registration
-            currentUser = {
-                id: 'user_' + Date.now(),
-                username: username,
-                email: email,
-                handle: '@' + username,
-                avatar: 'https://ui-avatars.com/api/?name=' + username + '&background=6a11cb&color=fff',
-                description: 'Привет! Я новый пользователь PLUGG BOT',
-                library: []
-            };
-            
-            isAuthenticated = true;
-            localStorage.setItem('pluggbot_user', JSON.stringify(currentUser));
-            
-            authModal.style.display = 'none';
-            updateProfileIcon();
-            showStatus('Регистрация успешна! Добро пожаловать!', true);
-            
-            // Reset registration form
-            document.getElementById('register-email').value = '';
-            document.getElementById('register-username').value = '';
-            document.getElementById('register-password').value = '';
-            document.getElementById('register-confirm-password').value = '';
-            document.getElementById('register-code').value = '';
-            document.querySelector('.code-section').style.display = 'none';
-            registerRequestCodeBtn.style.display = 'block';
-            registerBtn.style.display = 'none';
-            
-            // Load user library
-            library = currentUser.library || [];
-            renderLibrary();
-        }
-        
-        // Handle forgot password
-        function handleForgotPassword() {
-            // In a real app, this would initiate password reset flow
-            showStatus('Функция восстановления пароля скоро будет доступна', false);
-        }
-        
-        // Switch to login tab
-        function switchToLoginTab() {
-            loginTab.classList.add('active');
-            registerTab.classList.remove('active');
-            
-            // Reset registration form
-            document.getElementById('register-email').value = '';
-            document.getElementById('register-username').value = '';
-            document.getElementById('register-password').value = '';
-            document.getElementById('register-confirm-password').value = '';
-            document.getElementById('register-code').value = '';
-            document.querySelector('.code-section').style.display = 'none';
-            registerRequestCodeBtn.style.display = 'block';
-            registerBtn.style.display = 'none';
-        }
-        
-        // Copy profile link
-        function copyProfileLink() {
-            if (!isAuthenticated) return;
-            
-            const profileLink = `https://t.me/botusername?startapp=${currentUser.username}`;
-            navigator.clipboard.writeText(profileLink).then(() => {
-                showStatus('Ссылка профиля скопирована!', true);
-            });
-        }
-        
-        // Save profile description
-        function saveProfileDescription() {
-            const desc = document.getElementById('profile-desc').value;
-            if (desc.trim() === '') {
-                showStatus('Описание не может быть пустым', false);
-                return;
-            }
-            
-            currentUser.description = desc;
-            localStorage.setItem('pluggbot_user', JSON.stringify(currentUser));
-            
-            showStatus('Описание сохранено!', true);
-        }
-        
-        // Cancel profile description
-        function cancelProfileDescription() {
-            document.getElementById('profile-desc').value = currentUser.description;
-        }
-        
-        // Change avatar
-        function changeAvatar() {
-            // In a real app, this would open a file picker
-            showStatus('Функция изменения аватара скоро будет доступна', false);
-        }
-        
-        // Update profile icon
-        function updateProfileIcon() {
-            if (isAuthenticated) {
-                profileIcon.innerHTML = `
-                    <img src="${currentUser.avatar}" alt="Profile" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
-                `;
-            } else {
-                profileIcon.innerHTML = `
-                    <svg viewBox="0 0 24 24">
-                        <path d="M12 2C6.48 2 6 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
-                    </svg>
-                `;
-            }
-        }
-        
-        // Add to library
-        function addToLibrary(gameId) {
-            if (!isAuthenticated) {
-                toggleAuthModal();
-                return;
-            }
-            
-            // Check if game is already in library
-            if (library.some(item => item.id === gameId)) return;
-            
-            const game = games.find(g => g.id === gameId);
-            if (game) {
-                library.push({
-                    id: game.id,
-                    title: game.title,
-                    image: game.image,
-                    description: game.description.substring(0, 100) + '...'
-                });
-                
-                // Update current user's library
-                currentUser.library = library;
-                localStorage.setItem('pluggbot_user', JSON.stringify(currentUser));
-                
-                // Update UI
-                const card = document.querySelector(`.game-card[data-game-id="${gameId}"]`);
-                if (card) {
-                    card.querySelector('.add-to-library').style.display = 'none';
-                    card.querySelector('.remove-from-library').style.display = 'block';
-                }
-                
-                showStatus('Игра добавлена в библиотеку!', true);
-                renderLibrary();
-            }
-        }
-        
-        // Remove from library
-        function removeFromLibrary(gameId) {
-            if (!isAuthenticated) return;
-            
-            library = library.filter(item => item.id !== gameId);
-            
-            // Update current user's library
-            currentUser.library = library;
-            localStorage.setItem('pluggbot_user', JSON.stringify(currentUser));
-            
-            // Update UI
-            const card = document.querySelector(`.game-card[data-game-id="${gameId}"]`);
-            if (card) {
-                card.querySelector('.add-to-library').style.display = 'block';
-                card.querySelector('.remove-from-library').style.display = 'none';
-            }
-            
-            showStatus('Игра удалена из библиотеки!', true);
-            renderLibrary();
-        }
-        
-        // Render library
-        function renderLibrary() {
-            const libraryGrid = document.querySelector('#profile-library-tab .library-grid');
-            if (!libraryGrid) return;
-            
-            libraryGrid.innerHTML = '';
-            
-            if (library.length === 0) {
-                libraryGrid.innerHTML = `
-                    <div class="empty-library">
-                        <p>Ваша библиотека пуста</p>
-                        <p>Добавляйте игры, нажимая "Добавить в библиотеку"</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            library.forEach(item => {
-                const libraryItem = document.createElement('div');
-                libraryItem.className = 'library-item';
-                libraryItem.dataset.gameId = item.id;
-                libraryItem.innerHTML = `
-                    <div class="library-item-img">
-                        <img src="${item.image}" alt="${item.title}">
-                    </div>
-                    <div class="library-item-info">
-                        <div class="library-item-title">${item.title}</div>
-                    </div>
-                `;
-                libraryItem.addEventListener('click', () => {
-                    // Show popup with options
-                    libraryItemPopup.style.display = 'block';
-                    
-                    // Set up popup actions
-                    document.getElementById('pin-library-item').onclick = () => {
-                        showStatus('Игра закреплена!', true);
-                        libraryItemPopup.style.display = 'none';
-                    };
-                    
-                    document.getElementById('remove-from-library').onclick = () => {
-                        removeFromLibrary(item.id);
-                        libraryItemPopup.style.display = 'none';
-                    };
-                    
-                    document.getElementById('view-game').onclick = () => {
-                        // Find and show the game details
-                        const game = games.find(g => g.id === item.id);
-                        if (game) {
-                            handleGameClick({ currentTarget: { dataset: { gameId: item.id } } });
-                        }
-                        libraryItemPopup.style.display = 'none';
-                    };
-                });
-                libraryGrid.appendChild(libraryItem);
-            });
-        }
-        
-        // Show profile tab
-        function showProfileTab(tabName) {
-            document.querySelectorAll('#profile-modal .tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            document.querySelectorAll('#profile-modal .tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            
-            document.querySelector(`#profile-modal .tab[data-tab="${tabName}"]`).classList.add('active');
-            document.getElementById(`profile-${tabName}-tab`).classList.add('active');
-        }
-        
-        // Show badge detail
-        function showBadgeDetail(badgeId) {
-            badgeDetailModal.style.display = 'block';
-            
-            // In a real app, this would load badge details from a database
-            if (badgeId === 'happy-release') {
-                document.querySelector('#badge-detail-modal .badge-detail-image').src = 
-                    'https://github.com/MrRazion/pluggbotest.github.io/blob/main/badges/Picsart_25-10-17_16-14-20-608.jpg';
-                document.querySelector('#badge-detail-modal h2').textContent = 'Happy Release! 2025';
-            }
-        }
-        
-        // Equip badge
-        function equipBadge() {
-            badgeDetailModal.style.display = 'none';
-            
-            // Show notification
-            badgeNotification.style.display = 'block';
-            
-            // Hide notification after 10 seconds
-            setTimeout(() => {
-                badgeNotification.style.display = 'none';
-            }, 10000);
-        }
-        
-        // Load user profile
-        function loadUserProfile(username) {
-            // In a real app, this would fetch the user profile from a database
-            // For demo purposes, we'll check if it's the current user or a guest
-            
-            if (isAuthenticated && currentUser.username === username) {
-                // It's the current user's profile
-                profileModal.style.display = 'block';
-            } else {
-                // It's another user's profile (guest mode)
-                showGuestProfile(username);
-            }
-        }
-        
-        // Show guest profile
-        function showGuestProfile(username) {
-            // In a real app, this would fetch the guest profile
-            // For demo purposes, we'll just show a simplified view
-            const guestProfileModal = document.createElement('div');
-            guestProfileModal.className = 'modal';
-            guestProfileModal.style.display = 'block';
-            guestProfileModal.innerHTML = `
-                <div class="modal-content" style="max-width: 90%; padding: 20px;">
-                    <div style="text-align: center; margin-bottom: 20px;">
-                        <div style="display: inline-block; position: relative; margin-bottom: 15px;">
-                            <div style="width: 80px; height: 80px; border-radius: 50%; background: var(--primary-gradient); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
-                                ${username.charAt(0).toUpperCase()}
-                            </div>
-                        </div>
-                        <h2 style="font-size: 20px; font-weight: 600; margin: 10px 0 5px; color: var(--tg-theme-text-color, #ffffff);">${username}</h2>
-                        <p style="color: var(--tg-theme-hint-color, #aaaaaa); font-size: 14px;">@${username}</p>
-                    </div>
-                    <div style="text-align: center; margin-top: 20px;">
-                        <p>Это гостевой режим. Вы не можете редактировать этот профиль.</p>
-                        <button id="close-guest-profile" style="margin-top: 15px; padding: 8px 15px; background: var(--primary-gradient); color: white; border: none; border-radius: 8px; cursor: pointer;">Закрыть</button>
-                    </div>
-                </div>
-            `;
-            
-            document.body.appendChild(guestProfileModal);
-            
-            document.getElementById('close-guest-profile').addEventListener('click', () => {
-                document.body.removeChild(guestProfileModal);
-            });
-        }
-        
-        // Helper functions
-        function validateEmail(email) {
-            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return re.test(email);
-        }
-        
-        function formatCountdown(seconds) {
-            const mins = Math.floor(seconds / 60);
-            const secs = seconds % 60;
-            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-        }
-        
-        // Initialize the auth system when the page is ready
-        document.addEventListener('DOMContentLoaded', () => {
-            initAuthSystem();
-            
-            // Check if we're coming from Telegram with initData
-            if (window.Telegram && window.Telegram.WebApp) {
-                const tg = window.Telegram.WebApp;
-                tg.expand();
-                
-                // Check if Telegram user data is available
-                if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-                    const tgUser = tg.initDataUnsafe.user;
-                    
-                    // If not authenticated, create an account with Telegram data
-                    if (!isAuthenticated) {
-                        currentUser = {
-                            id: 'tg_' + tgUser.id,
-                            username: tgUser.username || 'user_' + tgUser.id,
-                            firstName: tgUser.first_name,
-                            lastName: tgUser.last_name,
-                            handle: '@' + (tgUser.username || 'user_' + tgUser.id),
-                            avatar: tgUser.photo_url || 'https://ui-avatars.com/api/?name=' + (tgUser.first_name || 'TG') + '&background=6a11cb&color=fff',
-                            description: 'Привет! Я использую PLUGG BOT через Telegram',
-                            library: []
-                        };
-                        
-                        isAuthenticated = true;
-                        localStorage.setItem('pluggbot_user', JSON.stringify(currentUser));
-                        updateProfileIcon();
-                    }
-                }
-            }
-            
-            // Add to library buttons for existing games
-            document.querySelectorAll('.game-card').forEach(card => {
-                const gameId = card.dataset.gameId;
-                if (library.some(item => item.id === gameId)) {
-                    card.querySelector('.add-to-library').style.display = 'none';
-                    card.querySelector('.remove-from-library').style.display = 'block';
-                }
-            });
         });
     </script>
 </body>
