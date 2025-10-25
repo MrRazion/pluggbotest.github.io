@@ -739,43 +739,57 @@
             overflow: hidden;
             white-space: nowrap;
         }
-        .auth-options {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin: 20px 0;
+        .plugg-auth-container {
+            padding: 0 20px 20px;
         }
-        .auth-option {
-            display: flex;
-            align-items: center;
-            padding: 14px;
-            background: var(--card-bg);
+        .plugg-auth-content {
+            text-align: center;
+        }
+        .plugg-auth-gif {
+            margin-bottom: 15px;
             border-radius: var(--border-radius-md);
+            overflow: hidden;
+        }
+        .plugg-auth-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 10px;
+        }
+        .plugg-auth-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        .plugg-auth-status {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            min-height: 20px;
+        }
+        .plugg-auth-button-container {
+            margin-top: 10px;
+        }
+        .plugg-auth-button {
+            display: inline-block;
+            width: 100%;
+            max-width: 300px;
+            padding: 14px;
+            background: var(--accent-gradient);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-md);
+            font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
+            text-align: center;
             transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(74, 134, 255, 0.3);
+            text-decoration: none;
         }
-        .auth-option:hover {
-            background: rgba(74, 134, 255, 0.1);
-            transform: translateX(5px);
-        }
-        .auth-icon {
-            width: 28px;
-            height: 28px;
-            margin-right: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .auth-icon.google {
-            background: linear-gradient(45deg, #ea4335, #4285f4, #fbbc05, #34a853);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .auth-icon.telegram {
-            color: #34a8f4;
-        }
-        .auth-text {
-            font-weight: 500;
+        .plugg-auth-button:active {
+            transform: scale(0.97);
         }
         .registration-progress {
             display: none;
@@ -1192,26 +1206,22 @@
                     <h2 style="text-align: center; margin-bottom: 10px;">Добро пожаловать</h2>
                     <p style="text-align: center; color: var(--text-secondary);">Войдите в свой аккаунт, чтобы сохранять приватки в библиотеке</p>
                 </div>
-                <div class="auth-options">
-                    <div class="auth-option" id="google-auth">
-                        <div class="auth-icon google">
-                            <svg width="24" height="24" viewBox="0 0 24 24">
-                                <path d="M22.56 12.25c0-.73-.06-1.44-.16-2.14H12v4.06h5.54c-.21 1.1-.65 2.04-1.33 2.74v2.72h2.14c1.25-1.16 2.1-2.8 2.1-4.7 0-.65-.07-1.27-.18-1.84Z" fill="#4285F4"/>
-                                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.58-2.77c-.96.65-2.18 1.04-3.7 1.04-2.82 0-5.17-1.87-6.01-4.37H2.14v2.71C3.9 20.43 7.6 23 12 23Z" fill="#34A853"/>
-                                <path d="M5.99 14.65c-.2-.6-.31-1.24-.31-1.9 0-.66.11-1.3.31-1.9v-2.71H2.14C1.9 8.66 1.75 9.3 1.75 10c0 .7.15 1.34.4 1.94l3.85 2.97Z" fill="#FBBC05"/>
-                                <path d="M12 5.38c1.6 0 3.02.56 4.07 1.6l3.04-3.04C17.05 2.31 14.65 1.5 12 1.5c-4.4 0-8.1 2.57-9.86 6.06l3.85 2.97c1.8-3.49 5.48-5.9 9.86-5.9Z" fill="#EA4335"/>
-                                <path d="M1 1h22v22H1z" fill="none"/>
-                            </svg>
+                <div class="plugg-auth-container">
+                    <div class="plugg-auth-content">
+                        <div class="plugg-auth-gif">
+                            <div class="tenor-gif-embed" data-postid="7138793964961059735" data-share-method="host" data-aspect-ratio="1.76596" data-width="100%">
+                                <a href="https://tenor.com/view/tsunya-tsunyash-vstars-anime-vtuber-gif-7138793964961059735">Tsunya Tsunyash Sticker</a> from <a href="https://tenor.com/search/tsunya-stickers">Tsunya Stickers</a>
+                            </div>
+                            <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
                         </div>
-                        <div class="auth-text">Войти через Google</div>
-                    </div>
-                    <div class="auth-option" id="telegram-auth">
-                        <div class="auth-icon telegram">
-                            <svg width="24" height="24" viewBox="0 0 24 24">
-                                <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.013 7.987c.176-.176.264-.352.264-.616 0-.176-.044-.308-.132-.44l-2.332-2.2c-.22-.22-.572-.176-.792.088l-1.716 8.14-4.356-4.136c-.176-.176-.352-.176-.528 0-.176.176-.176.352 0 .528l4.928 4.752c.176.176.396.264.616.264.176 0 .308-.088.44-.176l2.552-5.808 1.232-5.896z"/>
-                            </svg>
+                        <h3 class="plugg-auth-title">PLUGG ID</h3>
+                        <p class="plugg-auth-description">Plugg ID - это небольшая маленькая система авторизации которая проходит через телеграм бота.</p>
+                        <div class="plugg-auth-status" id="plugg-auth-status">
+                            подождите пожалуйста создаем кнопку для авторизации аккаунта...
                         </div>
-                        <div class="auth-text">Войти через Telegram</div>
+                        <div class="plugg-auth-button-container" id="plugg-auth-button-container" style="display: none;">
+                            <a href="#" class="plugg-auth-button" id="plugg-auth-button">Авторизоваться</a>
+                        </div>
                     </div>
                 </div>
                 <div class="registration-progress" id="registration-progress">
@@ -1263,8 +1273,9 @@
             const profileBtn = document.getElementById('profile-btn');
             const profileModal = document.getElementById('profile-modal');
             const authModal = document.getElementById('auth-modal');
-            const googleAuth = document.getElementById('google-auth');
-            const telegramAuth = document.getElementById('telegram-auth');
+            const pluggAuthStatus = document.getElementById('plugg-auth-status');
+            const pluggAuthButtonContainer = document.getElementById('plugg-auth-button-container');
+            const pluggAuthButton = document.getElementById('plugg-auth-button');
             const registrationProgress = document.getElementById('registration-progress');
             const profileName = document.getElementById('profile-name');
             const profileUsername = document.getElementById('profile-username');
@@ -1309,6 +1320,8 @@
             let totalBytes = 0;
             let isVisualizerActive = false;
             let visualizerInterval = null;
+            let authCode = null;
+            let authCodeTimer = null;
             
             // Создаем аудио визуализатор
             function createAudioVisualizer() {
@@ -1395,6 +1408,108 @@
                 return false;
             }
             
+            // Генерация случайного кода для авторизации
+            function generateAuthCode() {
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                let code = '';
+                for (let i = 0; i < 6; i++) {
+                    code += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                return code;
+            }
+            
+            // Генерация случайного startapp кода
+            function generateStartappCode() {
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+                let code = '';
+                for (let i = 0; i < 12; i++) {
+                    code += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                return code;
+            }
+            
+            // Проверка входа через startapp
+            function checkStartappAuth() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const startapp = urlParams.get('startapp');
+                
+                if (startapp) {
+                    // Проверяем, валидна ли ссылка
+                    const users = JSON.parse(localStorage.getItem('plugg_users') || '[]');
+                    const user = users.find(u => u.startappCode === startapp);
+                    
+                    if (user) {
+                        // Авторизуем пользователя
+                        localStorage.setItem('plugg_user', JSON.stringify(user));
+                        currentUser = user;
+                        updateProfileUI();
+                        
+                        // Удаляем использованный код из списка
+                        const newUserList = users.filter(u => u.startappCode !== startapp);
+                        localStorage.setItem('plugg_users', JSON.stringify(newUserList));
+                        
+                        // Убираем параметр startapp из URL
+                        const newUrl = window.location.protocol + '//' + window.location.host + window.location.pathname;
+                        window.history.pushState({}, '', newUrl);
+                        
+                        tg.showAlert('Вы успешно вошли в аккаунт!');
+                    } else {
+                        tg.showAlert('Неверный или просроченный код авторизации.');
+                    }
+                }
+            }
+            
+            // Показать кнопку авторизации
+            function showAuthButton() {
+                authCode = generateAuthCode();
+                const authLink = `https://t.me/plugg_so2_bot?start=${authCode}`;
+                
+                // Сохраняем код для последующей проверки
+                const authCodes = JSON.parse(localStorage.getItem('plugg_auth_codes') || '[]');
+                authCodes.push({
+                    code: authCode,
+                    timestamp: Date.now(),
+                    used: false
+                });
+                localStorage.setItem('plugg_auth_codes', JSON.stringify(authCodes));
+                
+                pluggAuthStatus.textContent = 'Нажмите на кнопку ниже, чтобы авторизоваться через PLUGG ID';
+                pluggAuthButton.href = authLink;
+                pluggAuthButtonContainer.style.display = 'block';
+            }
+            
+            // Обработчик кнопки PLUGG ID
+            if (pluggAuthButton) {
+                pluggAuthButton.addEventListener('click', () => {
+                    // При нажатии кнопки пользователь перейдет в Telegram бот
+                    // После авторизации в боте он получит ссылку с startapp параметром
+                    console.log("PLUGG ID authorization link:", pluggAuthButton.href);
+                });
+            }
+            
+            // Инициализация при загрузке
+            checkStartappAuth();
+            
+            // Проверка, нужно ли показывать статус регистрации
+            function checkAuthStatus() {
+                if (pluggAuthStatus && pluggAuthStatus.textContent.includes('создаем')) {
+                    setTimeout(showAuthButton, 10000); // Через 10 секунд
+                }
+            }
+            
+            // Обработчик закрытия модального окна аутентификации
+            if (authModal) {
+                authModal.addEventListener('click', (e) => {
+                    if (e.target === authModal) {
+                        // Сброс статуса при закрытии модального окна
+                        if (pluggAuthStatus) {
+                            pluggAuthStatus.textContent = 'подождите пожалуйста создаем кнопку для авторизации аккаунта...';
+                            pluggAuthButtonContainer.style.display = 'none';
+                        }
+                    }
+                });
+            }
+            
             // Генерация случайного username
             function generateRandomUsername() {
                 const adjectives = ['Crimson', 'Azure', 'Violet', 'Emerald', 'Golden', 'Silent', 'Swift', 'Mystic', 'Shadow', 'Radiant'];
@@ -1409,37 +1524,6 @@
             function isUsernameUnique(username) {
                 const users = JSON.parse(localStorage.getItem('plugg_users') || '[]');
                 return !users.some(user => user.username.toLowerCase() === username.toLowerCase());
-            }
-            
-            // Регистрация нового пользователя
-            function registerUser() {
-                let username;
-                do {
-                    username = generateRandomUsername();
-                } while (!isUsernameUnique(username));
-                const newUser = {
-                    id: Date.now().toString(),
-                    name: 'Пользователь',
-                    username: username,
-                    bio: 'Любитель приваток для Standoff 2',
-                    avatar: '',
-                    banner: '',
-                    library: [],
-                    lastUsernameChange: Date.now(),
-                    createdAt: Date.now()
-                };
-                // Сохраняем пользователя
-                localStorage.setItem('plugg_user', JSON.stringify(newUser));
-                // Добавляем в общий список пользователей
-                const users = JSON.parse(localStorage.getItem('plugg_users') || '[]');
-                users.push(newUser);
-                localStorage.setItem('plugg_users', JSON.stringify(users));
-                currentUser = newUser;
-                updateProfileUI();
-                // Генерируем стартапп ссылку
-                const startappLink = `https://t.me/Plugg_so2_bot?startapp=${username}`;
-                console.log('Ваша стартапп ссылка:', startappLink);
-                return newUser;
             }
             
             // Обновление UI профиля
@@ -1934,9 +2018,11 @@
             if (profileBtn) {
                 profileBtn.addEventListener('click', () => {
                     if (!checkUser()) {
-                        if (authModal) authModal.classList.add('active');
+                        authModal.classList.add('active');
+                        // Запускаем процесс генерации кнопки
+                        checkAuthStatus();
                     } else {
-                        if (profileModal) profileModal.classList.add('active');
+                        profileModal.classList.add('active');
                     }
                 });
             }
@@ -1955,186 +2041,6 @@
                     profileModal.classList.remove('active');
                 }
             });
-            
-            // Реализация аутентификации через Telegram
-            if (telegramAuth) {
-                telegramAuth.addEventListener('click', () => {
-                    if (authModal) authModal.classList.remove('active');
-                    if (registrationProgress) registrationProgress.style.display = 'block';
-                    
-                    // Проверяем, доступен ли Telegram WebApp
-                    if (window.Telegram && window.Telegram.WebApp) {
-                        // Получаем данные пользователя из Telegram
-                        const user = window.Telegram.WebApp.initDataUnsafe?.user;
-                        
-                        if (user) {
-                            registerTelegramUser(user);
-                        } else {
-                            if (registrationProgress) registrationProgress.style.display = 'none';
-                            tg.showAlert('Не удалось получить данные из Telegram. Попробуйте перезагрузить страницу.');
-                        }
-                    } else {
-                        if (registrationProgress) registrationProgress.style.display = 'none';
-                        tg.showAlert('Telegram WebApp не инициализирован. Попробуйте перезагрузить страницу.');
-                    }
-                });
-            }
-            
-            // Регистрация пользователя через Telegram
-            function registerTelegramUser(telegramUser) {
-                // Проверяем, существует ли уже пользователь с этим Telegram ID
-                const users = JSON.parse(localStorage.getItem('plugg_users') || '[]');
-                const existingUser = users.find(u => u.telegramId === telegramUser.id);
-                
-                if (existingUser) {
-                    // Пользователь уже существует, авторизуем его
-                    localStorage.setItem('plugg_user', JSON.stringify(existingUser));
-                    currentUser = existingUser;
-                } else {
-                    // Создаем нового пользователя
-                    const newUser = {
-                        id: `telegram_${telegramUser.id}`,
-                        telegramId: telegramUser.id,
-                        name: `${telegramUser.first_name}${telegramUser.last_name ? ' ' + telegramUser.last_name : ''}`,
-                        username: telegramUser.username || generateRandomUsername(),
-                        bio: 'Любитель приваток для Standoff 2',
-                        avatar: telegramUser.photo_url || '',
-                        banner: '',
-                        library: [],
-                        lastUsernameChange: Date.now(),
-                        createdAt: Date.now()
-                    };
-                    
-                    // Сохраняем пользователя
-                    localStorage.setItem('plugg_user', JSON.stringify(newUser));
-                    // Добавляем в общий список пользователей
-                    users.push(newUser);
-                    localStorage.setItem('plugg_users', JSON.stringify(users));
-                    currentUser = newUser;
-                }
-                
-                updateProfileUI();
-                if (registrationProgress) registrationProgress.style.display = 'none';
-                if (profileModal) profileModal.classList.add('active');
-            }
-            
-            // Инициализация Google Sign-In
-            function initGoogleSignIn() {
-                // Проверяем, загружен ли Google API
-                if (typeof gapi === 'undefined') {
-                    const script = document.createElement('script');
-                    script.src = 'https://apis.google.com/js/api.js';
-                    script.onload = () => {
-                        gapi.load('client:auth2', initGoogleAuth);
-                    };
-                    document.head.appendChild(script);
-                } else {
-                    initGoogleAuth();
-                }
-            }
-            
-            // Инициализация Google Auth
-            function initGoogleAuth() {
-                gapi.client.init({
-                    'clientId': '1040300883882-th6jmc15g4dqfcbsvffuntj34opu0juf.apps.googleusercontent.com',
-                    'scope': 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
-                    'plugin_name': 'PLUGG BOT'
-                }).then(() => {
-                    return gapi.auth2.getAuthInstance();
-                }).then(auth => {
-                    // Google Auth готов
-                }).catch(error => {
-                    console.error("Google auth initialization error:", error);
-                });
-            }
-            
-            // Обработчик кнопки входа через Google
-            if (googleAuth) {
-                googleAuth.addEventListener('click', () => {
-                    if (authModal) authModal.classList.remove('active');
-                    if (registrationProgress) registrationProgress.style.display = 'block';
-                    
-                    // Проверяем, доступен ли Google API
-                    if (typeof gapi !== 'undefined' && gapi.auth2) {
-                        signInWithGoogle();
-                    } else {
-                        initGoogleSignIn();
-                        
-                        // Повторная попытка через некоторое время
-                        setTimeout(() => {
-                            if (typeof gapi !== 'undefined' && gapi.auth2) {
-                                signInWithGoogle();
-                            } else {
-                                if (registrationProgress) registrationProgress.style.display = 'none';
-                                if (authModal) authModal.classList.add('active');
-                                tg.showAlert('Не удалось загрузить сервис Google. Проверьте подключение к интернету.');
-                            }
-                        }, 2000);
-                    }
-                });
-            }
-            
-            // Функция для входа через Google
-            function signInWithGoogle() {
-                if (typeof gapi === 'undefined' || !gapi.auth2) {
-                    if (registrationProgress) registrationProgress.style.display = 'none';
-                    if (authModal) authModal.classList.add('active');
-                    tg.showAlert('Сервис Google не готов. Попробуйте позже.');
-                    return;
-                }
-                
-                const auth2 = gapi.auth2.getAuthInstance();
-                auth2.signIn().then(googleUser => {
-                    registerGoogleUser(googleUser);
-                }).catch(error => {
-                    console.error("Google sign-in error:", error);
-                    if (registrationProgress) registrationProgress.style.display = 'none';
-                    if (authModal) authModal.classList.add('active');
-                    tg.showAlert('Ошибка входа через Google. Попробуйте еще раз.');
-                });
-            }
-            
-            // Регистрация пользователя через Google
-            function registerGoogleUser(googleUser) {
-                // Получаем профиль пользователя
-                const profile = googleUser.getBasicProfile();
-                
-                // Проверяем, существует ли уже пользователь с этим Google ID
-                const users = JSON.parse(localStorage.getItem('plugg_users') || '[]');
-                const existingUser = users.find(u => u.googleId === profile.getId());
-                
-                if (existingUser) {
-                    // Пользователь уже существует, авторизуем его
-                    localStorage.setItem('plugg_user', JSON.stringify(existingUser));
-                    currentUser = existingUser;
-                } else {
-                    // Создаем нового пользователя
-                    const newUser = {
-                        id: `google_${profile.getId()}`,
-                        googleId: profile.getId(),
-                        name: profile.getName(),
-                        username: profile.getEmail().split('@')[0] || generateRandomUsername(),
-                        email: profile.getEmail(),
-                        bio: 'Любитель приваток для Standoff 2',
-                        avatar: profile.getImageUrl() || '',
-                        banner: '',
-                        library: [],
-                        lastUsernameChange: Date.now(),
-                        createdAt: Date.now()
-                    };
-                    
-                    // Сохраняем пользователя
-                    localStorage.setItem('plugg_user', JSON.stringify(newUser));
-                    // Добавляем в общий список пользователей
-                    users.push(newUser);
-                    localStorage.setItem('plugg_users', JSON.stringify(users));
-                    currentUser = newUser;
-                }
-                
-                updateProfileUI();
-                if (registrationProgress) registrationProgress.style.display = 'none';
-                if (profileModal) profileModal.classList.add('active');
-            }
             
             // Обработчики вкладок профиля
             if (profileTabs && profileTabs.length > 0) {
@@ -2311,7 +2217,7 @@
                 console.log('Пользователь перешел по ссылке:', startapp);
                 // Например, можно показать профиль пользователя с этим username
                 const users = JSON.parse(localStorage.getItem('plugg_users') || '[]');
-                const user = users.find(u => u.username.toLowerCase() === startapp.toLowerCase());
+                const user = users.find(u => u.startappCode === startapp);
                 if (user) {
                     console.log('Найден пользователь:', user);
                     // Можно отобразить профиль этого пользователя
