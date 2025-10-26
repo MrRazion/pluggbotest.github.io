@@ -1322,6 +1322,10 @@
             let visualizerInterval = null;
             let authCode = null;
             let authCodeTimer = null;
+            let lastAuthCodeTime = 0;
+            let authCodeValidity = 60000; // 60 секунд
+            let serverHealthCheckAttempts = 0;
+            const maxServerHealthCheckAttempts = 3;
             
             // Создаем аудио визуализатор
             function createAudioVisualizer() {
@@ -1401,31 +1405,114 @@
             function checkUser() {
                 const user = localStorage.getItem('plugg_user');
                 if (user) {
-                    currentUser = JSON.parse(user);
-                    updateProfileUI();
-                    return true;
+                    try {
+                        currentUser = JSON.parse(user);
+                        updateProfileUI();
+                        return true;
+                    } catch (e) {
+                        console.error('Error parsing user data:', e);
+                        localStorage.removeItem('plugg_user');
+                        return false;
+                    }
                 }
                 return false;
             }
             
-            // Генерация случайного кода для авторизации
-            function generateAuthCode() {
-                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-                let code = '';
-                for (let i = 0; i < 6; i++) {
-                    code += chars.charAt(Math.floor(Math.random() * chars.length));
+            // Проверка доступности сервера
+            async function checkServerHealth() {
+                try {
+                    const response = await fetch('/health', {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json',
+                        },
+                        cache: 'no-store',
+                        mode: 'cors',
+                        credentials: 'same-origin'
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    serverHealthCheckAttempts = 0; // Сброс счетчика попыток
+                    return data.status === 'ok';
+                } catch (error) {
+                    console.error('Server health check failed:', error);
+                    serverHealthCheckAttempts++;
+                    
+                    // Если превышено максимальное количество попыток, показываем ошибку
+                    if (serverHealthCheckAttempts >= maxServerHealthCheckAttempts) {
+                        if (pluggAuthStatus) {
+                            pluggAuthStatus.textContent = 'Не удалось выполнить авторизацию, попробуйте позже.';
+                            pluggAuthStatus.style.color = 'var(--error-color)';
+                        }
+                    }
+                    
+                    return false;
                 }
-                return code;
             }
             
-            // Генерация случайного startapp кода
-            function generateStartappCode() {
-                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-                let code = '';
-                for (let i = 0; i < 12; i++) {
-                    code += chars.charAt(Math.floor(Math.random() * chars.length));
+            // Запрос на получение кода авторизации
+            async function requestAuthCode() {
+                try {
+                    if (pluggAuthStatus) {
+                        pluggAuthStatus.textContent = 'Запрашиваем код авторизации у сервера...';
+                        pluggAuthStatus.style.color = 'var(--text-secondary)';
+                    }
+                    
+                    const response = await fetch('/api/generate-auth-code', {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json',
+                        },
+                        cache: 'no-store',
+                        mode: 'cors',
+                        credentials: 'same-origin'
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        authCode = data.auth_code;
+                        if (pluggAuthStatus) {
+                            pluggAuthStatus.textContent = 'Код авторизации получен!';
+                            pluggAuthStatus.style.color = 'var(--text-color)';
+                        }
+                        
+                        // Отображаем кнопку авторизации
+                        if (pluggAuthButton && pluggAuthButtonContainer) {
+                            pluggAuthButton.href = data.auth_link;
+                            pluggAuthButtonContainer.style.display = 'block';
+                        }
+                        
+                        // Сохраняем код для последующей проверки
+                        let authCodes = JSON.parse(localStorage.getItem('plugg_auth_codes') || '[]');
+                        authCodes = authCodes.filter(code => Date.now() - code.timestamp < 120 * 1000);
+                        authCodes.push({
+                            code: authCode,
+                            timestamp: Date.now(),
+                            used: false
+                        });
+                        localStorage.setItem('plugg_auth_codes', JSON.stringify(authCodes));
+                        
+                        return true;
+                    } else {
+                        throw new Error(data.error || 'Неизвестная ошибка при получении кода авторизации');
+                    }
+                } catch (error) {
+                    console.error('Error requesting auth code:', error);
+                    if (pluggAuthStatus) {
+                        pluggAuthStatus.textContent = 'Не удалось выполнить авторизацию, попробуйте позже.';
+                        pluggAuthStatus.style.color = 'var(--error-color)';
+                    }
+                    return false;
                 }
-                return code;
             }
             
             // Проверка входа через startapp
@@ -1454,46 +1541,88 @@
                         
                         tg.showAlert('Вы успешно вошли в аккаунт!');
                     } else {
-                        tg.showAlert('Неверный или просроченный код авторизации.');
+                        // Проверяем, не был ли код использован недавно
+                        let recentCodes = JSON.parse(localStorage.getItem('plugg_recent_startapp_codes') || '[]');
+                        recentCodes = recentCodes.filter(code => Date.now() - code.timestamp < 30000); // Очищаем старые записи (старше 30 секунд)
+                        
+                        const recentCode = recentCodes.find(rc => rc.code === startapp);
+                        
+                        if (recentCode) {
+                            // Код был использован недавно, но пользователь еще не авторизован
+                            // Возможно, это первый заход после регистрации
+                            const user = getTempUserByStartapp(startapp);
+                            if (user) {
+                                // Сохраняем пользователя в постоянное хранилище
+                                let allUsers = JSON.parse(localStorage.getItem('plugg_users') || '[]');
+                                allUsers.push(user);
+                                localStorage.setItem('plugg_users', JSON.stringify(allUsers));
+                                localStorage.setItem('plugg_user', JSON.stringify(user));
+                                currentUser = user;
+                                updateProfileUI();
+                                
+                                // Удаляем временные данные
+                                removeTempUser(startapp);
+                                
+                                // Убираем параметр startapp из URL
+                                const newUrl = window.location.protocol + '//' + window.location.host + window.location.pathname;
+                                window.history.pushState({}, '', newUrl);
+                                
+                                tg.showAlert('Вы успешно вошли в аккаунт!');
+                            } else {
+                                // Показываем сообщение о том, что нужно обновить страницу
+                                tg.showAlert('Ссылка уже использована. Пожалуйста, обновите страницу.');
+                            }
+                        } else {
+                            // Сохраняем информацию о недавно использованном коде
+                            recentCodes.push({
+                                code: startapp,
+                                timestamp: Date.now()
+                            });
+                            localStorage.setItem('plugg_recent_startapp_codes', JSON.stringify(recentCodes));
+                            
+                            // Показываем сообщение об ошибке, но даем возможность повторной проверки
+                            const errorMessage = 'Неверный или просроченный код авторизации. Пожалуйста, запросите новый код в приложении.';
+                            console.error(errorMessage);
+                            
+                            // Попробуем проверить код еще раз через 2 секунды
+                            setTimeout(() => {
+                                checkStartappAuth();
+                            }, 2000);
+                        }
                     }
                 }
             }
             
-            // Показать кнопку авторизации
-            function showAuthButton() {
-                authCode = generateAuthCode();
-                const authLink = `https://t.me/plugg_so2_bot?start=${authCode}`;
-                
-                // Сохраняем код для последующей проверки
-                const authCodes = JSON.parse(localStorage.getItem('plugg_auth_codes') || '[]');
-                authCodes.push({
-                    code: authCode,
-                    timestamp: Date.now(),
-                    used: false
-                });
-                localStorage.setItem('plugg_auth_codes', JSON.stringify(authCodes));
-                
-                pluggAuthStatus.textContent = 'Нажмите на кнопку ниже, чтобы авторизоваться через PLUGG ID';
-                pluggAuthButton.href = authLink;
-                pluggAuthButtonContainer.style.display = 'block';
+            // Функция для временного хранения пользователей во время регистрации
+            function getTempUserByStartapp(startapp) {
+                const tempUsers = JSON.parse(localStorage.getItem('plugg_temp_users') || '[]');
+                return tempUsers.find(u => u.startappCode === startapp);
             }
             
-            // Обработчик кнопки PLUGG ID
-            if (pluggAuthButton) {
-                pluggAuthButton.addEventListener('click', () => {
-                    // При нажатии кнопки пользователь перейдет в Telegram бот
-                    // После авторизации в боте он получит ссылку с startapp параметром
-                    console.log("PLUGG ID authorization link:", pluggAuthButton.href);
-                });
+            function removeTempUser(startapp) {
+                let tempUsers = JSON.parse(localStorage.getItem('plugg_temp_users') || '[]');
+                tempUsers = tempUsers.filter(u => u.startappCode !== startapp);
+                localStorage.setItem('plugg_temp_users', JSON.stringify(tempUsers));
             }
-            
-            // Инициализация при загрузке
-            checkStartappAuth();
             
             // Проверка, нужно ли показывать статус регистрации
-            function checkAuthStatus() {
+            async function checkAuthStatus() {
                 if (pluggAuthStatus && pluggAuthStatus.textContent.includes('создаем')) {
-                    setTimeout(showAuthButton, 10000); // Через 10 секунд
+                    // Проверяем, доступен ли сервер
+                    const isServerHealthy = await checkServerHealth();
+                    
+                    if (isServerHealthy) {
+                        // Запрашиваем код авторизации у сервера
+                        await requestAuthCode();
+                    } else {
+                        if (serverHealthCheckAttempts < maxServerHealthCheckAttempts) {
+                            // Попробуем проверить еще раз через 2 секунды
+                            setTimeout(checkAuthStatus, 2000);
+                        } else {
+                            pluggAuthStatus.textContent = 'Не удалось выполнить авторизацию, попробуйте позже.';
+                            pluggAuthStatus.style.color = 'var(--error-color)';
+                        }
+                    }
                 }
             }
             
@@ -1504,6 +1633,7 @@
                         // Сброс статуса при закрытии модального окна
                         if (pluggAuthStatus) {
                             pluggAuthStatus.textContent = 'подождите пожалуйста создаем кнопку для авторизации аккаунта...';
+                            pluggAuthStatus.style.color = 'var(--text-secondary)';
                             pluggAuthButtonContainer.style.display = 'none';
                         }
                     }
@@ -1570,7 +1700,7 @@
                 });
             }
             
-            // Данные игр (оставляем как есть)
+            // Данные игр
             const games = [
                 {
                     id: 'standrise',
@@ -1754,6 +1884,8 @@
             function toggleGameInLibrary(gameId) {
                 if (!currentUser) {
                     authModal.classList.add('active');
+                    // Запускаем процесс генерации кнопки
+                    checkAuthStatus();
                     return;
                 }
                 if (!currentUser.library) {
@@ -2198,6 +2330,7 @@
             }
             
             // Инициализация при загрузке
+            checkStartappAuth();
             checkUser();
             renderGames('all');
             
@@ -2213,15 +2346,14 @@
             const urlParams = new URLSearchParams(window.location.search);
             const startapp = urlParams.get('startapp');
             if (startapp) {
-                // Здесь можно обработать переход по стартапп ссылке
-                console.log('Пользователь перешел по ссылке:', startapp);
-                // Например, можно показать профиль пользователя с этим username
-                const users = JSON.parse(localStorage.getItem('plugg_users') || '[]');
-                const user = users.find(u => u.startappCode === startapp);
-                if (user) {
-                    console.log('Найден пользователь:', user);
-                    // Можно отобразить профиль этого пользователя
-                }
+                // Проверяем, не был ли код использован недавно
+                let recentCodes = JSON.parse(localStorage.getItem('plugg_recent_startapp_codes') || '[]');
+                recentCodes = recentCodes.filter(code => Date.now() - code.timestamp < 5000); // Очищаем старые записи (старше 5 секунд)
+                recentCodes.push({
+                    code: startapp,
+                    timestamp: Date.now()
+                });
+                localStorage.setItem('plugg_recent_startapp_codes', JSON.stringify(recentCodes));
             }
             
             // Добавляем обработчик для закрытия модальных окон при нажатии Esc
