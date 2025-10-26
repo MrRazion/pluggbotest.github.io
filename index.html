@@ -1106,7 +1106,7 @@
                             <div class="audio-visualizer" id="audio-visualizer"></div>
                             <div class="visualizer-toggle" id="visualizer-toggle">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M12 5v14M17 5v14M7 5v14M2 5h20M2 19h20"></path>
+                                    <path d="M12 5v14M5 12h14"></path>
                                 </svg>
                             </div>
                         </div>
@@ -1320,10 +1320,6 @@
             let totalBytes = 0;
             let isVisualizerActive = false;
             let visualizerInterval = null;
-            let authCode = null;
-            let authCodeTimer = null;
-            let lastAuthCodeTime = 0;
-            let authCodeValidity = 60000; // 60 секунд
             let serverHealthCheckAttempts = 0;
             const maxServerHealthCheckAttempts = 3;
             
@@ -1410,7 +1406,7 @@
                         updateProfileUI();
                         return true;
                     } catch (e) {
-                        console.error('Error parsing user data:', e);
+                        console.error('Error parsing user data', e);
                         localStorage.removeItem('plugg_user');
                         return false;
                     }
@@ -1426,9 +1422,7 @@
                         headers: {
                             'Accept': 'application/json',
                         },
-                        cache: 'no-store',
-                        mode: 'cors',
-                        credentials: 'same-origin'
+                        cache: 'no-store'
                     });
                     
                     if (!response.ok) {
@@ -1467,9 +1461,7 @@
                         headers: {
                             'Accept': 'application/json',
                         },
-                        cache: 'no-store',
-                        mode: 'cors',
-                        credentials: 'same-origin'
+                        cache: 'no-store'
                     });
                     
                     if (!response.ok) {
@@ -1479,7 +1471,6 @@
                     const data = await response.json();
                     
                     if (data.success) {
-                        authCode = data.auth_code;
                         if (pluggAuthStatus) {
                             pluggAuthStatus.textContent = 'Код авторизации получен!';
                             pluggAuthStatus.style.color = 'var(--text-color)';
@@ -1490,16 +1481,6 @@
                             pluggAuthButton.href = data.auth_link;
                             pluggAuthButtonContainer.style.display = 'block';
                         }
-                        
-                        // Сохраняем код для последующей проверки
-                        let authCodes = JSON.parse(localStorage.getItem('plugg_auth_codes') || '[]');
-                        authCodes = authCodes.filter(code => Date.now() - code.timestamp < 120 * 1000);
-                        authCodes.push({
-                            code: authCode,
-                            timestamp: Date.now(),
-                            used: false
-                        });
-                        localStorage.setItem('plugg_auth_codes', JSON.stringify(authCodes));
                         
                         return true;
                     } else {
@@ -1516,93 +1497,33 @@
             }
             
             // Проверка входа через startapp
-            function checkStartappAuth() {
+            async function checkStartappAuth() {
                 const urlParams = new URLSearchParams(window.location.search);
                 const startapp = urlParams.get('startapp');
                 
                 if (startapp) {
-                    // Проверяем, валидна ли ссылка
-                    const users = JSON.parse(localStorage.getItem('plugg_users') || '[]');
-                    const user = users.find(u => u.startappCode === startapp);
-                    
-                    if (user) {
-                        // Авторизуем пользователя
-                        localStorage.setItem('plugg_user', JSON.stringify(user));
-                        currentUser = user;
-                        updateProfileUI();
+                    try {
+                        const response = await fetch(`/api/validate-startapp?code=${encodeURIComponent(startapp)}`);
+                        const data = await response.json();
                         
-                        // Удаляем использованный код из списка
-                        const newUserList = users.filter(u => u.startappCode !== startapp);
-                        localStorage.setItem('plugg_users', JSON.stringify(newUserList));
-                        
-                        // Убираем параметр startapp из URL
-                        const newUrl = window.location.protocol + '//' + window.location.host + window.location.pathname;
-                        window.history.pushState({}, '', newUrl);
-                        
-                        tg.showAlert('Вы успешно вошли в аккаунт!');
-                    } else {
-                        // Проверяем, не был ли код использован недавно
-                        let recentCodes = JSON.parse(localStorage.getItem('plugg_recent_startapp_codes') || '[]');
-                        recentCodes = recentCodes.filter(code => Date.now() - code.timestamp < 30000); // Очищаем старые записи (старше 30 секунд)
-                        
-                        const recentCode = recentCodes.find(rc => rc.code === startapp);
-                        
-                        if (recentCode) {
-                            // Код был использован недавно, но пользователь еще не авторизован
-                            // Возможно, это первый заход после регистрации
-                            const user = getTempUserByStartapp(startapp);
-                            if (user) {
-                                // Сохраняем пользователя в постоянное хранилище
-                                let allUsers = JSON.parse(localStorage.getItem('plugg_users') || '[]');
-                                allUsers.push(user);
-                                localStorage.setItem('plugg_users', JSON.stringify(allUsers));
-                                localStorage.setItem('plugg_user', JSON.stringify(user));
-                                currentUser = user;
-                                updateProfileUI();
-                                
-                                // Удаляем временные данные
-                                removeTempUser(startapp);
-                                
-                                // Убираем параметр startapp из URL
-                                const newUrl = window.location.protocol + '//' + window.location.host + window.location.pathname;
-                                window.history.pushState({}, '', newUrl);
-                                
-                                tg.showAlert('Вы успешно вошли в аккаунт!');
-                            } else {
-                                // Показываем сообщение о том, что нужно обновить страницу
-                                tg.showAlert('Ссылка уже использована. Пожалуйста, обновите страницу.');
-                            }
+                        if (data.success) {
+                            localStorage.setItem('plugg_user', JSON.stringify(data.user));
+                            currentUser = data.user;
+                            updateProfileUI();
+                            
+                            // Убираем параметр startapp из URL
+                            const newUrl = window.location.protocol + '//' + window.location.host + window.location.pathname;
+                            window.history.pushState({}, '', newUrl);
+                            
+                            tg.showAlert('Вы успешно вошли в аккаунт!');
                         } else {
-                            // Сохраняем информацию о недавно использованном коде
-                            recentCodes.push({
-                                code: startapp,
-                                timestamp: Date.now()
-                            });
-                            localStorage.setItem('plugg_recent_startapp_codes', JSON.stringify(recentCodes));
-                            
-                            // Показываем сообщение об ошибке, но даем возможность повторной проверки
-                            const errorMessage = 'Неверный или просроченный код авторизации. Пожалуйста, запросите новый код в приложении.';
-                            console.error(errorMessage);
-                            
-                            // Попробуем проверить код еще раз через 2 секунды
-                            setTimeout(() => {
-                                checkStartappAuth();
-                            }, 2000);
+                            tg.showAlert(data.error || 'Неверный или просроченный код авторизации.');
                         }
+                    } catch (error) {
+                        console.error('Error validating startapp:', error);
+                        tg.showAlert('Произошла ошибка при проверке кода авторизации.');
                     }
                 }
-            }
-            
-            // Функция для временного хранения пользователей во время регистрации
-            function getTempUserByStartapp(startapp) {
-                const tempUsers = JSON.parse(localStorage.getItem('plugg_temp_users') || '[]');
-                return tempUsers.find(u => u.startappCode === startapp);
-            }
-            
-            function removeTempUser(startapp) {
-                let tempUsers = JSON.parse(localStorage.getItem('plugg_temp_users') || '[]');
-                tempUsers = tempUsers.filter(u => u.startappCode !== startapp);
-                localStorage.setItem('plugg_temp_users', JSON.stringify(tempUsers));
             }
             
             // Проверка, нужно ли показывать статус регистрации
@@ -1638,22 +1559,6 @@
                         }
                     }
                 });
-            }
-            
-            // Генерация случайного username
-            function generateRandomUsername() {
-                const adjectives = ['Crimson', 'Azure', 'Violet', 'Emerald', 'Golden', 'Silent', 'Swift', 'Mystic', 'Shadow', 'Radiant'];
-                const nouns = ['Owl', 'Fox', 'Wolf', 'Eagle', 'Tiger', 'Dragon', 'Phoenix', 'Sparrow', 'Lion', 'Falcon'];
-                const numbers = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
-                return adjectives[Math.floor(Math.random() * adjectives.length)] + 
-                       nouns[Math.floor(Math.random() * nouns.length)] + 
-                       numbers;
-            }
-            
-            // Проверка уникальности username
-            function isUsernameUnique(username) {
-                const users = JSON.parse(localStorage.getItem('plugg_users') || '[]');
-                return !users.some(user => user.username.toLowerCase() === username.toLowerCase());
             }
             
             // Обновление UI профиля
@@ -2200,20 +2105,35 @@
                     editName.style.display = 'none';
                 });
                 
-                nameInput.addEventListener('blur', () => {
-                    if (nameInput.value.trim() !== '' && currentUser) {
-                        currentUser.name = nameInput.value.trim();
-                        localStorage.setItem('plugg_user', JSON.stringify(currentUser));
-                        nameDisplay.textContent = currentUser.name;
-                        updateProfileUI();
+                nameInput.addEventListener('blur', async () => {
+                    const newName = nameInput.value.trim();
+                    if (newName !== '' && currentUser && newName !== currentUser.name) {
+                        try {
+                            const response = await fetch('/api/update-user', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ user_id: currentUser.id, field: 'name', value: newName })
+                            });
+                            const data = await response.json();
+                            if (data.success) {
+                                currentUser.name = newName;
+                                localStorage.setItem('plugg_user', JSON.stringify(currentUser));
+                                nameDisplay.textContent = newName;
+                                profileName.textContent = newName;
+                                if (nameAvailable) {
+                                    nameAvailable.style.display = 'block';
+                                    setTimeout(() => nameAvailable.style.display = 'none', 2000);
+                                }
+                            } else {
+                                tg.showAlert(data.error || 'Ошибка обновления имени');
+                            }
+                        } catch (error) {
+                            tg.showAlert('Ошибка сети при обновлении имени');
+                        }
                     }
                     nameInput.style.display = 'none';
                     nameDisplay.style.display = 'block';
                     editName.style.display = 'flex';
-                    if (nameAvailable) {
-                        nameAvailable.style.display = 'block';
-                        setTimeout(() => nameAvailable.style.display = 'none', 2000);
-                    }
                 });
                 
                 nameInput.addEventListener('keypress', (e) => {
@@ -2232,56 +2152,83 @@
                     editUsername.style.display = 'none';
                 });
                 
+                let debounceTimer;
                 usernameInput.addEventListener('input', () => {
-                    const username = usernameInput.value.trim();
-                    if (username === '' || !usernameAvailable || !usernameUnavailable) return;
-                    
-                    if (isUsernameUnique(username) || (currentUser && username === currentUser.username)) {
-                        usernameAvailable.style.display = 'block';
-                        usernameUnavailable.style.display = 'none';
-                    } else {
-                        usernameAvailable.style.display = 'none';
-                        usernameUnavailable.style.display = 'block';
-                    }
+                    clearTimeout(debounceTimer);
+                    debounceTimer = setTimeout(async () => {
+                        const username = usernameInput.value.trim();
+                        if (username === '' || !usernameAvailable || !usernameUnavailable) return;
+                        
+                        if (username === currentUser.username) {
+                            usernameAvailable.style.display = 'block';
+                            usernameUnavailable.style.display = 'none';
+                            return;
+                        }
+                        
+                        try {
+                            const response = await fetch(`/api/check-username?username=${encodeURIComponent(username)}`);
+                            const data = await response.json();
+                            if (data.available) {
+                                usernameAvailable.style.display = 'block';
+                                usernameUnavailable.style.display = 'none';
+                            } else {
+                                usernameAvailable.style.display = 'none';
+                                usernameUnavailable.style.display = 'block';
+                            }
+                        } catch (error) {
+                            console.error('Error checking username:', error);
+                        }
+                    }, 300);
                 });
                 
-                usernameInput.addEventListener('blur', () => {
-                    const username = usernameInput.value.trim();
-                    if (username !== '' && currentUser) {
-                        if (isUsernameUnique(username) || username === currentUser.username) {
-                            // Проверяем, не прошло ли 7 дней с последнего изменения
-                            const lastChange = currentUser.lastUsernameChange || 0;
-                            const sevenDays = 7 * 24 * 60 * 60 * 1000; // 7 дней в миллисекундах
-                            if (Date.now() - lastChange >= sevenDays || !currentUser.lastUsernameChange) {
-                                // Обновляем юзернейм
-                                const oldUsername = currentUser.username;
-                                currentUser.username = username;
-                                currentUser.lastUsernameChange = Date.now();
-                                // Обновляем в списке пользователей
-                                const users = JSON.parse(localStorage.getItem('plugg_users') || '[]');
-                                const userIndex = users.findIndex(u => u.id === currentUser.id);
-                                if (userIndex !== -1) {
-                                    users[userIndex].username = username;
-                                    users[userIndex].lastUsernameChange = Date.now();
+                usernameInput.addEventListener('blur', async () => {
+                    const newUsername = usernameInput.value.trim();
+                    if (newUsername !== '' && currentUser && newUsername !== currentUser.username) {
+                        // Check time first (client-side)
+                        const lastChange = currentUser.lastUsernameChange || 0;
+                        const sevenDays = 7 * 24 * 60 * 60 * 1000;
+                        if (Date.now() - lastChange < sevenDays) {
+                            const daysLeft = Math.ceil((sevenDays - (Date.now() - lastChange)) / (24 * 60 * 60 * 1000));
+                            tg.showAlert(`Вы можете изменить юзернейм только раз в 7 дней. Пожалуйста, подождите еще ${daysLeft} дней.`);
+                            usernameInput.value = currentUser.username;
+                        } else {
+                            try {
+                                const checkResponse = await fetch(`/api/check-username?username=${encodeURIComponent(newUsername)}`);
+                                const checkData = await checkResponse.json();
+                                if (checkData.available) {
+                                    const updateResponse = await fetch('/api/update-user', {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({ user_id: currentUser.id, field: 'username', value: newUsername })
+                                    });
+                                    const updateData = await updateResponse.json();
+                                    if (updateData.success) {
+                                        currentUser.username = newUsername;
+                                        currentUser.lastUsernameChange = Date.now();
+                                        localStorage.setItem('plugg_user', JSON.stringify(currentUser));
+                                        usernameDisplay.textContent = newUsername;
+                                        profileUsername.textContent = `@${newUsername}`;
+                                        usernameAvailable.style.display = 'block';
+                                        setTimeout(() => usernameAvailable.style.display = 'none', 2000);
+                                    } else {
+                                        tg.showAlert(updateData.error || 'Ошибка обновления юзернейма');
+                                        usernameInput.value = currentUser.username;
+                                    }
+                                } else {
+                                    tg.showAlert('Этот юзернейм уже занят. Пожалуйста, выберите другой.');
+                                    usernameInput.value = currentUser.username;
                                 }
-                                localStorage.setItem('plugg_users', JSON.stringify(users));
-                                localStorage.setItem('plugg_user', JSON.stringify(currentUser));
-                                usernameDisplay.textContent = currentUser.username;
-                                updateProfileUI();
-                                tg.showAlert('Юзернейм успешно обновлен!');
-                            } else {
-                                const daysLeft = Math.ceil((sevenDays - (Date.now() - lastChange)) / (24 * 60 * 60 * 1000));
-                                tg.showAlert(`Вы можете изменить юзернейм только раз в 7 дней. Пожалуйста, подождите еще ${daysLeft} дней.`);
+                            } catch (error) {
+                                tg.showAlert('Ошибка сети при обновлении юзернейма');
                                 usernameInput.value = currentUser.username;
                             }
-                        } else if (username !== '') {
-                            tg.showAlert('Этот юзернейм уже занят. Пожалуйста, выберите другой.');
-                            usernameInput.value = currentUser.username;
                         }
                     }
                     usernameInput.style.display = 'none';
                     usernameDisplay.style.display = 'block';
                     editUsername.style.display = 'flex';
+                    usernameAvailable.style.display = 'none';
+                    usernameUnavailable.style.display = 'none';
                 });
                 
                 usernameInput.addEventListener('keypress', (e) => {
@@ -2300,12 +2247,27 @@
                     editBio.style.display = 'none';
                 });
                 
-                bioInput.addEventListener('blur', () => {
-                    if (bioInput.value.trim() !== '' && currentUser) {
-                        currentUser.bio = bioInput.value.trim();
-                        localStorage.setItem('plugg_user', JSON.stringify(currentUser));
-                        bioDisplay.textContent = currentUser.bio;
-                        updateProfileUI();
+                bioInput.addEventListener('blur', async () => {
+                    const newBio = bioInput.value.trim();
+                    if (currentUser && newBio !== currentUser.bio) {
+                        try {
+                            const response = await fetch('/api/update-user', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ user_id: currentUser.id, field: 'bio', value: newBio })
+                            });
+                            const data = await response.json();
+                            if (data.success) {
+                                currentUser.bio = newBio;
+                                localStorage.setItem('plugg_user', JSON.stringify(currentUser));
+                                bioDisplay.textContent = newBio || 'Добавьте описание профиля, чтобы рассказать о себе';
+                                profileBio.textContent = newBio || 'Добавьте описание профиля, чтобы рассказать о себе';
+                            } else {
+                                tg.showAlert(data.error || 'Ошибка обновления био');
+                            }
+                        } catch (error) {
+                            tg.showAlert('Ошибка сети при обновлении био');
+                        }
                     }
                     bioInput.style.display = 'none';
                     bioDisplay.style.display = 'block';
@@ -2340,20 +2302,6 @@
                 document.documentElement.style.setProperty('--tg-safe-area-inset-bottom', `${window.Telegram.WebApp.safeAreaInset.bottom}px`);
                 document.documentElement.style.setProperty('--tg-safe-area-inset-left', `${window.Telegram.WebApp.safeAreaInset.left}px`);
                 document.documentElement.style.setProperty('--tg-safe-area-inset-right', `${window.Telegram.WebApp.safeAreaInset.right}px`);
-            }
-            
-            // Обработка startapp параметра
-            const urlParams = new URLSearchParams(window.location.search);
-            const startapp = urlParams.get('startapp');
-            if (startapp) {
-                // Проверяем, не был ли код использован недавно
-                let recentCodes = JSON.parse(localStorage.getItem('plugg_recent_startapp_codes') || '[]');
-                recentCodes = recentCodes.filter(code => Date.now() - code.timestamp < 5000); // Очищаем старые записи (старше 5 секунд)
-                recentCodes.push({
-                    code: startapp,
-                    timestamp: Date.now()
-                });
-                localStorage.setItem('plugg_recent_startapp_codes', JSON.stringify(recentCodes));
             }
             
             // Добавляем обработчик для закрытия модальных окон при нажатии Esc
