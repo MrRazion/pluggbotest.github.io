@@ -270,6 +270,7 @@
             color: var(--text-secondary);
             transition: var(--transition);
             z-index: 2;
+            display: none;
         }
         .library-btn:hover {
             background: rgba(74, 134, 255, 0.2);
@@ -278,6 +279,27 @@
         .library-btn.active {
             color: var(--success-color);
             background: rgba(52, 199, 89, 0.2);
+        }
+        .add-to-library-btn {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--accent-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(74, 134, 255, 0.3);
+            z-index: 2;
+            cursor: pointer;
+        }
+        .add-to-library-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(74, 134, 255, 0.4);
         }
         /* Game details page */
         .game-details {
@@ -351,6 +373,29 @@
             display: flex;
             justify-content: center;
             margin-bottom: 20px;
+            position: relative;
+        }
+        .folder-btn {
+            position: absolute;
+            left: -50px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            transition: var(--transition);
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .folder-btn:hover {
+            background: var(--accent-color);
+            color: white;
+            transform: translateY(-50%) scale(1.05);
         }
         .download-btn {
             display: block;
@@ -672,6 +717,7 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+            flex-wrap: wrap;
         }
         .verified-badge {
             width: 18px;
@@ -683,6 +729,7 @@
             justify-content: center;
             cursor: pointer;
             position: relative;
+            margin-left: 4px;
         }
         .verified-badge svg {
             width: 12px;
@@ -710,21 +757,6 @@
             font-size: 14px;
             color: var(--text-secondary);
             margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .badge-icon {
-            width: 16px;
-            height: 16px;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        .badge-icon img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
         }
         .profile-bio {
             text-align: center;
@@ -780,6 +812,7 @@
             border-radius: var(--border-radius-sm);
             overflow: hidden;
             position: relative;
+            cursor: pointer;
         }
         .library-item img {
             width: 100%;
@@ -1334,6 +1367,33 @@
             border: none;
             color: white;
         }
+        .user-badges {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 5px;
+            flex-wrap: wrap;
+        }
+        .user-badge {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .user-badge img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .guest-mode {
+            opacity: 0.7;
+        }
+        .guest-mode .profile-edit,
+        .guest-mode .setting-item,
+        .guest-mode .logout-btn {
+            display: none !important;
+        }
         @keyframes flash {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.3; }
@@ -1385,6 +1445,11 @@
                 </div>
                 <div class="download-section">
                     <div class="download-btn-container">
+                        <div class="folder-btn" id="folder-btn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                        </div>
                         <button id="download-btn" class="download-btn">Скачать</button>
                     </div>
                     <div class="progress-container" id="progress-container">
@@ -1424,6 +1489,10 @@
                 <div class="section-content" id="details-description"></div>
                 <div class="section-title">Что нового<span class="new-indicator"></span></div>
                 <div class="section-content" id="details-whats-new"></div>
+                <div class="section-title">Добавить в библиотеку</div>
+                <div class="section-content">
+                    <button class="download-btn" id="add-to-library-btn">Добавить в библиотеку</button>
+                </div>
             </div>
         </div>
         <!-- Profile Modal -->
@@ -1449,6 +1518,7 @@
                     </div>
                     <div class="profile-name" id="profile-name">Гость</div>
                     <div class="profile-username" id="profile-username">@guest</div>
+                    <div class="user-badges" id="user-badges"></div>
                     <div class="profile-bio" id="profile-bio">Добавьте описание профиля, чтобы рассказать о себе</div>
                     <div class="profile-edit" id="profile-edit">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1514,7 +1584,7 @@
                         <div class="setting-item">
                             <div class="setting-label">Ссылка на ваш профиль</div>
                             <div class="setting-value" id="profile-link">
-                                <span id="profile-link-display">https://t.me/Plugg_So2_bot?startapp=none</span>
+                                <span id="profile-link-display">https://t.me/Plugg_So2_bot/app/none</span>
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
                                 </svg>
@@ -1637,6 +1707,7 @@
             const registrationProgress = document.getElementById('registration-progress');
             const profileName = document.getElementById('profile-name');
             const profileUsername = document.getElementById('profile-username');
+            const userBadges = document.getElementById('user-badges');
             const profileBio = document.getElementById('profile-bio');
             const profileAvatar = document.getElementById('profile-avatar');
             const bannerPlaceholder = document.getElementById('banner-placeholder');
@@ -1667,6 +1738,8 @@
             const pingValue = document.getElementById('ping-value');
             const profileLink = document.getElementById('profile-link');
             const profileLinkDisplay = document.getElementById('profile-link-display');
+            const folderBtn = document.getElementById('folder-btn');
+            const addToLibraryBtn = document.getElementById('add-to-library-btn');
             const badgesContainer = document.getElementById('badges-container');
             const badgeActions = document.getElementById('badge-actions');
             const badgeApplyBtn = document.getElementById('badge-apply');
@@ -1695,6 +1768,9 @@
             let visualizerInterval = null;
             let selectedBadge = null;
             let selectedBannerFile = null;
+            let isGuestMode = false;
+            let currentGameId = null;
+            let downloadFolder = localStorage.getItem('plugg_download_folder') || 'Download';
             
             // Создаем аудио визуализатор
             function createAudioVisualizer() {
@@ -1776,6 +1852,7 @@
                 if (user) {
                     try {
                         currentUser = JSON.parse(user);
+                        isGuestMode = false;
                         updateProfileUI();
                         return true;
                     } catch (e) {
@@ -1787,12 +1864,40 @@
                 return false;
             }
             
+            // Проверка гостевого режима
+            function checkGuestMode() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const startapp = urlParams.get('startapp');
+                const app = urlParams.get('app');
+                
+                if (app) {
+                    // Режим гостя - просмотр профиля
+                    const username = app;
+                    const users = JSON.parse(localStorage.getItem('plugg_users') || '[]');
+                    const user = users.find(u => u.username === username);
+                    
+                    if (user) {
+                        currentUser = user;
+                        isGuestMode = true;
+                        updateProfileUI();
+                        return true;
+                    }
+                }
+                
+                return false;
+            }
+            
             // Обновление UI профиля
             function updateProfileUI() {
-                if (!profileName || !profileUsername || !profileBio || !nameDisplay || 
+                if (!profileName || !profileUsername || !userBadges || !profileBio || !nameDisplay || 
                     !usernameDisplay || !bioDisplay || !libraryGrid) return;
                     
                 if (currentUser) {
+                    // Проверяем, является ли пользователь владельцем профиля
+                    if (tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id === currentUser.telegram_id) {
+                        isGuestMode = false;
+                    }
+                    
                     // Проверяем верификацию пользователя
                     const isVerified = isUserVerified(currentUser.telegram_id);
                     
@@ -1803,11 +1908,9 @@
                     if (isVerified) {
                         nameHTML += `
                             <div class="verified-badge" id="verified-badge">
-                                <svg viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path>
-                                </svg>
+                                <img src="https://github.com/MrRazion/pluggbotest.github.io/blob/main/badges/status/1761634926844.png?raw=true" alt="Verified" style="width: 100%; height: 100%; object-fit: cover;">
                                 <div class="verified-tooltip" id="verified-tooltip">
-                                    ${getVerifiedDescription(currentUser.telegram_id, currentUser.username)}
+                                    ${getVerifiedDescription(currentUser.telegram_id, currentUser.first_name)}
                                 </div>
                             </div>
                         `;
@@ -1819,18 +1922,21 @@
                     
                     // Обновляем юзернейм
                     const usernameText = currentUser.username ? `@${currentUser.username}` : 'Не указан';
-                    
-                    // Добавляем значки к юзернейму
-                    let badgesHTML = '';
-                    if (currentUser.badges && currentUser.badges.length > 0) {
-                        const activeBadge = currentUser.badges.find(b => b.active);
-                        if (activeBadge) {
-                            badgesHTML = `<div class="badge-icon"><img src="${activeBadge.image}" alt="Badge"></div>`;
-                        }
-                    }
-                    
-                    profileUsername.innerHTML = badgesHTML + usernameText;
+                    profileUsername.textContent = usernameText;
                     usernameDisplay.textContent = currentUser.username || 'Не указан';
+                    
+                    // Обновляем значки пользователя
+                    userBadges.innerHTML = '';
+                    if (currentUser.badges && currentUser.badges.length > 0) {
+                        currentUser.badges.forEach(badge => {
+                            if (badge.active) {
+                                const badgeElement = document.createElement('div');
+                                badgeElement.className = 'user-badge';
+                                badgeElement.innerHTML = `<img src="https://github.com/MrRazion/pluggbotest.github.io/blob/main/badges/status/pixel-mini-cake__b25a44ae.png?raw=true" alt="Badge">`;
+                                userBadges.appendChild(badgeElement);
+                            }
+                        });
+                    }
                     
                     // Обновляем био
                     profileBio.textContent = currentUser.bio || 'Добавьте описание профиля, чтобы рассказать о себе';
@@ -1846,16 +1952,18 @@
                         bannerPlaceholder.style.backgroundImage = `url('${currentUser.banner}')`;
                         bannerPlaceholder.style.backgroundSize = 'cover';
                         bannerPlaceholder.style.backgroundPosition = 'center';
+                        bannerPlaceholder.textContent = '';
                     } else {
                         bannerPlaceholder.style.background = 'var(--accent-gradient)';
                         bannerPlaceholder.style.backgroundSize = '';
                         bannerPlaceholder.style.backgroundPosition = '';
+                        bannerPlaceholder.textContent = 'Добавьте свой баннер, чтобы выделиться среди других пользователей';
                     }
                     
                     // Обновляем ссылку на профиль
                     const profileLink = currentUser.username 
-                        ? `https://t.me/Plugg_So2_bot?startapp=${currentUser.username}` 
-                        : 'https://t.me/Plugg_So2_bot?startapp=none';
+                        ? `https://t.me/Plugg_So2_bot/app/${currentUser.username}` 
+                        : 'https://t.me/Plugg_So2_bot/app/none';
                     profileLinkDisplay.textContent = profileLink;
                     
                     // Обновляем библиотеку
@@ -1882,6 +1990,13 @@
                             if (tooltip) tooltip.classList.remove('show');
                         });
                     }
+                    
+                    // Применяем режим гостя, если нужно
+                    if (isGuestMode) {
+                        profileModal.classList.add('guest-mode');
+                    } else {
+                        profileModal.classList.remove('guest-mode');
+                    }
                 }
             }
             
@@ -1897,22 +2012,22 @@
             }
             
             // Получение описания верификации
-            function getVerifiedDescription(telegram_id, username) {
+            function getVerifiedDescription(telegram_id, firstName) {
                 const verifiedUsers = [
                     { 
                         id: 5772425643, 
                         speciality: 'dev', 
-                        description: `${username} является официальным лицом и создателем проекта`
+                        description: `${firstName} является официальным лицом и создателем проекта`
                     },
                     { 
                         id: 7942740523, 
                         speciality: 'tester', 
-                        description: `${username} является официальным тестировщиком и помощником проекта`
+                        description: `${firstName} является официальным тестировщиком и помощником проекта`
                     },
                     { 
                         id: 5507094612, 
                         speciality: 'donate', 
-                        description: `${username} поддержал разработку проекта и получил особый значок`
+                        description: `${firstName} поддержал разработку проекта и получил особый значок`
                     }
                 ];
                 
@@ -1931,10 +2046,45 @@
                 const allBadges = [
                     {
                         id: 'new_user',
-                        name: 'Release Anniversary Cake',
+                        name: 'Новый пользователь',
                         image: 'https://github.com/MrRazion/pluggbotest.github.io/blob/main/badges/status/pixel-mini-cake__b25a44ae.png?raw=true',
                         date: 'До 01.12.2025',
                         description: 'Доступен всем новым аккаунтам до 1 декабря 2025 года'
+                    },
+                    {
+                        id: 'active_user',
+                        name: 'Активный пользователь',
+                        image: 'https://github.com/MrRazion/pluggbotest.github.io/blob/main/badges/status/pixel-mini-cake__b25a44ae.png?raw=true',
+                        date: 'За активность',
+                        description: 'Получен за активность в сообществе'
+                    },
+                    {
+                        id: 'premium',
+                        name: 'Премиум',
+                        image: 'https://github.com/MrRazion/pluggbotest.github.io/blob/main/badges/status/pixel-mini-cake__b25a44ae.png?raw=true',
+                        date: 'Подписка',
+                        description: 'Премиум статус'
+                    },
+                    {
+                        id: 'supporter',
+                        name: 'Поддержка',
+                        image: 'https://github.com/MrRazion/pluggbotest.github.io/blob/main/badges/status/pixel-mini-cake__b25a44ae.png?raw=true',
+                        date: 'За поддержку',
+                        description: 'Получен за поддержку проекта'
+                    },
+                    {
+                        id: 'early_adopter',
+                        name: 'Ранний пользователь',
+                        image: 'https://github.com/MrRazion/pluggbotest.github.io/blob/main/badges/status/pixel-mini-cake__b25a44ae.png?raw=true',
+                        date: 'Ранний доступ',
+                        description: 'Получен за ранний доступ к проекту'
+                    },
+                    {
+                        id: 'community_leader',
+                        name: 'Лидер сообщества',
+                        image: 'https://github.com/MrRazion/pluggbotest.github.io/blob/main/badges/status/pixel-mini-cake__b25a44ae.png?raw=true',
+                        date: 'За лидерство',
+                        description: 'Получен за лидерство в сообществе'
                     }
                 ];
                 
@@ -2032,13 +2182,37 @@
                     if (game) {
                         const item = document.createElement('div');
                         item.className = 'library-item animate-fade-in-up';
+                        item.dataset.gameId = gameId;
                         item.innerHTML = `
                             <img src="${game.image}" alt="${game.title}">
                             <div class="library-item-title">${game.title}</div>
                         `;
+                        item.addEventListener('click', () => {
+                            // Открываем страницу игры
+                            openGameDetails(gameId);
+                        });
                         libraryGrid.appendChild(item);
                     }
                 });
+            }
+            
+            // Открытие страницы игры
+            function openGameDetails(gameId) {
+                const game = games.find(g => g.id === gameId);
+                if (game) {
+                    detailsTitle.textContent = game.title;
+                    detailsImage.src = game.image;
+                    detailsImage.alt = game.title;
+                    detailsMeta.textContent = `Версия: ${game.version} • Размер: ${game.size}`;
+                    detailsDescription.innerHTML = `<p>${game.description}</p><ul><li>Спасибо за использование PLUGG BOT!</li></ul>`;
+                    detailsWhatsNew.innerHTML = `<ul>${game.whatsNew.map(item => `<li>${item}</li>`).join('')}</ul>`;
+                    currentDownloadUrl = game.url;
+                    currentFileName = game.fileName;
+                    currentGameTitle = game.title;
+                    currentGameId = gameId;
+                    downloadBtn.textContent = 'Скачать';
+                    gameDetails.classList.add('active');
+                }
             }
             
             // Данные игр
@@ -2168,8 +2342,8 @@
                     card.className = 'game-card animate-fade-in-up';
                     card.dataset.gameId = game.id;
                     card.innerHTML = `
-                        <div class="library-btn" data-game-id="${game.id}">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <div class="add-to-library-btn" data-game-id="${game.id}">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M12 5v14M5 12h14"></path>
                             </svg>
                         </div>
@@ -2183,17 +2357,21 @@
                         </div>
                     `;
                     card.style.animationDelay = `${Math.random() * 0.3}s`;
-                    card.addEventListener('click', handleGameClick);
+                    card.addEventListener('click', () => {
+                        openGameDetails(game.id);
+                    });
                     grid.appendChild(card);
                 });
+                
                 // Добавляем обработчики для кнопок библиотеки
-                document.querySelectorAll('.library-btn').forEach(btn => {
+                document.querySelectorAll('.add-to-library-btn').forEach(btn => {
                     btn.addEventListener('click', function(e) {
                         e.stopPropagation();
                         const gameId = this.dataset.gameId;
                         toggleGameInLibrary(gameId);
                     });
                 });
+                
                 // Проверяем состояние библиотеки для всех игр
                 updateLibraryButtons();
             }
@@ -2201,19 +2379,17 @@
             // Обновление кнопок библиотеки
             function updateLibraryButtons() {
                 if (!currentUser) return;
-                document.querySelectorAll('.library-btn').forEach(btn => {
+                document.querySelectorAll('.add-to-library-btn').forEach(btn => {
                     const gameId = btn.dataset.gameId;
                     if (currentUser.library && currentUser.library.includes(gameId)) {
-                        btn.classList.add('active');
                         btn.innerHTML = `
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none" stroke-width="2">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none" stroke-width="2">
                                 <path d="M12 5v14M5 12h14"></path>
                             </svg>
                         `;
                     } else {
-                        btn.classList.remove('active');
                         btn.innerHTML = `
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M12 5v14M5 12h14"></path>
                             </svg>
                         `;
@@ -2245,31 +2421,6 @@
                 // Обновляем UI
                 updateLibraryButtons();
                 updateLibraryUI();
-            }
-            
-            // Обработчик клика по карточке игры
-            function handleGameClick(e) {
-                const gameId = e.currentTarget.dataset.gameId;
-                const game = games.find(g => g.id === gameId);
-                if (game) {
-                    detailsTitle.textContent = game.title;
-                    detailsImage.src = game.image;
-                    detailsImage.alt = game.title;
-                    detailsMeta.textContent = `Версия: ${game.version} • Размер: ${game.size}`;
-                    detailsDescription.innerHTML = `<p>${game.description}</p><ul><li>Спасибо за использование PLUGG BOT!</li></ul>`;
-                    detailsWhatsNew.innerHTML = `<ul>${game.whatsNew.map(item => `<li>${item}</li>`).join('')}</ul>`;
-                    currentDownloadUrl = game.url;
-                    currentFileName = game.fileName;
-                    currentGameTitle = game.title;
-                    downloadBtn.textContent = 'Скачать';
-                    gameDetails.classList.add('active');
-                } else {
-                    tg.showPopup({
-                        title: 'Скоро будет доступно',
-                        message: 'Эта игра находится в разработке и скоро будет доступна для скачивания!',
-                        buttons: [{type: 'ok', text: 'Понятно'}]
-                    });
-                }
             }
             
             // Обработчики для вкладок
@@ -2386,7 +2537,8 @@
                         // Use native downloadFile method
                         window.Telegram.WebApp.downloadFile({
                             url: downloadUrl,
-                            file_name: currentFileName
+                            file_name: currentFileName,
+                            save_as: true
                         }, (accepted) => {
                             if (accepted) {
                                 if (statusText) statusText.textContent = 'Скачивание начато...';
@@ -2481,6 +2633,83 @@
             // Обработчик кнопки скачивания
             if (downloadBtn) {
                 downloadBtn.addEventListener('click', downloadFile);
+            }
+            
+            // Обработчик кнопки выбора папки
+            if (folderBtn) {
+                folderBtn.addEventListener('click', () => {
+                    // Показываем диалог выбора папки
+                    tg.showPopup({
+                        title: 'Выберите папку для сохранения',
+                        message: 'Выберите, куда сохранять загруженные файлы',
+                        buttons: [
+                            {id: 'download', type: 'default', text: 'Download'},
+                            {id: 'documents', type: 'default', text: 'Documents'},
+                            {id: 'custom', type: 'default', text: 'Другая папка'},
+                            {type: 'cancel'}
+                        ]
+                    }, (btn) => {
+                        if (btn === 'download') {
+                            downloadFolder = 'Download';
+                            localStorage.setItem('plugg_download_folder', 'Download');
+                            tg.showAlert('Файлы будут сохраняться в папку Download');
+                        } else if (btn === 'documents') {
+                            downloadFolder = 'Documents';
+                            localStorage.setItem('plugg_download_folder', 'Documents');
+                            tg.showAlert('Файлы будут сохраняться в папку Documents');
+                        } else if (btn === 'custom') {
+                            // Здесь можно реализовать выбор пользовательской папки
+                            downloadFolder = 'Custom';
+                            localStorage.setItem('plugg_download_folder', 'Custom');
+                            tg.showAlert('Файлы будут сохраняться в выбранную папку');
+                        }
+                    });
+                });
+            }
+            
+            // Обработчик кнопки добавить в библиотеку на странице игры
+            if (addToLibraryBtn) {
+                addToLibraryBtn.addEventListener('click', () => {
+                    if (!currentUser) {
+                        authModal.classList.add('active');
+                        return;
+                    }
+                    
+                    if (!currentUser.library) {
+                        currentUser.library = [];
+                    }
+                    
+                    if (currentGameId) {
+                        const index = currentUser.library.indexOf(currentGameId);
+                        if (index === -1) {
+                            // Добавляем в библиотеку
+                            currentUser.library.push(currentGameId);
+                            tg.showAlert('Игра добавлена в библиотеку!');
+                            // Обновляем кнопку в списке игр
+                            document.querySelectorAll(`.add-to-library-btn[data-game-id="${currentGameId}"]`).forEach(btn => {
+                                btn.innerHTML = `
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none" stroke-width="2">
+                                        <path d="M12 5v14M5 12h14"></path>
+                                    </svg>
+                                `;
+                            });
+                        } else {
+                            // Удаляем из библиотеки
+                            currentUser.library.splice(index, 1);
+                            tg.showAlert('Игра удалена из библиотеки!');
+                            // Обновляем кнопку в списке игр
+                            document.querySelectorAll(`.add-to-library-btn[data-game-id="${currentGameId}"]`).forEach(btn => {
+                                btn.innerHTML = `
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M12 5v14M5 12h14"></path>
+                                    </svg>
+                                `;
+                            });
+                        }
+                        // Сохраняем обновленные данные
+                        localStorage.setItem('plugg_user', JSON.stringify(currentUser));
+                    }
+                });
             }
             
             // ========== НОВАЯ СИСТЕМА АВТОРИЗАЦИИ ЧЕРЕЗ TELEGRAM ==========
@@ -2669,7 +2898,7 @@
                         currentUser.username = usernameInput.value.trim();
                         
                         // Обновляем ссылку на профиль
-                        const profileLink = `https://t.me/Plugg_So2_bot?startapp=${currentUser.username}`;
+                        const profileLink = `https://t.me/Plugg_So2_bot/app/${currentUser.username}`;
                         profileLinkDisplay.textContent = profileLink;
                         
                         localStorage.setItem('plugg_user', JSON.stringify(currentUser));
@@ -2720,8 +2949,8 @@
                 profileLink.addEventListener('click', () => {
                     if (currentUser) {
                         const profileLink = currentUser.username 
-                            ? `https://t.me/Plugg_So2_bot?startapp=${currentUser.username}` 
-                            : 'https://t.me/Plugg_So2_bot?startapp=none';
+                            ? `https://t.me/Plugg_So2_bot/app/${currentUser.username}` 
+                            : 'https://t.me/Plugg_So2_bot/app/none';
                         
                         navigator.clipboard.writeText(profileLink).then(() => {
                             profileLinkDisplay.classList.add('badge-profile-copied');
@@ -2928,7 +3157,9 @@
             }
             
             // Инициализация при загрузке
-            checkUser();
+            if (!checkUser()) {
+                checkGuestMode();
+            }
             renderGames('all');
             
             // Восстановление библиотеки после выхода
