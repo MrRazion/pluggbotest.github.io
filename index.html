@@ -1106,7 +1106,7 @@
                             <div class="audio-visualizer" id="audio-visualizer"></div>
                             <div class="visualizer-toggle" id="visualizer-toggle">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M12 5v14M5 12h14"></path>
+                                    <path d="M12 5v14M17 5v14M7 5v14M2 5h20M2 19h20"></path>
                                 </svg>
                             </div>
                         </div>
@@ -1215,18 +1215,18 @@
                             <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
                         </div>
                         <h3 class="plugg-auth-title">PLUGG ID</h3>
-                        <p class="plugg-auth-description">Plugg ID - это небольшая маленькая система авторизации которая проходит через телеграм бота.</p>
+                        <p class="plugg-auth-description">Простая и безопасная авторизация через Telegram.</p>
                         <div class="plugg-auth-status" id="plugg-auth-status">
-                            подождите пожалуйста создаем кнопку для авторизации аккаунта...
+                            Для входа нажмите на кнопку ниже
                         </div>
-                        <div class="plugg-auth-button-container" id="plugg-auth-button-container" style="display: none;">
-                            <a href="#" class="plugg-auth-button" id="plugg-auth-button">Авторизоваться</a>
+                        <div class="plugg-auth-button-container" id="plugg-auth-button-container">
+                            <button class="plugg-auth-button" id="telegram-auth-button">Войти через Telegram</button>
                         </div>
                     </div>
                 </div>
                 <div class="registration-progress" id="registration-progress">
                     <div class="loader"></div>
-                    <div class="progress-text">Регистрируем ваш аккаунт...</div>
+                    <div class="progress-text">Авторизация через Telegram...</div>
                     <div class="progress-subtext">Пожалуйста, подождите</div>
                 </div>
             </div>
@@ -1275,7 +1275,7 @@
             const authModal = document.getElementById('auth-modal');
             const pluggAuthStatus = document.getElementById('plugg-auth-status');
             const pluggAuthButtonContainer = document.getElementById('plugg-auth-button-container');
-            const pluggAuthButton = document.getElementById('plugg-auth-button');
+            const telegramAuthButton = document.getElementById('telegram-auth-button');
             const registrationProgress = document.getElementById('registration-progress');
             const profileName = document.getElementById('profile-name');
             const profileUsername = document.getElementById('profile-username');
@@ -1320,8 +1320,6 @@
             let totalBytes = 0;
             let isVisualizerActive = false;
             let visualizerInterval = null;
-            let serverHealthCheckAttempts = 0;
-            const maxServerHealthCheckAttempts = 3;
             
             // Создаем аудио визуализатор
             function createAudioVisualizer() {
@@ -1414,165 +1412,22 @@
                 return false;
             }
             
-            // Проверка доступности сервера
-            async function checkServerHealth() {
-                try {
-                    const response = await fetch('/health', {
-                        method: 'GET',
-                        headers: {
-                            'Accept': 'application/json',
-                        },
-                        cache: 'no-store'
-                    });
-                    
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    
-                    const data = await response.json();
-                    serverHealthCheckAttempts = 0; // Сброс счетчика попыток
-                    return data.status === 'ok';
-                } catch (error) {
-                    console.error('Server health check failed:', error);
-                    serverHealthCheckAttempts++;
-                    
-                    // Если превышено максимальное количество попыток, показываем ошибку
-                    if (serverHealthCheckAttempts >= maxServerHealthCheckAttempts) {
-                        if (pluggAuthStatus) {
-                            pluggAuthStatus.textContent = 'Не удалось выполнить авторизацию, попробуйте позже.';
-                            pluggAuthStatus.style.color = 'var(--error-color)';
-                        }
-                    }
-                    
-                    return false;
-                }
-            }
-            
-            // Запрос на получение кода авторизации
-            async function requestAuthCode() {
-                try {
-                    if (pluggAuthStatus) {
-                        pluggAuthStatus.textContent = 'Запрашиваем код авторизации у сервера...';
-                        pluggAuthStatus.style.color = 'var(--text-secondary)';
-                    }
-                    
-                    const response = await fetch('/api/generate-auth-code', {
-                        method: 'GET',
-                        headers: {
-                            'Accept': 'application/json',
-                        },
-                        cache: 'no-store'
-                    });
-                    
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    
-                    const data = await response.json();
-                    
-                    if (data.success) {
-                        if (pluggAuthStatus) {
-                            pluggAuthStatus.textContent = 'Код авторизации получен!';
-                            pluggAuthStatus.style.color = 'var(--text-color)';
-                        }
-                        
-                        // Отображаем кнопку авторизации
-                        if (pluggAuthButton && pluggAuthButtonContainer) {
-                            pluggAuthButton.href = data.auth_link;
-                            pluggAuthButtonContainer.style.display = 'block';
-                        }
-                        
-                        return true;
-                    } else {
-                        throw new Error(data.error || 'Неизвестная ошибка при получении кода авторизации');
-                    }
-                } catch (error) {
-                    console.error('Error requesting auth code:', error);
-                    if (pluggAuthStatus) {
-                        pluggAuthStatus.textContent = 'Не удалось выполнить авторизацию, попробуйте позже.';
-                        pluggAuthStatus.style.color = 'var(--error-color)';
-                    }
-                    return false;
-                }
-            }
-            
-            // Проверка входа через startapp
-            async function checkStartappAuth() {
-                const urlParams = new URLSearchParams(window.location.search);
-                const startapp = urlParams.get('startapp');
-                
-                if (startapp) {
-                    try {
-                        const response = await fetch(`/api/validate-startapp?code=${encodeURIComponent(startapp)}`);
-                        const data = await response.json();
-                        
-                        if (data.success) {
-                            localStorage.setItem('plugg_user', JSON.stringify(data.user));
-                            currentUser = data.user;
-                            updateProfileUI();
-                            
-                            // Убираем параметр startapp из URL
-                            const newUrl = window.location.protocol + '//' + window.location.host + window.location.pathname;
-                            window.history.pushState({}, '', newUrl);
-                            
-                            tg.showAlert('Вы успешно вошли в аккаунт!');
-                        } else {
-                            tg.showAlert(data.error || 'Неверный или просроченный код авторизации.');
-                        }
-                    } catch (error) {
-                        console.error('Error validating startapp:', error);
-                        tg.showAlert('Произошла ошибка при проверке кода авторизации.');
-                    }
-                }
-            }
-            
-            // Проверка, нужно ли показывать статус регистрации
-            async function checkAuthStatus() {
-                if (pluggAuthStatus && pluggAuthStatus.textContent.includes('создаем')) {
-                    // Проверяем, доступен ли сервер
-                    const isServerHealthy = await checkServerHealth();
-                    
-                    if (isServerHealthy) {
-                        // Запрашиваем код авторизации у сервера
-                        await requestAuthCode();
-                    } else {
-                        if (serverHealthCheckAttempts < maxServerHealthCheckAttempts) {
-                            // Попробуем проверить еще раз через 2 секунды
-                            setTimeout(checkAuthStatus, 2000);
-                        } else {
-                            pluggAuthStatus.textContent = 'Не удалось выполнить авторизацию, попробуйте позже.';
-                            pluggAuthStatus.style.color = 'var(--error-color)';
-                        }
-                    }
-                }
-            }
-            
-            // Обработчик закрытия модального окна аутентификации
-            if (authModal) {
-                authModal.addEventListener('click', (e) => {
-                    if (e.target === authModal) {
-                        // Сброс статуса при закрытии модального окна
-                        if (pluggAuthStatus) {
-                            pluggAuthStatus.textContent = 'подождите пожалуйста создаем кнопку для авторизации аккаунта...';
-                            pluggAuthStatus.style.color = 'var(--text-secondary)';
-                            pluggAuthButtonContainer.style.display = 'none';
-                        }
-                    }
-                });
-            }
-            
             // Обновление UI профиля
             function updateProfileUI() {
                 if (!profileName || !profileUsername || !profileBio || !nameDisplay || 
                     !usernameDisplay || !bioDisplay || !libraryGrid) return;
                     
                 if (currentUser) {
-                    profileName.textContent = currentUser.name;
-                    profileUsername.textContent = `@${currentUser.username}`;
+                    profileName.textContent = currentUser.first_name + (currentUser.last_name ? ' ' + currentUser.last_name : '');
+                    profileUsername.textContent = currentUser.username ? `@${currentUser.username}` : 'Не указан';
                     profileBio.textContent = currentUser.bio || 'Добавьте описание профиля, чтобы рассказать о себе';
-                    nameDisplay.textContent = currentUser.name;
-                    usernameDisplay.textContent = currentUser.username;
+                    nameDisplay.textContent = currentUser.first_name + (currentUser.last_name ? ' ' + currentUser.last_name : '');
+                    usernameDisplay.textContent = currentUser.username || 'Не указан';
                     bioDisplay.textContent = currentUser.bio || 'Добавьте описание профиля, чтобы рассказать о себе';
+                    // Обновляем аватар
+                    if (currentUser.avatar) {
+                        profileAvatar.innerHTML = `<img src="${currentUser.avatar}" alt="Аватар">`;
+                    }
                     // Обновляем библиотеку
                     updateLibraryUI();
                 }
@@ -1789,8 +1644,6 @@
             function toggleGameInLibrary(gameId) {
                 if (!currentUser) {
                     authModal.classList.add('active');
-                    // Запускаем процесс генерации кнопки
-                    checkAuthStatus();
                     return;
                 }
                 if (!currentUser.library) {
@@ -2049,18 +1902,77 @@
                 downloadBtn.addEventListener('click', downloadFile);
             }
             
-            // ========== ИСПРАВЛЕНИЯ ДЛЯ ПРОФИЛЯ И АУТЕНТИФИКАЦИИ ==========
+            // ========== НОВАЯ СИСТЕМА АВТОРИЗАЦИИ ЧЕРЕЗ TELEGRAM ==========
             
             // Обработчик кнопки профиля
             if (profileBtn) {
                 profileBtn.addEventListener('click', () => {
                     if (!checkUser()) {
                         authModal.classList.add('active');
-                        // Запускаем процесс генерации кнопки
-                        checkAuthStatus();
                     } else {
                         profileModal.classList.add('active');
                     }
+                });
+            }
+            
+            // Обработчик кнопки авторизации через Telegram
+            if (telegramAuthButton) {
+                telegramAuthButton.addEventListener('click', () => {
+                    // Показываем индикатор загрузки
+                    authModal.classList.remove('active');
+                    registrationProgress.style.display = 'block';
+                    
+                    // Используем данные из Telegram WebApp
+                    setTimeout(() => {
+                        if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+                            const user = tg.initDataUnsafe.user;
+                            
+                            // Создаем объект пользователя
+                            const userData = {
+                                telegram_id: user.id,
+                                first_name: user.first_name,
+                                last_name: user.last_name || '',
+                                username: user.username || '',
+                                auth_date: user.auth_date || Math.floor(Date.now() / 1000),
+                                avatar: user.photo_url || '',
+                                bio: 'Любитель приваток для Standoff 2',
+                                library: [],
+                                created_at: new Date().toISOString()
+                            };
+                            
+                            // Сохраняем пользователя
+                            localStorage.setItem('plugg_user', JSON.stringify(userData));
+                            currentUser = userData;
+                            
+                            // Обновляем интерфейс
+                            updateProfileUI();
+                            
+                            // Показываем профиль
+                            registrationProgress.style.display = 'none';
+                            profileModal.classList.add('active');
+                            
+                            tg.showAlert('Вы успешно вошли в систему PLUGG ID через Telegram!');
+                        } else {
+                            registrationProgress.style.display = 'none';
+                            authModal.classList.add('active');
+                            tg.showAlert('Не удалось получить данные из Telegram. Пожалуйста, попробуйте снова.');
+                        }
+                    }, 1000);
+                });
+            }
+            
+            // Обработчик кнопки выхода
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', () => {
+                    // Удаляем данные пользователя
+                    localStorage.removeItem('plugg_user');
+                    currentUser = null;
+                    
+                    // Закрываем модальное окно
+                    if (profileModal) profileModal.classList.remove('active');
+                    
+                    // Показываем уведомление
+                    tg.showAlert('Вы вышли из аккаунта');
                 });
             }
             
@@ -2105,35 +2017,23 @@
                     editName.style.display = 'none';
                 });
                 
-                nameInput.addEventListener('blur', async () => {
-                    const newName = nameInput.value.trim();
-                    if (newName !== '' && currentUser && newName !== currentUser.name) {
-                        try {
-                            const response = await fetch('/api/update-user', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({ user_id: currentUser.id, field: 'name', value: newName })
-                            });
-                            const data = await response.json();
-                            if (data.success) {
-                                currentUser.name = newName;
-                                localStorage.setItem('plugg_user', JSON.stringify(currentUser));
-                                nameDisplay.textContent = newName;
-                                profileName.textContent = newName;
-                                if (nameAvailable) {
-                                    nameAvailable.style.display = 'block';
-                                    setTimeout(() => nameAvailable.style.display = 'none', 2000);
-                                }
-                            } else {
-                                tg.showAlert(data.error || 'Ошибка обновления имени');
-                            }
-                        } catch (error) {
-                            tg.showAlert('Ошибка сети при обновлении имени');
-                        }
+                nameInput.addEventListener('blur', () => {
+                    if (nameInput.value.trim() !== '' && currentUser) {
+                        // Разделяем имя и фамилию
+                        const nameParts = nameInput.value.trim().split(' ');
+                        currentUser.first_name = nameParts[0];
+                        currentUser.last_name = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
+                        
+                        localStorage.setItem('plugg_user', JSON.stringify(currentUser));
+                        updateProfileUI();
                     }
                     nameInput.style.display = 'none';
                     nameDisplay.style.display = 'block';
                     editName.style.display = 'flex';
+                    if (nameAvailable) {
+                        nameAvailable.style.display = 'block';
+                        setTimeout(() => nameAvailable.style.display = 'none', 2000);
+                    }
                 });
                 
                 nameInput.addEventListener('keypress', (e) => {
@@ -2146,89 +2046,23 @@
             // Обработчик редактирования юзернейма
             if (editUsername && usernameInput && usernameDisplay) {
                 editUsername.addEventListener('click', () => {
-                    usernameInput.value = usernameDisplay.textContent;
+                    // Удаляем @ если он есть
+                    const currentUsername = usernameDisplay.textContent.replace('@', '');
+                    usernameInput.value = currentUsername;
                     usernameInput.style.display = 'block';
                     usernameDisplay.style.display = 'none';
                     editUsername.style.display = 'none';
                 });
                 
-                let debounceTimer;
-                usernameInput.addEventListener('input', () => {
-                    clearTimeout(debounceTimer);
-                    debounceTimer = setTimeout(async () => {
-                        const username = usernameInput.value.trim();
-                        if (username === '' || !usernameAvailable || !usernameUnavailable) return;
-                        
-                        if (username === currentUser.username) {
-                            usernameAvailable.style.display = 'block';
-                            usernameUnavailable.style.display = 'none';
-                            return;
-                        }
-                        
-                        try {
-                            const response = await fetch(`/api/check-username?username=${encodeURIComponent(username)}`);
-                            const data = await response.json();
-                            if (data.available) {
-                                usernameAvailable.style.display = 'block';
-                                usernameUnavailable.style.display = 'none';
-                            } else {
-                                usernameAvailable.style.display = 'none';
-                                usernameUnavailable.style.display = 'block';
-                            }
-                        } catch (error) {
-                            console.error('Error checking username:', error);
-                        }
-                    }, 300);
-                });
-                
-                usernameInput.addEventListener('blur', async () => {
-                    const newUsername = usernameInput.value.trim();
-                    if (newUsername !== '' && currentUser && newUsername !== currentUser.username) {
-                        // Check time first (client-side)
-                        const lastChange = currentUser.lastUsernameChange || 0;
-                        const sevenDays = 7 * 24 * 60 * 60 * 1000;
-                        if (Date.now() - lastChange < sevenDays) {
-                            const daysLeft = Math.ceil((sevenDays - (Date.now() - lastChange)) / (24 * 60 * 60 * 1000));
-                            tg.showAlert(`Вы можете изменить юзернейм только раз в 7 дней. Пожалуйста, подождите еще ${daysLeft} дней.`);
-                            usernameInput.value = currentUser.username;
-                        } else {
-                            try {
-                                const checkResponse = await fetch(`/api/check-username?username=${encodeURIComponent(newUsername)}`);
-                                const checkData = await checkResponse.json();
-                                if (checkData.available) {
-                                    const updateResponse = await fetch('/api/update-user', {
-                                        method: 'POST',
-                                        headers: { 'Content-Type': 'application/json' },
-                                        body: JSON.stringify({ user_id: currentUser.id, field: 'username', value: newUsername })
-                                    });
-                                    const updateData = await updateResponse.json();
-                                    if (updateData.success) {
-                                        currentUser.username = newUsername;
-                                        currentUser.lastUsernameChange = Date.now();
-                                        localStorage.setItem('plugg_user', JSON.stringify(currentUser));
-                                        usernameDisplay.textContent = newUsername;
-                                        profileUsername.textContent = `@${newUsername}`;
-                                        usernameAvailable.style.display = 'block';
-                                        setTimeout(() => usernameAvailable.style.display = 'none', 2000);
-                                    } else {
-                                        tg.showAlert(updateData.error || 'Ошибка обновления юзернейма');
-                                        usernameInput.value = currentUser.username;
-                                    }
-                                } else {
-                                    tg.showAlert('Этот юзернейм уже занят. Пожалуйста, выберите другой.');
-                                    usernameInput.value = currentUser.username;
-                                }
-                            } catch (error) {
-                                tg.showAlert('Ошибка сети при обновлении юзернейма');
-                                usernameInput.value = currentUser.username;
-                            }
-                        }
+                usernameInput.addEventListener('blur', () => {
+                    if (usernameInput.value.trim() !== '' && currentUser) {
+                        currentUser.username = usernameInput.value.trim();
+                        localStorage.setItem('plugg_user', JSON.stringify(currentUser));
+                        updateProfileUI();
                     }
                     usernameInput.style.display = 'none';
                     usernameDisplay.style.display = 'block';
                     editUsername.style.display = 'flex';
-                    usernameAvailable.style.display = 'none';
-                    usernameUnavailable.style.display = 'none';
                 });
                 
                 usernameInput.addEventListener('keypress', (e) => {
@@ -2247,27 +2081,12 @@
                     editBio.style.display = 'none';
                 });
                 
-                bioInput.addEventListener('blur', async () => {
-                    const newBio = bioInput.value.trim();
-                    if (currentUser && newBio !== currentUser.bio) {
-                        try {
-                            const response = await fetch('/api/update-user', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({ user_id: currentUser.id, field: 'bio', value: newBio })
-                            });
-                            const data = await response.json();
-                            if (data.success) {
-                                currentUser.bio = newBio;
-                                localStorage.setItem('plugg_user', JSON.stringify(currentUser));
-                                bioDisplay.textContent = newBio || 'Добавьте описание профиля, чтобы рассказать о себе';
-                                profileBio.textContent = newBio || 'Добавьте описание профиля, чтобы рассказать о себе';
-                            } else {
-                                tg.showAlert(data.error || 'Ошибка обновления био');
-                            }
-                        } catch (error) {
-                            tg.showAlert('Ошибка сети при обновлении био');
-                        }
+                bioInput.addEventListener('blur', () => {
+                    if (bioInput.value.trim() !== '' && currentUser) {
+                        currentUser.bio = bioInput.value.trim();
+                        localStorage.setItem('plugg_user', JSON.stringify(currentUser));
+                        bioDisplay.textContent = currentUser.bio;
+                        updateProfileUI();
                     }
                     bioInput.style.display = 'none';
                     bioDisplay.style.display = 'block';
@@ -2281,18 +2100,7 @@
                 });
             }
             
-            // Обработчик кнопки выхода
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', () => {
-                    localStorage.removeItem('plugg_user');
-                    currentUser = null;
-                    if (profileModal) profileModal.classList.remove('active');
-                    tg.showAlert('Вы вышли из аккаунта');
-                });
-            }
-            
             // Инициализация при загрузке
-            checkStartappAuth();
             checkUser();
             renderGames('all');
             
