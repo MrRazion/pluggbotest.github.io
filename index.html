@@ -619,6 +619,8 @@
             text-align: center;
             padding: 0 20px;
             cursor: pointer;
+            background-size: cover;
+            background-position: center;
         }
         .profile-info {
             padding: 20px;
@@ -1055,6 +1057,165 @@
             background: var(--success-color);
             color: white;
         }
+        /* Banner selector */
+        .banner-selector {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--primary-bg);
+            z-index: 3000;
+            padding: 20px;
+            display: none;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        .banner-selector.active {
+            display: flex;
+        }
+        .banner-selector-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .banner-selector-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        .banner-selector-close {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--secondary-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .banner-selector-close:hover {
+            transform: rotate(90deg);
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .banner-upload {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            background: var(--secondary-bg);
+            border-radius: var(--border-radius-md);
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .banner-upload:hover {
+            background: var(--card-bg);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        .banner-gallery {
+            width: 100%;
+            max-height: 50vh;
+            overflow-y: auto;
+            padding-right: 5px;
+            margin-bottom: 20px;
+        }
+        .banner-gallery::-webkit-scrollbar {
+            width: 6px;
+        }
+        .banner-gallery::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+        }
+        .banner-gallery::-webkit-scrollbar-thumb {
+            background: var(--accent-color);
+            border-radius: 3px;
+        }
+        .banner-gallery-item {
+            width: 100%;
+            height: 150px;
+            border-radius: var(--border-radius-md);
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        .banner-gallery-item:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        .banner-gallery-item::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .banner-gallery-item:hover::after {
+            opacity: 1;
+        }
+        .banner-preview {
+            display: none;
+            width: 100%;
+            padding: 15px;
+            background: var(--secondary-bg);
+            border-radius: var(--border-radius-md);
+            margin-top: auto;
+        }
+        .banner-preview.active {
+            display: block;
+        }
+        .banner-preview-img {
+            width: 100%;
+            height: 120px;
+            border-radius: var(--border-radius-md);
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+        .banner-preview-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .banner-preview-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .banner-preview-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: var(--border-radius-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .banner-preview-btn#banner-cancel {
+            background: var(--card-bg);
+            color: var(--text-color);
+        }
+        .banner-preview-btn#banner-cancel:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .banner-preview-btn.apply {
+            background: var(--accent-gradient);
+            color: white;
+        }
+        .banner-preview-btn.apply:hover {
+            opacity: 0.9;
+        }
         /* Responsive design */
         @media (min-width: 768px) {
             .container {
@@ -1314,7 +1475,8 @@
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                     <circle cx="9" cy="9" r="2"></circle>
-                    <path d="м21 15-3.086-3.086a2 2 0 0 1-2.828 0L6 21"></path>
+                    <!-- Исправлено: замена кириллической "м" на латинскую "m" -->
+                    <path d="m21 15-3.086-3.086a2 2 0 0 1-2.828 0L6 21"></path>
                 </svg>
                 <div>Выбрать из галереи</div>
             </div>
@@ -1386,7 +1548,6 @@
             const tg = window.Telegram.WebApp;
             tg.expand();
             tg.ready();
-            
             // Элементы интерфейса (с проверкой на существование)
             const downloadBtn = document.getElementById('download-btn');
             const progressFill = document.getElementById('progress-fill');
@@ -1443,7 +1604,6 @@
             const bannerPreviewImg = document.getElementById('banner-preview-img');
             const bannerCancelBtn = document.getElementById('banner-cancel');
             const bannerApplyBtn = document.getElementById('banner-apply');
-            
             // Переменные для отслеживания состояния
             let isDownloading = false;
             let currentTab = 'all';
@@ -1460,7 +1620,6 @@
             let selectedBannerFile = null;
             let isOwner = true; // По умолчанию владелец
             let currentGameId = null;
-            
             // Создаем визуализатор загрузки
             function createDownloadVisualizer() {
                 if (!downloadVisualizer) return;
@@ -1472,7 +1631,6 @@
                     downloadVisualizer.appendChild(bar);
                 }
             }
-            
             // Анимируем визуализатор загрузки
             function animateDownloadVisualizer() {
                 if (!isVisualizerActive || !downloadVisualizer) return;
@@ -1482,7 +1640,6 @@
                     bar.style.height = `${height}px`;
                 });
             }
-            
             // Переключение визуализатора загрузки
             if (visualizerToggle) {
                 visualizerToggle.addEventListener('click', () => {
@@ -1508,10 +1665,8 @@
                     }
                 });
             }
-            
             // Инициализация визуализатора загрузки
             createDownloadVisualizer();
-            
             // Эмуляция пинга
             function simulatePing() {
                 if (!pingValue) return;
@@ -1520,7 +1675,6 @@
                 const ping = Math.floor(Math.random() * (maxPing - minPing + 1)) + minPing;
                 pingValue.textContent = `${ping} ms`;
             }
-            
             // Обновление статистики загрузки
             function updateDownloadStats(loaded, total) {
                 if (total === 0 || !downloadedSize || !downloadSpeed) return;
@@ -1534,13 +1688,11 @@
                     }
                 }
             }
-            
             // Получение сохраненных данных пользователя
             function getSavedUserData(telegram_id) {
                 const savedUsers = JSON.parse(localStorage.getItem('plugg_saved_users') || '{}');
                 return savedUsers[telegram_id] || null;
             }
-            
             // Сохранение данных пользователя
             function saveUserData() {
                 if (!currentUser) return;
@@ -1555,7 +1707,6 @@
                 };
                 localStorage.setItem('plugg_saved_users', JSON.stringify(savedUsers));
             }
-            
             // Проверка наличия пользователя в localStorage
             function checkUser() {
                 const user = localStorage.getItem('plugg_user');
@@ -1582,19 +1733,15 @@
                 }
                 return false;
             }
-            
             // Обновление UI профиля
             function updateProfileUI() {
                 if (!profileName || !profileUsername || !profileBio || !nameInput || 
                     !usernameInput || !bioInput || !libraryGrid) return;
-                    
                 if (currentUser) {
                     // Проверяем верификацию пользователя
                     const isVerified = isUserVerified(currentUser.telegram_id);
-                    
                     // Обновляем имя
                     let nameHTML = currentUser.first_name + (currentUser.last_name ? ' ' + currentUser.last_name : '');
-                    
                     // Добавляем галочку верификации, если пользователь верифицирован
                     if (isVerified) {
                         nameHTML += `
@@ -1606,25 +1753,20 @@
                             </div>
                         `;
                     }
-                    
                     // Обновляем имя с галочкой верификации и значками
                     profileName.innerHTML = nameHTML;
                     nameInput.value = currentUser.first_name + (currentUser.last_name ? ' ' + currentUser.last_name : '');
-                    
                     // Обновляем юзернейм
                     const usernameText = currentUser.username ? `@${currentUser.username}` : 'Не указан';
                     profileUsername.innerHTML = usernameText;
                     usernameInput.value = currentUser.username || '';
-                    
                     // Обновляем био
                     profileBio.textContent = currentUser.bio || 'Добавьте описание профиля, чтобы рассказать о себе';
                     bioInput.value = currentUser.bio || '';
-                    
                     // Обновляем аватар
                     if (currentUser.avatar) {
                         profileAvatar.innerHTML = `<img src="${currentUser.avatar}" alt="Аватар">`;
                     }
-                    
                     // Обновляем баннер
                     if (currentUser.banner) {
                         bannerPlaceholder.style.backgroundImage = `url('${currentUser.banner}')`;
@@ -1637,10 +1779,8 @@
                         bannerPlaceholder.style.backgroundPosition = '';
                         bannerPlaceholder.textContent = 'Добавьте свой баннер, чтобы выделиться среди других пользователей';
                     }
-                    
                     // Обновляем библиотеку
                     updateLibraryUI();
-                    
                     // Добавляем обработчик для галочки верификации
                     const verifiedBadge = document.getElementById('verified-badge');
                     if (verifiedBadge) {
@@ -1653,7 +1793,6 @@
                             }, 10000);
                         });
                     }
-                    
                     // Проверяем, является ли пользователь владельцем
                     if (!isOwner) {
                         profileModal.classList.add('guest-view');
@@ -1662,13 +1801,11 @@
                     }
                 }
             }
-            
             // Проверка верификации пользователя
             function isUserVerified(telegram_id) {
                 const verifiedUsers = [5772425643, 7942740523, 5507094612];
                 return verifiedUsers.includes(Number(telegram_id));
             }
-            
             // Получение описания верификации
             function getVerifiedDescription(telegram_id, nickname) {
                 const verifiedUsers = {
@@ -1678,11 +1815,9 @@
                 };
                 return verifiedUsers[telegram_id] || '';
             }
-            
             // Обновление UI библиотеки
             function updateLibraryUI() {
                 if (!libraryGrid) return;
-                
                 libraryGrid.innerHTML = '';
                 if (!currentUser || !currentUser.library || currentUser.library.length === 0) {
                     libraryGrid.innerHTML = `
@@ -1705,7 +1840,6 @@
                     }
                 });
             }
-            
             // Данные игр
             const games = [
                 {
@@ -1821,7 +1955,6 @@
                     size: '499.1 MB'
                 }
             ];
-            
             // Функция для рендеринга игр в таб
             function renderGames(tab) {
                 const grid = document.querySelector(`#${tab}-tab .games-grid`);
@@ -1847,7 +1980,6 @@
                     grid.appendChild(card);
                 });
             }
-            
             // Обновление кнопки библиотеки в деталях
             function updateDetailsLibraryButton() {
                 if (!detailsLibraryBtn || !currentGameId || !currentUser) return;
@@ -1859,7 +1991,6 @@
                     detailsLibraryBtn.textContent = 'Добавить в библиотеку';
                 }
             }
-            
             // Добавление/удаление игры из библиотеки
             function toggleGameInLibrary(gameId) {
                 if (!currentUser) {
@@ -1886,7 +2017,6 @@
                 updateDetailsLibraryButton();
                 updateLibraryUI();
             }
-            
             // Обработчик клика по карточке игры
             function handleGameClick(e) {
                 const gameId = e.currentTarget.dataset.gameId;
@@ -1913,7 +2043,6 @@
                     });
                 }
             }
-            
             // Обработчики для вкладок
             document.querySelectorAll('.tab').forEach(tab => {
                 tab.addEventListener('click', () => {
@@ -1927,12 +2056,10 @@
                     applySearch();
                 });
             });
-            
             // Обработчик поиска
             if (searchInput) {
                 searchInput.addEventListener('input', applySearch);
             }
-            
             function applySearch() {
                 const term = searchInput.value.toLowerCase();
                 const grid = document.querySelector(`#${currentTab}-tab .games-grid`);
@@ -1942,7 +2069,6 @@
                     card.style.display = title.includes(term) ? '' : 'none';
                 });
             }
-            
             // Обработчик кнопки "Назад"
             if (backBtn) {
                 backBtn.addEventListener('click', () => {
@@ -1953,7 +2079,6 @@
                     }
                 });
             }
-            
             // Обработчик кнопки добавления в библиотеку в деталях
             if (detailsLibraryBtn) {
                 detailsLibraryBtn.addEventListener('click', () => {
@@ -1962,7 +2087,6 @@
                     }
                 });
             }
-            
             // Функция для обновления прогресса
             function updateProgress(percent, loaded, total) {
                 if (!progressFill || !progressPercent || !statusText) return;
@@ -1977,7 +2101,6 @@
                     statusText.textContent = 'Загрузка завершена! Проверьте папку Download на телефоне.';
                 }
             }
-            
             // Функция для показа статуса
             function showStatus(message, isSuccess) {
                 if (!statusMessage) return;
@@ -1985,7 +2108,6 @@
                 statusMessage.className = `status-message ${isSuccess ? 'status-success' : 'status-error'}`;
                 statusMessage.style.display = 'block';
             }
-            
             // Сброс UI загрузки
             function resetDownloadUI() {
                 isDownloading = false;
@@ -2017,7 +2139,6 @@
                     `;
                 }
             }
-            
             // Функция для скачивания файла
             function downloadFile() {
                 if (!isDownloading && downloadBtn) {
@@ -2128,14 +2249,11 @@
                     }
                 }
             }
-            
             // Обработчик кнопки скачивания
             if (downloadBtn) {
                 downloadBtn.addEventListener('click', downloadFile);
             }
-            
             // ========== НОВАЯ СИСТЕМА АВТОРИЗАЦИИ ЧЕРЕЗ TELEGRAM ==========
-            
             // Обработчик кнопки профиля
             if (profileBtn) {
                 profileBtn.addEventListener('click', () => {
@@ -2146,19 +2264,16 @@
                     }
                 });
             }
-            
             // Обработчик кнопки авторизации через Telegram
             if (telegramAuthButton) {
                 telegramAuthButton.addEventListener('click', () => {
                     // Показываем индикатор загрузки
                     authModal.classList.remove('active');
                     registrationProgress.style.display = 'block';
-                    
                     // Используем данные из Telegram WebApp
                     setTimeout(() => {
                         if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
                             const user = tg.initDataUnsafe.user;
-                            
                             // Создаем объект пользователя
                             const userData = {
                                 telegram_id: user.id,
@@ -2172,25 +2287,20 @@
                                 library: [],
                                 created_at: new Date().toISOString()
                             };
-                            
                             // Восстанавливаем сохраненные данные
                             const savedData = getSavedUserData(userData.telegram_id);
                             if (savedData) {
                                 Object.assign(userData, savedData);
                             }
-                            
                             // Сохраняем пользователя
                             localStorage.setItem('plugg_user', JSON.stringify(userData));
                             currentUser = userData;
                             saveUserData();
-                            
                             // Обновляем интерфейс
                             updateProfileUI();
-                            
                             // Показываем профиль
                             registrationProgress.style.display = 'none';
                             profileModal.classList.add('active');
-                            
                             tg.showAlert('Вы успешно вошли в систему PLUGG ID через Telegram!');
                         } else {
                             registrationProgress.style.display = 'none';
@@ -2200,7 +2310,6 @@
                     }, 1000);
                 });
             }
-            
             // Обработчик кнопки выхода
             if (logoutBtn) {
                 logoutBtn.addEventListener('click', () => {
@@ -2208,20 +2317,15 @@
                         // Сохраняем данные перед выходом
                         saveUserData();
                     }
-                    
                     // Удаляем текущего пользователя
                     localStorage.removeItem('plugg_user');
-                    
                     currentUser = null;
-                    
                     // Закрываем модальное окно
                     if (profileModal) profileModal.classList.remove('active');
-                    
                     // Показываем уведомление
                     tg.showAlert('Вы вышли из аккаунта');
                 });
             }
-            
             // Обработчик закрытия модальных окон
             document.addEventListener('click', (e) => {
                 // Закрытие authModal при клике вне контента
@@ -2229,14 +2333,12 @@
                     e.target === authModal) {
                     authModal.classList.remove('active');
                 }
-                
                 // Закрытие profileModal при клике вне контента
                 if (profileModal && profileModal.classList.contains('active') && 
                     e.target === profileModal) {
                     profileModal.classList.remove('active');
                 }
             });
-            
             // Обработчики вкладок профиля
             if (profileTabs && profileTabs.length > 0) {
                 profileTabs.forEach(tab => {
@@ -2253,7 +2355,6 @@
                     });
                 });
             }
-            
             // Обработчик сохранения имени
             if (saveNameBtn && nameInput) {
                 saveNameBtn.addEventListener('click', () => {
@@ -2262,7 +2363,6 @@
                         const nameParts = nameInput.value.trim().split(' ');
                         currentUser.first_name = nameParts[0];
                         currentUser.last_name = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
-                        
                         localStorage.setItem('plugg_user', JSON.stringify(currentUser));
                         saveUserData();
                         updateProfileUI();
@@ -2273,13 +2373,11 @@
                     }
                 });
             }
-            
             // Обработчик сохранения юзернейма
             if (saveUsernameBtn && usernameInput) {
                 saveUsernameBtn.addEventListener('click', () => {
                     if (usernameInput.value.trim() !== '' && currentUser) {
                         currentUser.username = usernameInput.value.trim();
-                        
                         localStorage.setItem('plugg_user', JSON.stringify(currentUser));
                         saveUserData();
                         updateProfileUI();
@@ -2290,7 +2388,6 @@
                     }
                 });
             }
-            
             // Обработчик сохранения био
             if (saveBioBtn && bioInput) {
                 saveBioBtn.addEventListener('click', () => {
@@ -2302,7 +2399,6 @@
                     }
                 });
             }
-            
             // Обработчик клика по баннеру
             if (bannerPlaceholder) {
                 bannerPlaceholder.addEventListener('click', () => {
@@ -2310,7 +2406,6 @@
                     loadGallery();
                 });
             }
-            
             // Обработчик закрытия селектора баннеров
             if (bannerSelectorClose) {
                 bannerSelectorClose.addEventListener('click', () => {
@@ -2319,7 +2414,6 @@
                     selectedBannerFile = null;
                 });
             }
-            
             // Обработчик выбора из галереи
             if (bannerUpload) {
                 bannerUpload.addEventListener('click', () => {
@@ -2328,33 +2422,49 @@
                     fileInput.type = 'file';
                     fileInput.accept = 'image/*';
                     fileInput.capture = 'user'; // Запрашиваем доступ к камере
-                    
                     fileInput.addEventListener('change', (e) => {
                         if (e.target.files && e.target.files[0]) {
                             selectedBannerFile = e.target.files[0];
                             const reader = new FileReader();
-                            
                             reader.onload = function(event) {
                                 bannerPreviewImg.src = event.target.result;
                                 bannerPreview.classList.add('active');
                             };
-                            
                             reader.readAsDataURL(selectedBannerFile);
                         }
                     });
-                    
                     fileInput.click();
                 });
             }
-            
             // Загрузка галереи
             function loadGallery() {
-                // Здесь можно загрузить изображения из галереи устройства
-                // Для примера добавим несколько заглушек
+                // Очищаем галерею
                 bannerGallery.innerHTML = '';
                 
+                // Примеры баннеров
+                const bannerExamples = [
+                    'https://i.imgur.com/7XQY5Qx.jpg',
+                    'https://i.imgur.com/5hF7b2n.jpg',
+                    'https://i.imgur.com/9pHqQ2k.jpg',
+                    'https://i.imgur.com/2yNqH4a.jpg',
+                    'https://i.imgur.com/3gTfD5p.jpg',
+                    'https://i.imgur.com/8cPvKqR.jpg'
+                ];
+                
+                bannerExamples.forEach((url, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'banner-gallery-item';
+                    item.style.backgroundImage = `url('${url}')`;
+                    
+                    item.addEventListener('click', () => {
+                        bannerPreviewImg.src = url;
+                        bannerPreview.classList.add('active');
+                        selectedBannerFile = null;
+                    });
+                    
+                    bannerGallery.appendChild(item);
+                });
             }
-            
             // Обработчик отмены выбора баннера
             if (bannerCancelBtn) {
                 bannerCancelBtn.addEventListener('click', () => {
@@ -2362,7 +2472,6 @@
                     selectedBannerFile = null;
                 });
             }
-            
             // Обработчик применения баннера
             if (bannerApplyBtn) {
                 bannerApplyBtn.addEventListener('click', () => {
@@ -2370,7 +2479,6 @@
                         if (selectedBannerFile) {
                             // Если выбран файл из галереи
                             const reader = new FileReader();
-                            
                             reader.onload = function(event) {
                                 currentUser.banner = event.target.result;
                                 localStorage.setItem('plugg_user', JSON.stringify(currentUser));
@@ -2380,7 +2488,6 @@
                                 selectedBannerFile = null;
                                 updateProfileUI();
                             };
-                            
                             reader.readAsDataURL(selectedBannerFile);
                         } else if (bannerPreviewImg.src) {
                             // Если выбрано изображение из галереи
@@ -2394,11 +2501,9 @@
                     }
                 });
             }
-            
             // Инициализация при загрузке
             checkUser();
             renderGames('all');
-            
             // Проверка start_param для определения гостя
             if (tg.initDataUnsafe && tg.initDataUnsafe.start_param) {
                 const startParam = tg.initDataUnsafe.start_param;
@@ -2406,7 +2511,6 @@
                     isOwner = false;
                 }
             }
-            
             // Установка safe area insets
             if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.safeAreaInset) {
                 document.documentElement.style.setProperty('--tg-safe-area-inset-top', `${window.Telegram.WebApp.safeAreaInset.top}px`);
@@ -2414,7 +2518,6 @@
                 document.documentElement.style.setProperty('--tg-safe-area-inset-left', `${window.Telegram.WebApp.safeAreaInset.left}px`);
                 document.documentElement.style.setProperty('--tg-safe-area-inset-right', `${window.Telegram.WebApp.safeAreaInset.right}px`);
             }
-            
             // Добавляем обработчик для закрытия модальных окон при нажатии Esc
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
