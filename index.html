@@ -684,10 +684,9 @@
             cursor: pointer;
             position: relative;
         }
-        .verified-badge svg {
+        .verified-badge img {
             width: 12px;
             height: 12px;
-            fill: white;
         }
         .verified-tooltip {
             position: absolute;
@@ -916,6 +915,15 @@
             color: var(--text-color);
             font-size: 14px;
         }
+        .save-btn {
+            margin-top: 10px;
+            padding: 10px;
+            background: var(--accent-gradient);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-sm);
+            cursor: pointer;
+        }
         .logout-btn {
             width: 100%;
             padding: 14px;
@@ -1023,6 +1031,27 @@
         .back-btn:hover {
             transform: translateX(-3px);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        .details-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .details-library-btn {
+            padding: 10px 15px;
+            background: var(--card-bg);
+            color: var(--text-color);
+            border: none;
+            border-radius: var(--border-radius-md);
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+        }
+        .details-library-btn.active {
+            background: var(--success-color);
+            color: white;
         }
         /* Responsive design */
         @media (min-width: 768px) {
@@ -1339,17 +1368,7 @@
             50% { opacity: 0.3; }
         }
         .profile-link-container {
-            text-align: center;
-            font-size: 14px;
-            color: var(--text-secondary);
-            margin-bottom: 15px;
-        }
-        .profile-link-container a {
-            color: var(--accent-color);
-            text-decoration: none;
-        }
-        .profile-link-container a:hover {
-            text-decoration: underline;
+            display: none;
         }
         .guest-view {
             pointer-events: none;
@@ -1395,7 +1414,10 @@
         </div>
         <!-- Детали игры (общий) -->
         <div class="game-details" id="game-details">
-            <button class="back-btn" id="back-btn">← Назад</button>
+            <div class="details-header">
+                <button class="back-btn" id="back-btn">← Назад</button>
+                <button class="details-library-btn" id="details-library-btn">Добавить в библиотеку</button>
+            </div>
             <div class="game-details-content">
                 <div class="game-details-header">
                     <div class="game-details-icon">
@@ -1473,9 +1495,6 @@
                     <div class="profile-name" id="profile-name">Гость</div>
                     <div class="profile-username" id="profile-username">@guest</div>
                     <div class="profile-bio" id="profile-bio">Добавьте описание профиля, чтобы рассказать о себе</div>
-                    <div class="profile-link-container" id="profile-link-container">
-                        Ссылка на профиль: <a id="profile-link-display" href="#">https://t.me/Plugg_So2_bot?startapp=none</a>
-                    </div>
                     <div class="profile-edit" id="profile-edit">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
@@ -1506,45 +1525,21 @@
                     <div class="profile-section profile-settings" id="settings-section">
                         <div class="setting-item">
                             <div class="setting-label">Имя</div>
-                            <div class="setting-value" id="edit-name">
-                                <span id="name-display">Гость</span>
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M12 5v14M5 12h14"></path>
-                                </svg>
-                            </div>
                             <input type="text" class="setting-input" id="name-input" placeholder="Введите ваше имя">
+                            <button class="save-btn" id="save-name">Сохранить</button>
                             <div class="username-available" id="name-available">Имя успешно обновлено</div>
                         </div>
                         <div class="setting-item">
                             <div class="setting-label">Юзернейм</div>
-                            <div class="setting-value" id="edit-username">
-                                <span id="username-display">guest</span>
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M12 5v14M5 12h14"></path>
-                                </svg>
-                            </div>
                             <input type="text" class="setting-input" id="username-input" placeholder="Введите ваш юзернейм">
+                            <button class="save-btn" id="save-username">Сохранить</button>
                             <div class="username-available" id="username-available">Юзернейм доступен</div>
                             <div class="username-unavailable" id="username-unavailable">Этот юзернейм уже занят</div>
                         </div>
                         <div class="setting-item">
                             <div class="setting-label">Описание профиля</div>
-                            <div class="setting-value" id="edit-bio">
-                                <span id="bio-display">Добавьте описание профиля, чтобы рассказать о себе</span>
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M12 5v14M5 12h14"></path>
-                                </svg>
-                            </div>
                             <textarea class="setting-input" id="bio-input" rows="3" placeholder="Расскажите немного о себе..."></textarea>
-                        </div>
-                        <div class="setting-item">
-                            <div class="setting-label">Ссылка на ваш профиль</div>
-                            <div class="setting-value" id="profile-link">
-                                <span id="profile-link-display">https://t.me/Plugg_So2_bot?startapp=none</span>
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
-                                </svg>
-                            </div>
+                            <button class="save-btn" id="save-bio">Сохранить</button>
                         </div>
                         <button class="logout-btn" id="logout-btn">Выйти из аккаунта</button>
                     </div>
@@ -1647,6 +1642,7 @@
             const statusMessage = document.getElementById('status-message');
             const progressContainer = document.getElementById('progress-container');
             const backBtn = document.getElementById('back-btn');
+            const detailsLibraryBtn = document.getElementById('details-library-btn');
             const gameDetails = document.getElementById('game-details');
             const detailsTitle = document.getElementById('details-title');
             const detailsImage = document.getElementById('details-image');
@@ -1672,15 +1668,12 @@
             const librarySection = document.getElementById('library-section');
             const iconsSection = document.getElementById('icons-section');
             const settingsSection = document.getElementById('settings-section');
-            const editName = document.getElementById('edit-name');
-            const editUsername = document.getElementById('edit-username');
-            const editBio = document.getElementById('edit-bio');
             const nameInput = document.getElementById('name-input');
             const usernameInput = document.getElementById('username-input');
             const bioInput = document.getElementById('bio-input');
-            const nameDisplay = document.getElementById('name-display');
-            const usernameDisplay = document.getElementById('username-display');
-            const bioDisplay = document.getElementById('bio-display');
+            const saveNameBtn = document.getElementById('save-name');
+            const saveUsernameBtn = document.getElementById('save-username');
+            const saveBioBtn = document.getElementById('save-bio');
             const nameAvailable = document.getElementById('name-available');
             const usernameAvailable = document.getElementById('username-available');
             const usernameUnavailable = document.getElementById('username-unavailable');
@@ -1691,8 +1684,6 @@
             const downloadedSize = document.getElementById('downloaded-size');
             const downloadSpeed = document.getElementById('download-speed');
             const pingValue = document.getElementById('ping-value');
-            const profileLink = document.getElementById('profile-link');
-            const profileLinkDisplay = document.getElementById('profile-link-display');
             const badgesContainer = document.getElementById('badges-container');
             const badgeActions = document.getElementById('badge-actions');
             const badgeApplyBtn = document.getElementById('badge-apply');
@@ -1705,7 +1696,6 @@
             const bannerPreviewImg = document.getElementById('banner-preview-img');
             const bannerCancelBtn = document.getElementById('banner-cancel');
             const bannerApplyBtn = document.getElementById('banner-apply');
-            const profileLinkContainer = document.getElementById('profile-link-container');
             
             // Переменные для отслеживания состояния
             let isDownloading = false;
@@ -1723,6 +1713,7 @@
             let selectedBadge = null;
             let selectedBannerFile = null;
             let isOwner = true; // По умолчанию владелец
+            let currentGameId = null;
             
             // Создаем аудио визуализатор
             function createAudioVisualizer() {
@@ -1846,8 +1837,8 @@
             
             // Обновление UI профиля
             function updateProfileUI() {
-                if (!profileName || !profileUsername || !profileBio || !nameDisplay || 
-                    !usernameDisplay || !bioDisplay || !libraryGrid) return;
+                if (!profileName || !profileUsername || !profileBio || !nameInput || 
+                    !usernameInput || !bioInput || !libraryGrid) return;
                     
                 if (currentUser) {
                     // Проверяем верификацию пользователя
@@ -1860,9 +1851,7 @@
                     if (isVerified) {
                         nameHTML += `
                             <div class="verified-badge" id="verified-badge">
-                                <svg viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path>
-                                </svg>
+                                <img src="https://github.com/MrRazion/pluggbotest.github.io/blob/main/badges/status/1761634926844.png?raw=true" alt="Verified">
                                 <div class="verified-tooltip" id="verified-tooltip">
                                     ${getVerifiedDescription(currentUser.telegram_id, currentUser.first_name)}
                                 </div>
@@ -1886,16 +1875,16 @@
                     
                     // Обновляем имя с галочкой верификации и значками
                     profileName.innerHTML = nameHTML;
-                    nameDisplay.textContent = currentUser.first_name + (currentUser.last_name ? ' ' + currentUser.last_name : '');
+                    nameInput.value = currentUser.first_name + (currentUser.last_name ? ' ' + currentUser.last_name : '');
                     
                     // Обновляем юзернейм
                     const usernameText = currentUser.username ? `@${currentUser.username}` : 'Не указан';
                     profileUsername.innerHTML = usernameText;
-                    usernameDisplay.textContent = currentUser.username || 'Не указан';
+                    usernameInput.value = currentUser.username || '';
                     
                     // Обновляем био
                     profileBio.textContent = currentUser.bio || 'Добавьте описание профиля, чтобы рассказать о себе';
-                    bioDisplay.textContent = currentUser.bio || 'Добавьте описание профиля, чтобы рассказать о себе';
+                    bioInput.value = currentUser.bio || '';
                     
                     // Обновляем аватар
                     if (currentUser.avatar) {
@@ -1914,13 +1903,6 @@
                         bannerPlaceholder.style.backgroundPosition = '';
                         bannerPlaceholder.textContent = 'Добавьте свой баннер, чтобы выделиться среди других пользователей';
                     }
-                    
-                    // Обновляем ссылку на профиль
-                    const profileLink = currentUser.username 
-                        ? `https://t.me/Plugg_So2_bot?startapp=${currentUser.username}` 
-                        : 'https://t.me/Plugg_So2_bot?startapp=none';
-                    profileLinkDisplay.textContent = profileLink;
-                    profileLinkDisplay.href = profileLink;
                     
                     // Обновляем библиотеку
                     updateLibraryUI();
@@ -1974,61 +1956,44 @@
                 
                 // Получаем список всех доступных значков
                 const allIcons = [
-                    {
-                        id: 'new_user',
-                        name: 'Новый пользователь',
-                        image: 'https://github.com/MrRazion/pluggbotest.github.io/blob/main/badges/status/pixel-mini-cake__b25a44ae.webp?raw=true',
-                        date: 'До 01.12.2025',
-                        description: 'Доступен всем новым аккаунтам до 1 декабря 2025 года'
-                    },
-                    // Можно добавить больше иконок
+                    // No automatic badges
                 ];
                 
                 // Добавляем значки, доступные пользователю
                 allIcons.forEach(icon => {
-                    // Проверяем, доступен ли значок (новый пользователь доступен до 1 декабря 2025)
-                    let isAvailable = true;
-                    if (icon.id === 'new_user') {
-                        const today = new Date();
-                        const deadline = new Date('2025-12-01T00:00:00+03:00'); // Moscow time
-                        isAvailable = today < deadline;
+                    const badgeItem = document.createElement('div');
+                    badgeItem.className = 'badge-item';
+                    badgeItem.dataset.badgeId = icon.id;
+                    
+                    // Проверяем, закреплен ли значок
+                    if (currentUser.pinned_badges && currentUser.pinned_badges.includes(icon.id)) {
+                        badgeItem.classList.add('pinned');
                     }
                     
-                    if (isAvailable) {
-                        const badgeItem = document.createElement('div');
-                        badgeItem.className = 'badge-item';
-                        badgeItem.dataset.badgeId = icon.id;
-                        
-                        // Проверяем, закреплен ли значок
-                        if (currentUser.pinned_badges && currentUser.pinned_badges.includes(icon.id)) {
-                            badgeItem.classList.add('pinned');
-                        }
-                        
-                        // Проверяем, активен ли значок
-                        if (currentUser.badges && currentUser.badges.some(b => b.id === icon.id && b.active)) {
-                            badgeItem.classList.add('selected');
-                        }
-                        
-                        badgeItem.innerHTML = `
-                            <img src="${icon.image}" alt="${icon.name}">
-                        `;
-                        
-                        badgeItem.addEventListener('click', () => {
-                            // Снимаем выделение со всех значков
-                            document.querySelectorAll('.badge-item').forEach(item => {
-                                item.classList.remove('selected');
-                            });
-                            
-                            // Выделяем текущий значок
-                            badgeItem.classList.add('selected');
-                            selectedBadge = icon;
-                            
-                            // Обновляем кнопки действий
-                            updateBadgeActions();
+                    // Проверяем, активен ли значок
+                    if (currentUser.badges && currentUser.badges.some(b => b.id === icon.id && b.active)) {
+                        badgeItem.classList.add('selected');
+                    }
+                    
+                    badgeItem.innerHTML = `
+                        <img src="${icon.image}" alt="${icon.name}">
+                    `;
+                    
+                    badgeItem.addEventListener('click', () => {
+                        // Снимаем выделение со всех значков
+                        document.querySelectorAll('.badge-item').forEach(item => {
+                            item.classList.remove('selected');
                         });
                         
-                        badgesContainer.appendChild(badgeItem);
-                    }
+                        // Выделяем текущий значок
+                        badgeItem.classList.add('selected');
+                        selectedBadge = icon;
+                        
+                        // Обновляем кнопки действий
+                        updateBadgeActions();
+                    });
+                    
+                    badgesContainer.appendChild(badgeItem);
                 });
             }
             
@@ -2222,11 +2187,6 @@
                     card.className = 'game-card animate-fade-in-up';
                     card.dataset.gameId = game.id;
                     card.innerHTML = `
-                        <div class="library-btn" data-game-id="${game.id}">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M12 5v14M5 12h14"></path>
-                            </svg>
-                        </div>
                         <div class="game-image">
                             <img src="${game.image}" alt="${game.title}">
                             <div class="game-overlay"></div>
@@ -2240,39 +2200,18 @@
                     card.addEventListener('click', handleGameClick);
                     grid.appendChild(card);
                 });
-                // Добавляем обработчики для кнопок библиотеки
-                document.querySelectorAll('.library-btn').forEach(btn => {
-                    btn.addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        const gameId = this.dataset.gameId;
-                        toggleGameInLibrary(gameId);
-                    });
-                });
-                // Проверяем состояние библиотеки для всех игр
-                updateLibraryButtons();
             }
             
-            // Обновление кнопок библиотеки
-            function updateLibraryButtons() {
-                if (!currentUser) return;
-                document.querySelectorAll('.library-btn').forEach(btn => {
-                    const gameId = btn.dataset.gameId;
-                    if (currentUser.library && currentUser.library.includes(gameId)) {
-                        btn.classList.add('active');
-                        btn.innerHTML = `
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none" stroke-width="2">
-                                <path d="M12 5v14M5 12h14"></path>
-                            </svg>
-                        `;
-                    } else {
-                        btn.classList.remove('active');
-                        btn.innerHTML = `
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M12 5v14M5 12h14"></path>
-                            </svg>
-                        `;
-                    }
-                });
+            // Обновление кнопки библиотеки в деталях
+            function updateDetailsLibraryButton() {
+                if (!detailsLibraryBtn || !currentGameId || !currentUser) return;
+                if (currentUser.library && currentUser.library.includes(currentGameId)) {
+                    detailsLibraryBtn.classList.add('active');
+                    detailsLibraryBtn.textContent = 'Удалить из библиотеки';
+                } else {
+                    detailsLibraryBtn.classList.remove('active');
+                    detailsLibraryBtn.textContent = 'Добавить в библиотеку';
+                }
             }
             
             // Добавление/удаление игры из библиотеки
@@ -2298,7 +2237,7 @@
                 localStorage.setItem('plugg_user', JSON.stringify(currentUser));
                 saveUserData();
                 // Обновляем UI
-                updateLibraryButtons();
+                updateDetailsLibraryButton();
                 updateLibraryUI();
             }
             
@@ -2316,8 +2255,10 @@
                     currentDownloadUrl = game.url;
                     currentFileName = game.fileName;
                     currentGameTitle = game.title;
+                    currentGameId = gameId;
                     downloadBtn.textContent = 'Скачать';
                     gameDetails.classList.add('active');
+                    updateDetailsLibraryButton();
                 } else {
                     tg.showPopup({
                         title: 'Скоро будет доступно',
@@ -2363,6 +2304,15 @@
                     if (xhr && isDownloading) {
                         xhr.abort();
                         resetDownloadUI();
+                    }
+                });
+            }
+            
+            // Обработчик кнопки добавления в библиотеку в деталях
+            if (detailsLibraryBtn) {
+                detailsLibraryBtn.addEventListener('click', () => {
+                    if (currentGameId) {
+                        toggleGameInLibrary(currentGameId);
                     }
                 });
             }
@@ -2583,17 +2533,6 @@
                             const savedData = getSavedUserData(userData.telegram_id);
                             if (savedData) {
                                 Object.assign(userData, savedData);
-                            } else {
-                                // Добавляем значок новичка, если пользователь новый
-                                const today = new Date();
-                                const deadline = new Date('2025-12-01T00:00:00+03:00');
-                                if (today < deadline) {
-                                    userData.badges.push({
-                                        id: 'new_user',
-                                        image: 'https://github.com/MrRazion/pluggbotest.github.io/blob/main/badges/status/pixel-mini-cake__b25a44ae.webp?raw=true',
-                                        active: false
-                                    });
-                                }
                             }
                             
                             // Сохраняем пользователя
@@ -2677,16 +2616,9 @@
                 });
             }
             
-            // Обработчик редактирования имени
-            if (editName && nameInput && nameDisplay) {
-                editName.addEventListener('click', () => {
-                    nameInput.value = nameDisplay.textContent;
-                    nameInput.style.display = 'block';
-                    nameDisplay.style.display = 'none';
-                    editName.style.display = 'none';
-                });
-                
-                nameInput.addEventListener('blur', () => {
+            // Обработчик сохранения имени
+            if (saveNameBtn && nameInput) {
+                saveNameBtn.addEventListener('click', () => {
                     if (nameInput.value.trim() !== '' && currentUser) {
                         // Разделяем имя и фамилию
                         const nameParts = nameInput.value.trim().split(' ');
@@ -2697,104 +2629,38 @@
                         saveUserData();
                         updateProfileUI();
                     }
-                    nameInput.style.display = 'none';
-                    nameDisplay.style.display = 'block';
-                    editName.style.display = 'flex';
                     if (nameAvailable) {
                         nameAvailable.style.display = 'block';
                         setTimeout(() => nameAvailable.style.display = 'none', 2000);
                     }
                 });
-                
-                nameInput.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
-                        nameInput.blur();
-                    }
-                });
             }
             
-            // Обработчик редактирования юзернейма
-            if (editUsername && usernameInput && usernameDisplay) {
-                editUsername.addEventListener('click', () => {
-                    // Удаляем @ если он есть
-                    const currentUsername = usernameDisplay.textContent.replace('@', '');
-                    usernameInput.value = currentUsername;
-                    usernameInput.style.display = 'block';
-                    usernameDisplay.style.display = 'none';
-                    editUsername.style.display = 'none';
-                });
-                
-                usernameInput.addEventListener('blur', () => {
+            // Обработчик сохранения юзернейма
+            if (saveUsernameBtn && usernameInput) {
+                saveUsernameBtn.addEventListener('click', () => {
                     if (usernameInput.value.trim() !== '' && currentUser) {
                         currentUser.username = usernameInput.value.trim();
-                        
-                        // Обновляем ссылку на профиль
-                        const profileLink = `https://t.me/Plugg_So2_bot?startapp=${currentUser.username}`;
-                        profileLinkDisplay.textContent = profileLink;
-                        profileLinkDisplay.href = profileLink;
                         
                         localStorage.setItem('plugg_user', JSON.stringify(currentUser));
                         saveUserData();
                         updateProfileUI();
                     }
-                    usernameInput.style.display = 'none';
-                    usernameDisplay.style.display = 'block';
-                    editUsername.style.display = 'flex';
-                });
-                
-                usernameInput.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
-                        usernameInput.blur();
+                    if (usernameAvailable) {
+                        usernameAvailable.style.display = 'block';
+                        setTimeout(() => usernameAvailable.style.display = 'none', 2000);
                     }
                 });
             }
             
-            // Обработчик редактирования био
-            if (editBio && bioInput && bioDisplay) {
-                editBio.addEventListener('click', () => {
-                    bioInput.value = bioDisplay.textContent;
-                    bioInput.style.display = 'block';
-                    bioDisplay.style.display = 'none';
-                    editBio.style.display = 'none';
-                });
-                
-                bioInput.addEventListener('blur', () => {
+            // Обработчик сохранения био
+            if (saveBioBtn && bioInput) {
+                saveBioBtn.addEventListener('click', () => {
                     if (bioInput.value.trim() !== '' && currentUser) {
                         currentUser.bio = bioInput.value.trim();
                         localStorage.setItem('plugg_user', JSON.stringify(currentUser));
                         saveUserData();
-                        bioDisplay.textContent = currentUser.bio;
                         updateProfileUI();
-                    }
-                    bioInput.style.display = 'none';
-                    bioDisplay.style.display = 'block';
-                    editBio.style.display = 'flex';
-                });
-                
-                bioInput.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
-                        bioInput.blur();
-                    }
-                });
-            }
-            
-            // Обработчик копирования ссылки на профиль
-            if (profileLink) {
-                profileLink.addEventListener('click', () => {
-                    if (currentUser) {
-                        const profileLink = currentUser.username 
-                            ? `https://t.me/Plugg_So2_bot?startapp=${currentUser.username}` 
-                            : 'https://t.me/Plugg_So2_bot?startapp=none';
-                        
-                        navigator.clipboard.writeText(profileLink).then(() => {
-                            profileLinkDisplay.classList.add('badge-profile-copied');
-                            tg.showAlert('Ссылка скопирована в буфер обмена!');
-                            setTimeout(() => {
-                                profileLinkDisplay.classList.remove('badge-profile-copied');
-                            }, 2000);
-                        }).catch(err => {
-                            console.error('Ошибка при копировании: ', err);
-                        });
                     }
                 });
             }
