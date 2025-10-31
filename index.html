@@ -637,31 +637,11 @@
             justify-content: center;
             color: var(--accent-color);
             font-size: 24px;
-            position: relative;
         }
         .profile-avatar img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-        }
-        .avatar-edit {
-            position: absolute;
-            bottom: 5px;
-            right: 5px;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: var(--accent-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            cursor: pointer;
-            transition: var(--transition);
-            border: 2px solid var(--secondary-bg);
-        }
-        .avatar-edit:hover {
-            transform: scale(1.1);
         }
         .profile-edit {
             position: absolute;
@@ -798,11 +778,6 @@
             border-radius: var(--border-radius-sm);
             overflow: hidden;
             position: relative;
-            transition: var(--transition);
-        }
-        .library-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
         .library-item img {
             width: 100%;
@@ -828,15 +803,6 @@
             text-overflow: ellipsis;
             overflow: hidden;
             white-space: nowrap;
-        }
-        .library-item-info {
-            position: absolute;
-            bottom: 30px;
-            left: 8px;
-            right: 8px;
-            color: white;
-            font-size: 10px;
-            opacity: 0.8;
         }
         .plugg-auth-container {
             padding: 0 20px 20px;
@@ -1408,7 +1374,6 @@
         }
         .guest-view .profile-edit,
         .guest-view .banner-edit,
-        .guest-view .avatar-edit,
         .guest-view .setting-value svg,
         .guest-view .logout-btn,
         .guest-view .badge-actions {
@@ -1419,113 +1384,6 @@
             color: var(--text-secondary);
             padding: 20px;
         }
-        /* Avatar selector styles */
-        .avatar-selector {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: var(--primary-bg);
-            z-index: 3000;
-            padding: 20px;
-            flex-direction: column;
-            overflow-y: auto;
-        }
-        .avatar-selector.active {
-            display: flex;
-        }
-        .avatar-selector-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 0;
-            margin-bottom: 15px;
-        }
-        .avatar-selector-title {
-            font-size: 18px;
-            font-weight: 600;
-        }
-        .avatar-selector-close {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--accent-color);
-            font-size: 20px;
-            cursor: pointer;
-        }
-        .avatar-upload {
-            padding: 15px;
-            border-radius: var(--border-radius-md);
-            background: var(--card-bg);
-            text-align: center;
-            margin-bottom: 20px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        .avatar-upload:hover {
-            background: var(--accent-color);
-            color: white;
-        }
-        .avatar-upload svg {
-            width: 24px;
-            height: 24px;
-            margin-bottom: 10px;
-            fill: var(--accent-color);
-        }
-        .avatar-upload:hover svg {
-            fill: white;
-        }
-        .avatar-preview {
-            display: none;
-            margin-top: 20px;
-        }
-        .avatar-preview.active {
-            display: block;
-        }
-        .avatar-preview-img {
-            width: 100%;
-            max-width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            overflow: hidden;
-            margin: 0 auto 15px;
-            border: 3px solid var(--accent-color);
-        }
-        .avatar-preview-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .avatar-preview-actions {
-            display: flex;
-            gap: 10px;
-        }
-        .avatar-preview-btn {
-            flex: 1;
-            padding: 10px;
-            border-radius: var(--border-radius-sm);
-            background: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: var(--text-secondary);
-            font-size: 14px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        .avatar-preview-btn:hover {
-            background: var(--accent-color);
-            color: white;
-            border-color: var(--accent-color);
-        }
-        .avatar-preview-btn.apply {
-            background: var(--accent-gradient);
-            border: none;
-            color: white;
-        }
     </style>
 </head>
 <body>
@@ -1533,7 +1391,7 @@
         <div class="header">
             <div>
                 <h1>PLUGG BOT</h1>
-                <p>Лучшая коллекция прививаток для удобного скачивания</p>
+                <p>Лучшая коллекция приваток для удобного скачивания</p>
             </div>
             <div class="profile-btn" id="profile-btn">
                 <svg class="profile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1635,12 +1493,6 @@
                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                             <circle cx="12" cy="7" r="4"></circle>
                         </svg>
-                        <div class="avatar-edit" id="avatar-edit">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                            </svg>
-                        </div>
                     </div>
                     <div class="profile-name" id="profile-name">Гость</div>
                     <div class="profile-username" id="profile-username">@guest</div>
@@ -1718,41 +1570,12 @@
                 </div>
             </div>
         </div>
-        <!-- Avatar Selector -->
-        <div class="avatar-selector" id="avatar-selector">
-            <div class="avatar-selector-header">
-                <div class="avatar-selector-title">Выберите аватар</div>
-                <div class="avatar-selector-close" id="avatar-selector-close">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M18 6 6 18"></path>
-                        <path d="м6 6 12 12"></path>
-                    </svg>
-                </div>
-            </div>
-            <div class="avatar-upload" id="avatar-upload">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                    <circle cx="12" cy="5" r="2"></circle>
-                    <path d="M16 8v4a4 4 0 0 1-8 0v-4"></path>
-                </svg>
-                <div>Выбрать из галереи</div>
-            </div>
-            <div class="avatar-preview" id="avatar-preview">
-                <div class="avatar-preview-img">
-                    <img id="avatar-preview-img" src="" alt="Preview">
-                </div>
-                <div class="avatar-preview-actions">
-                    <button class="avatar-preview-btn" id="avatar-cancel">Отмена</button>
-                    <button class="avatar-preview-btn apply" id="avatar-apply">Применить</button>
-                </div>
-            </div>
-        </div>
         <!-- Auth Modal -->
         <div class="profile-modal" id="auth-modal">
             <div class="profile-modal-content">
                 <div class="profile-info" style="margin-top: 0; padding-top: 30px; padding-bottom: 10px;">
                     <h2 style="text-align: center; margin-bottom: 10px;">Добро пожаловать</h2>
-                    <p style="text-align: center; color: var(--text-secondary);">Войдите в свой аккаунт, чтобы сохранять прививатки в библиотеке</p>
+                    <p style="text-align: center; color: var(--text-secondary);">Войдите в свой аккаунт, чтобы сохранять приватки в библиотеке</p>
                 </div>
                 <div class="plugg-auth-container">
                     <div class="plugg-auth-content">
@@ -1783,7 +1606,7 @@
             <div class="footer-content">
                 <div class="footer-section">
                     <h3>О нас</h3>
-                    <p>PLUGG BOT - лучший бот для поиска и скачивания прививаток. Мы предлагаем огромную коллекцию популярных прививаток.</p>
+                    <p>PLUGG BOT - лучший бот для поиска и скачивания приваток. Мы предлагаем огромную коллекцию популярных приваток.</p>
                 </div>
                 <div class="footer-section">
                     <h3>Наши контакты</h3>
@@ -1802,6 +1625,7 @@
             const tg = window.Telegram.WebApp;
             tg.expand();
             tg.ready();
+            
             // Элементы интерфейса (с проверкой на существование)
             const downloadBtn = document.getElementById('download-btn');
             const progressFill = document.getElementById('progress-fill');
@@ -1831,7 +1655,6 @@
             const profileAvatar = document.getElementById('profile-avatar');
             const bannerPlaceholder = document.getElementById('banner-placeholder');
             const bannerEdit = document.getElementById('banner-edit');
-            const avatarEdit = document.getElementById('avatar-edit');
             const profileEdit = document.getElementById('profile-edit');
             const profileTabs = document.querySelectorAll('.profile-tab');
             const librarySection = document.getElementById('library-section');
@@ -1860,13 +1683,7 @@
             const bannerPreviewImg = document.getElementById('banner-preview-img');
             const bannerCancelBtn = document.getElementById('banner-cancel');
             const bannerApplyBtn = document.getElementById('banner-apply');
-            const avatarSelector = document.getElementById('avatar-selector');
-            const avatarSelectorClose = document.getElementById('avatar-selector-close');
-            const avatarUpload = document.getElementById('avatar-upload');
-            const avatarPreview = document.getElementById('avatar-preview');
-            const avatarPreviewImg = document.getElementById('avatar-preview-img');
-            const avatarCancelBtn = document.getElementById('avatar-cancel');
-            const avatarApplyBtn = document.getElementById('avatar-apply');
+            
             // Переменные для отслеживания состояния
             let isDownloading = false;
             let currentTab = 'all';
@@ -1881,9 +1698,9 @@
             let isVisualizerActive = false;
             let visualizerInterval = null;
             let selectedBannerFile = null;
-            let selectedAvatarFile = null;
             let isOwner = true; // По умолчанию владелец
             let currentGameId = null;
+            
             // Создаем визуализатор загрузки
             function createDownloadVisualizer() {
                 if (!downloadVisualizer) return;
@@ -1895,6 +1712,7 @@
                     downloadVisualizer.appendChild(bar);
                 }
             }
+            
             // Анимируем визуализатор загрузки
             function animateDownloadVisualizer() {
                 if (!isVisualizerActive || !downloadVisualizer) return;
@@ -1904,6 +1722,7 @@
                     bar.style.height = `${height}px`;
                 });
             }
+            
             // Переключение визуализатора загрузки
             if (visualizerToggle) {
                 visualizerToggle.addEventListener('click', () => {
@@ -1929,8 +1748,10 @@
                     }
                 });
             }
+            
             // Инициализация визуализатора загрузки
             createDownloadVisualizer();
+            
             // Эмуляция пинга
             function simulatePing() {
                 if (!pingValue) return;
@@ -1939,6 +1760,7 @@
                 const ping = Math.floor(Math.random() * (maxPing - minPing + 1)) + minPing;
                 pingValue.textContent = `${ping} ms`;
             }
+            
             // Обновление статистики загрузки
             function updateDownloadStats(loaded, total) {
                 if (total === 0 || !downloadedSize || !downloadSpeed) return;
@@ -1952,20 +1774,20 @@
                     }
                 }
             }
+            
             // Получение сохраненных данных пользователя
             function getSavedUserData(telegram_id) {
                 const savedUsers = JSON.parse(localStorage.getItem('plugg_saved_users') || '{}');
                 return savedUsers[telegram_id] || null;
             }
+            
             // Сохранение данных пользователя
             function saveUserData(userData) {
                 const savedUsers = JSON.parse(localStorage.getItem('plugg_saved_users') || '{}');
                 savedUsers[userData.telegram_id] = userData;
                 localStorage.setItem('plugg_saved_users', JSON.stringify(savedUsers));
-                currentUser = userData; // Обновляем текущего пользователя после сохранения
-                updateProfileUI();
-                updateLibraryUI();
             }
+            
             // Проверка наличия пользователя
             function checkUser() {
                 const tgUser = tg.initDataUnsafe.user;
@@ -1980,15 +1802,19 @@
                 }
                 return false;
             }
+            
             // Обновление UI профиля
             function updateProfileUI() {
                 if (!profileName || !profileUsername || !profileBio || !nameInput || 
                     !usernameInput || !bioInput || !libraryGrid) return;
+                    
                 if (currentUser) {
                     // Проверяем верификацию пользователя
                     const isVerified = isUserVerified(currentUser.telegram_id);
+                    
                     // Обновляем имя
                     let nameHTML = currentUser.first_name + (currentUser.last_name ? ' ' + currentUser.last_name : '');
+                    
                     // Добавляем галочку верификации, если пользователь верифицирован
                     if (isVerified) {
                         nameHTML += `
@@ -2000,53 +1826,30 @@
                             </div>
                         `;
                     }
+                    
                     // Обновляем имя с галочкой верификации
                     profileName.innerHTML = nameHTML;
                     nameInput.value = currentUser.first_name + (currentUser.last_name ? ' ' + currentUser.last_name : '');
+                    
                     // Обновляем юзернейм
                     const usernameText = currentUser.username ? `@${currentUser.username}` : 'Не указан';
                     profileUsername.innerHTML = usernameText;
                     usernameInput.value = currentUser.username || '';
+                    
                     // Обновляем био
                     profileBio.textContent = currentUser.bio || 'Добавьте описание профиля, чтобы рассказать о себе';
                     bioInput.value = currentUser.bio || '';
+                    
                     // Обновляем аватар
                     if (currentUser.avatar) {
-                        profileAvatar.innerHTML = `
-                            <img src="${currentUser.avatar}" alt="Аватар">
-                            <div class="avatar-edit" id="avatar-edit">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                </svg>
-                            </div>
-                        `;
-                    } else if (currentUser.telegram_id && currentUser.first_name) {
-                        // Создаем инициалы для аватара
-                        const initials = currentUser.first_name.charAt(0) + (currentUser.last_name ? currentUser.last_name.charAt(0) : '');
-                        profileAvatar.innerHTML = `
-                            <span style="font-size: 24px; font-weight: 600;">${initials}</span>
-                            <div class="avatar-edit" id="avatar-edit">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                </svg>
-                            </div>
-                        `;
+                        profileAvatar.innerHTML = `<img src="${currentUser.avatar}" alt="Аватар">`;
                     } else {
-                        profileAvatar.innerHTML = `
-                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="12" cy="7" r="4"></circle>
-                            </svg>
-                            <div class="avatar-edit" id="avatar-edit">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                </svg>
-                            </div>
-                        `;
+                        profileAvatar.innerHTML = `<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>`;
                     }
+                    
                     // Обновляем баннер
                     if (currentUser.banner) {
                         bannerPlaceholder.style.backgroundImage = `url('${currentUser.banner}')`;
@@ -2059,8 +1862,10 @@
                         bannerPlaceholder.style.backgroundPosition = '';
                         bannerPlaceholder.textContent = 'Добавьте свой баннер, чтобы выделиться среди других пользователей';
                     }
+                    
                     // Обновляем библиотеку
                     updateLibraryUI();
+                    
                     // Добавляем обработчик для галочки верификации
                     const verifiedBadge = document.getElementById('verified-badge');
                     if (verifiedBadge) {
@@ -2073,6 +1878,7 @@
                             }, 10000);
                         });
                     }
+                    
                     // Проверяем, является ли пользователь владельцем
                     if (!isOwner) {
                         profileModal.classList.add('guest-view');
@@ -2081,11 +1887,13 @@
                     }
                 }
             }
+            
             // Проверка верификации пользователя
             function isUserVerified(telegram_id) {
                 const verifiedUsers = [5772425643, 7942740523, 5507094612];
                 return verifiedUsers.includes(Number(telegram_id));
             }
+            
             // Получение описания верификации
             function getVerifiedDescription(telegram_id, nickname) {
                 const verifiedUsers = {
@@ -2095,14 +1903,16 @@
                 };
                 return verifiedUsers[telegram_id] || '';
             }
+            
             // Обновление UI библиотеки
             function updateLibraryUI() {
                 if (!libraryGrid) return;
+                
                 libraryGrid.innerHTML = '';
                 if (!currentUser || !currentUser.library || currentUser.library.length === 0) {
                     libraryGrid.innerHTML = `
                         <div style="grid-column: 1 / -1; text-align: center; padding: 20px; color: var(--text-secondary);">
-                            Ваша библиотека пуста. Добавляйте прививатки в библиотеку, чтобы найти их здесь!
+                            Ваша библиотека пуста. Добавляйте приватки в библиотеку, чтобы найти их здесь!
                         </div>
                     `;
                     return;
@@ -2115,13 +1925,12 @@
                         item.innerHTML = `
                             <img src="${game.image}" alt="${game.title}">
                             <div class="library-item-title">${game.title}</div>
-                            <div class="library-item-info">Версия: ${game.version} • ${game.size}</div>
                         `;
-                        item.style.animationDelay = `${Math.random() * 0.3}s`;
                         libraryGrid.appendChild(item);
                     }
                 });
             }
+            
             // Данные игр
             const games = [
                 {
@@ -2237,6 +2046,7 @@
                     size: '499.1 MB'
                 }
             ];
+            
             // Функция для рендеринга игр в таб
             function renderGames(tab) {
                 const grid = document.querySelector(`#${tab}-tab .games-grid`);
@@ -2262,6 +2072,7 @@
                     grid.appendChild(card);
                 });
             }
+            
             // Обновление кнопки библиотеки в деталях
             function updateDetailsLibraryButton() {
                 if (!detailsLibraryBtn || !currentGameId || !currentUser) return;
@@ -2273,18 +2084,16 @@
                     detailsLibraryBtn.textContent = 'Добавить в библиотеку';
                 }
             }
+            
             // Добавление/удаление игры из библиотеки
             function toggleGameInLibrary(gameId) {
                 if (!currentUser) {
                     authModal.classList.add('active');
                     return;
                 }
-                
-                // Убедимся, что у пользователя есть библиотека
                 if (!currentUser.library) {
                     currentUser.library = [];
                 }
-                
                 const index = currentUser.library.indexOf(gameId);
                 if (index === -1) {
                     // Добавляем в библиотеку
@@ -2295,14 +2104,13 @@
                     currentUser.library.splice(index, 1);
                     tg.showAlert('Игра удалена из библиотеки!');
                 }
-                
                 // Сохраняем обновленные данные
                 saveUserData(currentUser);
-                
                 // Обновляем UI
                 updateDetailsLibraryButton();
                 updateLibraryUI();
             }
+            
             // Обработчик клика по карточке игры
             function handleGameClick(e) {
                 const gameId = e.currentTarget.dataset.gameId;
@@ -2329,6 +2137,7 @@
                     });
                 }
             }
+            
             // Обработчики для вкладок
             document.querySelectorAll('.tab').forEach(tab => {
                 tab.addEventListener('click', () => {
@@ -2342,10 +2151,12 @@
                     applySearch();
                 });
             });
+            
             // Обработчик поиска
             if (searchInput) {
                 searchInput.addEventListener('input', applySearch);
             }
+            
             function applySearch() {
                 const term = searchInput.value.toLowerCase();
                 const grid = document.querySelector(`#${currentTab}-tab .games-grid`);
@@ -2355,6 +2166,7 @@
                     card.style.display = title.includes(term) ? '' : 'none';
                 });
             }
+            
             // Обработчик кнопки "Назад"
             if (backBtn) {
                 backBtn.addEventListener('click', () => {
@@ -2365,6 +2177,7 @@
                     }
                 });
             }
+            
             // Обработчик кнопки добавления в библиотеку в деталях
             if (detailsLibraryBtn) {
                 detailsLibraryBtn.addEventListener('click', () => {
@@ -2373,6 +2186,7 @@
                     }
                 });
             }
+            
             // Функция для обновления прогресса
             function updateProgress(percent, loaded, total) {
                 if (!progressFill || !progressPercent || !statusText) return;
@@ -2387,6 +2201,7 @@
                     statusText.textContent = 'Загрузка завершена! Проверьте папку Download на телефоне.';
                 }
             }
+            
             // Функция для показа статуса
             function showStatus(message, isSuccess) {
                 if (!statusMessage) return;
@@ -2394,6 +2209,7 @@
                 statusMessage.className = `status-message ${isSuccess ? 'status-success' : 'status-error'}`;
                 statusMessage.style.display = 'block';
             }
+            
             // Сброс UI загрузки
             function resetDownloadUI() {
                 isDownloading = false;
@@ -2425,6 +2241,7 @@
                     `;
                 }
             }
+            
             // Функция для скачивания файла
             function downloadFile() {
                 if (!isDownloading && downloadBtn) {
@@ -2535,11 +2352,14 @@
                     }
                 }
             }
+            
             // Обработчик кнопки скачивания
             if (downloadBtn) {
                 downloadBtn.addEventListener('click', downloadFile);
             }
+            
             // ========== НОВАЯ СИСТЕМА АВТОРИЗАЦИИ ЧЕРЕЗ TELEGRAM ==========
+            
             // Обработчик кнопки профиля
             if (profileBtn) {
                 profileBtn.addEventListener('click', () => {
@@ -2550,16 +2370,19 @@
                     }
                 });
             }
+            
             // Обработчик кнопки авторизации через Telegram
             if (telegramAuthButton) {
                 telegramAuthButton.addEventListener('click', () => {
                     // Показываем индикатор загрузки
                     authModal.classList.remove('active');
                     registrationProgress.style.display = 'block';
+                    
                     // Используем данные из Telegram WebApp
                     setTimeout(() => {
                         if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
                             const user = tg.initDataUnsafe.user;
+                            
                             // Создаем объект пользователя
                             const userData = {
                                 telegram_id: user.id,
@@ -2569,25 +2392,28 @@
                                 auth_date: user.auth_date || Math.floor(Date.now() / 1000),
                                 avatar: user.photo_url || '',
                                 banner: '',
-                                bio: 'Любитель прививаток для Standoff 2',
+                                bio: 'Любитель приваток для Standoff 2',
                                 library: [],
-                                badges: [],
-                                pinned_badges: [],
                                 created_at: new Date().toISOString()
                             };
+                            
                             // Восстанавливаем сохраненные данные
                             const savedData = getSavedUserData(userData.telegram_id);
                             if (savedData) {
                                 Object.assign(userData, savedData);
                             }
+                            
                             // Сохраняем пользователя
                             saveUserData(userData);
                             currentUser = userData;
+                            
                             // Обновляем интерфейс
                             updateProfileUI();
+                            
                             // Показываем профиль
                             registrationProgress.style.display = 'none';
                             profileModal.classList.add('active');
+                            
                             tg.showAlert('Вы успешно вошли в систему PLUGG ID через Telegram!');
                         } else {
                             registrationProgress.style.display = 'none';
@@ -2597,37 +2423,20 @@
                     }, 1000);
                 });
             }
+            
             // Обработчик кнопки выхода
             if (logoutBtn) {
                 logoutBtn.addEventListener('click', () => {
-                    // Сохраняем данные пользователя перед выходом
-                    if (currentUser) {
-                        const savedData = getSavedUserData(currentUser.telegram_id);
-                        if (savedData) {
-                            // Обновляем только необходимые поля
-                            savedData.library = currentUser.library || [];
-                            savedData.avatar = currentUser.avatar || '';
-                            savedData.banner = currentUser.banner || '';
-                            savedData.bio = currentUser.bio || '';
-                            savedData.username = currentUser.username || '';
-                            savedData.first_name = currentUser.first_name || '';
-                            savedData.last_name = currentUser.last_name || '';
-                            
-                            // Сохраняем обновленные данные
-                            const savedUsers = JSON.parse(localStorage.getItem('plugg_saved_users') || '{}');
-                            savedUsers[currentUser.telegram_id] = savedData;
-                            localStorage.setItem('plugg_saved_users', JSON.stringify(savedUsers));
-                        }
-                    }
-                    
-                    // Очищаем текущего пользователя
                     currentUser = null;
+                    
                     // Закрываем модальное окно
                     if (profileModal) profileModal.classList.remove('active');
+                    
                     // Показываем уведомление
                     tg.showAlert('Вы вышли из аккаунта');
                 });
             }
+            
             // Обработчик закрытия модальных окон
             document.addEventListener('click', (e) => {
                 // Закрытие authModal при клике вне контента
@@ -2635,12 +2444,14 @@
                     e.target === authModal) {
                     authModal.classList.remove('active');
                 }
+                
                 // Закрытие profileModal при клике вне контента
                 if (profileModal && profileModal.classList.contains('active') && 
                     e.target === profileModal) {
                     profileModal.classList.remove('active');
                 }
             });
+            
             // Обработчики вкладок профиля
             if (profileTabs && profileTabs.length > 0) {
                 profileTabs.forEach(tab => {
@@ -2657,6 +2468,7 @@
                     });
                 });
             }
+            
             // Обработчик сохранения имени
             if (saveNameBtn && nameInput) {
                 saveNameBtn.addEventListener('click', () => {
@@ -2665,7 +2477,9 @@
                         const nameParts = nameInput.value.trim().split(' ');
                         currentUser.first_name = nameParts[0];
                         currentUser.last_name = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
+                        
                         saveUserData(currentUser);
+                        updateProfileUI();
                     }
                     if (nameAvailable) {
                         nameAvailable.style.display = 'block';
@@ -2673,12 +2487,15 @@
                     }
                 });
             }
+            
             // Обработчик сохранения юзернейма
             if (saveUsernameBtn && usernameInput) {
                 saveUsernameBtn.addEventListener('click', () => {
                     if (usernameInput.value.trim() !== '' && currentUser) {
                         currentUser.username = usernameInput.value.trim();
+                        
                         saveUserData(currentUser);
+                        updateProfileUI();
                     }
                     if (usernameAvailable) {
                         usernameAvailable.style.display = 'block';
@@ -2686,33 +2503,29 @@
                     }
                 });
             }
+            
             // Обработчик сохранения био
             if (saveBioBtn && bioInput) {
                 saveBioBtn.addEventListener('click', () => {
                     if (bioInput.value.trim() !== '' && currentUser) {
                         currentUser.bio = bioInput.value.trim();
                         saveUserData(currentUser);
+                        updateProfileUI();
                     }
                 });
             }
+            
             // Обработчик редактирования баннера
             if (bannerEdit) {
                 bannerEdit.addEventListener('click', () => {
                     // Показываем селектор баннеров
                     bannerSelector.classList.add('active');
+                    
                     // Загружаем галерею
                     loadGallery();
                 });
             }
-            // Обработчик редактирования аватара
-            if (avatarEdit) {
-                document.addEventListener('click', function(e) {
-                    if (e.target.closest('.avatar-edit')) {
-                        // Показываем селектор аватара
-                        avatarSelector.classList.add('active');
-                    }
-                });
-            }
+            
             // Обработчик закрытия селектора баннеров
             if (bannerSelectorClose) {
                 bannerSelectorClose.addEventListener('click', () => {
@@ -2721,15 +2534,8 @@
                     selectedBannerFile = null;
                 });
             }
-            // Обработчик закрытия селектора аватара
-            if (avatarSelectorClose) {
-                avatarSelectorClose.addEventListener('click', () => {
-                    avatarSelector.classList.remove('active');
-                    avatarPreview.classList.remove('active');
-                    selectedAvatarFile = null;
-                });
-            }
-            // Обработчик выбора из галереи баннера
+            
+            // Обработчик выбора из галереи
             if (bannerUpload) {
                 bannerUpload.addEventListener('click', () => {
                     // Создаем скрытый input для выбора файла
@@ -2737,68 +2543,57 @@
                     fileInput.type = 'file';
                     fileInput.accept = 'image/*';
                     fileInput.capture = 'user'; // Запрашиваем доступ к камере
+                    
                     fileInput.addEventListener('change', (e) => {
                         if (e.target.files && e.target.files[0]) {
                             selectedBannerFile = e.target.files[0];
                             const reader = new FileReader();
+                            
                             reader.onload = function(event) {
                                 bannerPreviewImg.src = event.target.result;
                                 bannerPreview.classList.add('active');
                             };
+                            
                             reader.readAsDataURL(selectedBannerFile);
                         }
                     });
+                    
                     fileInput.click();
                 });
             }
-            // Обработчик выбора из галереи аватара
-            if (avatarUpload) {
-                avatarUpload.addEventListener('click', () => {
-                    // Создаем скрытый input для выбора файла
-                    const fileInput = document.createElement('input');
-                    fileInput.type = 'file';
-                    fileInput.accept = 'image/*';
-                    fileInput.capture = 'user'; // Запрашиваем доступ к камере
-                    fileInput.addEventListener('change', (e) => {
-                        if (e.target.files && e.target.files[0]) {
-                            selectedAvatarFile = e.target.files[0];
-                            const reader = new FileReader();
-                            reader.onload = function(event) {
-                                avatarPreviewImg.src = event.target.result;
-                                avatarPreview.classList.add('active');
-                            };
-                            reader.readAsDataURL(selectedAvatarFile);
-                        }
-                    });
-                    fileInput.click();
-                });
-            }
+            
             // Загрузка галереи
             function loadGallery() {
                 // Здесь можно загрузить изображения из галереи устройства
                 // Для примера добавим несколько заглушек
                 bannerGallery.innerHTML = '';
+                
                 for (let i = 1; i <= 9; i++) {
                     const bannerItem = document.createElement('div');
                     bannerItem.className = 'banner-item';
                     bannerItem.innerHTML = `
                         <img src="https://picsum.photos/600/300?random=${i}" alt="Banner ${i}">
                     `;
+                    
                     bannerItem.addEventListener('click', () => {
                         // Снимаем выделение со всех элементов
                         document.querySelectorAll('.banner-item').forEach(item => {
                             item.classList.remove('selected');
                         });
+                        
                         // Выделяем текущий элемент
                         bannerItem.classList.add('selected');
+                        
                         // Устанавливаем изображение в превью
                         bannerPreviewImg.src = bannerItem.querySelector('img').src;
                         bannerPreview.classList.add('active');
                         selectedBannerFile = null;
                     });
+                    
                     bannerGallery.appendChild(bannerItem);
                 }
             }
+            
             // Обработчик отмены выбора баннера
             if (bannerCancelBtn) {
                 bannerCancelBtn.addEventListener('click', () => {
@@ -2806,6 +2601,7 @@
                     selectedBannerFile = null;
                 });
             }
+            
             // Обработчик применения баннера
             if (bannerApplyBtn) {
                 bannerApplyBtn.addEventListener('click', () => {
@@ -2813,13 +2609,16 @@
                         if (selectedBannerFile) {
                             // Если выбран файл из галереи
                             const reader = new FileReader();
+                            
                             reader.onload = function(event) {
                                 currentUser.banner = event.target.result;
                                 saveUserData(currentUser);
                                 bannerSelector.classList.remove('active');
                                 bannerPreview.classList.remove('active');
                                 selectedBannerFile = null;
+                                updateProfileUI();
                             };
+                            
                             reader.readAsDataURL(selectedBannerFile);
                         } else if (bannerPreviewImg.src) {
                             // Если выбрано изображение из галереи
@@ -2827,45 +2626,16 @@
                             saveUserData(currentUser);
                             bannerSelector.classList.remove('active');
                             bannerPreview.classList.remove('active');
+                            updateProfileUI();
                         }
                     }
                 });
             }
-            // Обработчик отмены выбора аватара
-            if (avatarCancelBtn) {
-                avatarCancelBtn.addEventListener('click', () => {
-                    avatarPreview.classList.remove('active');
-                    selectedAvatarFile = null;
-                });
-            }
-            // Обработчик применения аватара
-            if (avatarApplyBtn) {
-                avatarApplyBtn.addEventListener('click', () => {
-                    if (currentUser) {
-                        if (selectedAvatarFile) {
-                            // Если выбран файл из галереи
-                            const reader = new FileReader();
-                            reader.onload = function(event) {
-                                currentUser.avatar = event.target.result;
-                                saveUserData(currentUser);
-                                avatarSelector.classList.remove('active');
-                                avatarPreview.classList.remove('active');
-                                selectedAvatarFile = null;
-                            };
-                            reader.readAsDataURL(selectedAvatarFile);
-                        } else if (avatarPreviewImg.src) {
-                            // Если выбрано изображение из галереи
-                            currentUser.avatar = avatarPreviewImg.src;
-                            saveUserData(currentUser);
-                            avatarSelector.classList.remove('active');
-                            avatarPreview.classList.remove('active');
-                        }
-                    }
-                });
-            }
+            
             // Инициализация при загрузке
             checkUser();
             renderGames('all');
+            
             // Проверка start_param для определения гостя
             if (tg.initDataUnsafe && tg.initDataUnsafe.start_param) {
                 const startParam = tg.initDataUnsafe.start_param;
@@ -2873,6 +2643,7 @@
                     isOwner = false;
                 }
             }
+            
             // Установка safe area insets
             if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.safeAreaInset) {
                 document.documentElement.style.setProperty('--tg-safe-area-inset-top', `${window.Telegram.WebApp.safeAreaInset.top}px`);
@@ -2880,6 +2651,7 @@
                 document.documentElement.style.setProperty('--tg-safe-area-inset-left', `${window.Telegram.WebApp.safeAreaInset.left}px`);
                 document.documentElement.style.setProperty('--tg-safe-area-inset-right', `${window.Telegram.WebApp.safeAreaInset.right}px`);
             }
+            
             // Добавляем обработчик для закрытия модальных окон при нажатии Esc
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
@@ -2893,11 +2665,6 @@
                         bannerSelector.classList.remove('active');
                         bannerPreview.classList.remove('active');
                         selectedBannerFile = null;
-                    }
-                    if (avatarSelector && avatarSelector.classList.contains('active')) {
-                        avatarSelector.classList.remove('active');
-                        avatarPreview.classList.remove('active');
-                        selectedAvatarFile = null;
                     }
                 }
             });
