@@ -390,6 +390,24 @@
         .download-btn:not(:disabled):active {
             transform: scale(0.97);
         }
+        .details-library-btn {
+            width: 48%;
+            padding: 16px;
+            background: var(--card-bg);
+            color: var(--text-color);
+            border: none;
+            border-radius: var(--border-radius-md);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        .details-library-btn.active {
+            background: var(--success-color);
+            color: white;
+        }
         .progress-container {
             margin: 20px 0;
             display: none;
@@ -675,6 +693,8 @@
         .verified-badge {
             width: 18px;
             height: 18px;
+            border-radius: 50%;
+            background: transparent;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -682,8 +702,8 @@
             position: relative;
         }
         .verified-badge img {
-            width: 18px;
-            height: 18px;
+            width: 12px;
+            height: 12px;
         }
         .verified-tooltip {
             position: absolute;
@@ -1126,242 +1146,6 @@
         .negative-space {
             padding: 0 20px;
         }
-        /* Badges styles */
-        .badges-container {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            padding: 10px 0;
-        }
-        .badge-item {
-            aspect-ratio: 1/1;
-            border-radius: 8px;
-            overflow: hidden;
-            position: relative;
-            cursor: pointer;
-            transition: var(--transition);
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-            background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .badge-item:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        }
-        .badge-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .badge-item.pinned::after {
-            content: '';
-            position: absolute;
-            top: 4px;
-            right: 4px;
-            width: 16px;
-            height: 16px;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" viewBox="0 0 16 16"><path d="M9.828 8l-2.5-2.5a.5.5 0 0 1 0-.707l2.5-2.5a.5.5 0 0 1 .707 0l.646.646a.5.5 0 0 1 0 .708l-2.197 2.197 2.197 2.197a.5.5 0 0 1 0 .707l-.646.646a.5.5 0 0 1-.708 0zm-4.95.708L7.328 11.15a.5.5 0 0 1-.708 0l-.646-.647a.5.5 0 0 1 0-.707l2.197-2.197-2.197-2.197a.5.5 0 0 1 0-.707l.646-.646a.5.5 0 0 1 .708 0l2.5 2.5a.5.5 0 0 1 0 .708l-2.5 2.5a.5.5 0 0 1-.707 0z"/></svg>') no-repeat center;
-            background-size: 12px;
-            border-radius: 50%;
-        }
-        .badge-item.selected {
-            box-shadow: 0 0 0 2px var(--accent-color);
-        }
-        .badge-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        .badge-action-btn {
-            flex: 1;
-            padding: 10px;
-            border-radius: var(--border-radius-sm);
-            background: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: var(--text-secondary);
-            font-size: 14px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        .badge-action-btn:hover {
-            background: var(--accent-color);
-            color: white;
-            border-color: var(--accent-color);
-        }
-        .badge-action-btn.apply {
-            background: var(--accent-gradient);
-            border: none;
-            color: white;
-        }
-        .badge-action-btn.pinned {
-            background: var(--success-color);
-            border: none;
-            color: white;
-        }
-        .badge-profile {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 12px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: var(--border-radius-sm);
-            margin-top: 10px;
-            word-break: break-all;
-        }
-        .badge-profile svg {
-            width: 16px;
-            height: 16px;
-            color: var(--accent-color);
-        }
-        .badge-profile-copy {
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: var(--transition);
-        }
-        .badge-profile-copy:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-        .badge-profile-copied {
-            color: var(--success-color);
-            animation: flash 1s;
-        }
-        .banner-selector {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: var(--primary-bg);
-            z-index: 3000;
-            padding: 20px;
-            flex-direction: column;
-            overflow-y: auto;
-        }
-        .banner-selector.active {
-            display: flex;
-        }
-        .banner-selector-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 0;
-            margin-bottom: 15px;
-        }
-        .banner-selector-title {
-            font-size: 18px;
-            font-weight: 600;
-        }
-        .banner-selector-close {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--accent-color);
-            font-size: 20px;
-            cursor: pointer;
-        }
-        .banner-gallery {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .banner-item {
-            aspect-ratio: 16/9;
-            border-radius: 8px;
-            overflow: hidden;
-            cursor: pointer;
-            position: relative;
-        }
-        .banner-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .banner-item.selected::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(74, 134, 255, 0.3);
-            border: 2px solid var(--accent-color);
-        }
-        .banner-upload {
-            padding: 15px;
-            border-radius: var(--border-radius-md);
-            background: var(--card-bg);
-            text-align: center;
-            margin-bottom: 20px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        .banner-upload:hover {
-            background: var(--accent-color);
-            color: white;
-        }
-        .banner-upload svg {
-            width: 24px;
-            height: 24px;
-            margin-bottom: 10px;
-            fill: var(--accent-color);
-        }
-        .banner-upload:hover svg {
-            fill: white;
-        }
-        .banner-preview {
-            display: none;
-            margin-top: 20px;
-        }
-        .banner-preview.active {
-            display: block;
-        }
-        .banner-preview-img {
-            width: 100%;
-            height: 150px;
-            border-radius: var(--border-radius-md);
-            overflow: hidden;
-            margin-bottom: 15px;
-        }
-        .banner-preview-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .banner-preview-actions {
-            display: flex;
-            gap: 10px;
-        }
-        .banner-preview-btn {
-            flex: 1;
-            padding: 10px;
-            border-radius: var(--border-radius-sm);
-            background: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: var(--text-secondary);
-            font-size: 14px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        .banner-preview-btn:hover {
-            background: var(--accent-color);
-            color: white;
-            border-color: var(--accent-color);
-        }
-        .banner-preview-btn.apply {
-            background: var(--accent-gradient);
-            border: none;
-            color: white;
-        }
         @keyframes flash {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.3; }
@@ -1545,7 +1329,7 @@
                 <div class="banner-selector-close" id="banner-selector-close">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M18 6 6 18"></path>
-                        <path d="м6 6 12 12"></path>
+                        <path d="m6 6 12 12"></path>
                     </svg>
                 </div>
             </div>
@@ -1782,22 +1566,42 @@
             }
             
             // Сохранение данных пользователя
-            function saveUserData(userData) {
+            function saveUserData() {
+                if (!currentUser) return;
                 const savedUsers = JSON.parse(localStorage.getItem('plugg_saved_users') || '{}');
-                savedUsers[userData.telegram_id] = userData;
+                savedUsers[currentUser.telegram_id] = {
+                    first_name: currentUser.first_name,
+                    last_name: currentUser.last_name,
+                    username: currentUser.username,
+                    bio: currentUser.bio,
+                    banner: currentUser.banner,
+                    library: currentUser.library,
+                };
                 localStorage.setItem('plugg_saved_users', JSON.stringify(savedUsers));
             }
             
-            // Проверка наличия пользователя
+            // Проверка наличия пользователя в localStorage
             function checkUser() {
-                const tgUser = tg.initDataUnsafe.user;
-                if (tgUser) {
-                    const telegram_id = tgUser.id;
-                    const savedData = getSavedUserData(telegram_id);
-                    if (savedData) {
-                        currentUser = savedData;
+                const user = localStorage.getItem('plugg_user');
+                if (user) {
+                    try {
+                        currentUser = JSON.parse(user);
+                        if (tg.initDataUnsafe && tg.initDataUnsafe.user && currentUser.telegram_id !== tg.initDataUnsafe.user.id) {
+                            localStorage.removeItem('plugg_user');
+                            return false;
+                        }
+                        // Восстанавливаем сохраненные данные
+                        const savedData = getSavedUserData(currentUser.telegram_id);
+                        if (savedData) {
+                            Object.assign(currentUser, savedData);
+                            localStorage.setItem('plugg_user', JSON.stringify(currentUser));
+                        }
                         updateProfileUI();
                         return true;
+                    } catch (e) {
+                        console.error('Error parsing user data', e);
+                        localStorage.removeItem('plugg_user');
+                        return false;
                     }
                 }
                 return false;
@@ -1827,7 +1631,7 @@
                         `;
                     }
                     
-                    // Обновляем имя с галочкой верификации
+                    // Обновляем имя с галочкой верификации и значками
                     profileName.innerHTML = nameHTML;
                     nameInput.value = currentUser.first_name + (currentUser.last_name ? ' ' + currentUser.last_name : '');
                     
@@ -1843,11 +1647,6 @@
                     // Обновляем аватар
                     if (currentUser.avatar) {
                         profileAvatar.innerHTML = `<img src="${currentUser.avatar}" alt="Аватар">`;
-                    } else {
-                        profileAvatar.innerHTML = `<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="12" cy="7" r="4"></circle>
-                        </svg>`;
                     }
                     
                     // Обновляем баннер
@@ -1963,7 +1762,7 @@
                         '- Режим наблюдателей',
                         '- Кланы',
                         '- Ребаланс оружий из оригинала',
-                        '- Улучшение рейтинговых игр с первым сезоном',
+                        '- Улучшено рейтинговых игр с первым сезоном',
                         '- Новая акция с скинами из спина "Gambit" (Бабочка и т.д.)'
                     ],
                     image: 'https://avatars.mds.yandex.net/i?id=0e819955e77d734dbf74a1628015204f_l-12569562-images-thumbs&n=13',
@@ -2105,7 +1904,8 @@
                     tg.showAlert('Игра удалена из библиотеки!');
                 }
                 // Сохраняем обновленные данные
-                saveUserData(currentUser);
+                localStorage.setItem('plugg_user', JSON.stringify(currentUser));
+                saveUserData();
                 // Обновляем UI
                 updateDetailsLibraryButton();
                 updateLibraryUI();
@@ -2404,8 +2204,9 @@
                             }
                             
                             // Сохраняем пользователя
-                            saveUserData(userData);
+                            localStorage.setItem('plugg_user', JSON.stringify(userData));
                             currentUser = userData;
+                            saveUserData();
                             
                             // Обновляем интерфейс
                             updateProfileUI();
@@ -2427,6 +2228,14 @@
             // Обработчик кнопки выхода
             if (logoutBtn) {
                 logoutBtn.addEventListener('click', () => {
+                    if (currentUser) {
+                        // Сохраняем данные перед выходом
+                        saveUserData();
+                    }
+                    
+                    // Удаляем текущего пользователя
+                    localStorage.removeItem('plugg_user');
+                    
                     currentUser = null;
                     
                     // Закрываем модальное окно
@@ -2478,7 +2287,8 @@
                         currentUser.first_name = nameParts[0];
                         currentUser.last_name = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
                         
-                        saveUserData(currentUser);
+                        localStorage.setItem('plugg_user', JSON.stringify(currentUser));
+                        saveUserData();
                         updateProfileUI();
                     }
                     if (nameAvailable) {
@@ -2494,7 +2304,8 @@
                     if (usernameInput.value.trim() !== '' && currentUser) {
                         currentUser.username = usernameInput.value.trim();
                         
-                        saveUserData(currentUser);
+                        localStorage.setItem('plugg_user', JSON.stringify(currentUser));
+                        saveUserData();
                         updateProfileUI();
                     }
                     if (usernameAvailable) {
@@ -2509,7 +2320,8 @@
                 saveBioBtn.addEventListener('click', () => {
                     if (bioInput.value.trim() !== '' && currentUser) {
                         currentUser.bio = bioInput.value.trim();
-                        saveUserData(currentUser);
+                        localStorage.setItem('plugg_user', JSON.stringify(currentUser));
+                        saveUserData();
                         updateProfileUI();
                     }
                 });
@@ -2612,7 +2424,8 @@
                             
                             reader.onload = function(event) {
                                 currentUser.banner = event.target.result;
-                                saveUserData(currentUser);
+                                localStorage.setItem('plugg_user', JSON.stringify(currentUser));
+                                saveUserData();
                                 bannerSelector.classList.remove('active');
                                 bannerPreview.classList.remove('active');
                                 selectedBannerFile = null;
@@ -2623,7 +2436,8 @@
                         } else if (bannerPreviewImg.src) {
                             // Если выбрано изображение из галереи
                             currentUser.banner = bannerPreviewImg.src;
-                            saveUserData(currentUser);
+                            localStorage.setItem('plugg_user', JSON.stringify(currentUser));
+                            saveUserData();
                             bannerSelector.classList.remove('active');
                             bannerPreview.classList.remove('active');
                             updateProfileUI();
