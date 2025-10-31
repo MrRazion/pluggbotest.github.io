@@ -349,13 +349,12 @@
         }
         .download-btn-container {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             margin-bottom: 20px;
         }
         .download-btn {
             display: block;
-            width: 100%;
-            max-width: 300px;
+            width: 48%;
             padding: 16px;
             background: var(--accent-gradient);
             color: white;
@@ -390,6 +389,24 @@
         }
         .download-btn:not(:disabled):active {
             transform: scale(0.97);
+        }
+        .details-library-btn {
+            width: 48%;
+            padding: 16px;
+            background: var(--card-bg);
+            color: var(--text-color);
+            border: none;
+            border-radius: var(--border-radius-md);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        .details-library-btn.active {
+            background: var(--success-color);
+            color: white;
         }
         .progress-container {
             margin: 20px 0;
@@ -442,14 +459,14 @@
             font-weight: 600;
             margin-top: 3px;
         }
-        .audio-visualizer-container {
+        .download-visualizer-container {
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 6px;
             margin-top: 8px;
         }
-        .audio-visualizer {
+        .download-visualizer {
             display: none;
             height: 30px;
             width: 200px;
@@ -458,7 +475,7 @@
             gap: 2px;
             padding: 5px 0;
         }
-        .audio-bar {
+        .download-bar {
             width: 4px;
             background: var(--accent-color);
             border-radius: 2px;
@@ -700,6 +717,8 @@
             z-index: 10;
             opacity: 0;
             transition: opacity 0.3s;
+            max-width: 200px;
+            word-break: break-word;
         }
         .verified-tooltip.show {
             opacity: 1;
@@ -1380,6 +1399,11 @@
         .guest-view .badge-actions {
             display: none;
         }
+        .development-message {
+            text-align: center;
+            color: var(--text-secondary);
+            padding: 20px;
+        }
     </style>
 </head>
 <body>
@@ -1414,10 +1438,7 @@
         </div>
         <!-- Детали игры (общий) -->
         <div class="game-details" id="game-details">
-            <div class="details-header">
-                <button class="back-btn" id="back-btn">← Назад</button>
-                <button class="details-library-btn" id="details-library-btn">Добавить в библиотеку</button>
-            </div>
+            <button class="back-btn" id="back-btn">← Назад</button>
             <div class="game-details-content">
                 <div class="game-details-header">
                     <div class="game-details-icon">
@@ -1431,6 +1452,7 @@
                 <div class="download-section">
                     <div class="download-btn-container">
                         <button id="download-btn" class="download-btn">Скачать</button>
+                        <button class="details-library-btn" id="details-library-btn">Добавить в библиотеку</button>
                     </div>
                     <div class="progress-container" id="progress-container">
                         <div class="progress-info">
@@ -1454,8 +1476,8 @@
                                 <span class="download-stats-value" id="ping-value">-- ms</span>
                             </div>
                         </div>
-                        <div class="audio-visualizer-container">
-                            <div class="audio-visualizer" id="audio-visualizer"></div>
+                        <div class="download-visualizer-container">
+                            <div class="download-visualizer" id="download-visualizer"></div>
                             <div class="visualizer-toggle" id="visualizer-toggle">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M12 5v14M17 5v14M7 5v14M2 5h20M2 19h20"></path>
@@ -1514,6 +1536,7 @@
                         </div>
                     </div>
                     <div class="profile-section" id="icons-section">
+                        <div class="development-message">Эта функция всё ещё в разработке</div>
                         <div class="badges-container" id="badges-container">
                             <!-- Icons will be added here -->
                         </div>
@@ -1561,7 +1584,7 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                     <circle cx="9" cy="9" r="2"></circle>
-                    <path d="m21 15-3.086-3.086a2 2 0 0 1-2.828 0L6 21"></path>
+                    <path d="м21 15-3.086-3.086a2 2 0 0 1-2.828 0L6 21"></path>
                 </svg>
                 <div>Выбрать из галереи</div>
             </div>
@@ -1680,7 +1703,7 @@
             const logoutBtn = document.getElementById('logout-btn');
             const libraryGrid = document.getElementById('library-grid');
             const visualizerToggle = document.getElementById('visualizer-toggle');
-            const audioVisualizer = document.getElementById('audio-visualizer');
+            const downloadVisualizer = document.getElementById('download-visualizer');
             const downloadedSize = document.getElementById('downloaded-size');
             const downloadSpeed = document.getElementById('download-speed');
             const pingValue = document.getElementById('ping-value');
@@ -1715,43 +1738,43 @@
             let isOwner = true; // По умолчанию владелец
             let currentGameId = null;
             
-            // Создаем аудио визуализатор
-            function createAudioVisualizer() {
-                if (!audioVisualizer) return;
-                audioVisualizer.innerHTML = '';
+            // Создаем визуализатор загрузки
+            function createDownloadVisualizer() {
+                if (!downloadVisualizer) return;
+                downloadVisualizer.innerHTML = '';
                 for (let i = 0; i < 25; i++) {
                     const bar = document.createElement('div');
-                    bar.className = 'audio-bar';
+                    bar.className = 'download-bar';
                     bar.style.height = '2px';
-                    audioVisualizer.appendChild(bar);
+                    downloadVisualizer.appendChild(bar);
                 }
             }
             
-            // Анимируем аудио визуализатор
-            function animateAudioVisualizer() {
-                if (!isVisualizerActive || !audioVisualizer) return;
-                const bars = document.querySelectorAll('.audio-bar');
+            // Анимируем визуализатор загрузки
+            function animateDownloadVisualizer() {
+                if (!isVisualizerActive || !downloadVisualizer) return;
+                const bars = document.querySelectorAll('.download-bar');
                 bars.forEach(bar => {
                     const height = Math.floor(Math.random() * 25) + 2;
                     bar.style.height = `${height}px`;
                 });
             }
             
-            // Переключение аудио визуализатора
+            // Переключение визуализатора загрузки
             if (visualizerToggle) {
                 visualizerToggle.addEventListener('click', () => {
                     isVisualizerActive = !isVisualizerActive;
                     if (isVisualizerActive) {
-                        audioVisualizer.style.display = 'flex';
+                        downloadVisualizer.style.display = 'flex';
                         visualizerToggle.innerHTML = `
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M5 12h14M5 18h14M5 6h14"></path>
                             </svg>
                         `;
                         if (visualizerInterval) clearInterval(visualizerInterval);
-                        visualizerInterval = setInterval(animateAudioVisualizer, 80);
+                        visualizerInterval = setInterval(animateDownloadVisualizer, 80);
                     } else {
-                        audioVisualizer.style.display = 'none';
+                        downloadVisualizer.style.display = 'none';
                         visualizerToggle.innerHTML = `
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M12 5v14M17 5v14M7 5v14M2 5h20M2 19h20"></path>
@@ -1763,8 +1786,8 @@
                 });
             }
             
-            // Инициализация аудио визуализатора
-            createAudioVisualizer();
+            // Инициализация визуализатора загрузки
+            createDownloadVisualizer();
             
             // Эмуляция пинга
             function simulatePing() {
@@ -1916,6 +1939,7 @@
                         const tooltip = document.getElementById('verified-tooltip');
                         verifiedBadge.addEventListener('click', () => {
                             tooltip.classList.add('show');
+                            tooltip.style.display = 'block';
                             setTimeout(() => {
                                 tooltip.classList.remove('show');
                             }, 10000);
@@ -2354,13 +2378,13 @@
                     statusMessage.style.display = 'none';
                 }
                 updateProgress(0, 0, 0);
-                // Останавливаем аудио визуализатор
+                // Останавливаем визуализатор загрузки
                 if (visualizerInterval) {
                     clearInterval(visualizerInterval);
                     visualizerInterval = null;
                 }
-                if (audioVisualizer) {
-                    audioVisualizer.style.display = 'none';
+                if (downloadVisualizer) {
+                    downloadVisualizer.style.display = 'none';
                 }
                 isVisualizerActive = false;
                 if (visualizerToggle) {
