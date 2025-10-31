@@ -390,24 +390,6 @@
         .download-btn:not(:disabled):active {
             transform: scale(0.97);
         }
-        .details-library-btn {
-            width: 48%;
-            padding: 16px;
-            background: var(--card-bg);
-            color: var(--text-color);
-            border: none;
-            border-radius: var(--border-radius-md);
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            text-align: center;
-            transition: var(--transition);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        }
-        .details-library-btn.active {
-            background: var(--success-color);
-            color: white;
-        }
         .progress-container {
             margin: 20px 0;
             display: none;
@@ -693,8 +675,6 @@
         .verified-badge {
             width: 18px;
             height: 18px;
-            border-radius: 50%;
-            background: var(--success-color);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -702,8 +682,8 @@
             position: relative;
         }
         .verified-badge img {
-            width: 12px;
-            height: 12px;
+            width: 18px;
+            height: 18px;
         }
         .verified-tooltip {
             position: absolute;
@@ -1526,23 +1506,12 @@
                 </div>
                 <div class="profile-tabs">
                     <div class="profile-tab active" data-tab="library">Библиотека</div>
-                    <div class="profile-tab" data-tab="icons">Иконки</div>
                     <div class="profile-tab" data-tab="settings">Настройки</div>
                 </div>
                 <div class="profile-content">
                     <div class="profile-section active" id="library-section">
                         <div class="library-grid" id="library-grid">
                             <!-- Library items will be added here -->
-                        </div>
-                    </div>
-                    <div class="profile-section" id="icons-section">
-                        <div class="development-message">Эта функция всё ещё в разработке</div>
-                        <div class="badges-container" id="badges-container">
-                            <!-- Icons will be added here -->
-                        </div>
-                        <div class="badge-actions" id="badge-actions">
-                            <button class="badge-action-btn apply" id="badge-apply">Применить</button>
-                            <button class="badge-action-btn" id="badge-pin">Закрепить</button>
                         </div>
                     </div>
                     <div class="profile-section profile-settings" id="settings-section">
@@ -1576,7 +1545,7 @@
                 <div class="banner-selector-close" id="banner-selector-close">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M18 6 6 18"></path>
-                        <path d="m6 6 12 12"></path>
+                        <path d="м6 6 12 12"></path>
                     </svg>
                 </div>
             </div>
@@ -1689,7 +1658,6 @@
             const profileEdit = document.getElementById('profile-edit');
             const profileTabs = document.querySelectorAll('.profile-tab');
             const librarySection = document.getElementById('library-section');
-            const iconsSection = document.getElementById('icons-section');
             const settingsSection = document.getElementById('settings-section');
             const nameInput = document.getElementById('name-input');
             const usernameInput = document.getElementById('username-input');
@@ -1707,10 +1675,6 @@
             const downloadedSize = document.getElementById('downloaded-size');
             const downloadSpeed = document.getElementById('download-speed');
             const pingValue = document.getElementById('ping-value');
-            const badgesContainer = document.getElementById('badges-container');
-            const badgeActions = document.getElementById('badge-actions');
-            const badgeApplyBtn = document.getElementById('badge-apply');
-            const badgePinBtn = document.getElementById('badge-pin');
             const bannerSelector = document.getElementById('banner-selector');
             const bannerSelectorClose = document.getElementById('banner-selector-close');
             const bannerGallery = document.getElementById('banner-gallery');
@@ -1733,7 +1697,6 @@
             let totalBytes = 0;
             let isVisualizerActive = false;
             let visualizerInterval = null;
-            let selectedBadge = null;
             let selectedBannerFile = null;
             let isOwner = true; // По умолчанию владелец
             let currentGameId = null;
@@ -1819,40 +1782,22 @@
             }
             
             // Сохранение данных пользователя
-            function saveUserData() {
-                if (!currentUser) return;
+            function saveUserData(userData) {
                 const savedUsers = JSON.parse(localStorage.getItem('plugg_saved_users') || '{}');
-                savedUsers[currentUser.telegram_id] = {
-                    first_name: currentUser.first_name,
-                    last_name: currentUser.last_name,
-                    username: currentUser.username,
-                    bio: currentUser.bio,
-                    banner: currentUser.banner,
-                    library: currentUser.library,
-                    badges: currentUser.badges,
-                    pinned_badges: currentUser.pinned_badges
-                };
+                savedUsers[userData.telegram_id] = userData;
                 localStorage.setItem('plugg_saved_users', JSON.stringify(savedUsers));
             }
             
-            // Проверка наличия пользователя в localStorage
+            // Проверка наличия пользователя
             function checkUser() {
-                const user = localStorage.getItem('plugg_user');
-                if (user) {
-                    try {
-                        currentUser = JSON.parse(user);
-                        // Восстанавливаем сохраненные данные
-                        const savedData = getSavedUserData(currentUser.telegram_id);
-                        if (savedData) {
-                            Object.assign(currentUser, savedData);
-                            localStorage.setItem('plugg_user', JSON.stringify(currentUser));
-                        }
+                const tgUser = tg.initDataUnsafe.user;
+                if (tgUser) {
+                    const telegram_id = tgUser.id;
+                    const savedData = getSavedUserData(telegram_id);
+                    if (savedData) {
+                        currentUser = savedData;
                         updateProfileUI();
                         return true;
-                    } catch (e) {
-                        console.error('Error parsing user data', e);
-                        localStorage.removeItem('plugg_user');
-                        return false;
                     }
                 }
                 return false;
@@ -1882,21 +1827,7 @@
                         `;
                     }
                     
-                    // Добавляем значки к имени (если нет галочки, значок слева; если есть, справа)
-                    let badgesHTML = '';
-                    if (currentUser.badges && currentUser.badges.length > 0) {
-                        const activeBadge = currentUser.badges.find(b => b.active);
-                        if (activeBadge) {
-                            badgesHTML = `<div class="badge-icon"><img src="${activeBadge.image}" alt="Badge"></div>`;
-                        }
-                    }
-                    if (isVerified) {
-                        nameHTML += badgesHTML;
-                    } else {
-                        nameHTML = badgesHTML + nameHTML;
-                    }
-                    
-                    // Обновляем имя с галочкой верификации и значками
+                    // Обновляем имя с галочкой верификации
                     profileName.innerHTML = nameHTML;
                     nameInput.value = currentUser.first_name + (currentUser.last_name ? ' ' + currentUser.last_name : '');
                     
@@ -1929,9 +1860,6 @@
                     
                     // Обновляем библиотеку
                     updateLibraryUI();
-                    
-                    // Инициализируем значки
-                    initIcons();
                     
                     // Добавляем обработчик для галочки верификации
                     const verifiedBadge = document.getElementById('verified-badge');
@@ -1969,92 +1897,6 @@
                     5507094612: `${nickname} supported the development of the project and received a special badge.`
                 };
                 return verifiedUsers[telegram_id] || '';
-            }
-            
-            // Инициализация иконок
-            function initIcons() {
-                if (!badgesContainer) return;
-                
-                // Очистка контейнера
-                badgesContainer.innerHTML = '';
-                
-                // Получаем список всех доступных значков
-                const allIcons = [
-                    // No automatic badges
-                ];
-                
-                // Добавляем значки, доступные пользователю
-                allIcons.forEach(icon => {
-                    const badgeItem = document.createElement('div');
-                    badgeItem.className = 'badge-item';
-                    badgeItem.dataset.badgeId = icon.id;
-                    
-                    // Проверяем, закреплен ли значок
-                    if (currentUser.pinned_badges && currentUser.pinned_badges.includes(icon.id)) {
-                        badgeItem.classList.add('pinned');
-                    }
-                    
-                    // Проверяем, активен ли значок
-                    if (currentUser.badges && currentUser.badges.some(b => b.id === icon.id && b.active)) {
-                        badgeItem.classList.add('selected');
-                    }
-                    
-                    badgeItem.innerHTML = `
-                        <img src="${icon.image}" alt="${icon.name}">
-                    `;
-                    
-                    badgeItem.addEventListener('click', () => {
-                        // Снимаем выделение со всех значков
-                        document.querySelectorAll('.badge-item').forEach(item => {
-                            item.classList.remove('selected');
-                        });
-                        
-                        // Выделяем текущий значок
-                        badgeItem.classList.add('selected');
-                        selectedBadge = icon;
-                        
-                        // Обновляем кнопки действий
-                        updateBadgeActions();
-                    });
-                    
-                    badgesContainer.appendChild(badgeItem);
-                });
-            }
-            
-            // Обновление кнопок действий для значков
-            function updateBadgeActions() {
-                if (!badgeApplyBtn || !badgePinBtn || !selectedBadge) return;
-                
-                // Проверяем количество закрепленных значков
-                const pinnedCount = currentUser.pinned_badges ? currentUser.pinned_badges.length : 0;
-                
-                // По умолчанию кнопка "Применить" активна
-                badgeApplyBtn.classList.remove('pinned');
-                badgeApplyBtn.classList.add('apply');
-                badgeApplyBtn.textContent = 'Применить';
-                
-                // Проверяем, закреплен ли значок
-                const isPinned = currentUser.pinned_badges && currentUser.pinned_badges.includes(selectedBadge.id);
-                
-                if (pinnedCount >= 6 && !isPinned) {
-                    badgePinBtn.style.display = 'none';
-                } else {
-                    badgePinBtn.style.display = 'block';
-                    if (isPinned) {
-                        badgePinBtn.classList.add('pinned');
-                        badgePinBtn.textContent = 'Открепить';
-                    } else {
-                        badgePinBtn.classList.remove('pinned');
-                        badgePinBtn.textContent = 'Закрепить';
-                    }
-                }
-                
-                // Проверяем, активен ли значок
-                const isActive = currentUser.badges && currentUser.badges.some(b => b.id === selectedBadge.id && b.active);
-                
-                if (isActive) {
-                    badgeApplyBtn.textContent = 'Снять';
-                }
             }
             
             // Обновление UI библиотеки
@@ -2258,8 +2100,7 @@
                     tg.showAlert('Игра удалена из библиотеки!');
                 }
                 // Сохраняем обновленные данные
-                localStorage.setItem('plugg_user', JSON.stringify(currentUser));
-                saveUserData();
+                saveUserData(currentUser);
                 // Обновляем UI
                 updateDetailsLibraryButton();
                 updateLibraryUI();
@@ -2560,9 +2401,8 @@
                             }
                             
                             // Сохраняем пользователя
-                            localStorage.setItem('plugg_user', JSON.stringify(userData));
+                            saveUserData(userData);
                             currentUser = userData;
-                            saveUserData();
                             
                             // Обновляем интерфейс
                             updateProfileUI();
@@ -2584,14 +2424,6 @@
             // Обработчик кнопки выхода
             if (logoutBtn) {
                 logoutBtn.addEventListener('click', () => {
-                    if (currentUser) {
-                        // Сохраняем данные перед выходом
-                        saveUserData();
-                    }
-                    
-                    // Удаляем текущего пользователя
-                    localStorage.removeItem('plugg_user');
-                    
                     currentUser = null;
                     
                     // Закрываем модальное окно
@@ -2623,17 +2455,11 @@
                     tab.addEventListener('click', () => {
                         profileTabs.forEach(t => t.classList.remove('active'));
                         tab.classList.add('active');
-                        if (tab.dataset.tab === 'library' && librarySection && iconsSection && settingsSection) {
+                        if (tab.dataset.tab === 'library' && librarySection && settingsSection) {
                             librarySection.style.display = 'block';
-                            iconsSection.style.display = 'none';
                             settingsSection.style.display = 'none';
-                        } else if (tab.dataset.tab === 'icons' && librarySection && iconsSection && settingsSection) {
+                        } else if (tab.dataset.tab === 'settings' && librarySection && settingsSection) {
                             librarySection.style.display = 'none';
-                            iconsSection.style.display = 'block';
-                            settingsSection.style.display = 'none';
-                        } else if (tab.dataset.tab === 'settings' && librarySection && iconsSection && settingsSection) {
-                            librarySection.style.display = 'none';
-                            iconsSection.style.display = 'none';
                             settingsSection.style.display = 'block';
                         }
                     });
@@ -2649,8 +2475,7 @@
                         currentUser.first_name = nameParts[0];
                         currentUser.last_name = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
                         
-                        localStorage.setItem('plugg_user', JSON.stringify(currentUser));
-                        saveUserData();
+                        saveUserData(currentUser);
                         updateProfileUI();
                     }
                     if (nameAvailable) {
@@ -2666,8 +2491,7 @@
                     if (usernameInput.value.trim() !== '' && currentUser) {
                         currentUser.username = usernameInput.value.trim();
                         
-                        localStorage.setItem('plugg_user', JSON.stringify(currentUser));
-                        saveUserData();
+                        saveUserData(currentUser);
                         updateProfileUI();
                     }
                     if (usernameAvailable) {
@@ -2682,87 +2506,9 @@
                 saveBioBtn.addEventListener('click', () => {
                     if (bioInput.value.trim() !== '' && currentUser) {
                         currentUser.bio = bioInput.value.trim();
-                        localStorage.setItem('plugg_user', JSON.stringify(currentUser));
-                        saveUserData();
+                        saveUserData(currentUser);
                         updateProfileUI();
                     }
-                });
-            }
-            
-            // Обработчик кнопки "Применить" для значков
-            if (badgeApplyBtn) {
-                badgeApplyBtn.addEventListener('click', () => {
-                    if (!selectedBadge || !currentUser) return;
-                    
-                    // Проверяем, активен ли уже этот значок
-                    const isAlreadyActive = currentUser.badges && currentUser.badges.some(b => b.id === selectedBadge.id && b.active);
-                    
-                    if (isAlreadyActive) {
-                        // Снимаем активность
-                        currentUser.badges = currentUser.badges.filter(b => b.id !== selectedBadge.id || !b.active);
-                        badgeApplyBtn.textContent = 'Применить';
-                    } else {
-                        // Удаляем текущий активный значок
-                        if (currentUser.badges) {
-                            currentUser.badges = currentUser.badges.filter(b => !b.active);
-                        } else {
-                            currentUser.badges = [];
-                        }
-                        
-                        // Добавляем новый активный значок
-                        currentUser.badges.push({
-                            id: selectedBadge.id,
-                            image: selectedBadge.image,
-                            active: true
-                        });
-                        
-                        badgeApplyBtn.textContent = 'Снять';
-                    }
-                    
-                    // Сохраняем изменения
-                    localStorage.setItem('plugg_user', JSON.stringify(currentUser));
-                    saveUserData();
-                    updateProfileUI();
-                });
-            }
-            
-            // Обработчик кнопки "Закрепить" для значков
-            if (badgePinBtn) {
-                badgePinBtn.addEventListener('click', () => {
-                    if (!selectedBadge || !currentUser) return;
-                    
-                    // Проверяем, закреплен ли уже этот значок
-                    const isPinned = currentUser.pinned_badges && currentUser.pinned_badges.includes(selectedBadge.id);
-                    
-                    if (isPinned) {
-                        // Открепляем значок
-                        currentUser.pinned_badges = currentUser.pinned_badges.filter(id => id !== selectedBadge.id);
-                        badgePinBtn.textContent = 'Закрепить';
-                        badgePinBtn.classList.remove('pinned');
-                    } else {
-                        // Проверяем, не превышен ли лимит закрепленных значков
-                        if (!currentUser.pinned_badges) {
-                            currentUser.pinned_badges = [];
-                        }
-                        
-                        if (currentUser.pinned_badges.length < 6) {
-                            // Закрепляем значок
-                            currentUser.pinned_badges.push(selectedBadge.id);
-                            badgePinBtn.textContent = 'Открепить';
-                            badgePinBtn.classList.add('pinned');
-                        } else {
-                            tg.showAlert('Вы достигли лимита закрепленных значков (6 шт.)');
-                            return;
-                        }
-                    }
-                    
-                    // Сохраняем изменения
-                    localStorage.setItem('plugg_user', JSON.stringify(currentUser));
-                    saveUserData();
-                    updateProfileUI();
-                    
-                    // Обновляем отображение значков
-                    initIcons();
                 });
             }
             
@@ -2863,8 +2609,7 @@
                             
                             reader.onload = function(event) {
                                 currentUser.banner = event.target.result;
-                                localStorage.setItem('plugg_user', JSON.stringify(currentUser));
-                                saveUserData();
+                                saveUserData(currentUser);
                                 bannerSelector.classList.remove('active');
                                 bannerPreview.classList.remove('active');
                                 selectedBannerFile = null;
@@ -2875,8 +2620,7 @@
                         } else if (bannerPreviewImg.src) {
                             // Если выбрано изображение из галереи
                             currentUser.banner = bannerPreviewImg.src;
-                            localStorage.setItem('plugg_user', JSON.stringify(currentUser));
-                            saveUserData();
+                            saveUserData(currentUser);
                             bannerSelector.classList.remove('active');
                             bannerPreview.classList.remove('active');
                             updateProfileUI();
