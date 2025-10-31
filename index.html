@@ -28,96 +28,84 @@
             --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.25);
             --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
         }
+        
         body {
             background: var(--primary-bg);
             color: var(--text-color);
-            line-height: 1.6;
+            min-height: 100vh;
             padding-top: var(--tg-safe-area-inset-top);
-            padding-bottom: calc(80px + var(--tg-safe-area-inset-bottom));
+            padding-bottom: var(--tg-safe-area-inset-bottom);
             padding-left: var(--tg-safe-area-inset-left);
             padding-right: var(--tg-safe-area-inset-right);
-            min-height: 100vh;
-            overflow-x: hidden;
-            transition: var(--transition);
+            animation: fadeIn 0.3s ease;
         }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
         .container {
-            max-width: 100%;
+            max-width: 700px;
             margin: 0 auto;
-            padding: 15px;
+            padding: 20px;
         }
-        /* Header with gradient and profile button */
+        
+        /* Header styles */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px;
-            background: var(--secondary-bg);
-            border-radius: var(--border-radius-lg);
-            box-shadow: var(--shadow-soft);
-            margin-bottom: 20px;
-            position: relative;
-            overflow: hidden;
+            padding: 10px 0 20px;
         }
-        .header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: var(--accent-gradient);
-            z-index: 1;
-        }
-        .header h1 {
-            font-size: 22px;
+        
+        .logo {
+            font-size: 24px;
             font-weight: 700;
             background: var(--accent-gradient);
             -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
             background-clip: text;
-            position: relative;
-            z-index: 2;
+            color: transparent;
         }
-        .header p {
-            color: var(--text-secondary);
-            font-size: 13px;
-            margin-top: 5px;
-        }
-        .profile-btn {
+        
+        .library-btn {
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: var(--card-bg);
+            background: rgba(74, 134, 255, 0.1);
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
+            color: var(--accent-color);
             transition: var(--transition);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            z-index: 3;
+            z-index: 2;
         }
-        .profile-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
-        }
-        .profile-icon {
-            width: 24px;
-            height: 24px;
+        
+        .library-btn:hover {
+            background: rgba(74, 134, 255, 0.2);
             color: var(--accent-color);
         }
-        /* Search bar with modern design */
+        
+        .library-btn.active {
+            color: var(--success-color);
+            background: rgba(52, 199, 89, 0.2);
+        }
+        
+        /* Search bar */
         .search-bar {
             margin-bottom: 20px;
             position: relative;
             border-radius: var(--border-radius-md);
             overflow: hidden;
         }
+        
         .search-bar input {
             width: 100%;
             padding: 14px 15px 14px 45px;
@@ -125,75 +113,29 @@
             border: none;
             border-radius: var(--border-radius-md);
             color: var(--text-color);
-            font-size: 14px;
-            transition: var(--transition);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            font-size: 15px;
         }
+        
         .search-bar input:focus {
             outline: none;
-            box-shadow: 0 4px 12px rgba(74, 134, 255, 0.25);
+            box-shadow: 0 0 0 2px var(--accent-color);
         }
-        .search-bar svg {
+        
+        .search-icon {
             position: absolute;
             left: 15px;
             top: 50%;
             transform: translateY(-50%);
-            width: 18px;
-            height: 18px;
-            fill: var(--text-secondary);
-            transition: var(--transition);
+            color: var(--text-secondary);
         }
-        /* Tabs with smooth animation */
-        .tabs {
-            display: flex;
-            overflow-x: auto;
-            margin-bottom: 20px;
-            padding-bottom: 5px;
-            scrollbar-width: none;
-            gap: 8px;
-        }
-        .tabs::-webkit-scrollbar {
-            display: none;
-        }
-        .tab {
-            padding: 10px 20px;
-            background: var(--secondary-bg);
-            border-radius: var(--border-radius-md);
-            cursor: pointer;
-            transition: var(--transition);
-            font-weight: 500;
-            font-size: 15px;
-            white-space: nowrap;
-            position: relative;
-            overflow: hidden;
-        }
-        .tab::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--accent-gradient);
-            transition: var(--transition);
-        }
-        .tab:hover::after {
-            width: 100%;
-        }
-        .tab.active {
-            background: var(--card-bg);
-            color: var(--accent-color);
-        }
-        .tab.active::after {
-            width: 100%;
-        }
-        /* Games grid with improved card design */
+        
+        /* Game grid */
         .games-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 16px;
-            margin-bottom: 30px;
         }
+        
         .game-card {
             background: var(--card-bg);
             border-radius: var(--border-radius-lg);
@@ -204,10 +146,12 @@
             cursor: pointer;
             transform: translateY(0);
         }
+        
         .game-card:hover {
             transform: translateY(-3px);
             box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3);
         }
+        
         .game-image {
             width: 100%;
             height: 140px;
@@ -215,6 +159,7 @@
             position: relative;
             background: linear-gradient(45deg, #1a1a1a, #252525);
         }
+        
         .game-image img {
             width: 100%;
             height: 100%;
@@ -222,31 +167,33 @@
             transition: var(--transition);
             opacity: 0.9;
         }
+        
         .game-card:hover .game-image img {
             transform: scale(1.05);
-            opacity: 1;
         }
+        
         .game-overlay {
             position: absolute;
-            bottom: 0;
+            top: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
-            height: 50%;
+            bottom: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
         }
+        
         .game-info {
-            padding: 14px;
+            padding: 15px;
         }
+        
         .game-title {
-            font-size: 15px;
             font-weight: 600;
+            font-size: 16px;
             margin-bottom: 5px;
-            color: var(--text-color);
-            display: -webkit-box;
-            -webkit-line-clamp: 1;
-            -webkit-box-orient: vertical;
+            white-space: nowrap;
             overflow: hidden;
+            text-overflow: ellipsis;
         }
+        
         .game-description {
             font-size: 13px;
             color: var(--text-secondary);
@@ -254,297 +201,60 @@
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
-            height: 38px;
+            height: 36px;
         }
-        .library-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-secondary);
-            transition: var(--transition);
-            z-index: 2;
-        }
-        .library-btn:hover {
-            background: rgba(74, 134, 255, 0.2);
-            color: var(--accent-color);
-        }
-        .library-btn.active {
-            color: var(--success-color);
-            background: rgba(52, 199, 89, 0.2);
-        }
-        /* Game details page */
-        .game-details {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: var(--primary-bg);
-            z-index: 1000;
-            padding: 20px;
-            overflow-y: auto;
-            padding-top: var(--tg-safe-area-inset-top);
-            padding-bottom: var(--tg-safe-area-inset-bottom);
-            padding-left: var(--tg-safe-area-inset-left);
-            padding-right: var(--tg-safe-area-inset-right);
-            animation: fadeIn 0.3s ease;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .game-details.active {
-            display: block;
-        }
-        .game-details-content {
-            background: var(--secondary-bg);
-            border-radius: var(--border-radius-lg);
-            padding: 20px;
-            margin-top: 20px;
-            box-shadow: var(--shadow-card);
-        }
-        .game-details-header {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 20px;
-        }
-        .game-details-icon {
-            width: 70px;
-            height: 70px;
+        
+        /* Library item - improved design */
+        .library-item {
+            background: var(--card-bg);
             border-radius: var(--border-radius-md);
             overflow: hidden;
-            margin-right: 15px;
-            flex-shrink: 0;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
+            box-shadow: var(--shadow-card);
+            position: relative;
+            cursor: pointer;
+            transform: translateY(0);
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
-        .game-details-icon img {
+        
+        .library-item-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        
+        .library-item-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-        .game-details-info {
+        
+        .library-item-info {
             flex: 1;
+            min-width: 0;
         }
-        .game-details-title {
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 5px;
-            color: var(--text-color);
-        }
-        .game-details-meta {
-            font-size: 14px;
-            color: var(--text-secondary);
-            margin-bottom: 15px;
-        }
-        .download-section {
-            margin-bottom: 25px;
-        }
-        .download-btn-container {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-        .download-btn {
-            display: block;
-            width: 48%;
-            padding: 16px;
-            background: var(--accent-gradient);
-            color: white;
-            border: none;
-            border-radius: var(--border-radius-md);
-            font-size: 16px;
+        
+        .library-item-title {
             font-weight: 600;
-            cursor: pointer;
-            text-align: center;
-            transition: var(--transition);
-            box-shadow: 0 4px 15px rgba(74, 134, 255, 0.3);
-            position: relative;
+            font-size: 15px;
+            margin-bottom: 3px;
+            white-space: nowrap;
             overflow: hidden;
+            text-overflow: ellipsis;
         }
-        .download-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: var(--transition);
-        }
-        .download-btn:hover::before {
-            left: 100%;
-        }
-        .download-btn:disabled {
-            background: linear-gradient(90deg, #3a3a3a, #4a4a4a);
-            cursor: not-allowed;
-            box-shadow: none;
-        }
-        .download-btn:not(:disabled):active {
-            transform: scale(0.97);
-        }
-        .progress-container {
-            margin: 20px 0;
-            display: none;
-        }
-        .progress-info {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-        }
-        .progress-text {
-            font-size: 14px;
+        
+        .library-item-meta {
+            font-size: 12px;
             color: var(--text-secondary);
-        }
-        .progress-percent {
-            font-weight: 600;
-            color: var(--accent-color);
-        }
-        .progress-bar {
-            height: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: var(--border-radius-sm);
-            overflow: hidden;
-            margin-bottom: 15px;
-        }
-        .progress-fill {
-            height: 100%;
-            background: var(--accent-gradient);
-            border-radius: var(--border-radius-sm);
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-        .download-stats {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: var(--border-radius-sm);
-            padding: 12px;
-            font-family: monospace;
-            font-size: 13px;
-            color: var(--text-secondary);
-            margin-bottom: 15px;
             display: flex;
-            justify-content: space-between;
-        }
-        .download-stats-item {
-            display: flex;
-            flex-direction: column;
-        }
-        .download-stats-value {
-            color: var(--text-color);
-            font-weight: 600;
-            margin-top: 3px;
-        }
-        .download-visualizer-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 6px;
-            margin-top: 8px;
-        }
-        .download-visualizer {
-            display: none;
-            height: 30px;
-            width: 200px;
-            display: flex;
-            align-items: flex-end;
-            gap: 2px;
-            padding: 5px 0;
-        }
-        .download-bar {
-            width: 4px;
-            background: var(--accent-color);
-            border-radius: 2px;
-            transition: height 0.1s ease;
-        }
-        .visualizer-toggle {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.08);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: var(--transition);
-            margin-left: auto;
-        }
-        .visualizer-toggle:hover {
-            background: rgba(74, 134, 255, 0.2);
-            transform: rotate(-10deg);
-        }
-        .section-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin: 25px 0 12px;
-            color: var(--text-color);
-            display: flex;
-            align-items: center;
             gap: 8px;
         }
-        .section-content {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: var(--border-radius-md);
-            padding: 15px;
-            margin-bottom: 20px;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-        .section-content p {
-            margin-bottom: 10px;
-            color: var(--text-secondary);
-        }
-        .section-content ul {
-            list-style-type: none;
-            padding-left: 10px;
-        }
-        .section-content li {
-            margin-bottom: 8px;
-            padding-left: 20px;
-            position: relative;
-            color: var(--text-secondary);
-        }
-        .section-content li::before {
-            content: '•';
-            color: var(--accent-color);
-            font-weight: bold;
-            position: absolute;
-            left: 0;
-        }
-        .new-indicator {
-            width: 10px;
-            height: 10px;
-            background-color: var(--success-color);
-            border-radius: 50%;
-            margin-left: 10px;
-            animation: flash 1.5s infinite;
-        }
-        @keyframes flash {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
-        .status-message {
-            padding: 12px 15px;
-            border-radius: var(--border-radius-md);
-            margin-top: 15px;
-            font-size: 14px;
-            display: none;
-        }
-        .status-success {
-            background: rgba(52, 199, 89, 0.1);
-            color: var(--success-color);
-            display: block;
-        }
-        .status-error {
-            background: rgba(255, 59, 48, 0.1);
-            color: var(--error-color);
-            display: block;
-        }
+        
         /* Profile modal */
         .profile-modal {
             position: fixed;
@@ -562,10 +272,12 @@
             pointer-events: none;
             transition: opacity 0.3s ease;
         }
+        
         .profile-modal.active {
             opacity: 1;
             pointer-events: all;
         }
+        
         .profile-modal-content {
             background: var(--secondary-bg);
             border-radius: var(--border-radius-lg);
@@ -576,18 +288,20 @@
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
             transform: translateY(20px);
             opacity: 0;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
+        
         .profile-modal.active .profile-modal-content {
             transform: translateY(0);
             opacity: 1;
         }
+        
         .profile-header {
             position: relative;
-            height: 160px;
+            height: 180px;
             overflow: hidden;
-            border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
         }
+        
         .banner-placeholder {
             width: 100%;
             height: 100%;
@@ -597,16 +311,15 @@
             justify-content: center;
             color: white;
             font-weight: 500;
-            font-size: 14px;
-            text-align: center;
-            padding: 0 20px;
+            position: relative;
         }
+        
         .banner-edit {
             position: absolute;
-            top: 10px;
+            bottom: 10px;
             right: 10px;
-            width: 30px;
-            height: 30px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             background: rgba(0, 0, 0, 0.4);
             display: flex;
@@ -616,14 +329,17 @@
             cursor: pointer;
             transition: var(--transition);
         }
+        
         .banner-edit:hover {
             background: rgba(74, 134, 255, 0.6);
         }
+        
         .profile-info {
             padding: 20px;
             position: relative;
             margin-top: -60px;
         }
+        
         .profile-avatar {
             width: 80px;
             height: 80px;
@@ -637,292 +353,181 @@
             justify-content: center;
             color: var(--accent-color);
             font-size: 24px;
+            cursor: pointer;
+            position: relative;
         }
+        
         .profile-avatar img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-        .profile-edit {
+        
+        .avatar-edit {
             position: absolute;
-            bottom: 15px;
-            right: 15px;
-            width: 28px;
-            height: 28px;
+            bottom: 5px;
+            right: 5px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
             background: var(--accent-color);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            cursor: pointer;
-            transition: var(--transition);
+            font-size: 12px;
         }
-        .profile-edit:hover {
-            transform: scale(1.1);
-        }
+        
         .profile-name {
-            text-align: center;
             font-size: 20px;
             font-weight: 600;
+            text-align: center;
             margin-bottom: 5px;
-            color: var(--text-color);
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 6px;
         }
+        
         .verified-badge {
             width: 18px;
             height: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
             position: relative;
+            cursor: pointer;
         }
+        
         .verified-badge img {
-            width: 18px;
-            height: 18px;
+            width: 100%;
+            height: 100%;
         }
+        
         .verified-tooltip {
             position: absolute;
-            top: -40px;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
             background: rgba(0, 0, 0, 0.8);
             color: white;
             padding: 8px 12px;
             border-radius: 8px;
-            font-size: 12px;
+            font-size: 13px;
             white-space: nowrap;
-            z-index: 10;
             opacity: 0;
-            transition: opacity 0.3s;
-            max-width: 200px;
-            word-break: break-word;
+            pointer-events: none;
+            transition: opacity 0.2s;
+            z-index: 10;
         }
-        .verified-tooltip.show {
+        
+        .verified-badge:hover .verified-tooltip {
             opacity: 1;
         }
+        
         .profile-username {
-            text-align: center;
-            font-size: 14px;
             color: var(--text-secondary);
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 15px;
         }
-        .badge-icon {
-            width: 16px;
-            height: 16px;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        .badge-icon img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+        
         .profile-bio {
+            color: var(--text-color);
             text-align: center;
-            font-size: 14px;
-            color: var(--text-secondary);
             margin-bottom: 20px;
-            min-height: 40px;
+            line-height: 1.4;
+            font-size: 15px;
         }
+        
         .profile-tabs {
             display: flex;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            margin-bottom: 15px;
-            gap: 0;
         }
+        
         .profile-tab {
             flex: 1;
+            padding: 15px;
             text-align: center;
-            padding: 12px 0;
             cursor: pointer;
+            transition: var(--transition);
             font-weight: 500;
-            font-size: 15px;
-            color: var(--text-secondary);
-            transition: var(--transition);
-            position: relative;
         }
-        .profile-tab::after {
-            content: '';
-            position: absolute;
-            bottom: -1px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 2px;
-            background: var(--accent-color);
-            transition: var(--transition);
-        }
+        
         .profile-tab.active {
             color: var(--accent-color);
+            border-bottom: 2px solid var(--accent-color);
         }
-        .profile-tab.active::after {
-            width: 80%;
-        }
+        
         .profile-content {
-            padding: 0 20px 20px;
+            padding: 15px;
         }
-        .library-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-        }
-        .library-item {
-            aspect-ratio: 9/16;
-            border-radius: var(--border-radius-sm);
-            overflow: hidden;
-            position: relative;
-        }
-        .library-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .library-item::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
-        }
-        .library-item-title {
-            position: absolute;
-            bottom: 8px;
-            left: 8px;
-            right: 8px;
-            color: white;
-            font-size: 11px;
-            text-overflow: ellipsis;
-            overflow: hidden;
-            white-space: nowrap;
-        }
-        .plugg-auth-container {
-            padding: 0 20px 20px;
-        }
-        .plugg-auth-content {
-            text-align: center;
-        }
-        .plugg-auth-gif {
-            margin-bottom: 15px;
-            border-radius: var(--border-radius-md);
-            overflow: hidden;
-        }
-        .plugg-auth-title {
-            font-size: 20px;
-            font-weight: 600;
-            color: var(--text-color);
-            margin-bottom: 10px;
-        }
-        .plugg-auth-description {
-            font-size: 14px;
-            color: var(--text-secondary);
-            margin-bottom: 20px;
-            line-height: 1.5;
-        }
-        .plugg-auth-status {
-            font-size: 14px;
-            color: var(--text-secondary);
-            margin-bottom: 15px;
-            min-height: 20px;
-        }
-        .plugg-auth-button-container {
-            margin-top: 10px;
-        }
-        .plugg-auth-button {
-            display: inline-block;
-            width: 100%;
-            max-width: 300px;
-            padding: 14px;
-            background: var(--accent-gradient);
-            color: white;
-            border: none;
-            border-radius: var(--border-radius-md);
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            text-align: center;
-            transition: var(--transition);
-            box-shadow: 0 4px 15px rgba(74, 134, 255, 0.3);
-            text-decoration: none;
-        }
-        .plugg-auth-button:active {
-            transform: scale(0.97);
-        }
-        .registration-progress {
-            display: none;
-            padding: 20px;
-            text-align: center;
-        }
-        .loader {
-            display: inline-block;
-            width: 40px;
-            height: 40px;
-            border: 4px solid rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            border-top-color: var(--accent-color);
-            animation: spin 1s ease-in-out infinite;
-            margin-bottom: 15px;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        .progress-text {
-            color: var(--text-secondary);
-            margin-bottom: 5px;
-        }
-        .progress-subtext {
-            color: var(--text-secondary);
-            font-size: 13px;
-        }
-        .profile-settings {
+        
+        .profile-section {
             display: none;
         }
+        
+        .profile-section.active {
+            display: block;
+        }
+        
         .setting-item {
-            padding: 15px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 20px;
         }
+        
         .setting-label {
-            font-weight: 500;
+            display: block;
             margin-bottom: 8px;
-            color: var(--text-color);
-        }
-        .setting-value {
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            font-weight: 500;
             color: var(--text-secondary);
-            cursor: pointer;
-            transition: var(--transition);
         }
-        .setting-value:hover {
-            color: var(--accent-color);
-        }
+        
         .setting-input {
             width: 100%;
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: var(--border-radius-sm);
+            padding: 12px;
+            background: var(--card-bg);
+            border: none;
+            border-radius: var(--border-radius-md);
             color: var(--text-color);
-            font-size: 14px;
+            font-size: 15px;
         }
+        
+        .setting-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px var(--accent-color);
+        }
+        
         .save-btn {
-            margin-top: 10px;
-            padding: 10px;
+            width: 100%;
+            padding: 12px;
             background: var(--accent-gradient);
             color: white;
             border: none;
-            border-radius: var(--border-radius-sm);
+            border-radius: var(--border-radius-md);
+            font-weight: 500;
+            margin-top: 10px;
             cursor: pointer;
+            transition: var(--transition);
         }
+        
+        .save-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(106, 17, 203, 0.3);
+        }
+        
+        .username-available {
+            color: var(--success-color);
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .username-unavailable {
+            color: var(--error-color);
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+        
         .logout-btn {
             width: 100%;
             padding: 14px;
@@ -935,302 +540,135 @@
             cursor: pointer;
             transition: var(--transition);
         }
+        
         .logout-btn:hover {
             background: rgba(255, 59, 48, 0.2);
         }
-        .username-available {
-            color: var(--success-color);
-            font-size: 12px;
-            margin-top: 5px;
-            display: none;
-        }
-        .username-unavailable {
-            color: var(--error-color);
-            font-size: 12px;
-            margin-top: 5px;
-            display: none;
-        }
-        /* Footer with modern design */
-        .footer {
-            background: var(--secondary-bg);
-            border-radius: var(--border-radius-lg);
-            padding: 20px;
-            margin-top: 30px;
-            box-shadow: var(--shadow-soft);
-        }
-        .footer-content {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        .footer-section {
-            padding: 0 10px;
-        }
-        .footer-section h3 {
-            font-size: 15px;
-            margin-bottom: 10px;
-            color: var(--text-color);
-            font-weight: 600;
-        }
-        .footer-section p, .footer-section a {
-            font-size: 13px;
-            color: var(--text-secondary);
-            margin-bottom: 5px;
-            text-decoration: none;
-            line-height: 1.5;
-        }
-        .footer-section a {
-            color: var(--accent-color);
-            transition: var(--transition);
-        }
-        .footer-section a:hover {
-            text-decoration: underline;
-        }
-        .footer-bottom {
-            text-align: center;
-            padding-top: 15px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            margin-top: 10px;
-        }
-        .footer-bottom p {
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-        /* Back button with animation */
-        .back-btn {
-            display: inline-flex;
-            align-items: center;
-            padding: 10px 15px;
-            background: var(--card-bg);
-            color: var(--text-color);
-            border: none;
-            border-radius: var(--border-radius-md);
-            font-size: 14px;
-            cursor: pointer;
-            margin-bottom: 15px;
-            margin-top: 10px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-        }
-        .back-btn::before {
-            content: '';
-            position: absolute;
+        
+        /* Auth modal */
+        .auth-modal {
+            position: fixed;
             top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transition: var(--transition);
-        }
-        .back-btn:hover::before {
-            left: 100%;
-        }
-        .back-btn:hover {
-            transform: translateX(-3px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-        .details-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        .details-library-btn {
-            padding: 10px 15px;
-            background: var(--card-bg);
-            color: var(--text-color);
-            border: none;
-            border-radius: var(--border-radius-md);
-            font-size: 14px;
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            transition: var(--transition);
-        }
-        .details-library-btn.active {
-            background: var(--success-color);
-            color: white;
-        }
-        /* Responsive design */
-        @media (min-width: 768px) {
-            .container {
-                max-width: 750px;
-            }
-            .games-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-            .game-image {
-                height: 160px;
-            }
-            .game-details-icon {
-                width: 80px;
-                height: 80px;
-            }
-            .game-details-title {
-                font-size: 24px;
-            }
-            .library-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
-        }
-        /* Animations for UI elements */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        .animate-fade-in-up {
-            animation: fadeInUp 0.4s ease forwards;
-        }
-        .delay-1 {
-            animation-delay: 0.1s;
-        }
-        .delay-2 {
-            animation-delay: 0.2s;
-        }
-        .delay-3 {
-            animation-delay: 0.3s;
-        }
-        /* Dark mode with strategic contrast improves readability */ 
-        .tg-theme-dark {
-            --primary-bg: #0a0a0a;
-            --secondary-bg: #121212;
-            --card-bg: #1a1a1a;
-            --text-color: #ffffff;
-            --text-secondary: #b0b0b0;
-        }
-        /* It's best to use dark color schemes with lighter, unsaturated accent colors */ 
-        .tg-theme-light {
-            --primary-bg: #f5f5f7;
-            --secondary-bg: #ffffff;
-            --card-bg: #ffffff;
-            --text-color: #1c1c1c;
-            --text-secondary: #636366;
-            --accent-gradient: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            --accent-color: #4a86ff;
-        }
-        /* Avoid placing light-colored text on a bright gradient or dark text on a dark gradient */ 
-        .gradient-text {
-            background: var(--accent-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        /* Mastering the Art of Dark UI Design: Leverage negative space */ 
-        .negative-space {
-            padding: 0 20px;
-        }
-        /* Badges styles */
-        .badges-container {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            padding: 10px 0;
-        }
-        .badge-item {
-            aspect-ratio: 1/1;
-            border-radius: 8px;
-            overflow: hidden;
-            position: relative;
-            cursor: pointer;
-            transition: var(--transition);
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-            background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .badge-item:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        }
-        .badge-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .badge-item.pinned::after {
-            content: '';
-            position: absolute;
-            top: 4px;
-            right: 4px;
-            width: 16px;
-            height: 16px;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" viewBox="0 0 16 16"><path d="M9.828 8l-2.5-2.5a.5.5 0 0 1 0-.707l2.5-2.5a.5.5 0 0 1 .707 0l.646.646a.5.5 0 0 1 0 .708l-2.197 2.197 2.197 2.197a.5.5 0 0 1 0 .707l-.646.646a.5.5 0 0 1-.708 0zm-4.95.708L7.328 11.15a.5.5 0 0 1-.708 0l-.646-.647a.5.5 0 0 1 0-.707l2.197-2.197-2.197-2.197a.5.5 0 0 1 0-.707l.646-.646a.5.5 0 0 1 .708 0l2.5 2.5a.5.5 0 0 1 0 .708l-2.5 2.5a.5.5 0 0 1-.707 0z"/></svg>') no-repeat center;
-            background-size: 12px;
-            border-radius: 50%;
-        }
-        .badge-item.selected {
-            box-shadow: 0 0 0 2px var(--accent-color);
-        }
-        .badge-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        .badge-action-btn {
-            flex: 1;
-            padding: 10px;
-            border-radius: var(--border-radius-sm);
-            background: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: var(--text-secondary);
-            font-size: 14px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        .badge-action-btn:hover {
-            background: var(--accent-color);
-            color: white;
-            border-color: var(--accent-color);
-        }
-        .badge-action-btn.apply {
-            background: var(--accent-gradient);
-            border: none;
-            color: white;
-        }
-        .badge-action-btn.pinned {
-            background: var(--success-color);
-            border: none;
-            color: white;
-        }
-        .badge-profile {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 12px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: var(--border-radius-sm);
-            margin-top: 10px;
-            word-break: break-all;
-        }
-        .badge-profile svg {
-            width: 16px;
-            height: 16px;
-            color: var(--accent-color);
-        }
-        .badge-profile-copy {
-            width: 20px;
-            height: 20px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .auth-modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .auth-modal-content {
+            background: var(--secondary-bg);
+            border-radius: var(--border-radius-lg);
+            width: 100%;
+            max-width: 400px;
+            padding: 30px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        
+        .auth-modal.active .auth-modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .plugg-auth-container {
+            padding: 0 20px 20px;
+        }
+        
+        .plugg-auth-content {
+            text-align: center;
+        }
+        
+        .plugg-auth-gif {
+            margin-bottom: 15px;
+            border-radius: var(--border-radius-md);
+            overflow: hidden;
+        }
+        
+        .plugg-auth-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 10px;
+        }
+        
+        .plugg-auth-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+        
+        .telegram-auth-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 14px;
+            background: #0088cc;
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-md);
+            font-weight: 500;
             cursor: pointer;
-            border-radius: 4px;
             transition: var(--transition);
         }
-        .badge-profile-copy:hover {
-            background: rgba(255, 255, 255, 0.1);
+        
+        .telegram-auth-btn:hover {
+            background: #0077b3;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 119, 179, 0.3);
         }
-        .badge-profile-copied {
-            color: var(--success-color);
-            animation: flash 1s;
+        
+        .telegram-icon {
+            width: 24px;
+            height: 24px;
         }
-        .banner-selector {
+        
+        /* Registration progress */
+        .registration-progress {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: var(--primary-bg);
+            z-index: 10;
+        }
+        
+        .progress-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid var(--accent-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Game details */
+        .game-details {
             display: none;
             position: fixed;
             top: 0;
@@ -1238,1147 +676,777 @@
             right: 0;
             bottom: 0;
             background: var(--primary-bg);
-            z-index: 3000;
+            z-index: 1000;
             padding: 20px;
-            flex-direction: column;
             overflow-y: auto;
+            padding-top: var(--tg-safe-area-inset-top);
+            padding-bottom: var(--tg-safe-area-inset-bottom);
+            padding-left: var(--tg-safe-area-inset-left);
+            padding-right: var(--tg-safe-area-inset-right);
         }
-        .banner-selector.active {
+        
+        .game-details.active {
+            display: block;
+        }
+        
+        .game-details-content {
+            background: var(--secondary-bg);
+            border-radius: var(--border-radius-lg);
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: var(--shadow-card);
+        }
+        
+        .game-details-header {
             display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
         }
+        
+        .game-details-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .game-details-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .game-details-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .game-details-meta {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        .game-details-description {
+            line-height: 1.5;
+            color: var(--text-color);
+            margin-bottom: 20px;
+        }
+        
+        .game-details-description p {
+            margin-bottom: 15px;
+        }
+        
+        .game-details-description ul {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .game-details-description li {
+            margin-bottom: 8px;
+            position: relative;
+        }
+        
+        .game-details-description li:before {
+            content: "•";
+            color: var(--accent-color);
+            font-weight: bold;
+            position: absolute;
+            left: -12px;
+        }
+        
+        .game-details-whats-new {
+            margin-top: 20px;
+        }
+        
+        .game-details-whats-new h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+        
+        .game-details-whats-new ul {
+            padding-left: 20px;
+        }
+        
+        .game-details-whats-new li {
+            margin-bottom: 8px;
+            position: relative;
+        }
+        
+        .game-details-whats-new li:before {
+            content: "→";
+            color: var(--accent-color);
+            position: absolute;
+            left: -15px;
+        }
+        
+        .download-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--accent-gradient);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-md);
+            font-weight: 500;
+            margin-top: 15px;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .download-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(106, 17, 203, 0.3);
+        }
+        
+        .download-btn:active {
+            transform: translateY(0);
+        }
+        
+        .details-library-btn {
+            width: 100%;
+            padding: 12px;
+            background: rgba(74, 134, 255, 0.1);
+            color: var(--accent-color);
+            border: none;
+            border-radius: var(--border-radius-md);
+            font-weight: 500;
+            margin-top: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .details-library-btn.active {
+            background: var(--success-color);
+            color: white;
+        }
+        
+        /* Banner selector */
+        .banner-selector {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--primary-bg);
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .banner-selector.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
         .banner-selector-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 0;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
+        
+        .banner-selector-close {
+            color: var(--accent-color);
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
         .banner-selector-title {
             font-size: 18px;
             font-weight: 600;
         }
-        .banner-selector-close {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--accent-color);
-            font-size: 20px;
-            cursor: pointer;
-        }
+        
         .banner-gallery {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 10px;
-            margin-bottom: 20px;
+            flex: 1;
+            overflow-y: auto;
         }
+        
         .banner-item {
             aspect-ratio: 16/9;
-            border-radius: 8px;
+            border-radius: var(--border-radius-sm);
             overflow: hidden;
             cursor: pointer;
             position: relative;
         }
+        
         .banner-item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
+        
         .banner-item.selected::after {
-            content: '';
+            content: "";
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(74, 134, 255, 0.3);
             border: 2px solid var(--accent-color);
+            border-radius: var(--border-radius-sm);
         }
+        
         .banner-upload {
-            padding: 15px;
-            border-radius: var(--border-radius-md);
             background: var(--card-bg);
-            text-align: center;
-            margin-bottom: 20px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        .banner-upload:hover {
-            background: var(--accent-color);
-            color: white;
-        }
-        .banner-upload svg {
-            width: 24px;
-            height: 24px;
-            margin-bottom: 10px;
-            fill: var(--accent-color);
-        }
-        .banner-upload:hover svg {
-            fill: white;
-        }
-        .banner-preview {
-            display: none;
-            margin-top: 20px;
-        }
-        .banner-preview.active {
-            display: block;
-        }
-        .banner-preview-img {
-            width: 100%;
-            height: 150px;
             border-radius: var(--border-radius-md);
-            overflow: hidden;
-            margin-bottom: 15px;
+            padding: 15px;
+            text-align: center;
+            margin-top: 10px;
+            cursor: pointer;
         }
-        .banner-preview-img img {
+        
+        .banner-upload-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+            color: var(--accent-color);
+        }
+        
+        /* Avatar selector */
+        .avatar-selector {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--primary-bg);
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .avatar-selector.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .avatar-selector-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .avatar-selector-close {
+            color: var(--accent-color);
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        .avatar-selector-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .avatar-upload {
+            background: var(--card-bg);
+            border-radius: var(--border-radius-md);
+            padding: 15px;
+            text-align: center;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        
+        .avatar-upload-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+            color: var(--accent-color);
+        }
+        
+        .avatar-preview {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            overflow: hidden;
+            border: 3px solid var(--accent-color);
+        }
+        
+        .avatar-preview img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-        .banner-preview-actions {
-            display: flex;
-            gap: 10px;
+        
+        /* Library grid */
+        .library-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
         }
-        .banner-preview-btn {
-            flex: 1;
-            padding: 10px;
-            border-radius: var(--border-radius-sm);
-            background: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: var(--text-secondary);
-            font-size: 14px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        .banner-preview-btn:hover {
-            background: var(--accent-color);
-            color: white;
-            border-color: var(--accent-color);
-        }
-        .banner-preview-btn.apply {
-            background: var(--accent-gradient);
-            border: none;
-            color: white;
-        }
-        @keyframes flash {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
-        .profile-link-container {
-            display: none;
-        }
-        .guest-view {
-            pointer-events: none;
-        }
-        .guest-view .profile-edit,
-        .guest-view .banner-edit,
-        .guest-view .setting-value svg,
-        .guest-view .logout-btn,
-        .guest-view .badge-actions {
-            display: none;
-        }
-        .development-message {
+        
+        /* Footer */
+        .footer {
+            background: var(--secondary-bg);
+            border-radius: var(--border-radius-lg);
+            padding: 15px;
+            margin-top: 20px;
             text-align: center;
             color: var(--text-secondary);
-            padding: 20px;
+            font-size: 13px;
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-fade-in-up {
+            animation: fadeInUp 0.3s ease forwards;
+        }
+        
+        /* Responsive design */
+        @media (min-width: 768px) {
+            .container {
+                max-width: 750px;
+            }
+            
+            .games-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .library-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Main content -->
     <div class="container">
         <div class="header">
-            <div>
-                <h1>PLUGG BOT</h1>
-                <p>Лучшая коллекция приваток для удобного скачивания</p>
-            </div>
-            <div class="profile-btn" id="profile-btn">
-                <svg class="profile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="12" cy="7" r="4"></circle>
+            <div class="logo">PLUGG</div>
+            <button class="library-btn" id="library-btn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14l4-4h10a2 2 0 0 1 2 2v1"></path>
                 </svg>
-            </div>
+            </button>
         </div>
+        
         <div class="search-bar">
-            <svg viewBox="0 0 24 24">
-                <path d="M15.5 14H14.71L14.43 13.73C15.41 12.59 16 11.11 16 9.5C16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16C11.11 16 12.59 15.41 13.73 14.43L14 14.71V15.5L19 20.49L20.49 19L15.5 14ZM9.5 14C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14Z"/>
+            <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
-            <input type="text" placeholder="Поиск игр..." id="search-input">
+            <input type="text" id="search-input" placeholder="Search for games...">
         </div>
+        
         <div class="tabs">
-            <div class="tab active" data-tab="all">ПРИВАТКИ</div>
-            <div class="tab" data-tab="popular">ПРИВАТКИ ДЛЯ ПК</div>
+            <div class="tab active" data-tab="all">All</div>
+            <div class="tab" data-tab="action">Action</div>
         </div>
-        <div class="tab-content active" id="all-tab">
+        
+        <div class="tab-content" id="all-tab">
             <div class="games-grid"></div>
         </div>
-        <div class="tab-content" id="popular-tab">
+        
+        <div class="tab-content" id="action-tab" style="display: none;">
             <div class="games-grid"></div>
         </div>
-        <!-- Детали игры (общий) -->
-        <div class="game-details" id="game-details">
-            <button class="back-btn" id="back-btn">← Назад</button>
-            <div class="game-details-content">
-                <div class="game-details-header">
-                    <div class="game-details-icon">
-                        <img id="details-image" src="" alt="">
-                    </div>
-                    <div class="game-details-info">
-                        <div class="game-details-title" id="details-title"></div>
-                        <div class="game-details-meta" id="details-meta"></div>
-                    </div>
+    </div>
+    
+    <!-- Game details page -->
+    <div class="game-details" id="game-details">
+        <button id="back-btn" style="background: none; border: none; color: var(--accent-color); font-weight: 500; margin-bottom: 15px; cursor: pointer;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"></path>
+            </svg> Back
+        </button>
+        
+        <div class="game-details-content">
+            <div class="game-details-header">
+                <div class="game-details-icon">
+                    <img id="details-image" src="" alt="Game icon">
                 </div>
-                <div class="download-section">
-                    <div class="download-btn-container">
-                        <button id="download-btn" class="download-btn">Скачать</button>
-                        <button class="details-library-btn" id="details-library-btn">Добавить в библиотеку</button>
-                    </div>
-                    <div class="progress-container" id="progress-container">
-                        <div class="progress-info">
-                            <span class="progress-text">Статус: <span id="status-text">Готов к загрузке</span></span>
-                            <span class="progress-percent" id="progress-percent">0%</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" id="progress-fill"></div>
-                        </div>
-                        <div class="download-stats">
-                            <div class="download-stats-item">
-                                <span>Скачано</span>
-                                <span class="download-stats-value" id="downloaded-size">0 MB</span>
-                            </div>
-                            <div class="download-stats-item">
-                                <span>Скорость</span>
-                                <span class="download-stats-value" id="download-speed">0 KB/s</span>
-                            </div>
-                            <div class="download-stats-item">
-                                <span>Пинг</span>
-                                <span class="download-stats-value" id="ping-value">-- ms</span>
-                            </div>
-                        </div>
-                        <div class="download-visualizer-container">
-                            <div class="download-visualizer" id="download-visualizer"></div>
-                            <div class="visualizer-toggle" id="visualizer-toggle">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M12 5v14M17 5v14M7 5v14M2 5h20M2 19h20"></path>
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
+                <div>
+                    <div class="game-details-title" id="details-title"></div>
+                    <div class="game-details-meta" id="details-meta"></div>
                 </div>
-                <div id="status-message" class="status-message"></div>
-                <div class="section-title">Описание</div>
-                <div class="section-content" id="details-description"></div>
-                <div class="section-title">Что нового<span class="new-indicator"></span></div>
-                <div class="section-content" id="details-whats-new"></div>
             </div>
+            
+            <div class="game-details-description">
+                <p id="details-description"></p>
+                <ul>
+                    <li>Thanks for using PLUGG BOT!</li>
+                </ul>
+            </div>
+            
+            <div class="game-details-whats-new">
+                <h3>What's New</h3>
+                <ul id="details-whats-new"></ul>
+            </div>
+            
+            <button class="download-btn" id="download-btn">Download</button>
+            <button class="details-library-btn" id="details-library-btn">Add to Library</button>
         </div>
-        <!-- Profile Modal -->
-        <div class="profile-modal" id="profile-modal">
-            <div class="profile-modal-content">
-                <div class="profile-header">
-                    <div class="banner-placeholder" id="banner-placeholder">
-                        Добавьте свой баннер, чтобы выделиться среди других пользователей
-                    </div>
+    </div>
+    
+    <!-- Profile modal -->
+    <div class="profile-modal" id="profile-modal">
+        <div class="profile-modal-content">
+            <div class="profile-header">
+                <div class="banner-placeholder" id="banner-placeholder">
                     <div class="banner-edit" id="banner-edit">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 5v14M5 12h14"></path>
                         </svg>
                     </div>
                 </div>
-                <div class="profile-info">
-                    <div class="profile-avatar" id="profile-avatar">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="12" cy="7" r="4"></circle>
-                        </svg>
-                    </div>
-                    <div class="profile-name" id="profile-name">Гость</div>
-                    <div class="profile-username" id="profile-username">@guest</div>
-                    <div class="profile-bio" id="profile-bio">Добавьте описание профиля, чтобы рассказать о себе</div>
-                    <div class="profile-edit" id="profile-edit">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </div>
+            
+            <div class="profile-info">
+                <div class="profile-avatar" id="profile-avatar">
+                    <div class="avatar-edit">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 5v14M5 12h14"></path>
                         </svg>
                     </div>
                 </div>
-                <div class="profile-tabs">
-                    <div class="profile-tab active" data-tab="library">Библиотека</div>
-                    <div class="profile-tab" data-tab="settings">Настройки</div>
-                </div>
-                <div class="profile-content">
-                    <div class="profile-section active" id="library-section">
-                        <div class="library-grid" id="library-grid">
-                            <!-- Library items will be added here -->
-                        </div>
-                    </div>
-                    <div class="profile-section profile-settings" id="settings-section">
-                        <div class="setting-item">
-                            <div class="setting-label">Имя</div>
-                            <input type="text" class="setting-input" id="name-input" placeholder="Введите ваше имя">
-                            <button class="save-btn" id="save-name">Сохранить</button>
-                            <div class="username-available" id="name-available">Имя успешно обновлено</div>
-                        </div>
-                        <div class="setting-item">
-                            <div class="setting-label">Юзернейм</div>
-                            <input type="text" class="setting-input" id="username-input" placeholder="Введите ваш юзернейм">
-                            <button class="save-btn" id="save-username">Сохранить</button>
-                            <div class="username-available" id="username-available">Юзернейм доступен</div>
-                            <div class="username-unavailable" id="username-unavailable">Этот юзернейм уже занят</div>
-                        </div>
-                        <div class="setting-item">
-                            <div class="setting-label">Описание профиля</div>
-                            <textarea class="setting-input" id="bio-input" rows="3" placeholder="Расскажите немного о себе..."></textarea>
-                            <button class="save-btn" id="save-bio">Сохранить</button>
-                        </div>
-                        <button class="logout-btn" id="logout-btn">Выйти из аккаунта</button>
+                <div class="profile-name" id="profile-name"></div>
+                <div class="profile-username" id="profile-username"></div>
+                <div class="profile-bio" id="profile-bio"></div>
+            </div>
+            
+            <div class="profile-tabs">
+                <div class="profile-tab active" data-tab="library">Library</div>
+                <div class="profile-tab" data-tab="settings">Settings</div>
+            </div>
+            
+            <div class="profile-content">
+                <div class="profile-section active" id="library-section">
+                    <div class="library-grid" id="library-grid">
+                        <!-- Library items will be added here -->
                     </div>
                 </div>
-            </div>
-        </div>
-        <!-- Banner Selector -->
-        <div class="banner-selector" id="banner-selector">
-            <div class="banner-selector-header">
-                <div class="banner-selector-title">Выберите баннер</div>
-                <div class="banner-selector-close" id="banner-selector-close">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M18 6 6 18"></path>
-                        <path d="м6 6 12 12"></path>
-                    </svg>
-                </div>
-            </div>
-            <div class="banner-upload" id="banner-upload">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                    <circle cx="9" cy="9" r="2"></circle>
-                    <path d="м21 15-3.086-3.086a2 2 0 0 1-2.828 0L6 21"></path>
-                </svg>
-                <div>Выбрать из галереи</div>
-            </div>
-            <div class="banner-gallery" id="banner-gallery">
-                <!-- Gallery items will be added here -->
-            </div>
-            <div class="banner-preview" id="banner-preview">
-                <div class="banner-preview-img">
-                    <img id="banner-preview-img" src="" alt="Preview">
-                </div>
-                <div class="banner-preview-actions">
-                    <button class="banner-preview-btn" id="banner-cancel">Отмена</button>
-                    <button class="banner-preview-btn apply" id="banner-apply">Применить</button>
-                </div>
-            </div>
-        </div>
-        <!-- Auth Modal -->
-        <div class="profile-modal" id="auth-modal">
-            <div class="profile-modal-content">
-                <div class="profile-info" style="margin-top: 0; padding-top: 30px; padding-bottom: 10px;">
-                    <h2 style="text-align: center; margin-bottom: 10px;">Добро пожаловать</h2>
-                    <p style="text-align: center; color: var(--text-secondary);">Войдите в свой аккаунт, чтобы сохранять приватки в библиотеке</p>
-                </div>
-                <div class="plugg-auth-container">
-                    <div class="plugg-auth-content">
-                        <div class="plugg-auth-gif">
-                            <div class="tenor-gif-embed" data-postid="7138793964961059735" data-share-method="host" data-aspect-ratio="1.76596" data-width="100%">
-                                <a href="https://tenor.com/view/tsunya-tsunyash-vstars-anime-vtuber-gif-7138793964961059735">Tsunya Tsunyash Sticker</a> from <a href="https://tenor.com/search/tsunya-stickers">Tsunya Stickers</a>
-                            </div>
-                            <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
-                        </div>
-                        <h3 class="plugg-auth-title">PLUGG ID</h3>
-                        <p class="plugg-auth-description">Простая и безопасная авторизация через Telegram.</p>
-                        <div class="plugg-auth-status" id="plugg-auth-status">
-                            Для входа нажмите на кнопку ниже
-                        </div>
-                        <div class="plugg-auth-button-container" id="plugg-auth-button-container">
-                            <button class="plugg-auth-button" id="telegram-auth-button">Войти через Telegram</button>
-                        </div>
+                
+                <div class="profile-section profile-settings" id="settings-section">
+                    <div class="setting-item">
+                        <div class="setting-label">Name</div>
+                        <input type="text" class="setting-input" id="name-input" placeholder="Enter your name">
+                        <button class="save-btn" id="save-name">Save</button>
                     </div>
+                    
+                    <div class="setting-item">
+                        <div class="setting-label">Username</div>
+                        <input type="text" class="setting-input" id="username-input" placeholder="Enter your username">
+                        <div class="username-available">Username available</div>
+                        <div class="username-unavailable">Username already taken</div>
+                        <button class="save-btn" id="save-username">Save</button>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="setting-label">Bio</div>
+                        <input type="text" class="setting-input" id="bio-input" placeholder="Tell us about yourself">
+                        <button class="save-btn" id="save-bio">Save</button>
+                    </div>
+                    
+                    <button class="logout-btn" id="logout-btn">Log Out</button>
                 </div>
-                <div class="registration-progress" id="registration-progress">
-                    <div class="loader"></div>
-                    <div class="progress-text">Авторизация через Telegram...</div>
-                    <div class="progress-subtext">Пожалуйста, подождите</div>
-                </div>
-            </div>
-        </div>
-        <div class="footer">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>О нас</h3>
-                    <p>PLUGG BOT - лучший бот для поиска и скачивания приваток. Мы предлагаем огромную коллекцию популярных приваток.</p>
-                </div>
-                <div class="footer-section">
-                    <h3>Наши контакты</h3>
-                    <p>Владелец бота: <a href="https://t.me/kurune" target="_blank">Плагги</a></p>
-                    <p>По разным вопросам: <a href="https://t.me/soukita" target="_blank">Кита</a></p>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>© 2025 Pluggs. Все права защищены.</p>
             </div>
         </div>
     </div>
+    
+    <!-- Auth modal -->
+    <div class="auth-modal" id="auth-modal">
+        <div class="auth-modal-content">
+            <div class="plugg-auth-container">
+                <div class="plugg-auth-content">
+                    <div class="plugg-auth-gif">
+                        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="url(#gradient)" stroke-width="1.5">
+                            <circle cx="12" cy="12" r="10" />
+                            <path d="M12 8v8M8 12h8" />
+                            <defs>
+                                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#6a11cb" />
+                                    <stop offset="100%" stop-color="#2575fc" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <h2 class="plugg-auth-title">PLUGG ID</h2>
+                    <p class="plugg-auth-description">Sign in with Telegram to access your account and save your game library</p>
+                    <button class="telegram-auth-btn" id="telegram-auth-btn">
+                        <svg class="telegram-icon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.192 8.327c.468-.202.655-.566.332-.969l-2.589-3.236c-.202-.252-.566-.252-.768 0l-1.717 1.717 4.208 2.104c.252.15.332.252.15.416-.15.126-.378.102-.63 0l-2.256-1.128-5.464 5.212c-.227.227-.227.516 0 .743l3.459 3.459c.227.227.59.227.842 0l2.256-2.256 2.589-7.273c.15-.444.566-.655.944-.416z"/>
+                        </svg>
+                        Continue with Telegram
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Registration progress -->
+    <div class="registration-progress" id="registration-progress">
+        <div class="progress-spinner"></div>
+    </div>
+    
+    <!-- Banner selector -->
+    <div class="banner-selector" id="banner-selector">
+        <div class="banner-selector-header">
+            <div class="banner-selector-close" id="banner-selector-close">Cancel</div>
+            <div class="banner-selector-title">Select Banner</div>
+            <div class="banner-selector-apply" id="banner-apply-btn" style="color: var(--accent-color); font-weight: 500; cursor: pointer;">Apply</div>
+        </div>
+        
+        <div class="banner-gallery" id="banner-gallery">
+            <!-- Banner items will be added here -->
+        </div>
+        
+        <div class="banner-upload" id="banner-upload">
+            <svg class="banner-upload-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            <div>Upload from device</div>
+            <input type="file" id="banner-file-input" accept="image/*" style="display: none;">
+        </div>
+    </div>
+    
+    <!-- Avatar selector -->
+    <div class="avatar-selector" id="avatar-selector">
+        <div class="avatar-selector-header">
+            <div class="avatar-selector-close" id="avatar-selector-close">Cancel</div>
+            <div class="avatar-selector-title">Select Avatar</div>
+            <div class="avatar-selector-apply" id="avatar-apply-btn" style="color: var(--accent-color); font-weight: 500; cursor: pointer;">Apply</div>
+        </div>
+        
+        <div class="avatar-preview">
+            <img id="avatar-preview-img" src="" alt="Avatar preview">
+        </div>
+        
+        <div class="banner-upload" id="avatar-upload">
+            <svg class="banner-upload-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            <div>Upload from device</div>
+            <input type="file" id="avatar-file-input" accept="image/*" style="display: none;">
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>PLUGG BOT &copy; 2023</p>
+    </div>
+
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Инициализация Telegram Web App
-            const tg = window.Telegram.WebApp;
-            tg.expand();
-            tg.ready();
-            
-            // Элементы интерфейса (с проверкой на существование)
-            const downloadBtn = document.getElementById('download-btn');
-            const progressFill = document.getElementById('progress-fill');
-            const progressPercent = document.getElementById('progress-percent');
-            const statusText = document.getElementById('status-text');
-            const statusMessage = document.getElementById('status-message');
-            const progressContainer = document.getElementById('progress-container');
-            const backBtn = document.getElementById('back-btn');
-            const detailsLibraryBtn = document.getElementById('details-library-btn');
-            const gameDetails = document.getElementById('game-details');
-            const detailsTitle = document.getElementById('details-title');
-            const detailsImage = document.getElementById('details-image');
-            const detailsMeta = document.getElementById('details-meta');
-            const detailsDescription = document.getElementById('details-description');
-            const detailsWhatsNew = document.getElementById('details-whats-new');
-            const searchInput = document.getElementById('search-input');
-            const profileBtn = document.getElementById('profile-btn');
-            const profileModal = document.getElementById('profile-modal');
-            const authModal = document.getElementById('auth-modal');
-            const pluggAuthStatus = document.getElementById('plugg-auth-status');
-            const pluggAuthButtonContainer = document.getElementById('plugg-auth-button-container');
-            const telegramAuthButton = document.getElementById('telegram-auth-button');
-            const registrationProgress = document.getElementById('registration-progress');
-            const profileName = document.getElementById('profile-name');
-            const profileUsername = document.getElementById('profile-username');
-            const profileBio = document.getElementById('profile-bio');
-            const profileAvatar = document.getElementById('profile-avatar');
-            const bannerPlaceholder = document.getElementById('banner-placeholder');
-            const bannerEdit = document.getElementById('banner-edit');
-            const profileEdit = document.getElementById('profile-edit');
-            const profileTabs = document.querySelectorAll('.profile-tab');
-            const librarySection = document.getElementById('library-section');
-            const settingsSection = document.getElementById('settings-section');
-            const nameInput = document.getElementById('name-input');
-            const usernameInput = document.getElementById('username-input');
-            const bioInput = document.getElementById('bio-input');
-            const saveNameBtn = document.getElementById('save-name');
-            const saveUsernameBtn = document.getElementById('save-username');
-            const saveBioBtn = document.getElementById('save-bio');
-            const nameAvailable = document.getElementById('name-available');
-            const usernameAvailable = document.getElementById('username-available');
-            const usernameUnavailable = document.getElementById('username-unavailable');
-            const logoutBtn = document.getElementById('logout-btn');
-            const libraryGrid = document.getElementById('library-grid');
-            const visualizerToggle = document.getElementById('visualizer-toggle');
-            const downloadVisualizer = document.getElementById('download-visualizer');
-            const downloadedSize = document.getElementById('downloaded-size');
-            const downloadSpeed = document.getElementById('download-speed');
-            const pingValue = document.getElementById('ping-value');
-            const bannerSelector = document.getElementById('banner-selector');
-            const bannerSelectorClose = document.getElementById('banner-selector-close');
-            const bannerGallery = document.getElementById('banner-gallery');
-            const bannerUpload = document.getElementById('banner-upload');
-            const bannerPreview = document.getElementById('banner-preview');
-            const bannerPreviewImg = document.getElementById('banner-preview-img');
-            const bannerCancelBtn = document.getElementById('banner-cancel');
-            const bannerApplyBtn = document.getElementById('banner-apply');
-            
-            // Переменные для отслеживания состояния
-            let isDownloading = false;
-            let currentTab = 'all';
-            let xhr = null;
-            let currentDownloadUrl = '';
-            let currentFileName = '';
-            let currentGameTitle = '';
-            let currentUser = null;
-            let downloadStartTime = 0;
-            let downloadedBytes = 0;
-            let totalBytes = 0;
-            let isVisualizerActive = false;
-            let visualizerInterval = null;
-            let selectedBannerFile = null;
-            let isOwner = true; // По умолчанию владелец
-            let currentGameId = null;
-            
-            // Создаем визуализатор загрузки
-            function createDownloadVisualizer() {
-                if (!downloadVisualizer) return;
-                downloadVisualizer.innerHTML = '';
-                for (let i = 0; i < 25; i++) {
-                    const bar = document.createElement('div');
-                    bar.className = 'download-bar';
-                    bar.style.height = '2px';
-                    downloadVisualizer.appendChild(bar);
-                }
+        // Initialize Telegram WebApp
+        const tg = Telegram.WebApp;
+        tg.expand();
+        
+        // DOM Elements
+        const libraryBtn = document.getElementById('library-btn');
+        const searchInput = document.getElementById('search-input');
+        const tabs = document.querySelectorAll('.tab');
+        const profileModal = document.getElementById('profile-modal');
+        const authModal = document.getElementById('auth-modal');
+        const telegramAuthButton = document.getElementById('telegram-auth-btn');
+        const registrationProgress = document.getElementById('registration-progress');
+        const profileName = document.getElementById('profile-name');
+        const profileUsername = document.getElementById('profile-username');
+        const profileBio = document.getElementById('profile-bio');
+        const profileAvatar = document.getElementById('profile-avatar');
+        const bannerPlaceholder = document.getElementById('banner-placeholder');
+        const bannerEdit = document.getElementById('banner-edit');
+        const profileEdit = document.getElementById('profile-edit');
+        const profileTabs = document.querySelectorAll('.profile-tab');
+        const librarySection = document.getElementById('library-section');
+        const settingsSection = document.getElementById('settings-section');
+        const nameInput = document.getElementById('name-input');
+        const usernameInput = document.getElementById('username-input');
+        const bioInput = document.getElementById('bio-input');
+        const saveNameBtn = document.getElementById('save-name');
+        const saveUsernameBtn = document.getElementById('save-username');
+        const saveBioBtn = document.getElementById('save-bio');
+        const nameAvailable = document.getElementById('name-available');
+        const usernameAvailable = document.getElementById('username-available');
+        const usernameUnavailable = document.getElementById('username-unavailable');
+        const logoutBtn = document.getElementById('logout-btn');
+        const libraryGrid = document.getElementById('library-grid');
+        const bannerSelector = document.getElementById('banner-selector');
+        const bannerSelectorClose = document.getElementById('banner-selector-close');
+        const bannerGallery = document.getElementById('banner-gallery');
+        const bannerUpload = document.getElementById('banner-upload');
+        const bannerFileInput = document.getElementById('banner-file-input');
+        const bannerApplyBtn = document.getElementById('banner-apply-btn');
+        const avatarSelector = document.getElementById('avatar-selector');
+        const avatarSelectorClose = document.getElementById('avatar-selector-close');
+        const avatarPreviewImg = document.getElementById('avatar-preview-img');
+        const avatarUpload = document.getElementById('avatar-upload');
+        const avatarFileInput = document.getElementById('avatar-file-input');
+        const avatarApplyBtn = document.getElementById('avatar-apply-btn');
+        const backBtn = document.getElementById('back-btn');
+        const detailsLibraryBtn = document.getElementById('details-library-btn');
+        const gameDetails = document.getElementById('game-details');
+        const detailsTitle = document.getElementById('details-title');
+        const detailsImage = document.getElementById('details-image');
+        const detailsMeta = document.getElementById('details-meta');
+        const detailsDescription = document.getElementById('details-description');
+        const detailsWhatsNew = document.getElementById('details-whats-new');
+        const downloadBtn = document.getElementById('download-btn');
+        
+        // User data
+        let currentUser = null;
+        let selectedBannerFile = null;
+        let selectedAvatarFile = null;
+        let currentDownloadUrl = '';
+        let currentFileName = '';
+        let currentGameTitle = '';
+        let currentGameId = null;
+        let currentTab = 'all';
+        
+        // Game data
+        const games = [
+            {
+                id: 'standrise',
+                title: 'StandRise',
+                description: 'Private server StandRise is a private server for the popular game Standoff 2, which opens up unlimited possibilities and a new level of freedom for players. Here there are no strict restrictions that hinder your gaming process, and all content becomes available without additional effort. The server provides',
+                whatsNew: ['New gift', 'All from Standoff 0.35.0 (New pack, new collection action, maps, new weapons, etc.)', 'Added daily calls', 'Spectator mode', 'Clans', 'Weapon rebalance from original', 'Improved rating games with first season', 'New action with skins from "Gambit" spin (Butterfly, etc.)'],
+                image: 'https://avatars.mds.yandex.net/i?id=0e819955e77d734dbf74a1628015204f_l-12569562-images-thumbs&n=13',
+                categories: ['action'],
+                url: 'https://huggingface.co/Zerchi/test/resolve/main/standleoprivate3.0.apk',
+                fileName: 'standleoprivate3.0.apk',
+                version: '3.0',
+                size: '2.01 GB'
+            },
+            {
+                id: 'projectevolution',
+                title: 'Project Evolution',
+                description: 'Private server Project Evolution is a modification of the popular shooter Standoff 2, offering players unique opportunities and many additional functions. This server provides excellent conditions for all lovers of intense and exciting online battles, with powerful settings and elaboration of all elements.',
+                whatsNew: ['Fixed errors when entering the game.', 'Added clans', 'Added "Competitive" mode'],
+                image: 'https://5play.info/_ld/14/1487.webp',
+                categories: ['action'],
+                url: 'https://huggingface.co/Zerchi/test/resolve/main/CrossOffClassic-1.1F2.apk',
+                fileName: 'CrossOffClassic-1.1F2.apk',
+                version: '1.1 (F2)',
+                size: '499.1 MB'
+            },
+            {
+                id: 'standknife',
+                title: 'StandKnife',
+                description: 'Private server StandKnife Simulator is a well-known private server that reworks the concept of the popular shooter Standoff 2 and focuses the entire gameplay on mastering cold weapons.',
+                whatsNew: ['Fixed errors when entering the game.'],
+                image: 'https://edroid.ru/wp-content/uploads/2024/02/4-31.webp',
+                categories: ['action'],
+                url: 'https://huggingface.co/Zerchi/test/resolve/main/StandKnife%202.9%20(f3).apk',
+                fileName: 'StandKnife 2.9 (f3).apk',
+                version: '2.9 (f3)',
+                size: '2.08 GB'
+            },
+            {
+                id: 'standchillow',
+                title: 'StandChillow',
+                description: 'StandChillow is an exciting shooter for Android that offers saturated team battles based on the popular mobile action Standoff 2. The game transports you to the world of tactical battles, where each clash tests your combat skills.',
+                whatsNew: ['Fixed errors when entering the game.', 'Added clans', 'Added "Competitive" mode'],
+                image: 'https://5play.info/_ld/14/1487.webp',
+                categories: ['action'],
+                url: 'https://huggingface.co/Zerchi/test/resolve/main/CrossOffClassic-1.1F2.apk',
+                fileName: 'CrossOffClassic-1.1F2.apk',
+                version: '1.1 (F2)',
+                size: '499.1 MB'
+            }
+        ];
+        
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if user is logged in
+            if (!checkUser()) {
+                authModal.classList.add('active');
+            } else {
+                profileModal.classList.add('active');
             }
             
-            // Анимируем визуализатор загрузки
-            function animateDownloadVisualizer() {
-                if (!isVisualizerActive || !downloadVisualizer) return;
-                const bars = document.querySelectorAll('.download-bar');
-                bars.forEach(bar => {
-                    const height = Math.floor(Math.random() * 25) + 2;
-                    bar.style.height = `${height}px`;
-                });
-            }
+            // Render games
+            renderGames(currentTab);
             
-            // Переключение визуализатора загрузки
-            if (visualizerToggle) {
-                visualizerToggle.addEventListener('click', () => {
-                    isVisualizerActive = !isVisualizerActive;
-                    if (isVisualizerActive) {
-                        downloadVisualizer.style.display = 'flex';
-                        visualizerToggle.innerHTML = `
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M5 12h14M5 18h14M5 6h14"></path>
-                            </svg>
-                        `;
-                        if (visualizerInterval) clearInterval(visualizerInterval);
-                        visualizerInterval = setInterval(animateDownloadVisualizer, 80);
-                    } else {
-                        downloadVisualizer.style.display = 'none';
-                        visualizerToggle.innerHTML = `
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M12 5v14M17 5v14M7 5v14M2 5h20M2 19h20"></path>
-                            </svg>
-                        `;
-                        if (visualizerInterval) clearInterval(visualizerInterval);
-                        visualizerInterval = null;
-                    }
-                });
-            }
-            
-            // Инициализация визуализатора загрузки
-            createDownloadVisualizer();
-            
-            // Эмуляция пинга
-            function simulatePing() {
-                if (!pingValue) return;
-                const minPing = 30;
-                const maxPing = 120;
-                const ping = Math.floor(Math.random() * (maxPing - minPing + 1)) + minPing;
-                pingValue.textContent = `${ping} ms`;
-            }
-            
-            // Обновление статистики загрузки
-            function updateDownloadStats(loaded, total) {
-                if (total === 0 || !downloadedSize || !downloadSpeed) return;
-                const mbLoaded = (loaded / (1024 * 1024)).toFixed(2);
-                downloadedSize.textContent = `${mbLoaded} MB`;
-                if (downloadStartTime > 0) {
-                    const elapsed = (Date.now() - downloadStartTime) / 1000; // seconds
-                    if (elapsed > 0) {
-                        const speed = (loaded / elapsed) / 1024; // KB/s
-                        downloadSpeed.textContent = `${speed.toFixed(2)} KB/s`;
-                    }
-                }
-            }
-            
-            // Получение сохраненных данных пользователя
-            function getSavedUserData(telegram_id) {
-                const savedUsers = JSON.parse(localStorage.getItem('plugg_saved_users') || '{}');
-                return savedUsers[telegram_id] || null;
-            }
-            
-            // Сохранение данных пользователя
-            function saveUserData(userData) {
-                const savedUsers = JSON.parse(localStorage.getItem('plugg_saved_users') || '{}');
-                savedUsers[userData.telegram_id] = userData;
-                localStorage.setItem('plugg_saved_users', JSON.stringify(savedUsers));
-            }
-            
-            // Проверка наличия пользователя
-            function checkUser() {
-                const tgUser = tg.initDataUnsafe.user;
-                if (tgUser) {
-                    const telegram_id = tgUser.id;
-                    const savedData = getSavedUserData(telegram_id);
-                    if (savedData) {
-                        currentUser = savedData;
-                        updateProfileUI();
-                        return true;
-                    }
-                }
-                return false;
-            }
-            
-            // Обновление UI профиля
-            function updateProfileUI() {
-                if (!profileName || !profileUsername || !profileBio || !nameInput || 
-                    !usernameInput || !bioInput || !libraryGrid) return;
-                    
-                if (currentUser) {
-                    // Проверяем верификацию пользователя
-                    const isVerified = isUserVerified(currentUser.telegram_id);
-                    
-                    // Обновляем имя
-                    let nameHTML = currentUser.first_name + (currentUser.last_name ? ' ' + currentUser.last_name : '');
-                    
-                    // Добавляем галочку верификации, если пользователь верифицирован
-                    if (isVerified) {
-                        nameHTML += `
-                            <div class="verified-badge" id="verified-badge">
-                                <img src="https://github.com/MrRazion/pluggbotest.github.io/blob/main/badges/status/1761634926844.png?raw=true" alt="Verified">
-                                <div class="verified-tooltip" id="verified-tooltip">
-                                    ${getVerifiedDescription(currentUser.telegram_id, currentUser.first_name)}
-                                </div>
-                            </div>
-                        `;
-                    }
-                    
-                    // Обновляем имя с галочкой верификации
-                    profileName.innerHTML = nameHTML;
-                    nameInput.value = currentUser.first_name + (currentUser.last_name ? ' ' + currentUser.last_name : '');
-                    
-                    // Обновляем юзернейм
-                    const usernameText = currentUser.username ? `@${currentUser.username}` : 'Не указан';
-                    profileUsername.innerHTML = usernameText;
-                    usernameInput.value = currentUser.username || '';
-                    
-                    // Обновляем био
-                    profileBio.textContent = currentUser.bio || 'Добавьте описание профиля, чтобы рассказать о себе';
-                    bioInput.value = currentUser.bio || '';
-                    
-                    // Обновляем аватар
-                    if (currentUser.avatar) {
-                        profileAvatar.innerHTML = `<img src="${currentUser.avatar}" alt="Аватар">`;
-                    }
-                    
-                    // Обновляем баннер
-                    if (currentUser.banner) {
-                        bannerPlaceholder.style.backgroundImage = `url('${currentUser.banner}')`;
-                        bannerPlaceholder.style.backgroundSize = 'cover';
-                        bannerPlaceholder.style.backgroundPosition = 'center';
-                        bannerPlaceholder.textContent = '';
-                    } else {
-                        bannerPlaceholder.style.background = 'var(--accent-gradient)';
-                        bannerPlaceholder.style.backgroundSize = '';
-                        bannerPlaceholder.style.backgroundPosition = '';
-                        bannerPlaceholder.textContent = 'Добавьте свой баннер, чтобы выделиться среди других пользователей';
-                    }
-                    
-                    // Обновляем библиотеку
-                    updateLibraryUI();
-                    
-                    // Добавляем обработчик для галочки верификации
-                    const verifiedBadge = document.getElementById('verified-badge');
-                    if (verifiedBadge) {
-                        const tooltip = document.getElementById('verified-tooltip');
-                        verifiedBadge.addEventListener('click', () => {
-                            tooltip.classList.add('show');
-                            tooltip.style.display = 'block';
-                            setTimeout(() => {
-                                tooltip.classList.remove('show');
-                            }, 10000);
-                        });
-                    }
-                    
-                    // Проверяем, является ли пользователь владельцем
-                    if (!isOwner) {
-                        profileModal.classList.add('guest-view');
-                    } else {
-                        profileModal.classList.remove('guest-view');
-                    }
-                }
-            }
-            
-            // Проверка верификации пользователя
-            function isUserVerified(telegram_id) {
-                const verifiedUsers = [5772425643, 7942740523, 5507094612];
-                return verifiedUsers.includes(Number(telegram_id));
-            }
-            
-            // Получение описания верификации
-            function getVerifiedDescription(telegram_id, nickname) {
-                const verifiedUsers = {
-                    5772425643: `${nickname} is the official person and creator of the project.`,
-                    7942740523: `${nickname} is the official tester and assistant of the project.`,
-                    5507094612: `${nickname} supported the development of the project and received a special badge.`
-                };
-                return verifiedUsers[telegram_id] || '';
-            }
-            
-            // Обновление UI библиотеки
-            function updateLibraryUI() {
-                if (!libraryGrid) return;
-                
-                libraryGrid.innerHTML = '';
-                if (!currentUser || !currentUser.library || currentUser.library.length === 0) {
-                    libraryGrid.innerHTML = `
-                        <div style="grid-column: 1 / -1; text-align: center; padding: 20px; color: var(--text-secondary);">
-                            Ваша библиотека пуста. Добавляйте приватки в библиотеку, чтобы найти их здесь!
-                        </div>
-                    `;
-                    return;
-                }
-                currentUser.library.forEach(gameId => {
-                    const game = games.find(g => g.id === gameId);
-                    if (game) {
-                        const item = document.createElement('div');
-                        item.className = 'library-item animate-fade-in-up';
-                        item.innerHTML = `
-                            <img src="${game.image}" alt="${game.title}">
-                            <div class="library-item-title">${game.title}</div>
-                        `;
-                        libraryGrid.appendChild(item);
-                    }
-                });
-            }
-            
-            // Данные игр
-            const games = [
-                {
-                    id: 'standrise',
-                    title: 'StandRise',
-                    description: 'Приватный сервер StandRise - это приватный сервер для популярной игры Standoff 2, который открывает перед игроками безграничные возможности и новую степень свободы. Здесь нет строгих ограничений, которые сдерживают ваш игровой процесс, а весь контент становится доступным без дополнительных усилий. Сервер предоставляет неограниченные ресурсы, позволяя вам мгновенно приобрести любые скины, оружие и улучшения.',
-                    whatsNew: [
-                        '— Улучшена оптимизация',
-                        '— Исправлены вылеты',
-                        'Доступны новые методы для входа Facebook и VK',
-                        '— Доступна линковка аккаунтов через различные способы входов Google, Facebook, VK',
-                        '— Теперь доступны функции приватности',
-                        '— Улучшен античит'
-                    ],
-                    image: 'https://avatars.mds.yandex.net/i?id=725c7c7f58887b1cd7015d30752cfa7b_sr-16333491-images-thumbs&n=13',
-                    categories: ['action'],
-                    url: 'https://huggingface.co/Zerchi/test/resolve/main/StandRise1.4.0f1.apk',
-                    fileName: 'StandRise1.4.0f1.apk',
-                    version: '1.4F2',
-                    size: '1.98 GB'
-                },
-                {
-                    id: 'standleo',
-                    title: 'StandLeo',
-                    description: 'Приватный сервер StandLeo - настоящий рай для фанатов Standoff 2, предлагающий приватный сервер. Здесь вы сможете погрузиться в адреналиновые сражения и тактические соревнования, не тратя ни копейки на внешние атрибуты и награды.',
-                    whatsNew: [
-                        '- Новый подарок',
-                        '- Все из Standoff 0.35.0 (Новый пак, новая акция с коллекцией, карты, новое оружие и т.д.)',
-                        '- Добавлены ежедневные вызовы',
-                        '- Режим наблюдателей',
-                        '- Кланы',
-                        '- Ребаланс оружий из оригинала',
-                        '- Улучшение рейтинговых игр с первым сезоном',
-                        '- Новая акция с скинами из спина "Gambit" (Бабочка и т.д.)'
-                    ],
-                    image: 'https://avatars.mds.yandex.net/i?id=0e819955e77d734dbf74a1628015204f_l-12569562-images-thumbs&n=13',
-                    categories: ['action'],
-                    url: 'https://huggingface.co/Zerchi/test/resolve/main/standleoprivate3.0.apk',
-                    fileName: 'standleoprivate3.0.apk',
-                    version: '3.0',
-                    size: '2.01 GB'
-                },
-                {
-                    id: 'projectevolution',
-                    title: 'Project Evolution',
-                    description: 'Приватный сервер Project Evolution - это модификация популярного шутера Standoff 2, предлагающий игрокам уникальные возможности и множество дополнительных функций. Этот сервер предоставляет отличные условия для всех любителей интенсивных и увлекательных онлайн-сражений, с мощной настройкой и проработкой всех элементов.',
-                    whatsNew: [
-                        'Новая карта Hanami для режимов со сценарием «Закладки бомбы».',
-                        'Новый боевой пропуск — «Syndicate».',
-                        'Новая карта Hanari для режимов «Командный бой», «Гонка вооружений» и «Ограбление».',
-                        'Переработана карта Bridge и слегка обновлена карта Yard.',
-                        'Новая снайперская винтовка — Mallard.',
-                        'Обновление фракции Синдикат «Коготь Дракона» и небольшое обновление фракции S.A.F.',
-                        'Новые коллекции — «Syndicate» и «Rewind».',
-                        'Новый Charm Pack — «Rewind».',
-                        'Новый задний фон главного меню.',
-                    ],
-                    image: 'https://static1.tgstat.ru/channels/_0/51/5149f74cbede968093f53564123bd9f5.jpg',
-                    categories: ['action'],
-                    url: 'https://huggingface.co/Zerchi/test/resolve/main/Project%20Evolution%209.4%20f1.apk',
-                    fileName: 'Project Evolution 9.4 f1.apk',
-                    version: '9.4',
-                    size: '1.80 GB'
-                },
-                {
-                    id: 'standknife',
-                    title: 'StandKnife',
-                    description: 'Приватный сервер StandKnife Simulator - известная многим приватка, перерабатывающая концепцию популярного шутера Standoff 2 и сосредотачивающий весь игровой процесс на мастерстве владения холодным оружием.',
-                    whatsNew: [
-                        'Фикс ошибок при входе в игру.'
-                    ],
-                    image: 'https://edroid.ru/wp-content/uploads/2024/02/4-31.webp',
-                    categories: ['action'],
-                    url: 'https://huggingface.co/Zerchi/test/resolve/main/StandKnife%202.9%20(f3).apk',
-                    fileName: 'StandKnife 2.9 (f3).apk',
-                    version: '2.9 (f3)',
-                    size: '2.08 GB'
-                },
-                {
-                    id: 'standchillow',
-                    title: 'StandChillow',
-                    description: 'StandChillow - это увлекательный шутер для Android, который предлагает насыщенные командные бои на основе популярного мобильного экшена Standoff 2. Игра переносит вас в мир тактических баталий, где каждая схватка проверяет ваши боевые навыки.',
-                    whatsNew: [
-                        'Фикс ошибок при входе в игру.',
-                        '- Новый контент из обновления 0.34.0 (скины, интерфейс, саундтрек)',
-                        '- Добавлены карты "Awm Lego" и "Summer Breeze"',
-                        '- Убрано снижение уровня при убийстве с ножа в гонке вооружений',
-                        '- Возвращены статтрек версии скинов на береты',
-                        '- Улучшено пространственное аудио',
-                        '- Исправление багов (включая кривой скелет персонажа)'
-                    ],
-                    image: 'https://5play.life/uploads/posts/2025-07/thumbs/1751996821_standchillow-icon.png',
-                    categories: ['action'],
-                    url: 'https://huggingface.co/Zerchi/test/resolve/main/1.6.apk',
-                    fileName: '1.6.apk',
-                    version: '1.6',
-                    size: '1.34 GB'
-                },
-                {
-                    id: 'crossoff',
-                    title: 'Crossoff: Classic',
-                    description: 'CrossOff — приватка в которой за сыгранные матчи выдают серебро и золото, является копией оригинальной игры, возможность входа через Google.',
-                    whatsNew: [
-                        'Добавлен античит',
-                        'Добавлены кланы',
-                        '- Добавлены режим "Соревновательный"',
-                    ],
-                    image: 'https://5play.info/_ld/14/1487.webp',
-                    categories: ['action'],
-                    url: 'https://huggingface.co/Zerchi/test/resolve/main/CrossOffClassic-1.1F2.apk',
-                    fileName: 'CrossOffClassic-1.1F2.apk',
-                    version: '1.1 (F2)',
-                    size: '499.1 MB'
-                }
-            ];
-            
-            // Функция для рендеринга игр в таб
-            function renderGames(tab) {
-                const grid = document.querySelector(`#${tab}-tab .games-grid`);
-                if (!grid) return;
-                grid.innerHTML = '';
-                const filteredGames = tab === 'all' ? games : games.filter(game => game.categories.includes(tab));
-                filteredGames.forEach(game => {
-                    const card = document.createElement('div');
-                    card.className = 'game-card animate-fade-in-up';
-                    card.dataset.gameId = game.id;
-                    card.innerHTML = `
-                        <div class="game-image">
-                            <img src="${game.image}" alt="${game.title}">
-                            <div class="game-overlay"></div>
-                        </div>
-                        <div class="game-info">
-                            <div class="game-title">${game.title}</div>
-                            <div class="game-description">${game.description}</div>
-                        </div>
-                    `;
-                    card.style.animationDelay = `${Math.random() * 0.3}s`;
-                    card.addEventListener('click', handleGameClick);
-                    grid.appendChild(card);
-                });
-            }
-            
-            // Обновление кнопки библиотеки в деталях
-            function updateDetailsLibraryButton() {
-                if (!detailsLibraryBtn || !currentGameId || !currentUser) return;
-                if (currentUser.library && currentUser.library.includes(currentGameId)) {
-                    detailsLibraryBtn.classList.add('active');
-                    detailsLibraryBtn.textContent = 'Удалить из библиотеки';
-                } else {
-                    detailsLibraryBtn.classList.remove('active');
-                    detailsLibraryBtn.textContent = 'Добавить в библиотеку';
-                }
-            }
-            
-            // Добавление/удаление игры из библиотеки
-            function toggleGameInLibrary(gameId) {
-                if (!currentUser) {
+            // Event listeners
+            setupEventListeners();
+        });
+        
+        // Setup all event listeners
+        function setupEventListeners() {
+            // Library button
+            libraryBtn.addEventListener('click', () => {
+                if (!checkUser()) {
                     authModal.classList.add('active');
-                    return;
-                }
-                if (!currentUser.library) {
-                    currentUser.library = [];
-                }
-                const index = currentUser.library.indexOf(gameId);
-                if (index === -1) {
-                    // Добавляем в библиотеку
-                    currentUser.library.push(gameId);
-                    tg.showAlert('Игра добавлена в библиотеку!');
                 } else {
-                    // Удаляем из библиотеки
-                    currentUser.library.splice(index, 1);
-                    tg.showAlert('Игра удалена из библиотеки!');
-                }
-                // Сохраняем обновленные данные
-                saveUserData(currentUser);
-                // Обновляем UI
-                updateDetailsLibraryButton();
-                updateLibraryUI();
-            }
-            
-            // Обработчик клика по карточке игры
-            function handleGameClick(e) {
-                const gameId = e.currentTarget.dataset.gameId;
-                const game = games.find(g => g.id === gameId);
-                if (game) {
-                    detailsTitle.textContent = game.title;
-                    detailsImage.src = game.image;
-                    detailsImage.alt = game.title;
-                    detailsMeta.textContent = `Версия: ${game.version} • Размер: ${game.size}`;
-                    detailsDescription.innerHTML = `<p>${game.description}</p><ul><li>Спасибо за использование PLUGG BOT!</li></ul>`;
-                    detailsWhatsNew.innerHTML = `<ul>${game.whatsNew.map(item => `<li>${item}</li>`).join('')}</ul>`;
-                    currentDownloadUrl = game.url;
-                    currentFileName = game.fileName;
-                    currentGameTitle = game.title;
-                    currentGameId = gameId;
-                    downloadBtn.textContent = 'Скачать';
-                    gameDetails.classList.add('active');
-                    updateDetailsLibraryButton();
-                } else {
-                    tg.showPopup({
-                        title: 'Скоро будет доступно',
-                        message: 'Эта игра находится в разработке и скоро будет доступна для скачивания!',
-                        buttons: [{type: 'ok', text: 'Понятно'}]
+                    profileModal.classList.add('active');
+                    // Switch to library tab
+                    document.querySelectorAll('.profile-tab').forEach(tab => {
+                        if (tab.dataset.tab === 'library') {
+                            tab.classList.add('active');
+                        } else {
+                            tab.classList.remove('active');
+                        }
                     });
+                    librarySection.style.display = 'block';
+                    settingsSection.style.display = 'none';
                 }
-            }
+            });
             
-            // Обработчики для вкладок
-            document.querySelectorAll('.tab').forEach(tab => {
+            // Tab switching
+            tabs.forEach(tab => {
                 tab.addEventListener('click', () => {
-                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    tabs.forEach(t => t.classList.remove('active'));
                     tab.classList.add('active');
-                    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-                    const content = document.getElementById(`${tab.dataset.tab}-tab`);
-                    if (content) content.classList.add('active');
                     currentTab = tab.dataset.tab;
                     renderGames(currentTab);
                     applySearch();
                 });
             });
             
-            // Обработчик поиска
-            if (searchInput) {
-                searchInput.addEventListener('input', applySearch);
-            }
+            // Search functionality
+            searchInput.addEventListener('input', applySearch);
             
-            function applySearch() {
-                const term = searchInput.value.toLowerCase();
-                const grid = document.querySelector(`#${currentTab}-tab .games-grid`);
-                if (!grid) return;
-                Array.from(grid.children).forEach(card => {
-                    const title = card.querySelector('.game-title').textContent.toLowerCase();
-                    card.style.display = title.includes(term) ? '' : 'none';
-                });
-            }
-            
-            // Обработчик кнопки "Назад"
-            if (backBtn) {
-                backBtn.addEventListener('click', () => {
-                    gameDetails.classList.remove('active');
-                    if (xhr && isDownloading) {
-                        xhr.abort();
-                        resetDownloadUI();
+            // Profile tab switching
+            profileTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    profileTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    if (tab.dataset.tab === 'library' && librarySection && settingsSection) {
+                        librarySection.style.display = 'block';
+                        settingsSection.style.display = 'none';
+                    } else if (tab.dataset.tab === 'settings' && librarySection && settingsSection) {
+                        librarySection.style.display = 'none';
+                        settingsSection.style.display = 'block';
                     }
                 });
-            }
+            });
             
-            // Обработчик кнопки добавления в библиотеку в деталях
-            if (detailsLibraryBtn) {
-                detailsLibraryBtn.addEventListener('click', () => {
-                    if (currentGameId) {
-                        toggleGameInLibrary(currentGameId);
-                    }
-                });
-            }
-            
-            // Функция для обновления прогресса
-            function updateProgress(percent, loaded, total) {
-                if (!progressFill || !progressPercent || !statusText) return;
-                progressFill.style.width = percent + '%';
-                progressPercent.textContent = percent + '%';
-                updateDownloadStats(loaded, total);
-                if (percent === 0) {
-                    statusText.textContent = 'Готов к загрузке';
-                } else if (percent < 100) {
-                    statusText.textContent = `Загрузка: ${percent}%`;
-                } else {
-                    statusText.textContent = 'Загрузка завершена! Проверьте папку Download на телефоне.';
-                }
-            }
-            
-            // Функция для показа статуса
-            function showStatus(message, isSuccess) {
-                if (!statusMessage) return;
-                statusMessage.textContent = message;
-                statusMessage.className = `status-message ${isSuccess ? 'status-success' : 'status-error'}`;
-                statusMessage.style.display = 'block';
-            }
-            
-            // Сброс UI загрузки
-            function resetDownloadUI() {
-                isDownloading = false;
-                if (downloadBtn) {
-                    downloadBtn.disabled = false;
-                    downloadBtn.textContent = 'Скачать';
-                }
-                if (progressContainer) {
-                    progressContainer.style.display = 'none';
-                }
-                if (statusMessage) {
-                    statusMessage.style.display = 'none';
-                }
-                updateProgress(0, 0, 0);
-                // Останавливаем визуализатор загрузки
-                if (visualizerInterval) {
-                    clearInterval(visualizerInterval);
-                    visualizerInterval = null;
-                }
-                if (downloadVisualizer) {
-                    downloadVisualizer.style.display = 'none';
-                }
-                isVisualizerActive = false;
-                if (visualizerToggle) {
-                    visualizerToggle.innerHTML = `
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 5v14M17 5v14M7 5v14M2 5h20M2 19h20"></path>
-                        </svg>
-                    `;
-                }
-            }
-            
-            // Функция для скачивания файла
-            function downloadFile() {
-                if (!isDownloading && downloadBtn) {
-                    isDownloading = true;
-                    downloadBtn.disabled = true;
-                    downloadBtn.innerHTML = '<span class="loader"></span> Загрузка...';
-                    if (progressContainer) progressContainer.style.display = 'block';
-                    if (statusText) statusText.textContent = 'Запрос на скачивание...';
-                    updateProgress(0, 0, 0);
-                    // Эмулируем пинг
-                    simulatePing();
-                    const pingInterval = setInterval(simulatePing, 2000);
-                    // Добавляем уникальный параметр к URL для принудительной перезагрузки
-                    const timestamp = Date.now();
-                    const downloadUrl = `${currentDownloadUrl}?t=${timestamp}`;
-                    if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.isVersionAtLeast('8.0')) {
-                        // Use native downloadFile method
-                        window.Telegram.WebApp.downloadFile({
-                            url: downloadUrl,
-                            file_name: currentFileName
-                        }, (accepted) => {
-                            if (accepted) {
-                                if (statusText) statusText.textContent = 'Скачивание начато...';
-                                // Эмулируем прогресс загрузки
-                                downloadStartTime = Date.now();
-                                let percent = 0;
-                                let loadedBytes = 0;
-                                totalBytes = 100 * 1024 * 1024; // 100MB для эмуляции
-                                const downloadInterval = setInterval(() => {
-                                    percent += Math.random() * 2;
-                                    if (percent > 100) percent = 100;
-                                    loadedBytes = (percent / 100) * totalBytes;
-                                    updateProgress(percent, loadedBytes, totalBytes);
-                                    if (percent >= 100) {
-                                        clearInterval(downloadInterval);
-                                        clearInterval(pingInterval);
-                                        showStatus('Загрузка завершена! Файл готов к установке.', true);
-                                    }
-                                }, 200);
-                            } else {
-                                clearInterval(pingInterval);
-                                showStatus('Скачивание отменено.', false);
-                                updateProgress(0, 0, 0);
-                            }
-                            resetDownloadUI();
-                            if (downloadBtn) downloadBtn.textContent = 'Скачать еще раз';
-                        });
-                    } else {
-                        // Fallback to XMLHttpRequest
-                        try {
-                            xhr = new XMLHttpRequest();
-                            xhr.open('GET', downloadUrl, true);
-                            xhr.responseType = 'blob';
-                            xhr.onprogress = function(event) {
-                                if (event.lengthComputable) {
-                                    const percent = Math.round((event.loaded / event.total) * 100);
-                                    downloadedBytes = event.loaded;
-                                    totalBytes = event.total;
-                                    updateProgress(percent, event.loaded, event.total);
-                                }
-                            };
-                            xhr.onload = function() {
-                                clearInterval(pingInterval);
-                                if (xhr.status === 200) {
-                                    if (statusText) statusText.textContent = 'Проверка целостности файла...';
-                                    setTimeout(() => {
-                                        const blob = new Blob([xhr.response], { type: 'application/vnd.android.package-archive' });
-                                        const url = URL.createObjectURL(blob);
-                                        const a = document.createElement('a');
-                                        a.style.display = 'none';
-                                        a.href = url;
-                                        a.download = currentFileName;
-                                        document.body.appendChild(a);
-                                        a.click();
-                                        URL.revokeObjectURL(url);
-                                        document.body.removeChild(a);
-                                        updateProgress(100, totalBytes, totalBytes);
-                                        showStatus('Файл успешно проверен и готов к установке.', true);
-                                    }, 1500);
-                                } else {
-                                    showStatus(`Ошибка загрузки: статус ${xhr.status}. Файл может быть поврежден.`, false);
-                                    updateProgress(0, 0, 0);
-                                }
-                                resetDownloadUI();
-                                xhr = null;
-                            };
-                            xhr.onerror = function() {
-                                clearInterval(pingInterval);
-                                showStatus('Ошибка сети. Проверьте подключение.', false);
-                                updateProgress(0, 0, 0);
-                                resetDownloadUI();
-                                xhr = null;
-                            };
-                            xhr.onabort = function() {
-                                clearInterval(pingInterval);
-                                showStatus('Загрузка отменена.', false);
-                                updateProgress(0, 0, 0);
-                                resetDownloadUI();
-                                xhr = null;
-                            };
-                            xhr.send();
-                        } catch (error) {
-                            clearInterval(pingInterval);
-                            showStatus(`Ошибка: ${error.message}. Не удалось скачать файл.`, false);
-                            resetDownloadUI();
-                            xhr = null;
-                        }
-                    }
-                }
-            }
-            
-            // Обработчик кнопки скачивания
-            if (downloadBtn) {
-                downloadBtn.addEventListener('click', downloadFile);
-            }
-            
-            // ========== НОВАЯ СИСТЕМА АВТОРИЗАЦИИ ЧЕРЕЗ TELEGRAM ==========
-            
-            // Обработчик кнопки профиля
-            if (profileBtn) {
-                profileBtn.addEventListener('click', () => {
-                    if (!checkUser()) {
-                        authModal.classList.add('active');
-                    } else {
-                        profileModal.classList.add('active');
-                    }
-                });
-            }
-            
-            // Обработчик кнопки авторизации через Telegram
+            // Telegram auth button
             if (telegramAuthButton) {
                 telegramAuthButton.addEventListener('click', () => {
-                    // Показываем индикатор загрузки
+                    // Show loading indicator
                     authModal.classList.remove('active');
                     registrationProgress.style.display = 'block';
                     
-                    // Используем данные из Telegram WebApp
+                    // Use data from Telegram WebApp
                     setTimeout(() => {
                         if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
                             const user = tg.initDataUnsafe.user;
                             
-                            // Создаем объект пользователя
+                            // Create user object
                             const userData = {
                                 telegram_id: user.id,
                                 first_name: user.first_name,
@@ -2387,121 +1455,255 @@
                                 auth_date: user.auth_date || Math.floor(Date.now() / 1000),
                                 avatar: user.photo_url || '',
                                 banner: '',
-                                bio: 'Любитель приваток для Standoff 2',
+                                bio: 'Lover of private servers for Standoff 2',
                                 library: [],
                                 badges: [],
                                 pinned_badges: [],
                                 created_at: new Date().toISOString()
                             };
                             
-                            // Восстанавливаем сохраненные данные
+                            // Restore saved data
                             const savedData = getSavedUserData(userData.telegram_id);
                             if (savedData) {
                                 Object.assign(userData, savedData);
                             }
                             
-                            // Сохраняем пользователя
+                            // Save user data
                             saveUserData(userData);
                             currentUser = userData;
                             
-                            // Обновляем интерфейс
+                            // Update UI
                             updateProfileUI();
                             
-                            // Показываем профиль
+                            // Show profile
                             registrationProgress.style.display = 'none';
                             profileModal.classList.add('active');
-                            
-                            tg.showAlert('Вы успешно вошли в систему PLUGG ID через Telegram!');
+                            tg.showAlert('You have successfully logged in to PLUGG ID via Telegram!');
                         } else {
                             registrationProgress.style.display = 'none';
                             authModal.classList.add('active');
-                            tg.showAlert('Не удалось получить данные из Telegram. Пожалуйста, попробуйте снова.');
+                            tg.showAlert('Failed to get data from Telegram. Please try again.');
                         }
                     }, 1000);
                 });
             }
             
-            // Обработчик кнопки выхода
+            // Logout button
             if (logoutBtn) {
                 logoutBtn.addEventListener('click', () => {
                     currentUser = null;
-                    
-                    // Закрываем модальное окно
+                    localStorage.removeItem('currentUser');
+                    // Close modal
                     if (profileModal) profileModal.classList.remove('active');
-                    
-                    // Показываем уведомление
-                    tg.showAlert('Вы вышли из аккаунта');
+                    // Show auth modal
+                    authModal.classList.add('active');
+                    // Show alert
+                    tg.showAlert('You have logged out of your account');
                 });
             }
             
-            // Обработчик закрытия модальных окон
+            // Close modals when clicking outside
             document.addEventListener('click', (e) => {
-                // Закрытие authModal при клике вне контента
+                // Close authModal when clicking outside content
                 if (authModal && authModal.classList.contains('active') && 
-                    e.target === authModal) {
+                    !authModal.querySelector('.auth-modal-content').contains(e.target)) {
                     authModal.classList.remove('active');
                 }
                 
-                // Закрытие profileModal при клике вне контента
+                // Close profileModal when clicking outside content
                 if (profileModal && profileModal.classList.contains('active') && 
-                    e.target === profileModal) {
+                    !profileModal.querySelector('.profile-modal-content').contains(e.target)) {
                     profileModal.classList.remove('active');
                 }
             });
             
-            // Обработчики вкладок профиля
-            if (profileTabs && profileTabs.length > 0) {
-                profileTabs.forEach(tab => {
-                    tab.addEventListener('click', () => {
-                        profileTabs.forEach(t => t.classList.remove('active'));
-                        tab.classList.add('active');
-                        if (tab.dataset.tab === 'library' && librarySection && settingsSection) {
-                            librarySection.style.display = 'block';
-                            settingsSection.style.display = 'none';
-                        } else if (tab.dataset.tab === 'settings' && librarySection && settingsSection) {
-                            librarySection.style.display = 'none';
-                            settingsSection.style.display = 'block';
-                        }
+            // Banner edit
+            if (bannerEdit) {
+                bannerEdit.addEventListener('click', () => {
+                    // Show banner selector
+                    bannerSelector.classList.add('active');
+                    
+                    // Clear previous selection
+                    selectedBannerFile = null;
+                    
+                    // Clear gallery
+                    bannerGallery.innerHTML = '';
+                    
+                    // Add default banners
+                    const defaultBanners = [
+                        'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&q=80',
+                        'https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&q=80',
+                        'https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&q=80',
+                        'https://images.unsplash.com/photo-1506157786151-b8491531f063?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&q=80',
+                        'https://images.unsplash.com/photo-1558655146-d09347e92766?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&q=80',
+                        'https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&q=80'
+                    ];
+                    
+                    defaultBanners.forEach(url => {
+                        const item = document.createElement('div');
+                        item.className = 'banner-item';
+                        item.innerHTML = `<img src="${url}" alt="Banner">`;
+                        item.addEventListener('click', () => {
+                            document.querySelectorAll('.banner-item').forEach(i => i.classList.remove('selected'));
+                            item.classList.add('selected');
+                            selectedBannerFile = null;
+                        });
+                        bannerGallery.appendChild(item);
                     });
                 });
             }
             
-            // Обработчик сохранения имени
+            // Banner selector close
+            if (bannerSelectorClose) {
+                bannerSelectorClose.addEventListener('click', () => {
+                    bannerSelector.classList.remove('active');
+                });
+            }
+            
+            // Banner upload
+            if (bannerUpload) {
+                bannerUpload.addEventListener('click', () => {
+                    bannerFileInput.click();
+                });
+            }
+            
+            // Banner file input
+            if (bannerFileInput) {
+                bannerFileInput.addEventListener('change', (e) => {
+                    if (e.target.files && e.target.files[0]) {
+                        selectedBannerFile = e.target.files[0];
+                        document.querySelectorAll('.banner-item').forEach(i => i.classList.remove('selected'));
+                    }
+                });
+            }
+            
+            // Banner apply button
+            if (bannerApplyBtn) {
+                bannerApplyBtn.addEventListener('click', () => {
+                    if (currentUser) {
+                        if (selectedBannerFile) {
+                            // If file is selected from gallery
+                            const reader = new FileReader();
+                            reader.onload = function(event) {
+                                currentUser.banner = event.target.result;
+                                saveUserData(currentUser);
+                                bannerSelector.classList.remove('active');
+                                bannerPreview.classList.remove('active');
+                                selectedBannerFile = null;
+                                updateProfileUI();
+                            };
+                            reader.readAsDataURL(selectedBannerFile);
+                        } else {
+                            // If banner is selected from gallery
+                            const selectedBanner = bannerGallery.querySelector('.banner-item.selected');
+                            if (selectedBanner) {
+                                const bannerUrl = selectedBanner.querySelector('img').src;
+                                currentUser.banner = bannerUrl;
+                                saveUserData(currentUser);
+                                bannerSelector.classList.remove('active');
+                                updateProfileUI();
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Avatar edit
+            if (profileAvatar) {
+                profileAvatar.addEventListener('click', () => {
+                    // Show avatar selector
+                    avatarSelector.classList.add('active');
+                    
+                    // Clear previous selection
+                    selectedAvatarFile = null;
+                    
+                    // Set current avatar as preview
+                    if (currentUser && currentUser.avatar) {
+                        avatarPreviewImg.src = currentUser.avatar;
+                    }
+                });
+            }
+            
+            // Avatar selector close
+            if (avatarSelectorClose) {
+                avatarSelectorClose.addEventListener('click', () => {
+                    avatarSelector.classList.remove('active');
+                });
+            }
+            
+            // Avatar upload
+            if (avatarUpload) {
+                avatarUpload.addEventListener('click', () => {
+                    avatarFileInput.click();
+                });
+            }
+            
+            // Avatar file input
+            if (avatarFileInput) {
+                avatarFileInput.addEventListener('change', (e) => {
+                    if (e.target.files && e.target.files[0]) {
+                        selectedAvatarFile = e.target.files[0];
+                        
+                        // Preview the image
+                        const reader = new FileReader();
+                        reader.onload = function(event) {
+                            avatarPreviewImg.src = event.target.result;
+                        };
+                        reader.readAsDataURL(e.target.files[0]);
+                    }
+                });
+            }
+            
+            // Avatar apply button
+            if (avatarApplyBtn) {
+                avatarApplyBtn.addEventListener('click', () => {
+                    if (currentUser && selectedAvatarFile) {
+                        const reader = new FileReader();
+                        reader.onload = function(event) {
+                            currentUser.avatar = event.target.result;
+                            saveUserData(currentUser);
+                            avatarSelector.classList.remove('active');
+                            selectedAvatarFile = null;
+                            updateProfileUI();
+                        };
+                        reader.readAsDataURL(selectedAvatarFile);
+                    }
+                });
+            }
+            
+            // Save name
             if (saveNameBtn && nameInput) {
                 saveNameBtn.addEventListener('click', () => {
                     if (nameInput.value.trim() !== '' && currentUser) {
-                        // Разделяем имя и фамилию
+                        // Split name and surname
                         const nameParts = nameInput.value.trim().split(' ');
                         currentUser.first_name = nameParts[0];
                         currentUser.last_name = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
                         
                         saveUserData(currentUser);
                         updateProfileUI();
-                    }
-                    if (nameAvailable) {
+                        
                         nameAvailable.style.display = 'block';
                         setTimeout(() => nameAvailable.style.display = 'none', 2000);
                     }
                 });
             }
             
-            // Обработчик сохранения юзернейма
+            // Save username
             if (saveUsernameBtn && usernameInput) {
                 saveUsernameBtn.addEventListener('click', () => {
                     if (usernameInput.value.trim() !== '' && currentUser) {
                         currentUser.username = usernameInput.value.trim();
-                        
                         saveUserData(currentUser);
                         updateProfileUI();
-                    }
-                    if (usernameAvailable) {
+                        
                         usernameAvailable.style.display = 'block';
                         setTimeout(() => usernameAvailable.style.display = 'none', 2000);
                     }
                 });
             }
             
-            // Обработчик сохранения био
+            // Save bio
             if (saveBioBtn && bioInput) {
                 saveBioBtn.addEventListener('click', () => {
                     if (bioInput.value.trim() !== '' && currentUser) {
@@ -2512,160 +1714,294 @@
                 });
             }
             
-            // Обработчик редактирования баннера
-            if (bannerEdit) {
-                bannerEdit.addEventListener('click', () => {
-                    // Показываем селектор баннеров
-                    bannerSelector.classList.add('active');
-                    
-                    // Загружаем галерею
-                    loadGallery();
+            // Back button
+            if (backBtn) {
+                backBtn.addEventListener('click', () => {
+                    gameDetails.classList.remove('active');
                 });
             }
             
-            // Обработчик закрытия селектора баннеров
-            if (bannerSelectorClose) {
-                bannerSelectorClose.addEventListener('click', () => {
-                    bannerSelector.classList.remove('active');
-                    bannerPreview.classList.remove('active');
-                    selectedBannerFile = null;
+            // Download button
+            if (downloadBtn) {
+                downloadBtn.addEventListener('click', () => {
+                    if (currentDownloadUrl) {
+                        window.open(currentDownloadUrl, '_blank');
+                    }
                 });
             }
             
-            // Обработчик выбора из галереи
-            if (bannerUpload) {
-                bannerUpload.addEventListener('click', () => {
-                    // Создаем скрытый input для выбора файла
-                    const fileInput = document.createElement('input');
-                    fileInput.type = 'file';
-                    fileInput.accept = 'image/*';
-                    fileInput.capture = 'user'; // Запрашиваем доступ к камере
-                    
-                    fileInput.addEventListener('change', (e) => {
-                        if (e.target.files && e.target.files[0]) {
-                            selectedBannerFile = e.target.files[0];
-                            const reader = new FileReader();
-                            
-                            reader.onload = function(event) {
-                                bannerPreviewImg.src = event.target.result;
-                                bannerPreview.classList.add('active');
-                            };
-                            
-                            reader.readAsDataURL(selectedBannerFile);
-                        }
-                    });
-                    
-                    fileInput.click();
+            // Library button in details
+            if (detailsLibraryBtn) {
+                detailsLibraryBtn.addEventListener('click', () => {
+                    if (currentGameId) {
+                        toggleGameInLibrary(currentGameId);
+                    }
                 });
             }
-            
-            // Загрузка галереи
-            function loadGallery() {
-                // Здесь можно загрузить изображения из галереи устройства
-                // Для примера добавим несколько заглушек
-                bannerGallery.innerHTML = '';
+        }
+        
+        // Check if user exists
+        function checkUser() {
+            const tgUser = tg.initDataUnsafe?.user;
+            if (tgUser) {
+                const telegram_id = tgUser.id;
+                const savedData = getSavedUserData(telegram_id);
+                if (savedData) {
+                    currentUser = savedData;
+                    updateProfileUI();
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        // Get saved user data
+        function getSavedUserData(telegram_id) {
+            const savedUsers = JSON.parse(localStorage.getItem('plugg_saved_users') || '{}');
+            return savedUsers[telegram_id] || null;
+        }
+        
+        // Save user data
+        function saveUserData(userData) {
+            const savedUsers = JSON.parse(localStorage.getItem('plugg_saved_users') || '{}');
+            savedUsers[userData.telegram_id] = userData;
+            localStorage.setItem('plugg_saved_users', JSON.stringify(savedUsers));
+        }
+        
+        // Update profile UI
+        function updateProfileUI() {
+            if (!profileName || !profileUsername || !profileBio || !nameInput || 
+                !usernameInput || !bioInput || !libraryGrid) return;
                 
-                for (let i = 1; i <= 9; i++) {
-                    const bannerItem = document.createElement('div');
-                    bannerItem.className = 'banner-item';
-                    bannerItem.innerHTML = `
-                        <img src="https://picsum.photos/600/300?random=${i}" alt="Banner ${i}">
+            if (currentUser) {
+                // Check user verification
+                const isVerified = isUserVerified(currentUser.telegram_id);
+                
+                // Update name
+                let nameHTML = currentUser.first_name + (currentUser.last_name ? ' ' + currentUser.last_name : '');
+                
+                // Add verification badge if user is verified
+                if (isVerified) {
+                    nameHTML += `<div class="verified-badge" id="verified-badge">
+                        <img src="https://github.com/MrRazion/pluggbotest.github.io/blob/main/badges/status/1761634926844.png?raw=true" alt="Verified">
+                        <div class="verified-tooltip" id="verified-tooltip">${getVerifiedDescription(currentUser.telegram_id, currentUser.first_name)}</div>
+                    </div>`;
+                }
+                
+                profileName.innerHTML = nameHTML;
+                nameInput.value = currentUser.first_name + (currentUser.last_name ? ' ' + currentUser.last_name : '');
+                
+                // Update username
+                const usernameText = currentUser.username ? `@${currentUser.username}` : 'Not specified';
+                profileUsername.innerHTML = usernameText;
+                usernameInput.value = currentUser.username || '';
+                
+                // Update bio
+                profileBio.textContent = currentUser.bio || 'Add a description of your profile to tell about yourself';
+                bioInput.value = currentUser.bio || '';
+                
+                // Update avatar
+                if (currentUser.avatar) {
+                    profileAvatar.innerHTML = `<img src="${currentUser.avatar}" alt="Avatar">`;
+                    profileAvatar.classList.add('has-avatar');
+                } else {
+                    // Fallback to Telegram photo or initial if no avatar
+                    const initial = currentUser.first_name ? currentUser.first_name[0].toUpperCase() : 'U';
+                    profileAvatar.innerHTML = initial;
+                    profileAvatar.classList.remove('has-avatar');
+                }
+                
+                // Update banner
+                if (currentUser.banner) {
+                    bannerPlaceholder.style.backgroundImage = `url('${currentUser.banner}')`;
+                    bannerPlaceholder.style.backgroundSize = 'cover';
+                    bannerPlaceholder.style.backgroundPosition = 'center';
+                    bannerPlaceholder.textContent = '';
+                } else {
+                    bannerPlaceholder.style.background = 'var(--accent-gradient)';
+                    bannerPlaceholder.style.backgroundSize = '';
+                    bannerPlaceholder.style.backgroundPosition = '';
+                    bannerPlaceholder.textContent = 'Add banner';
+                }
+                
+                // Update library UI
+                updateLibraryUI();
+            }
+        }
+        
+        // Update library UI
+        function updateLibraryUI() {
+            if (!libraryGrid) return;
+            libraryGrid.innerHTML = '';
+            
+            if (!currentUser || !currentUser.library || currentUser.library.length === 0) {
+                libraryGrid.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 20px; color: var(--text-secondary);">
+                        Your library is empty. Add private servers to your library to find them here!
+                    </div>
+                `;
+                return;
+            }
+            
+            currentUser.library.forEach(gameId => {
+                const game = games.find(g => g.id === gameId);
+                if (game) {
+                    const item = document.createElement('div');
+                    item.className = 'library-item animate-fade-in-up';
+                    item.innerHTML = `
+                        <div class="library-item-image">
+                            <img src="${game.image}" alt="${game.title}">
+                        </div>
+                        <div class="library-item-info">
+                            <div class="library-item-title">${game.title}</div>
+                            <div class="library-item-meta">
+                                <span>Ver: ${game.version}</span>
+                                <span>${game.size}</span>
+                            </div>
+                        </div>
                     `;
-                    
-                    bannerItem.addEventListener('click', () => {
-                        // Снимаем выделение со всех элементов
-                        document.querySelectorAll('.banner-item').forEach(item => {
-                            item.classList.remove('selected');
-                        });
-                        
-                        // Выделяем текущий элемент
-                        bannerItem.classList.add('selected');
-                        
-                        // Устанавливаем изображение в превью
-                        bannerPreviewImg.src = bannerItem.querySelector('img').src;
-                        bannerPreview.classList.add('active');
-                        selectedBannerFile = null;
+                    item.addEventListener('click', () => {
+                        // Show game details
+                        handleGameClick({ currentTarget: item, dataset: { gameId: game.id } });
                     });
-                    
-                    bannerGallery.appendChild(bannerItem);
-                }
-            }
-            
-            // Обработчик отмены выбора баннера
-            if (bannerCancelBtn) {
-                bannerCancelBtn.addEventListener('click', () => {
-                    bannerPreview.classList.remove('active');
-                    selectedBannerFile = null;
-                });
-            }
-            
-            // Обработчик применения баннера
-            if (bannerApplyBtn) {
-                bannerApplyBtn.addEventListener('click', () => {
-                    if (currentUser) {
-                        if (selectedBannerFile) {
-                            // Если выбран файл из галереи
-                            const reader = new FileReader();
-                            
-                            reader.onload = function(event) {
-                                currentUser.banner = event.target.result;
-                                saveUserData(currentUser);
-                                bannerSelector.classList.remove('active');
-                                bannerPreview.classList.remove('active');
-                                selectedBannerFile = null;
-                                updateProfileUI();
-                            };
-                            
-                            reader.readAsDataURL(selectedBannerFile);
-                        } else if (bannerPreviewImg.src) {
-                            // Если выбрано изображение из галереи
-                            currentUser.banner = bannerPreviewImg.src;
-                            saveUserData(currentUser);
-                            bannerSelector.classList.remove('active');
-                            bannerPreview.classList.remove('active');
-                            updateProfileUI();
-                        }
-                    }
-                });
-            }
-            
-            // Инициализация при загрузке
-            checkUser();
-            renderGames('all');
-            
-            // Проверка start_param для определения гостя
-            if (tg.initDataUnsafe && tg.initDataUnsafe.start_param) {
-                const startParam = tg.initDataUnsafe.start_param;
-                if (currentUser && startParam !== currentUser.username && startParam !== 'none') {
-                    isOwner = false;
-                }
-            }
-            
-            // Установка safe area insets
-            if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.safeAreaInset) {
-                document.documentElement.style.setProperty('--tg-safe-area-inset-top', `${window.Telegram.WebApp.safeAreaInset.top}px`);
-                document.documentElement.style.setProperty('--tg-safe-area-inset-bottom', `${window.Telegram.WebApp.safeAreaInset.bottom}px`);
-                document.documentElement.style.setProperty('--tg-safe-area-inset-left', `${window.Telegram.WebApp.safeAreaInset.left}px`);
-                document.documentElement.style.setProperty('--tg-safe-area-inset-right', `${window.Telegram.WebApp.safeAreaInset.right}px`);
-            }
-            
-            // Добавляем обработчик для закрытия модальных окон при нажатии Esc
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    if (authModal && authModal.classList.contains('active')) {
-                        authModal.classList.remove('active');
-                    }
-                    if (profileModal && profileModal.classList.contains('active')) {
-                        profileModal.classList.remove('active');
-                    }
-                    if (bannerSelector && bannerSelector.classList.contains('active')) {
-                        bannerSelector.classList.remove('active');
-                        bannerPreview.classList.remove('active');
-                        selectedBannerFile = null;
-                    }
+                    libraryGrid.appendChild(item);
                 }
             });
-        });
+        }
+        
+        // Render games for current tab
+        function renderGames(tab) {
+            const grid = document.querySelector(`#${tab}-tab .games-grid`);
+            if (!grid) return;
+            grid.innerHTML = '';
+            
+            const filteredGames = tab === 'all' ? 
+                games : 
+                games.filter(game => game.categories.includes(tab));
+            
+            filteredGames.forEach(game => {
+                const card = document.createElement('div');
+                card.className = 'game-card animate-fade-in-up';
+                card.dataset.gameId = game.id;
+                card.innerHTML = `
+                    <div class="game-image">
+                        <img src="${game.image}" alt="${game.title}">
+                        <div class="game-overlay"></div>
+                    </div>
+                    <div class="game-info">
+                        <div class="game-title">${game.title}</div>
+                        <div class="game-description">${game.description}</div>
+                    </div>
+                `;
+                card.style.animationDelay = `${Math.random() * 0.3}s`;
+                card.addEventListener('click', handleGameClick);
+                grid.appendChild(card);
+            });
+        }
+        
+        // Apply search filter
+        function applySearch() {
+            const term = searchInput.value.toLowerCase();
+            const grid = document.querySelector(`#${currentTab}-tab .games-grid`);
+            if (!grid) return;
+            
+            Array.from(grid.children).forEach(card => {
+                const title = card.querySelector('.game-title').textContent.toLowerCase();
+                const description = card.querySelector('.game-description').textContent.toLowerCase();
+                
+                if (title.includes(term) || description.includes(term)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+        
+        // Handle game click
+        function handleGameClick(e) {
+            const gameId = e.currentTarget.dataset.gameId;
+            const game = games.find(g => g.id === gameId);
+            if (game) {
+                detailsTitle.textContent = game.title;
+                detailsImage.src = game.image;
+                detailsImage.alt = game.title;
+                detailsMeta.textContent = `Version: ${game.version} • Size: ${game.size}`;
+                detailsDescription.innerHTML = `<p>${game.description}</p>`;
+                detailsWhatsNew.innerHTML = `<ul>${game.whatsNew.map(item => `<li>${item}</li>`).join('')}</ul>`;
+                currentDownloadUrl = game.url;
+                currentFileName = game.fileName;
+                currentGameTitle = game.title;
+                currentGameId = gameId;
+                downloadBtn.textContent = 'Download';
+                gameDetails.classList.add('active');
+                updateDetailsLibraryButton();
+            } else {
+                tg.showPopup({
+                    title: 'Error',
+                    message: 'Game not found',
+                    buttons: [{ type: 'ok' }]
+                });
+            }
+        }
+        
+        // Update details library button
+        function updateDetailsLibraryButton() {
+            if (!detailsLibraryBtn || !currentGameId || !currentUser) return;
+            
+            if (currentUser.library && currentUser.library.includes(currentGameId)) {
+                detailsLibraryBtn.classList.add('active');
+                detailsLibraryBtn.textContent = 'Remove from Library';
+            } else {
+                detailsLibraryBtn.classList.remove('active');
+                detailsLibraryBtn.textContent = 'Add to Library';
+            }
+        }
+        
+        // Toggle game in library
+        function toggleGameInLibrary(gameId) {
+            if (!currentUser) {
+                authModal.classList.add('active');
+                return;
+            }
+            
+            if (!currentUser.library) {
+                currentUser.library = [];
+            }
+            
+            const index = currentUser.library.indexOf(gameId);
+            if (index === -1) {
+                // Add to library
+                currentUser.library.push(gameId);
+                tg.showAlert('Game added to library!');
+            } else {
+                // Remove from library
+                currentUser.library.splice(index, 1);
+                tg.showAlert('Game removed from library!');
+            }
+            
+            // Save updated data
+            saveUserData(currentUser);
+            
+            // Update UI
+            updateDetailsLibraryButton();
+            updateLibraryUI();
+        }
+        
+        // Check if user is verified
+        function isUserVerified(telegram_id) {
+            const verifiedUsers = [5772425643, 7942740523, 5507094612];
+            return verifiedUsers.includes(Number(telegram_id));
+        }
+        
+        // Get verification description
+        function getVerifiedDescription(telegram_id, nickname) {
+            const verifiedUsers = {
+                5772425643: `${nickname} is the official person and creator of the project.`,
+                7942740523: `${nickname} is the official tester and assistant of the project.`,
+                5507094612: `${nickname} supported the development of the project and received a special badge.`
+            };
+            return verifiedUsers[telegram_id] || '';
+        }
     </script>
 </body>
 </html>
