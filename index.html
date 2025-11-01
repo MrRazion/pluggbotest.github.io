@@ -497,6 +497,93 @@
             background: rgba(74, 134, 255, 0.2);
             transform: rotate(-10deg);
         }
+        
+        /* НОВАЯ СИСТЕМА СКРИНШОТОВ */
+        .screenshots-section {
+            margin: 25px 0;
+        }
+        
+        .screenshots-container {
+            position: relative;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        
+        .screenshots-slider {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 10px 0;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE and Edge */
+        }
+        
+        .screenshots-slider::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+        
+        .screenshot-item {
+            min-width: 120px;
+            height: 80px;
+            border-radius: 12px;
+            overflow: hidden;
+            flex-shrink: 0;
+            cursor: pointer;
+            transition: transform 0.2s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .screenshot-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .screenshot-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .screenshot-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 2;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .screenshot-nav:hover {
+            opacity: 1;
+            background: rgba(0, 0, 0, 0.7);
+        }
+        
+        .screenshot-nav:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        
+        .screenshot-nav.prev {
+            left: 5px;
+        }
+        
+        .screenshot-nav.next {
+            right: 5px;
+        }
+        /* КОНЕЦ СИСТЕМЫ СКРИНШОТОВ */
+        
         .section-title {
             font-size: 16px;
             font-weight: 600;
@@ -562,33 +649,6 @@
             background: rgba(255, 59, 48, 0.1);
             color: var(--error-color);
             display: block;
-        }
-        /* Screenshots section */
-        .screenshots-section {
-            display: flex;
-            overflow-x: auto;
-            gap: 10px;
-            margin-bottom: 20px;
-            scroll-snap-type: x mandatory;
-            padding-bottom: 10px;
-            scrollbar-width: none;
-        }
-        .screenshots-section::-webkit-scrollbar {
-            display: none;
-        }
-        .screenshot {
-            width: 80px;
-            height: 80px;
-            border-radius: var(--border-radius-sm);
-            overflow: hidden;
-            flex-shrink: 0;
-            scroll-snap-align: start;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-        }
-        .screenshot img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
         }
         /* Profile modal */
         .profile-modal {
@@ -1347,7 +1407,7 @@
         <div class="header">
             <div>
                 <h1>PLUGG BOT</h1>
-                <p>Лучшая коллекция приваток для удобного скачивания</p>
+                <p>Лучшая коллекция прививаток для удобного скачивания</p>
             </div>
             <div class="profile-btn" id="profile-btn">
                 <svg class="profile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1423,7 +1483,20 @@
                     </div>
                 </div>
                 <div id="status-message" class="status-message"></div>
-                <div class="screenshots-section" id="screenshots-section"></div>
+                
+                <!-- СЕКЦИЯ СКРИНШОТОВ -->
+                <div class="screenshots-section">
+                    <div class="section-title">Скриншоты</div>
+                    <div class="screenshots-container">
+                        <button class="screenshot-nav prev"><</button>
+                        <div class="screenshots-slider" id="screenshots-slider">
+                            <!-- Скриншоты будут добавлены здесь динамически -->
+                        </div>
+                        <button class="screenshot-nav next">></button>
+                    </div>
+                </div>
+                <!-- КОНЕЦ СЕКЦИИ СКРИНШОТОВ -->
+                
                 <div class="section-title">Описание</div>
                 <div class="section-content" id="details-description"></div>
                 <div class="section-title">Что нового<span class="new-indicator"></span></div>
@@ -1558,7 +1631,7 @@
             <div class="footer-content">
                 <div class="footer-section">
                     <h3>О нас</h3>
-                    <p>PLUGG BOT - лучший бот для поиска и скачивания приваток. Мы предлагаем огромную коллекцию популярных приваток.</p>
+                    <p>PLUGG BOT - лучший бот для поиска и скачивания прививаток. Мы предлагаем огромную коллекцию популярных прививаток.</p>
                 </div>
                 <div class="footer-section">
                     <h3>Наши контакты</h3>
@@ -1592,7 +1665,6 @@
             const detailsMeta = document.getElementById('details-meta');
             const detailsDescription = document.getElementById('details-description');
             const detailsWhatsNew = document.getElementById('details-whats-new');
-            const screenshotsSection = document.getElementById('screenshots-section');
             const searchInput = document.getElementById('search-input');
             const profileBtn = document.getElementById('profile-btn');
             const profileModal = document.getElementById('profile-modal');
@@ -1634,6 +1706,9 @@
             const bannerPreviewImg = document.getElementById('banner-preview-img');
             const bannerCancelBtn = document.getElementById('banner-cancel');
             const bannerApplyBtn = document.getElementById('banner-apply');
+            const screenshotsSlider = document.getElementById('screenshots-slider');
+            const prevBtn = document.querySelector('.screenshot-nav.prev');
+            const nextBtn = document.querySelector('.screenshot-nav.next');
             // Переменные для отслеживания состояния
             let isDownloading = false;
             let currentTab = 'all';
@@ -1852,7 +1927,7 @@
                 if (!currentUser || !currentUser.library || currentUser.library.length === 0) {
                     libraryGrid.innerHTML = `
                         <div style="grid-column: 1 / -1; text-align: center; padding: 20px; color: var(--text-secondary);">
-                            Ваша библиотека пуста. Добавляйте приватки в библиотеку, чтобы найти их здесь!
+                            Ваша библиотека пуста. Добавляйте прививатки в библиотеку, чтобы найти их здесь!
                         </div>
                     `;
                     return;
@@ -1870,7 +1945,7 @@
                     }
                 });
             }
-            // Данные игр
+            // Данные игр (с добавленными скриншотами)
             const games = [
                 {
                     id: 'standrise',
@@ -1885,17 +1960,19 @@
                         '— Улучшен античит'
                     ],
                     image: 'https://avatars.mds.yandex.net/i?id=725c7c7f58887b1cd7015d30752cfa7b_sr-16333491-images-thumbs&n=13',
-                    screenshots: [
-                        'https://avatars.mds.yandex.net/i?id=725c7c7f58887b1cd7015d30752cfa7b_sr-16333491-images-thumbs&n=13',
-                        'https://avatars.mds.yandex.net/i?id=725c7c7f58887b1cd7015d30752cfa7b_sr-16333491-images-thumbs&n=13',
-                        'https://avatars.mds.yandex.net/i?id=725c7c7f58887b1cd7015d30752cfa7b_sr-16333491-images-thumbs&n=13',
-                        'https://avatars.mds.yandex.net/i?id=725c7c7f58887b1cd7015d30752cfa7b_sr-16333491-images-thumbs&n=13'
-                    ],
                     categories: ['action'],
                     url: 'https://huggingface.co/Zerchi/test/resolve/main/StandRise1.4.0f1.apk',
                     fileName: 'StandRise1.4.0f1.apk',
                     version: '1.4F2',
-                    size: '1.98 GB'
+                    size: '1.98 GB',
+                    screenshots: [
+                        'https://i.imgur.com/7XQY5Qx.jpg',
+                        'https://i.imgur.com/5hF7b2n.jpg',
+                        'https://i.imgur.com/9pHqQ2k.jpg',
+                        'https://i.imgur.com/2yNqH4a.jpg',
+                        'https://i.imgur.com/3gTfD5p.jpg',
+                        'https://i.imgur.com/8cPvKqR.jpg'
+                    ]
                 },
                 {
                     id: 'standleo',
@@ -1912,17 +1989,16 @@
                         '- Новая акция с скинами из спина "Gambit" (Бабочка и т.д.)'
                     ],
                     image: 'https://avatars.mds.yandex.net/i?id=0e819955e77d734dbf74a1628015204f_l-12569562-images-thumbs&n=13',
-                    screenshots: [
-                        'https://avatars.mds.yandex.net/i?id=0e819955e77d734dbf74a1628015204f_l-12569562-images-thumbs&n=13',
-                        'https://avatars.mds.yandex.net/i?id=0e819955e77d734dbf74a1628015204f_l-12569562-images-thumbs&n=13',
-                        'https://avatars.mds.yandex.net/i?id=0e819955e77d734dbf74a1628015204f_l-12569562-images-thumbs&n=13',
-                        'https://avatars.mds.yandex.net/i?id=0e819955e77d734dbf74a1628015204f_l-12569562-images-thumbs&n=13'
-                    ],
                     categories: ['action'],
                     url: 'https://huggingface.co/Zerchi/test/resolve/main/standleoprivate3.0.apk',
                     fileName: 'standleoprivate3.0.apk',
                     version: '3.0',
-                    size: '2.01 GB'
+                    size: '2.01 GB',
+                    screenshots: [
+                        'https://i.imgur.com/7XQY5Qx.jpg',
+                        'https://i.imgur.com/5hF7b2n.jpg',
+                        'https://i.imgur.com/9pHqQ2k.jpg'
+                    ]
                 },
                 {
                     id: 'projectevolution',
@@ -1940,17 +2016,17 @@
                         'Новый задний фон главного меню.',
                     ],
                     image: 'https://static1.tgstat.ru/channels/_0/51/5149f74cbede968093f53564123bd9f5.jpg',
-                    screenshots: [
-                        'https://static1.tgstat.ru/channels/_0/51/5149f74cbede968093f53564123bd9f5.jpg',
-                        'https://static1.tgstat.ru/channels/_0/51/5149f74cbede968093f53564123bd9f5.jpg',
-                        'https://static1.tgstat.ru/channels/_0/51/5149f74cbede968093f53564123bd9f5.jpg',
-                        'https://static1.tgstat.ru/channels/_0/51/5149f74cbede968093f53564123bd9f5.jpg'
-                    ],
                     categories: ['action'],
                     url: 'https://huggingface.co/Zerchi/test/resolve/main/Project%20Evolution%209.4%20f1.apk',
                     fileName: 'Project Evolution 9.4 f1.apk',
                     version: '9.4',
-                    size: '1.80 GB'
+                    size: '1.80 GB',
+                    screenshots: [
+                        'https://i.imgur.com/7XQY5Qx.jpg',
+                        'https://i.imgur.com/5hF7b2n.jpg',
+                        'https://i.imgur.com/9pHqQ2k.jpg',
+                        'https://i.imgur.com/2yNqH4a.jpg'
+                    ]
                 },
                 {
                     id: 'standknife',
@@ -1960,17 +2036,15 @@
                         'Фикс ошибок при входе в игру.'
                     ],
                     image: 'https://edroid.ru/wp-content/uploads/2024/02/4-31.webp',
-                    screenshots: [
-                        'https://edroid.ru/wp-content/uploads/2024/02/4-31.webp',
-                        'https://edroid.ru/wp-content/uploads/2024/02/4-31.webp',
-                        'https://edroid.ru/wp-content/uploads/2024/02/4-31.webp',
-                        'https://edroid.ru/wp-content/uploads/2024/02/4-31.webp'
-                    ],
                     categories: ['action'],
                     url: 'https://huggingface.co/Zerchi/test/resolve/main/StandKnife%202.9%20(f3).apk',
                     fileName: 'StandKnife 2.9 (f3).apk',
                     version: '2.9 (f3)',
-                    size: '2.08 GB'
+                    size: '2.08 GB',
+                    screenshots: [
+                        'https://i.imgur.com/7XQY5Qx.jpg',
+                        'https://i.imgur.com/5hF7b2n.jpg'
+                    ]
                 },
                 {
                     id: 'standchillow',
@@ -1986,17 +2060,18 @@
                         '- Исправление багов (включая кривой скелет персонажа)'
                     ],
                     image: 'https://5play.life/uploads/posts/2025-07/thumbs/1751996821_standchillow-icon.png',
-                    screenshots: [
-                        'https://5play.life/uploads/posts/2025-07/thumbs/1751996821_standchillow-icon.png',
-                        'https://5play.life/uploads/posts/2025-07/thumbs/1751996821_standchillow-icon.png',
-                        'https://5play.life/uploads/posts/2025-07/thumbs/1751996821_standchillow-icon.png',
-                        'https://5play.life/uploads/posts/2025-07/thumbs/1751996821_standchillow-icon.png'
-                    ],
                     categories: ['action'],
                     url: 'https://huggingface.co/Zerchi/test/resolve/main/1.6.apk',
                     fileName: '1.6.apk',
                     version: '1.6',
-                    size: '1.34 GB'
+                    size: '1.34 GB',
+                    screenshots: [
+                        'https://i.imgur.com/7XQY5Qx.jpg',
+                        'https://i.imgur.com/5hF7b2n.jpg',
+                        'https://i.imgur.com/9pHqQ2k.jpg',
+                        'https://i.imgur.com/2yNqH4a.jpg',
+                        'https://i.imgur.com/3gTfD5p.jpg'
+                    ]
                 },
                 {
                     id: 'crossoff',
@@ -2008,17 +2083,15 @@
                         '- Добавлены режим "Соревновательный"',
                     ],
                     image: 'https://5play.info/_ld/14/1487.webp',
-                    screenshots: [
-                        'https://5play.info/_ld/14/1487.webp',
-                        'https://5play.info/_ld/14/1487.webp',
-                        'https://5play.info/_ld/14/1487.webp',
-                        'https://5play.info/_ld/14/1487.webp'
-                    ],
                     categories: ['action'],
                     url: 'https://huggingface.co/Zerchi/test/resolve/main/CrossOffClassic-1.1F2.apk',
                     fileName: 'CrossOffClassic-1.1F2.apk',
                     version: '1.1 (F2)',
-                    size: '499.1 MB'
+                    size: '499.1 MB',
+                    screenshots: [
+                        'https://i.imgur.com/7XQY5Qx.jpg',
+                        'https://i.imgur.com/5hF7b2n.jpg'
+                    ]
                 }
             ];
             // Функция для рендеринга игр в таб
@@ -2046,6 +2119,57 @@
                     grid.appendChild(card);
                 });
             }
+            // Функция для отображения скриншотов игры
+            function showGameScreenshots(gameId) {
+                const game = games.find(g => g.id === gameId);
+                if (!game || !game.screenshots || game.screenshots.length === 0) {
+                    if (screenshotsSlider && screenshotsSlider.closest('.screenshots-section')) {
+                        screenshotsSlider.closest('.screenshots-section').style.display = 'none';
+                    }
+                    return;
+                }
+                
+                if (screenshotsSlider && screenshotsSlider.closest('.screenshots-section')) {
+                    screenshotsSlider.closest('.screenshots-section').style.display = 'block';
+                    screenshotsSlider.innerHTML = '';
+                    
+                    game.screenshots.forEach(screenshot => {
+                        const item = document.createElement('div');
+                        item.className = 'screenshot-item';
+                        item.innerHTML = `<img src="${screenshot}" alt="Скриншот">`;
+                        screenshotsSlider.appendChild(item);
+                    });
+                    
+                    // Инициализация навигации
+                    updateNavButtons();
+                }
+            }
+            
+            // Обновление состояния навигационных кнопок
+            function updateNavButtons() {
+                if (!screenshotsSlider) return;
+                
+                const maxScroll = screenshotsSlider.scrollWidth - screenshotsSlider.clientWidth;
+                if (prevBtn) prevBtn.disabled = screenshotsSlider.scrollLeft <= 0;
+                if (nextBtn) nextBtn.disabled = screenshotsSlider.scrollLeft >= maxScroll - 1;
+            }
+            
+            // Прокрутка влево
+            function scrollPrev() {
+                if (screenshotsSlider) {
+                    screenshotsSlider.scrollBy({ left: -200, behavior: 'smooth' });
+                    setTimeout(updateNavButtons, 300);
+                }
+            }
+            
+            // Прокрутка вправо
+            function scrollNext() {
+                if (screenshotsSlider) {
+                    screenshotsSlider.scrollBy({ left: 200, behavior: 'smooth' });
+                    setTimeout(updateNavButtons, 300);
+                }
+            }
+            
             // Обновление кнопки библиотеки в деталях
             function updateDetailsLibraryButton() {
                 if (!detailsLibraryBtn || !currentGameId || !currentUser) return;
@@ -2101,15 +2225,9 @@
                     downloadBtn.textContent = 'Скачать';
                     gameDetails.classList.add('active');
                     updateDetailsLibraryButton();
-
-                    // Рендеринг скриншотов
-                    screenshotsSection.innerHTML = '';
-                    game.screenshots.forEach(src => {
-                        const div = document.createElement('div');
-                        div.className = 'screenshot';
-                        div.innerHTML = `<img src="${src}" alt="Screenshot">`;
-                        screenshotsSection.appendChild(div);
-                    });
+                    
+                    // Показываем скриншоты
+                    showGameScreenshots(gameId);
                 } else {
                     tg.showPopup({
                         title: 'Скоро будет доступно',
@@ -2358,7 +2476,7 @@
                                 auth_date: user.auth_date || Math.floor(Date.now() / 1000),
                                 avatar: user.photo_url || '',
                                 banner: '',
-                                bio: 'Любитель приваток для Standoff 2',
+                                bio: 'Любитель прививаток для Standoff 2',
                                 library: [],
                                 created_at: new Date().toISOString()
                             };
@@ -2515,7 +2633,6 @@
             function loadGallery() {
                 // Очищаем галерею
                 bannerGallery.innerHTML = '';
-                
                 // Примеры баннеров
                 const bannerExamples = [
                     'https://i.imgur.com/7XQY5Qx.jpg',
@@ -2525,18 +2642,15 @@
                     'https://i.imgur.com/3gTfD5p.jpg',
                     'https://i.imgur.com/8cPvKqR.jpg'
                 ];
-                
                 bannerExamples.forEach((url, index) => {
                     const item = document.createElement('div');
                     item.className = 'banner-gallery-item';
                     item.style.backgroundImage = `url('${url}')`;
-                    
                     item.addEventListener('click', () => {
                         bannerPreviewImg.src = url;
                         bannerPreview.classList.add('active');
                         selectedBannerFile = null;
                     });
-                    
                     bannerGallery.appendChild(item);
                 });
             }
@@ -2609,6 +2723,17 @@
                     }
                 }
             });
+            
+            // Инициализация обработчиков для скриншотов
+            if (prevBtn) prevBtn.addEventListener('click', scrollPrev);
+            if (nextBtn) nextBtn.addEventListener('click', scrollNext);
+            
+            // Добавляем обработчик прокрутки для обновления состояния кнопок
+            if (screenshotsSlider) {
+                screenshotsSlider.addEventListener('scroll', updateNavButtons);
+                // Инициализируем кнопки после загрузки
+                setTimeout(updateNavButtons, 500);
+            }
         });
     </script>
 </body>
