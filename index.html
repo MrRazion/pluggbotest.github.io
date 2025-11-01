@@ -563,6 +563,48 @@
             color: var(--error-color);
             display: block;
         }
+        
+        /* Screenshots carousel - NEW SECTION */
+        .screenshots-container {
+            overflow-x: auto;
+            padding: 10px 0;
+            scrollbar-width: none;
+            margin-bottom: 20px;
+        }
+        .screenshots-container::-webkit-scrollbar {
+            display: none;
+        }
+        .screenshots-scroll {
+            display: flex;
+            gap: 12px;
+            padding: 5px;
+        }
+        .screenshot-item {
+            min-width: 240px;
+            height: 426px; /* 9:16 aspect ratio */
+            border-radius: var(--border-radius-md);
+            overflow: hidden;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+        .screenshot-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: var(--border-radius-md);
+            transition: var(--transition);
+        }
+        .screenshot-item:hover img {
+            transform: scale(1.03);
+        }
+        .no-screenshots {
+            color: var(--text-secondary);
+            padding: 15px;
+            text-align: center;
+            min-width: 100%;
+        }
+        
         /* Profile modal */
         .profile-modal {
             position: fixed;
@@ -1398,6 +1440,15 @@
                 <div id="status-message" class="status-message"></div>
                 <div class="section-title">Описание</div>
                 <div class="section-content" id="details-description"></div>
+                
+                <!-- Секция скриншотов -->
+                <div class="section-title">Скриншоты</div>
+                <div class="screenshots-container">
+                    <div class="screenshots-scroll" id="screenshots-scroll">
+                        <!-- Скриншоты будут добавлены здесь динамически -->
+                    </div>
+                </div>
+                
                 <div class="section-title">Что нового<span class="new-indicator"></span></div>
                 <div class="section-content" id="details-whats-new"></div>
             </div>
@@ -1564,6 +1615,7 @@
             const detailsMeta = document.getElementById('details-meta');
             const detailsDescription = document.getElementById('details-description');
             const detailsWhatsNew = document.getElementById('details-whats-new');
+            const screenshotsScroll = document.getElementById('screenshots-scroll');
             const searchInput = document.getElementById('search-input');
             const profileBtn = document.getElementById('profile-btn');
             const profileModal = document.getElementById('profile-modal');
@@ -1722,8 +1774,8 @@
                         const savedData = getSavedUserData(currentUser.telegram_id);
                         if (savedData) {
                             Object.assign(currentUser, savedData);
-                            localStorage.setItem('plugg_user', JSON.stringify(currentUser));
                         }
+                        localStorage.setItem('plugg_user', JSON.stringify(currentUser));
                         updateProfileUI();
                         return true;
                     } catch (e) {
@@ -1855,6 +1907,13 @@
                         '— Теперь доступны функции приватности',
                         '— Улучшен античит'
                     ],
+                    screenshots: [
+                        'https://androidprog.com/wp-content/uploads/2023/08/standrise-screenshot-1.jpg',
+                        'https://androidprog.com/wp-content/uploads/2023/08/standrise-screenshot-2.jpg',
+                        'https://androidprog.com/wp-content/uploads/2023/08/standrise-screenshot-3.jpg',
+                        'https://androidprog.com/wp-content/uploads/2023/08/standrise-screenshot-4.jpg',
+                        'https://androidprog.com/wp-content/uploads/2023/08/standrise-screenshot-5.jpg'
+                    ],
                     image: 'https://avatars.mds.yandex.net/i?id=725c7c7f58887b1cd7015d30752cfa7b_sr-16333491-images-thumbs&n=13',
                     categories: ['action'],
                     url: 'https://huggingface.co/Zerchi/test/resolve/main/StandRise1.4.0f1.apk',
@@ -1875,6 +1934,12 @@
                         '- Ребаланс оружий из оригинала',
                         '- Улучшено рейтинговых игр с первым сезоном',
                         '- Новая акция с скинами из спина "Gambit" (Бабочка и т.д.)'
+                    ],
+                    screenshots: [
+                        'https://androidprog.com/wp-content/uploads/2023/09/standleo-screenshot-1.jpg',
+                        'https://androidprog.com/wp-content/uploads/2023/09/standleo-screenshot-2.jpg',
+                        'https://androidprog.com/wp-content/uploads/2023/09/standleo-screenshot-3.jpg',
+                        'https://androidprog.com/wp-content/uploads/2023/09/standleo-screenshot-4.jpg'
                     ],
                     image: 'https://avatars.mds.yandex.net/i?id=0e819955e77d734dbf74a1628015204f_l-12569562-images-thumbs&n=13',
                     categories: ['action'],
@@ -1898,6 +1963,14 @@
                         'Новый Charm Pack — «Rewind».',
                         'Новый задний фон главного меню.',
                     ],
+                    screenshots: [
+                        'https://androidprog.com/wp-content/uploads/2023/10/project-evolution-screenshot-1.jpg',
+                        'https://androidprog.com/wp-content/uploads/2023/10/project-evolution-screenshot-2.jpg',
+                        'https://androidprog.com/wp-content/uploads/2023/10/project-evolution-screenshot-3.jpg',
+                        'https://androidprog.com/wp-content/uploads/2023/10/project-evolution-screenshot-4.jpg',
+                        'https://androidprog.com/wp-content/uploads/2023/10/project-evolution-screenshot-5.jpg',
+                        'https://androidprog.com/wp-content/uploads/2023/10/project-evolution-screenshot-6.jpg'
+                    ],
                     image: 'https://static1.tgstat.ru/channels/_0/51/5149f74cbede968093f53564123bd9f5.jpg',
                     categories: ['action'],
                     url: 'https://huggingface.co/Zerchi/test/resolve/main/Project%20Evolution%209.4%20f1.apk',
@@ -1911,6 +1984,12 @@
                     description: 'Приватный сервер StandKnife Simulator - известная многим приватка, перерабатывающая концепцию популярного шутера Standoff 2 и сосредотачивающий весь игровой процесс на мастерстве владения холодным оружием.',
                     whatsNew: [
                         'Фикс ошибок при входе в игру.'
+                    ],
+                    screenshots: [
+                        'https://androidprog.com/wp-content/uploads/2023/11/standknife-screenshot-1.jpg',
+                        'https://androidprog.com/wp-content/uploads/2023/11/standknife-screenshot-2.jpg',
+                        'https://androidprog.com/wp-content/uploads/2023/11/standknife-screenshot-3.jpg',
+                        'https://androidprog.com/wp-content/uploads/2023/11/standknife-screenshot-4.jpg'
                     ],
                     image: 'https://edroid.ru/wp-content/uploads/2024/02/4-31.webp',
                     categories: ['action'],
@@ -1932,6 +2011,13 @@
                         '- Улучшено пространственное аудио',
                         '- Исправление багов (включая кривой скелет персонажа)'
                     ],
+                    screenshots: [
+                        'https://androidprog.com/wp-content/uploads/2023/12/standchillow-screenshot-1.jpg',
+                        'https://androidprog.com/wp-content/uploads/2023/12/standchillow-screenshot-2.jpg',
+                        'https://androidprog.com/wp-content/uploads/2023/12/standchillow-screenshot-3.jpg',
+                        'https://androidprog.com/wp-content/uploads/2023/12/standchillow-screenshot-4.jpg',
+                        'https://androidprog.com/wp-content/uploads/2023/12/standchillow-screenshot-5.jpg'
+                    ],
                     image: 'https://5play.life/uploads/posts/2025-07/thumbs/1751996821_standchillow-icon.png',
                     categories: ['action'],
                     url: 'https://huggingface.co/Zerchi/test/resolve/main/1.6.apk',
@@ -1947,6 +2033,11 @@
                         'Добавлен античит',
                         'Добавлены кланы',
                         '- Добавлены режим "Соревновательный"',
+                    ],
+                    screenshots: [
+                        'https://androidprog.com/wp-content/uploads/2024/01/crossoff-screenshot-1.jpg',
+                        'https://androidprog.com/wp-content/uploads/2024/01/crossoff-screenshot-2.jpg',
+                        'https://androidprog.com/wp-content/uploads/2024/01/crossoff-screenshot-3.jpg'
                     ],
                     image: 'https://5play.info/_ld/14/1487.webp',
                     categories: ['action'],
@@ -2028,6 +2119,20 @@
                     detailsImage.alt = game.title;
                     detailsMeta.textContent = `Версия: ${game.version} • Размер: ${game.size}`;
                     detailsDescription.innerHTML = `<p>${game.description}</p><ul><li>Спасибо за использование PLUGG BOT!</li></ul>`;
+                    
+                    // Заполняем скриншоты
+                    screenshotsScroll.innerHTML = '';
+                    if (game.screenshots && game.screenshots.length > 0) {
+                        game.screenshots.forEach(screenshot => {
+                            const item = document.createElement('div');
+                            item.className = 'screenshot-item';
+                            item.innerHTML = `<img src="${screenshot}" alt="Скриншот ${game.title}">`;
+                            screenshotsScroll.appendChild(item);
+                        });
+                    } else {
+                        screenshotsScroll.innerHTML = '<div class="no-screenshots">Скриншоты не найдены</div>';
+                    }
+                    
                     detailsWhatsNew.innerHTML = `<ul>${game.whatsNew.map(item => `<li>${item}</li>`).join('')}</ul>`;
                     currentDownloadUrl = game.url;
                     currentFileName = game.fileName;
@@ -2441,7 +2546,6 @@
             function loadGallery() {
                 // Очищаем галерею
                 bannerGallery.innerHTML = '';
-                
                 // Примеры баннеров
                 const bannerExamples = [
                     'https://i.imgur.com/7XQY5Qx.jpg',
@@ -2451,18 +2555,14 @@
                     'https://i.imgur.com/3gTfD5p.jpg',
                     'https://i.imgur.com/8cPvKqR.jpg'
                 ];
-                
                 bannerExamples.forEach((url, index) => {
                     const item = document.createElement('div');
                     item.className = 'banner-gallery-item';
                     item.style.backgroundImage = `url('${url}')`;
-                    
                     item.addEventListener('click', () => {
                         bannerPreviewImg.src = url;
                         bannerPreview.classList.add('active');
-                        selectedBannerFile = null;
                     });
-                    
                     bannerGallery.appendChild(item);
                 });
             }
