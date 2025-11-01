@@ -576,12 +576,12 @@
         }
         .screenshots-scroll {
             display: flex;
-            gap: 12px;
+            gap: 8px;
             padding: 5px;
         }
         .screenshot-item {
-            min-width: 240px;
-            height: 426px; /* 9:16 aspect ratio */
+            min-width: 150px;
+            height: 266px; /* Scaled down 9:16 aspect ratio */
             border-radius: var(--border-radius-md);
             overflow: hidden;
             flex-shrink: 0;
@@ -594,6 +594,7 @@
             object-fit: cover;
             border-radius: var(--border-radius-md);
             transition: var(--transition);
+            loading: lazy;
         }
         .screenshot-item:hover img {
             transform: scale(1.03);
@@ -2126,7 +2127,7 @@
                         game.screenshots.forEach(screenshot => {
                             const item = document.createElement('div');
                             item.className = 'screenshot-item';
-                            item.innerHTML = `<img src="${screenshot}" alt="Скриншот ${game.title}">`;
+                            item.innerHTML = `<img src="${screenshot}" alt="Скриншот ${game.title}" loading="lazy">`;
                             screenshotsScroll.appendChild(item);
                         });
                     } else {
