@@ -1445,6 +1445,8 @@
           min-width: 20px;
           flex-shrink: 0;
           margin-top: 2px;
+          stroke-linecap: round;
+          stroke-linejoin: round;
         }
 
         .security-item span {
@@ -1569,9 +1571,8 @@
                     
                     <div class="security-item">
                       <svg class="security-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M12 2a5 5 0 0 0-5 5v2a5 5 0 0 0 10 0v-2a5 5 0 0 0-5-5z"></path>
-                        <line x1="12" y1="13" x2="12" y2="19"></line>
-                        <polyline points="9 16 12 19 15 16"></polyline>
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="9" r="4"></circle>
                       </svg>
                       <span>Приложение может собирать типы данных: личная информация, финансовые данные, сведения о приложении и его производительности, сообщения, история действий в приложении</span>
                     </div>
@@ -1590,6 +1591,13 @@
                         <line x1="8" y1="12" x2="16" y2="12"></line>
                       </svg>
                       <span>В приложении нет способа запросить удаление данных</span>
+                    </div>
+                    
+                    <div class="security-item">
+                      <svg class="security-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 12h12M10 18l6-6-6-6"></path>
+                      </svg>
+                      <span>Доступна функция поделиться данными с другими пользователями</span>
                     </div>
                   </div>
                 </div>
@@ -1673,7 +1681,7 @@
                     <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                     <circle cx="9" cy="9" r="2"></circle>
                     <!-- Исправлено: замена кириллической "м" на латинскую "m" -->
-                    <path d="m21 15-3.086-3.086a2 2 0 0 1-2.828 0L6 21"></path>
+                    <path d="м21 15-3.086-3.086a2 2 0 0 1-2.828 0L6 21"></path>
                 </svg>
                 <div>Выбрать из галереи</div>
             </div>
