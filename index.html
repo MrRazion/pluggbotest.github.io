@@ -64,9 +64,8 @@
             background: var(--secondary-bg);
             border-radius: var(--border-radius-lg);
             box-shadow: var(--shadow-soft);
-            margin-bottom: 20px;
             position: relative;
-            overflow: hidden;
+            margin-bottom: 20px;
         }
         
         .header::before {
@@ -175,12 +174,12 @@
             padding: 10px 20px;
             background: var(--secondary-bg);
             border-radius: var(--border-radius-md);
-            cursor: pointer;
-            transition: var(--transition);
-            white-space: nowrap;
-            font-size: 15px;
+            font-weight: 500;
             color: var(--text-secondary);
+            transition: var(--transition);
             position: relative;
+            white-space: nowrap;
+            cursor: pointer;
         }
         
         .tab.active {
@@ -188,56 +187,50 @@
             background: rgba(74, 134, 255, 0.1);
         }
         
-        .tab.active::after {
+        .tab::after {
             content: '';
             position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
             height: 2px;
             background: var(--accent-color);
-            border-radius: 0 0 var(--border-radius-md) var(--border-radius-md);
+            transition: var(--transition);
         }
         
-        /* Game grid layout */
+        .tab.active::after {
+            width: 80%;
+        }
+        
+        /* Game grid */
         .games-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
+            gap: 15px;
         }
         
         .game-card {
             background: var(--card-bg);
             border-radius: var(--border-radius-md);
             overflow: hidden;
-            box-shadow: var(--shadow-card);
             transition: var(--transition);
+            box-shadow: var(--shadow-card);
             position: relative;
         }
         
         .game-card:hover {
-            transform: translateY(-3px);
+            transform: translateY(-5px);
             box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
         }
         
         .game-image {
             width: 100%;
             height: 150px;
-            background: linear-gradient(45deg, #3a3a3a, #4a4a4a);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 500;
-        }
-        
-        .game-image img {
-            width: 100%;
-            height: 100%;
             object-fit: cover;
         }
         
-        .game-content {
+        .game-info {
             padding: 15px;
         }
         
@@ -251,13 +244,21 @@
         .game-meta {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            font-size: 13px;
             color: var(--text-secondary);
-            margin-top: 8px;
+            font-size: 13px;
+            margin-top: 5px;
         }
         
+        .game-size {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+        
+        /* Download button */
         .download-btn {
+            display: block;
             width: 100%;
             padding: 16px;
             background: var(--accent-gradient);
@@ -319,6 +320,7 @@
             color: white;
         }
         
+        /* Progress bar */
         .progress-container {
             margin: 20px 0;
             display: none;
@@ -362,303 +364,34 @@
             padding: 12px;
             display: flex;
             justify-content: space-between;
-        }
-        
-        .download-stats-item {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .download-stats-label {
-            font-family: monospace;
             font-size: 13px;
-            color: var(--text-secondary);
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
         }
         
-        .download-stats-value {
-            color: var(--text-color);
-            font-weight: 600;
-            margin-top: 3px;
-        }
-        
-        .download-visualizer-container {
+        .download-stats span {
             display: flex;
-            justify-content: center;
             align-items: center;
-            gap: 6px;
-            margin-top: 8px;
+            gap: 5px;
         }
         
-        .download-visualizer {
-            display: none;
-            height: 30px;
-            width: 200px;
-            display: flex;
-            align-items: flex-end;
-            gap: 2px;
-            padding: 5px 0;
-        }
-        
-        .download-bar {
-            width: 4px;
-            background: var(--accent-color);
-            border-radius: 2px;
-        }
-        
-        /* Game details page */
-        .game-details {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: var(--primary-bg);
-            z-index: 1000;
-            padding: 20px;
-            overflow-y: auto;
-            padding-top: var(--tg-safe-area-inset-top);
-        }
-        
-        .back-btn {
-            display: inline-flex;
-            align-items: center;
-            padding: 10px 15px;
-            background: var(--card-bg);
-            color: var(--text-color);
-            border: none;
+        /* Status messages */
+        .status-message {
+            padding: 12px 15px;
             border-radius: var(--border-radius-md);
+            margin-top: 15px;
             font-size: 14px;
-            cursor: pointer;
-            margin-bottom: 15px;
-            margin-top: 10px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .back-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transition: var(--transition);
-        }
-        
-        .back-btn:hover::before {
-            left: 100%;
-        }
-        
-        .back-btn:hover {
-            transform: translateX(-3px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-        
-        .details-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        
-        .details-library-btn {
-            padding: 10px 15px;
-            background: var(--card-bg);
-            color: var(--text-color);
-            border: none;
-            border-radius: var(--border-radius-md);
-            font-size: 14px;
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            transition: var(--transition);
-        }
-        
-        .details-library-btn.active {
-            background: var(--success-color);
-            color: white;
-        }
-        
-        /* Banner selector */
-        .banner-selector {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: var(--primary-bg);
-            z-index: 3000;
-            padding: 20px;
             display: none;
-            flex-direction: column;
-            overflow-y: auto;
         }
         
-        .banner-selector.active {
-            display: flex;
-        }
-        
-        .banner-selector-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .banner-selector-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--text-color);
-        }
-        
-        .banner-selector-close {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background: var(--secondary-bg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        
-        .banner-selector-close:hover {
-            transform: rotate(90deg);
-        }
-        
-        .banner-upload {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 15px;
-            background: var(--secondary-bg);
-            border-radius: var(--border-radius-md);
-            margin-bottom: 20px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        
-        .banner-upload:hover {
-            background: var(--card-bg);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-        
-        .banner-gallery {
-            width: 100%;
-            max-height: 50vh;
-            overflow-y: auto;
-            padding-right: 5px;
-            margin-bottom: 20px;
-        }
-        
-        .banner-gallery::-webkit-scrollbar {
-            width: 6px;
-        }
-        
-        .banner-gallery::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 3px;
-        }
-        
-        .banner-gallery::-webkit-scrollbar-thumb {
-            background: var(--accent-color);
-            border-radius: 3px;
-        }
-        
-        .banner-gallery-item {
-            width: 100%;
-            height: 150px;
-            border-radius: var(--border-radius-md);
-            margin-bottom: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background-size: cover;
-            background-position: center;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-        }
-        
-        .banner-gallery-item:hover {
-            transform: scale(1.02);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        }
-        
-        .banner-gallery-item::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.2);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        .banner-gallery-item:hover::after {
-            opacity: 1;
-        }
-        
-        .banner-preview {
-            display: none;
-            width: 100%;
-            padding: 15px;
-            background: var(--secondary-bg);
-            border-radius: var(--border-radius-md);
-            margin-top: auto;
-        }
-        
-        .banner-preview.active {
+        .status-success {
+            background: rgba(52, 199, 89, 0.1);
+            color: var(--success-color);
             display: block;
         }
         
-        .banner-preview-img {
-            width: 100%;
-            height: 120px;
-            border-radius: var(--border-radius-md);
-            overflow: hidden;
-            margin-bottom: 15px;
-        }
-        
-        .banner-preview-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .banner-preview-actions {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .banner-preview-btn {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: var(--border-radius-md);
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        
-        .banner-preview-cancel {
-            background: var(--secondary-bg);
-            color: var(--text-color);
-        }
-        
-        .banner-preview-apply {
-            background: var(--accent-gradient);
-            color: white;
+        .status-error {
+            background: rgba(255, 59, 48, 0.1);
+            color: var(--error-color);
+            display: block;
         }
         
         /* Profile modal */
@@ -906,7 +639,6 @@
         
         .library-item {
             aspect-ratio: 9/16;
-            background: linear-gradient(45deg, #3a3a3a, #4a4a4a);
             border-radius: var(--border-radius-sm);
             overflow: hidden;
             position: relative;
@@ -940,6 +672,7 @@
             white-space: nowrap;
         }
         
+        /* Auth container */
         .plugg-auth-container {
             padding: 0 20px 20px;
         }
@@ -1023,12 +756,354 @@
         }
         
         .progress-text {
-            font-size: 14px;
             color: var(--text-secondary);
             margin-bottom: 20px;
             position: relative;
             overflow: hidden;
         }
+        
+        /* Game details page */
+        .game-details {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--primary-bg);
+            z-index: 1000;
+            padding: 20px;
+            overflow-y: auto;
+            padding-top: var(--tg-safe-area-inset-top);
+        }
+        
+        .details-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .details-library-btn {
+            padding: 10px 15px;
+            background: var(--card-bg);
+            color: var(--text-color);
+            border: none;
+            border-radius: var(--border-radius-md);
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+        }
+        
+        .details-library-btn.active {
+            background: var(--success-color);
+            color: white;
+        }
+        
+        /* Banner selector */
+        .banner-selector {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--primary-bg);
+            z-index: 3000;
+            padding: 20px;
+            display: none;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        
+        .banner-selector.active {
+            display: flex;
+        }
+        
+        .banner-selector-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .banner-selector-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        
+        .banner-selector-close {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--secondary-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .banner-selector-close:hover {
+            transform: rotate(90deg);
+        }
+        
+        .banner-upload {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            background: var(--secondary-bg);
+            border-radius: var(--border-radius-md);
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .banner-upload:hover {
+            background: var(--card-bg);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .banner-gallery {
+            width: 100%;
+            max-height: 50vh;
+            overflow-y: auto;
+            padding-right: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .banner-gallery::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .banner-gallery::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+        }
+        
+        .banner-gallery::-webkit-scrollbar-thumb {
+            background: var(--accent-color);
+            border-radius: 3px;
+        }
+        
+        .banner-gallery-item {
+            width: 100%;
+            height: 150px;
+            border-radius: var(--border-radius-md);
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .banner-gallery-item:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .banner-gallery-item::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .banner-gallery-item:hover::after {
+            opacity: 1;
+        }
+        
+        .banner-preview {
+            display: none;
+            width: 100%;
+            padding: 15px;
+            background: var(--secondary-bg);
+            border-radius: var(--border-radius-md);
+            margin-top: auto;
+        }
+        
+        .banner-preview.active {
+            display: block;
+        }
+        
+        .banner-preview-img {
+            width: 100%;
+            height: 120px;
+            border-radius: var(--border-radius-md);
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+        
+        .banner-preview-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .banner-preview-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .banner-preview-btn {
+            flex: 1;
+            padding: 10px;
+            background: var(--card-bg);
+            color: var(--text-color);
+            border: none;
+            border-radius: var(--border-radius-md);
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .banner-preview-btn:hover {
+            transform: scale(1.03);
+        }
+        
+        /* Back button with animation */
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 15px;
+            background: var(--card-bg);
+            color: var(--text-color);
+            border: none;
+            border-radius: var(--border-radius-md);
+            font-size: 14px;
+            cursor: pointer;
+            margin-bottom: 15px;
+            margin-top: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .back-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: var(--transition);
+        }
+        
+        .back-btn:hover::before {
+            left: 100%;
+        }
+        
+        .back-btn:hover {
+            transform: translateX(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Visualizer */
+        .visualizer-toggle {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-left: auto;
+        }
+        
+        .visualizer-toggle:hover {
+            background: rgba(74, 134, 255, 0.2);
+            transform: rotate(-10deg);
+        }
+        
+        /* НОВАЯ СИСТЕМА СКРИНШОТОВ */
+        .screenshots-section {
+            margin: 25px 0;
+        }
+        
+        .screenshots-container {
+            position: relative;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        
+        .screenshots-slider {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding: 10px 0;
+        }
+        
+        .screenshot-item {
+            width: 160px;
+            height: 300px;
+            border-radius: var(--border-radius-sm);
+            overflow: hidden;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .screenshot-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .screenshot-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 2;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .screenshot-nav:hover {
+            opacity: 1;
+            background: rgba(0, 0, 0, 0.7);
+        }
+        
+        .screenshot-nav:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        
+        .screenshot-nav.prev {
+            left: 5px;
+        }
+        
+        .screenshot-nav.next {
+            right: 5px;
+        }
+        /* КОНЕЦ СИСТЕМЫ СКРИНШОТОВ */
         
         .section-title {
             font-size: 16px;
@@ -1078,35 +1153,54 @@
             height: 10px;
             background: var(--success-color);
             border-radius: 50%;
-            margin-left: 5px;
+            display: inline-block;
+            margin-right: 5px;
         }
         
-        .status-message {
-            padding: 12px 15px;
-            border-radius: var(--border-radius-md);
-            margin-top: 15px;
-            font-size: 14px;
-            display: none;
+        .verified-badge {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
         }
         
-        .status-success {
-            background: rgba(52, 199, 89, 0.1);
-            color: var(--success-color);
-            display: block;
+        .verified-badge img {
+            width: 15px;
+            height: 15px;
         }
         
-        .status-error {
-            background: rgba(255, 59, 48, 0.1);
-            color: var(--error-color);
-            display: block;
+        .verified-tooltip {
+            position: absolute;
+            top: -40px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            white-space: nowrap;
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 0.3s;
+            max-width: 250px;
+            word-break: break-word;
+            line-height: 1.3;
+        }
+        
+        .verified-tooltip.show {
+            opacity: 1;
         }
         
         .library-btn {
-            width: 30px;
-            height: 30px;
+            width: 35px;
+            height: 35px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--text-secondary);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
             border: none;
             display: flex;
             align-items: center;
@@ -1137,44 +1231,9 @@
             right: 5px;
         }
         
-        /* КОНЕЦ СИСТЕМЫ СКРИНШОТОВ */
-        .screenshot-nav {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            background: rgba(0, 0, 0, 0.5);
+        .library-btn.active {
+            background: var(--success-color);
             color: white;
-            border: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 2;
-            opacity: 0.7;
-            transition: opacity 0.3s;
-            font-size: 20px;
-            font-weight: bold;
-        }
-        
-        .screenshot-nav:hover {
-            opacity: 1;
-            background: rgba(0, 0, 0, 0.7);
-        }
-        
-        .screenshot-nav:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-        }
-        
-        .screenshot-nav.prev {
-            left: 5px;
-        }
-        
-        .screenshot-nav.next {
-            right: 5px;
         }
         
         /* Footer with modern design */
@@ -1230,6 +1289,84 @@
         .footer-bottom p {
             font-size: 12px;
             color: var(--text-secondary);
+        }
+        
+        .username-available {
+            color: var(--success-color);
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .username-unavailable {
+            color: var(--error-color);
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .tg-theme-light {
+            --primary-bg: #f5f5f7;
+            --secondary-bg: #ffffff;
+            --card-bg: #ffffff;
+            --text-color: #1c1c1c;
+            --text-secondary: #636366;
+            --accent-gradient: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            --accent-color: #4a86ff;
+        }
+        
+        .gradient-text {
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .verified-badge {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .verified-badge img {
+            width: 15px;
+            height: 15px;
+        }
+        
+        .verified-tooltip {
+            position: absolute;
+            top: -40px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            white-space: nowrap;
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 0.3s;
+            max-width: 250px;
+            word-break: break-word;
+            line-height: 1.3;
+        }
+        
+        .verified-tooltip.show {
+            opacity: 1;
+        }
+        
+        .verified-icon {
+            animation: flash 1.5s infinite;
+        }
+        
+        @keyframes flash {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
         }
         
         .profile-settings {
@@ -1296,131 +1433,220 @@
         .logout-btn:hover {
             background: rgba(255, 59, 48, 0.2);
         }
-        
-        .username-available {
-            color: var(--success-color);
-            font-size: 12px;
-            margin-top: 5px;
-            display: none;
-        }
-        
-        .username-unavailable {
-            color: var(--error-color);
-            font-size: 12px;
-            margin-top: 5px;
-            display: none;
-        }
-        
-        .tg-theme-light {
-            --primary-bg: #f5f5f7;
-            --secondary-bg: #ffffff;
-            --card-bg: #ffffff;
-            --text-color: #1c1c1c;
-            --text-secondary: #636366;
-            --accent-gradient: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            --accent-color: #4a86ff;
-        }
-        
-        .gradient-text {
-            background: var(--accent-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Header -->
         <div class="header">
             <div>
                 <h1>PLUGG</h1>
-                <p>Ваша игровая библиотека</p>
+                <p>Приватные сборки Standoff 2</p>
             </div>
             <button id="profile-btn" class="profile-btn">
-                <svg class="profile-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg class="profile-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                     <circle cx="12" cy="7" r="4"></circle>
                 </svg>
             </button>
         </div>
 
+        <!-- Search -->
         <div class="search-bar">
             <input type="text" id="search-input" placeholder="Поиск игр...">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="11" cy="11" r="8"></circle>
                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
         </div>
 
+        <!-- Tabs -->
         <div class="tabs">
-            <div class="tab active" data-tab="all">Все игры</div>
+            <div class="tab active" data-tab="all">Все</div>
             <div class="tab" data-tab="new">Новые</div>
-            <div class="tab" data-tab="top">Топ</div>
+            <div class="tab" data-tab="popular">Популярные</div>
         </div>
 
-        <div id="all-games" class="games-section">
-            <div class="games-grid" id="games-grid">
-                <!-- Games will be populated here -->
-            </div>
-        </div>
+        <!-- Games Grid -->
+        <div class="games-grid" id="games-grid"></div>
 
-        <div id="game-details" class="game-details">
-            <button class="back-btn">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <!-- Game Details -->
+        <div class="game-details" id="game-details">
+            <button id="back-btn" class="back-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M15 18l-6-6 6-6"></path>
                 </svg>
                 Назад
             </button>
+            
             <div class="details-header">
                 <h2 id="details-title" class="gradient-text">Название игры</h2>
-                <button id="library-btn" class="details-library-btn">В библиотеку</button>
+                <button id="details-library-btn" class="details-library-btn">В библиотеку</button>
             </div>
-            <img id="details-image" src="" alt="Обложка игры" style="width: 100%; height: 200px; object-fit: cover; border-radius: 12px; margin-bottom: 15px;">
-            <div id="details-meta" style="color: var(--text-secondary); margin-bottom: 15px;"></div>
-            <p id="details-description" style="margin-bottom: 20px; color: var(--text-secondary);"></p>
-            <h3 style="margin-bottom: 10px; color: var(--text-color);">Что нового</h3>
-            <p id="details-whats-new" style="color: var(--text-secondary);"></p>
-            <button id="download-btn" class="download-btn">Скачать</button>
             
-            <div class="progress-container">
-                <div class="progress-info">
-                    <span class="progress-text">Загружено: <span id="downloaded-size">0 MB</span></span>
-                    <span class="progress-percent">0%</span>
+            <img id="details-image" src="" alt="Обложка игры" class="game-image" style="border-radius: var(--border-radius-md);">
+            
+            <div id="details-meta" class="game-meta" style="margin: 15px 0;"></div>
+            
+            <div class="section-title">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+                Описание
+            </div>
+            <div class="section-content">
+                <p id="details-description">Описание игры...</p>
+            </div>
+            
+            <div class="section-title">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+                Что нового
+            </div>
+            <div class="section-content">
+                <p id="details-whats-new">Что нового в этой версии...</p>
+            </div>
+            
+            <!-- Скриншоты -->
+            <div class="screenshots-section">
+                <div class="section-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                        <polyline points="21 15 16 10 5 21"></polyline>
+                    </svg>
+                    Скриншоты
                 </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progress-fill" style="width: 0%;"></div>
-                </div>
-                <div class="download-stats">
-                    <div class="download-stats-item">
-                        <span class="download-stats-label">Скорость</span>
-                        <span class="download-stats-value" id="download-speed">0 MB/s</span>
-                    </div>
-                    <div class="download-stats-item">
-                        <span class="download-stats-label">Пинг</span>
-                        <span class="download-stats-value" id="ping-value">0 ms</span>
-                    </div>
-                </div>
-                <div class="download-visualizer-container">
-                    <button id="visualizer-toggle" style="background: none; border: none; cursor: pointer;">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 5v14M17 5v14M7 5v14M2 5h20M2 19h20"></path>
+                <div class="screenshots-container">
+                    <button class="screenshot-nav prev" disabled>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="15 18 9 12 15 6"></polyline>
                         </svg>
                     </button>
-                    <div id="download-visualizer" class="download-visualizer"></div>
+                    <div class="screenshots-slider" id="screenshots-slider"></div>
+                    <button class="screenshot-nav next">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Download Section -->
+            <div class="section-title">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                Скачать
+            </div>
+            <div class="section-content">
+                <button id="download-btn" class="download-btn">Скачать</button>
+                
+                <div class="progress-container" id="progress-container">
+                    <div class="progress-info">
+                        <span class="progress-text">Скачивание: <span id="downloaded-size">0 MB</span> из <span id="total-size">0 MB</span></span>
+                        <span class="progress-percent" id="progress-percent">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                    <div class="download-stats">
+                        <span><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v10l7-7-5 11h-4z"></path><circle cx="12" cy="20" r="2"></circle></svg> <span id="download-speed">0 KB/s</span></span>
+                        <span><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg> <span id="ping-value">0 мс</span></span>
+                        <button id="visualizer-toggle" class="visualizer-toggle">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 5v14M17 5v14M7 5v14M2 5h20M2 19h20"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="status-message" class="status-message"></div>
+            </div>
+        </div>
+
+        <!-- Profile Modal -->
+        <div class="profile-modal" id="profile-modal">
+            <div class="profile-modal-content">
+                <div class="profile-header">
+                    <div id="banner-placeholder" class="banner-placeholder">Нажмите, чтобы изменить баннер</div>
+                </div>
+                <div class="profile-info">
+                    <div id="profile-avatar" class="profile-avatar">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </div>
+                    <div class="profile-edit" id="profile-edit">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                    </div>
+                    <h2 id="profile-name" class="profile-name">Имя Фамилия</h2>
+                    <p id="profile-username" class="profile-username">@username</p>
+                    <p id="profile-bio" class="profile-bio">Добавьте описание профиля, чтобы рассказать о себе</p>
+                    
+                    <div class="profile-tabs">
+                        <div class="profile-tab active" data-tab="library">Библиотека</div>
+                        <div class="profile-tab" data-tab="settings">Настройки</div>
+                    </div>
+                    
+                    <div id="library-section" class="profile-content">
+                        <div class="library-grid" id="library-grid">
+                            <!-- Здесь будут элементы библиотеки -->
+                        </div>
+                    </div>
+                    
+                    <div id="settings-section" class="profile-content profile-settings">
+                        <div class="setting-item">
+                            <div class="setting-label">Имя</div>
+                            <input type="text" id="name-input" class="setting-input" placeholder="Ваше имя">
+                            <div class="username-available" id="name-available">Имя доступно</div>
+                            <button id="save-name" class="save-btn">Сохранить</button>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <div class="setting-label">Юзернейм</div>
+                            <input type="text" id="username-input" class="setting-input" placeholder="Ваш юзернейм">
+                            <div class="username-available" id="username-available">Юзернейм доступен</div>
+                            <div class="username-unavailable" id="username-unavailable">Юзернейм занят</div>
+                            <button id="save-username" class="save-btn">Сохранить</button>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <div class="setting-label">Описание</div>
+                            <textarea id="bio-input" class="setting-input" rows="3" placeholder="Расскажите о себе"></textarea>
+                            <button id="save-bio" class="save-btn">Сохранить</button>
+                        </div>
+                        
+                        <button id="logout-btn" class="logout-btn">Выйти</button>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div id="auth-modal" class="profile-modal">
+        <!-- Auth Modal -->
+        <div class="profile-modal" id="auth-modal">
             <div class="profile-modal-content">
                 <div class="plugg-auth-container">
                     <div class="plugg-auth-content">
                         <div class="plugg-auth-gif">
-                            <img src="https://i.imgur.com/9bU4TPl.gif" alt="PLUGG Auth" style="width: 100%; border-radius: 12px;">
+                            <img src="https://i.imgur.com/2yNqH4a.jpg" alt="PLUGG Auth" style="width: 100%; border-radius: var(--border-radius-md);">
                         </div>
-                        <h2 class="plugg-auth-title">Войдите в PLUGG</h2>
-                        <p class="plugg-auth-description">Для доступа к библиотеке игр и сохранения ваших настроек, войдите с помощью Telegram</p>
-                        <div class="plugg-auth-status" id="plugg-auth-status">Ожидание авторизации...</div>
+                        <h2 class="plugg-auth-title">Добро пожаловать в PLUGG</h2>
+                        <p class="plugg-auth-description">Для доступа к приватным сборкам Standoff 2 войдите через Telegram</p>
+                        <div class="plugg-auth-status" id="plugg-auth-status"></div>
                         <div class="plugg-auth-button-container" id="plugg-auth-button-container">
                             <button id="telegram-auth-button" class="plugg-auth-button">Войти через Telegram</button>
                         </div>
@@ -1433,106 +1659,53 @@
             </div>
         </div>
 
-        <div id="profile-modal" class="profile-modal">
-            <div class="profile-modal-content">
-                <div class="profile-header">
-                    <div id="banner-placeholder" class="banner-placeholder">Добавьте свой баннер, чтобы выделиться среди других пользователей</div>
-                </div>
-                <div class="profile-info">
-                    <div id="profile-avatar" class="profile-avatar">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="12" cy="7" r="4"></circle>
-                        </svg>
-                    </div>
-                    <div class="profile-edit" id="profile-edit">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 20h9"></path>
-                            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
-                        </svg>
-                    </div>
-                    <h2 class="profile-name" id="profile-name">Имя Фамилия</h2>
-                    <p class="profile-username" id="profile-username">@username</p>
-                    <p class="profile-bio" id="profile-bio">Добавьте описание профиля, чтобы рассказать о себе</p>
-                </div>
-                <div class="profile-tabs">
-                    <div class="profile-tab active" data-tab="library">Библиотека</div>
-                    <div class="profile-tab" data-tab="settings">Настройки</div>
-                </div>
-                <div class="profile-content">
-                    <div id="library-section">
-                        <div class="library-grid" id="library-grid">
-                            <!-- Library games will be populated here -->
-                        </div>
-                    </div>
-                    <div id="settings-section" class="profile-settings">
-                        <div class="setting-item">
-                            <label class="setting-label">Имя</label>
-                            <input type="text" id="name-input" class="setting-input">
-                            <div class="username-available" id="name-available">Имя доступно</div>
-                            <button id="save-name" class="save-btn">Сохранить</button>
-                        </div>
-                        <div class="setting-item">
-                            <label class="setting-label">Юзернейм</label>
-                            <input type="text" id="username-input" class="setting-input">
-                            <div class="username-available" id="username-available">Юзернейм доступен</div>
-                            <div class="username-unavailable" id="username-unavailable">Юзернейм занят</div>
-                            <button id="save-username" class="save-btn">Сохранить</button>
-                        </div>
-                        <div class="setting-item">
-                            <label class="setting-label">Описание</label>
-                            <textarea id="bio-input" class="setting-input" rows="3" style="resize: none;"></textarea>
-                            <button id="save-bio" class="save-btn">Сохранить</button>
-                        </div>
-                        <button id="logout-btn" class="logout-btn">Выйти</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="banner-selector" class="banner-selector">
+        <!-- Banner Selector -->
+        <div class="banner-selector" id="banner-selector">
             <div class="banner-selector-header">
                 <h2 class="banner-selector-title">Выберите баннер</h2>
-                <div id="banner-selector-close" class="banner-selector-close">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <button class="banner-selector-close" id="banner-selector-close">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="18" y1="6" x2="6" y2="18"></line>
                         <line x1="6" y1="6" x2="18" y2="18"></line>
                     </svg>
-                </div>
+                </button>
             </div>
+            
             <div class="banner-upload" id="banner-upload">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                     <polyline points="17 8 12 3 7 8"></polyline>
                     <line x1="12" y1="3" x2="12" y2="15"></line>
                 </svg>
                 <p>Загрузить свой баннер</p>
             </div>
+            
             <div class="banner-gallery" id="banner-gallery">
-                <!-- Gallery items will be populated here -->
+                <!-- Галерея баннеров будет загружена здесь -->
             </div>
-            <div id="banner-preview" class="banner-preview">
+            
+            <div class="banner-preview" id="banner-preview">
                 <div class="banner-preview-img">
-                    <img id="banner-preview-img" src="" alt="Preview">
+                    <img id="banner-preview-img" src="" alt="Предпросмотр баннера">
                 </div>
                 <div class="banner-preview-actions">
-                    <button id="banner-cancel-btn" class="banner-preview-btn banner-preview-cancel">Отмена</button>
-                    <button id="banner-apply-btn" class="banner-preview-btn banner-preview-apply">Применить</button>
+                    <button class="banner-preview-btn" id="banner-preview-cancel">Отмена</button>
+                    <button class="banner-preview-btn" id="banner-preview-save">Сохранить</button>
                 </div>
             </div>
         </div>
 
+        <!-- Footer -->
         <div class="footer">
             <div class="footer-content">
                 <div class="footer-section">
                     <h3>PLUGG</h3>
-                    <p>Ваша игровая библиотека в Telegram</p>
+                    <p>Платформа для приватных сборок Standoff 2</p>
                 </div>
                 <div class="footer-section">
-                    <h3>Полезные ссылки</h3>
-                    <a href="#">Правила сообщества</a>
-                    <a href="#">Политика конфиденциальности</a>
-                    <a href="#">Поддержка</a>
+                    <h3>Контакты</h3>
+                    <a href="https://t.me/plugg_bot">Telegram</a>
+                    <a href="https://discord.gg/plugg">Discord</a>
                 </div>
                 <div class="footer-bottom">
                     <p>© 2023 PLUGG. Все права защищены.</p>
@@ -1542,34 +1715,30 @@
     </div>
 
     <script>
-        // Telegram WebApp initialization
-        const tg = Telegram.WebApp;
-        tg.expand();
+        // Глобальные переменные
+        let currentUser = null;
+        let isOwner = true;
+        let games = [];
+        let xhr = null;
+        let isDownloading = false;
+        let downloadedBytes = 0;
+        let totalBytes = 0;
+        let startTime = 0;
+        let visualizerInterval = null;
+        let isVisualizerActive = false;
+        let currentGame = null;
+        let currentFileName = '';
+        let pingInterval = null;
         
-        // Initialize theme
-        function updateTheme() {
-            const themeParams = tg.themeParams;
-            document.documentElement.style.setProperty('--tg-theme-bg-color', themeParams.bg_color);
-            document.documentElement.style.setProperty('--tg-theme-text-color', themeParams.text_color);
-            document.documentElement.style.setProperty('--tg-theme-hint-color', themeParams.hint_color);
-            document.documentElement.style.setProperty('--tg-theme-link-color', themeParams.link_color);
-            document.documentElement.style.setProperty('--tg-theme-button-color', themeParams.button_color);
-            document.documentElement.style.setProperty('--tg-theme-button-text-color', themeParams.button_text_color);
-            document.documentElement.style.setProperty('--tg-theme-secondary-bg-color', themeParams.secondary_bg_color);
-            
-            // Update safe area insets
-            document.documentElement.style.setProperty('--tg-safe-area-inset-top', tg.viewportStableHeight > 0 ? tg.viewportStableHeight + 'px' : 'env(safe-area-inset-top)');
-            document.documentElement.style.setProperty('--tg-safe-area-inset-bottom', tg.viewportStableHeight > 0 ? tg.viewportStableHeight + 'px' : 'env(safe-area-inset-bottom)');
-            document.documentElement.style.setProperty('--tg-safe-area-inset-left', tg.viewportStableHeight > 0 ? tg.viewportStableHeight + 'px' : 'env(safe-area-inset-left)');
-            document.documentElement.style.setProperty('--tg-safe-area-inset-right', tg.viewportStableHeight > 0 ? tg.viewportStableHeight + 'px' : 'env(safe-area-inset-right)');
-        }
-        
-        // Initial theme setup
-        updateTheme();
-        tg.onEvent('themeChanged', updateTheme);
-        
-        // DOM elements
-        const gamesGrid = document.getElementById('games-grid');
+        // Элементы интерфейса (с проверкой на существование)
+        const downloadBtn = document.getElementById('download-btn');
+        const progressFill = document.getElementById('progress-fill');
+        const progressPercent = document.getElementById('progress-percent');
+        const statusText = document.getElementById('status-message');
+        const statusMessage = document.getElementById('status-message');
+        const progressContainer = document.getElementById('progress-container');
+        const backBtn = document.getElementById('back-btn');
+        const detailsLibraryBtn = document.getElementById('details-library-btn');
         const gameDetails = document.getElementById('game-details');
         const detailsTitle = document.getElementById('details-title');
         const detailsImage = document.getElementById('details-image');
@@ -1605,7 +1774,6 @@
         const logoutBtn = document.getElementById('logout-btn');
         const libraryGrid = document.getElementById('library-grid');
         const visualizerToggle = document.getElementById('visualizer-toggle');
-        const downloadVisualizer = document.getElementById('download-visualizer');
         const downloadedSize = document.getElementById('downloaded-size');
         const downloadSpeed = document.getElementById('download-speed');
         const pingValue = document.getElementById('ping-value');
@@ -1614,493 +1782,568 @@
         const bannerGallery = document.getElementById('banner-gallery');
         const bannerUpload = document.getElementById('banner-upload');
         const bannerPreview = document.getElementById('banner-preview');
-        const bannerPreviewImg = document.getElementById('banner-preview-img');
-        const bannerCancelBtn = document.getElementById('banner-cancel-btn');
-        const bannerApplyBtn = document.getElementById('banner-apply-btn');
-        const libraryBtn = document.getElementById('library-btn');
-        const downloadBtn = document.getElementById('download-btn');
-        const progressFill = document.getElementById('progress-fill');
-        const statusMessage = document.getElementById('status-message');
         
-        // Mock game data
-        const games = [
+        // Примеры игр
+        games = [
             {
                 id: 1,
-                title: "Minecraft",
-                image: "https://i.imgur.com/5Q5uRlD.jpg",
-                size: "125 MB",
-                rating: "4.8",
-                downloads: "1.2M",
-                description: "Популярная песочница с открытым миром, где вы можете строить, исследовать и выживать.",
-                whatsNew: "Добавлены новые биомы, мобы и улучшена оптимизация для мобильных устройств."
+                title: 'Standoff 2 - Приват 1',
+                image: 'https://i.imgur.com/7XQY5Qx.jpg',
+                size: '125 MB',
+                version: '0.22.1',
+                description: 'Уникальная сборка Standoff 2 с новыми скинами и картами. Полная оптимизация для слабых устройств.',
+                whatsNew: 'Добавлены новые скины, исправлены баги, улучшена стабильность.',
+                screenshots: [
+                    'https://i.imgur.com/5hF7b2n.jpg',
+                    'https://i.imgur.com/9pHqQ2k.jpg',
+                    'https://i.imgur.com/3gTfD5p.jpg',
+                    'https://i.imgur.com/8cPvKqR.jpg'
+                ],
+                downloadUrl: 'https://example.com/standoff2-privat1.apk',
+                fileName: 'standoff2-privat1.apk'
             },
             {
                 id: 2,
-                title: "Roblox",
-                image: "https://i.imgur.com/6Z6Z6Z6.jpg",
-                size: "180 MB",
-                rating: "4.7",
-                downloads: "2.5M",
-                description: "Платформа для создания и игры в пользовательские игры.",
-                whatsNew: "Улучшена стабильность, добавлены новые инструменты для разработчиков."
+                title: 'Standoff 2 - Приват 2',
+                image: 'https://i.imgur.com/5hF7b2n.jpg',
+                size: '130 MB',
+                version: '0.22.0',
+                description: 'Приватная сборка Standoff 2 с уникальными функциями и улучшенной графикой.',
+                whatsNew: 'Добавлены новые режимы игры, улучшена графика.',
+                screenshots: [
+                    'https://i.imgur.com/7XQY5Qx.jpg',
+                    'https://i.imgur.com/9pHqQ2k.jpg',
+                    'https://i.imgur.com/2yNqH4a.jpg',
+                    'https://i.imgur.com/3gTfD5p.jpg'
+                ],
+                downloadUrl: 'https://example.com/standoff2-privat2.apk',
+                fileName: 'standoff2-privat2.apk'
             },
             {
                 id: 3,
-                title: "Subway Surfers",
-                image: "https://i.imgur.com/7Z7Z7Z7.jpg",
-                size: "145 MB",
-                rating: "4.6",
-                downloads: "3.1M",
-                description: "Бесконечный раннер с красочной графикой и увлекательным геймплеем.",
-                whatsNew: "Новые локации, персонажи и обновленные события."
+                title: 'Standoff 2 - Приват 3',
+                image: 'https://i.imgur.com/9pHqQ2k.jpg',
+                size: '115 MB',
+                version: '0.21.5',
+                description: 'Минималистичная сборка Standoff 2 без лишних функций, только базовый геймплей.',
+                whatsNew: 'Оптимизация производительности, исправлены критические баги.',
+                screenshots: [
+                    'https://i.imgur.com/5hF7b2n.jpg',
+                    'https://i.imgur.com/7XQY5Qx.jpg',
+                    'https://i.imgur.com/2yNqH4a.jpg',
+                    'https://i.imgur.com/8cPvKqR.jpg'
+                ],
+                downloadUrl: 'https://example.com/standoff2-privat3.apk',
+                fileName: 'standoff2-privat3.apk'
             },
             {
                 id: 4,
-                title: "Among Us",
-                image: "https://i.imgur.com/8Z8Z8Z8.jpg",
-                size: "85 MB",
-                rating: "4.5",
-                downloads: "1.8M",
-                description: "Социальная дедуктивная игра для 4-10 игроков онлайн или через локальную сеть.",
-                whatsNew: "Новые карты, скины и улучшенная античит система."
-            },
-            {
-                id: 5,
-                title: "PUBG Mobile",
-                image: "https://i.imgur.com/9Z9Z9Z9.jpg",
-                size: "2.1 GB",
-                rating: "4.4",
-                downloads: "4.5M",
-                description: "Игра в жанре королевской битвы с реалистичной графикой и соревновательным геймплеем.",
-                whatsNew: "Новое оружие, обновленные карты и улучшенная стабильность."
-            },
-            {
-                id: 6,
-                title: "Free Fire",
-                image: "https://i.imgur.com/AZAZAZA.jpg",
-                size: "1.3 GB",
-                rating: "4.3",
-                downloads: "3.7M",
-                description: "Королевская битва с быстрыми раундами и разнообразными персонажами.",
-                whatsNew: "Новые события, скины и оптимизация для слабых устройств."
+                title: 'Standoff 2 - Приват 4',
+                image: 'https://i.imgur.com/2yNqH4a.jpg',
+                size: '140 MB',
+                version: '0.22.2',
+                description: 'Последняя версия приватной сборки Standoff 2 с эксклюзивными функциями.',
+                whatsNew: 'Добавлены новые карты, улучшена система баланса.',
+                screenshots: [
+                    'https://i.imgur.com/9pHqQ2k.jpg',
+                    'https://i.imgur.com/5hF7b2n.jpg',
+                    'https://i.imgur.com/7XQY5Qx.jpg',
+                    'https://i.imgur.com/3gTfD5p.jpg'
+                ],
+                downloadUrl: 'https://example.com/standoff2-privat4.apk',
+                fileName: 'standoff2-privat4.apk'
             }
         ];
         
-        // User data
-        let currentUser = null;
-        let currentGame = null;
-        let isDownloading = false;
-        let xhr = null;
-        let currentFileName = '';
-        let downloadedBytes = 0;
-        let totalBytes = 0;
-        let downloadStartTime = 0;
-        let pingInterval = null;
-        let visualizerInterval = null;
-        let isVisualizerActive = false;
-        
-        // Initialize the app
-        function initApp() {
-            // Check if user is authenticated
-            if (!checkUser()) {
-                showAuthModal();
-            } else {
-                updateProfileUI();
-                renderGames('all');
-                setupEventListeners();
-            }
+        // Функция проверки верификации пользователя
+        function isUserVerified(telegramId) {
+            // Здесь должна быть проверка через ваш сервер
+            // Для примера, предположим, что пользователь с ID 123456789 верифицирован
+            return telegramId === '123456789';
         }
         
-        // Check if user exists in localStorage
+        // Проверка пользователя
         function checkUser() {
             const user = localStorage.getItem('plugg_user');
-            if (user) {
-                try {
-                    currentUser = JSON.parse(user);
-                    return true;
-                } catch (e) {
-                    console.error('Error parsing user data', e);
+            if (!user) return false;
+            
+            try {
+                currentUser = JSON.parse(user);
+                
+                // Добавляем проверку структуры данных
+                if (!currentUser || !currentUser.telegram_id) {
                     localStorage.removeItem('plugg_user');
                     return false;
                 }
-            }
-            return false;
-        }
-        
-        // Save user data to localStorage
-        function saveUserData() {
-            if (currentUser) {
-                localStorage.setItem('plugg_user', JSON.stringify(currentUser));
-            }
-        }
-        
-        // Create default user if doesn't exist
-        function createDefaultUser(userData) {
-            const defaultUser = {
-                id: userData.id,
-                first_name: userData.first_name,
-                last_name: userData.last_name || '',
-                username: userData.username || '',
-                photo_url: userData.photo_url || '',
-                auth_date: userData.auth_date,
-                hash: userData.hash,
-                library: [],
-                bio: 'Добавьте описание профиля, чтобы рассказать о себе',
-                banner: '',
-                is_verified: true
-            };
-            return defaultUser;
-        }
-        
-        // Show auth modal
-        function showAuthModal() {
-            authModal.classList.add('active');
-            tg.MainButton.setText("Войти через Telegram");
-            tg.MainButton.show();
-            tg.MainButton.onClick(handleTelegramAuth);
-        }
-        
-        // Hide auth modal
-        function hideAuthModal() {
-            authModal.classList.remove('active');
-            tg.MainButton.hide();
-            tg.MainButton.offClick(handleTelegramAuth);
-        }
-        
-        // Handle Telegram authentication
-        function handleTelegramAuth() {
-            try {
-                pluggAuthStatus.textContent = 'Подготовка к авторизации...';
-                registrationProgress.style.display = 'block';
-                pluggAuthButtonContainer.style.display = 'none';
                 
-                // Simulate auth process
-                setTimeout(() => {
-                    const initData = Telegram.WebApp.initData;
-                    if (!initData) {
-                        pluggAuthStatus.textContent = 'Ошибка авторизации. Попробуйте еще раз.';
-                        pluggAuthButtonContainer.style.display = 'block';
-                        registrationProgress.style.display = 'none';
-                        return;
+                // Проверяем Telegram WebApp только если он инициализирован
+                if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe) {
+                    const tg = window.Telegram.WebApp;
+                    if (tg.initDataUnsafe.user && currentUser.telegram_id !== tg.initDataUnsafe.user.id) {
+                        localStorage.removeItem('plugg_user');
+                        return false;
                     }
-                    
-                    // Parse user data from initData
-                    const urlParams = new URLSearchParams(initData);
-                    const user = JSON.parse(decodeURIComponent(urlParams.get('user')));
-                    
-                    // Create or update user
-                    currentUser = createDefaultUser(user);
+                }
+                
+                // Восстанавливаем данные
+                const savedData = getSavedUserData(currentUser.telegram_id);
+                if (savedData) {
+                    Object.assign(currentUser, savedData);
                     localStorage.setItem('plugg_user', JSON.stringify(currentUser));
-                    
-                    pluggAuthStatus.textContent = 'Авторизация успешна!';
-                    setTimeout(() => {
-                        hideAuthModal();
-                        updateProfileUI();
-                        renderGames('all');
-                        setupEventListeners();
-                    }, 1000);
-                }, 1000);
-            } catch (error) {
-                console.error('Auth error:', error);
-                pluggAuthStatus.textContent = 'Ошибка авторизации: ' + error.message;
-                pluggAuthButtonContainer.style.display = 'block';
-                registrationProgress.style.display = 'none';
+                }
+                
+                updateProfileUI();
+                return true;
+            } catch (e) {
+                console.error('Error parsing user data', e);
+                localStorage.removeItem('plugg_user');
+                return false;
             }
         }
         
-        // Update profile UI with current user data
-        function updateProfileUI() {
+        // Получение сохраненных данных пользователя
+        function getSavedUserData(telegramId) {
+            const savedUsers = localStorage.getItem('plugg_saved_users');
+            if (savedUsers) {
+                try {
+                    const users = JSON.parse(savedUsers);
+                    return users[telegramId];
+                } catch (e) {
+                    console.error('Error parsing saved users', e);
+                }
+            }
+            return null;
+        }
+        
+        // Сохранение данных пользователя
+        function saveUserData() {
             if (!currentUser) return;
             
-            // Update name
-            profileName.textContent = `${currentUser.first_name}${currentUser.last_name ? ' ' + currentUser.last_name : ''}`;
+            // Добавляем проверку и восстановление структуры данных
+            if (!currentUser.library) currentUser.library = [];
+            if (!currentUser.bio) currentUser.bio = 'Любитель прививаток для Standoff 2';
+            if (!currentUser.banner) currentUser.banner = '';
+            if (!currentUser.avatar) currentUser.avatar = '';
             
-            // Fixed: Corrected the syntax error here - removed duplicate declaration
-            const usernameText = currentUser.username ? `@${currentUser.username}` : 'Не указан';
-            profileUsername.innerHTML = usernameText;
-            usernameInput.value = currentUser.username || '';
-            
-            // Update bio
-            profileBio.textContent = currentUser.bio || 'Добавьте описание профиля, чтобы рассказать о себе';
-            bioInput.value = currentUser.bio || '';
-            
-            // Update avatar
-            if (currentUser.avatar) {
-                profileAvatar.innerHTML = `<img src="${currentUser.avatar}" alt="Аватар">`;
+            // Сохраняем данные
+            const savedUsers = localStorage.getItem('plugg_saved_users') || '{}';
+            let users = {};
+            try {
+                users = JSON.parse(savedUsers);
+            } catch (e) {
+                console.error('Error parsing saved users', e);
             }
             
-            // Update banner
-            if (currentUser.banner) {
-                bannerPlaceholder.style.backgroundImage = `url('${currentUser.banner}')`;
-                bannerPlaceholder.style.backgroundSize = 'cover';
-                bannerPlaceholder.style.backgroundPosition = 'center';
-                bannerPlaceholder.textContent = '';
-            } else {
-                bannerPlaceholder.style.background = 'var(--accent-gradient)';
-                bannerPlaceholder.style.backgroundSize = '';
-                bannerPlaceholder.style.backgroundPosition = '';
-                bannerPlaceholder.textContent = 'Добавьте свой баннер, чтобы выделиться среди других пользователей';
-            }
+            users[currentUser.telegram_id] = {
+                library: currentUser.library,
+                bio: currentUser.bio,
+                banner: currentUser.banner,
+                avatar: currentUser.avatar
+            };
             
-            // Update library UI
-            updateLibraryUI();
+            localStorage.setItem('plugg_saved_users', JSON.stringify(users));
+            localStorage.setItem('plugg_user', JSON.stringify(currentUser));
+        }
+        
+        // Обновление UI профиля
+        function updateProfileUI() {
+            if (!profileName || !profileUsername || !profileBio || !nameInput || !usernameInput || !bioInput || !libraryGrid) return;
             
-            // Add handler for verification badge hover
-            const verifiedBadge = document.querySelector('.verified-badge');
-            if (verifiedBadge) {
-                const tooltip = document.querySelector('.verified-tooltip');
-                verifiedBadge.addEventListener('mouseenter', () => {
-                    tooltip.classList.add('show');
-                });
-                verifiedBadge.addEventListener('mouseleave', () => {
-                    tooltip.classList.remove('show');
-                });
+            if (currentUser) {
+                // Проверяем верификацию пользователя
+                const isVerified = isUserVerified(currentUser.telegram_id);
+                
+                // Обновляем имя
+                let nameHTML = currentUser.first_name + (currentUser.last_name ? ' ' + currentUser.last_name : '');
+                // Добавляем галочку верификации, если пользователь верифицирован
+                if (isVerified) {
+                    nameHTML += `<span class="verified-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></span>`;
+                }
+                profileName.innerHTML = nameHTML;
+                
+                // Обновляем юзернейм
+                const usernameText = currentUser.username ? `@${currentUser.username}` : 'Не указан';
+                profileUsername.innerHTML = usernameText;
+                usernameInput.value = currentUser.username || '';
+                
+                // Обновляем био
+                profileBio.textContent = currentUser.bio || 'Добавьте описание профиля, чтобы рассказать о себе';
+                bioInput.value = currentUser.bio || '';
+                
+                // Обновляем аватар
+                if (currentUser.avatar) {
+                    profileAvatar.innerHTML = `<img src="${currentUser.avatar}" alt="Аватар">`;
+                } else {
+                    profileAvatar.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    `;
+                }
+                
+                // Обновляем баннер
+                if (currentUser.banner) {
+                    bannerPlaceholder.style.backgroundImage = `url('${currentUser.banner}')`;
+                } else {
+                    bannerPlaceholder.style.background = 'var(--accent-gradient)';
+                }
+                
+                // Обновляем библиотеку
+                renderLibrary();
             }
         }
         
-        // Update library UI
-        function updateLibraryUI() {
-            if (!currentUser || !currentUser.library || currentUser.library.length === 0) {
-                libraryGrid.innerHTML = `
-                    <div style="grid-column: 1 / -1; text-align: center; padding: 20px; color: var(--text-secondary);">
-                        Ваша библиотека пуста
-                    </div>
-                `;
+        // Рендеринг библиотеки
+        function renderLibrary() {
+            if (!libraryGrid || !currentUser || !currentUser.library) return;
+            
+            libraryGrid.innerHTML = '';
+            
+            if (currentUser.library.length === 0) {
+                libraryGrid.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; color: var(--text-secondary); padding: 20px;">Ваша библиотека пуста</p>';
                 return;
             }
             
-            libraryGrid.innerHTML = '';
-            const libraryGames = games.filter(game => currentUser.library.includes(game.id));
-            
-            libraryGames.forEach(game => {
-                const gameElement = document.createElement('div');
-                gameElement.className = 'library-item';
-                gameElement.innerHTML = `
-                    <img src="${game.image}" alt="${game.title}">
-                    <div class="library-item-title">${game.title}</div>
-                `;
-                gameElement.addEventListener('click', () => showGameDetails(game));
-                libraryGrid.appendChild(gameElement);
+            currentUser.library.forEach(gameId => {
+                const game = games.find(g => g.id === gameId);
+                if (game) {
+                    const item = document.createElement('div');
+                    item.className = 'library-item';
+                    item.innerHTML = `
+                        <img src="${game.image}" alt="${game.title}">
+                        <div class="library-item-title">${game.title}</div>
+                    `;
+                    item.addEventListener('click', () => showGameDetails(game));
+                    libraryGrid.appendChild(item);
+                }
             });
         }
         
-        // Render games based on tab
+        // Рендеринг игр
         function renderGames(tab) {
-            const grid = document.getElementById('games-grid');
-            if (!grid) return;
+            const grid = document.querySelector(`#${tab}-tab .games-grid`);
+            
+            // Добавляем проверку существования элемента
+            if (!grid) {
+                console.error(`Элемент .games-grid для таба ${tab} не найден`);
+                // Создаем элемент, если он отсутствует
+                const tabContent = document.getElementById(`${tab}-tab`);
+                if (tabContent) {
+                    const gamesGrid = document.createElement('div');
+                    gamesGrid.className = 'games-grid';
+                    gamesGrid.id = 'games-grid';
+                    tabContent.appendChild(gamesGrid);
+                    renderGames(tab); // Рекурсивный вызов
+                    return;
+                }
+                return;
+            }
             
             grid.innerHTML = '';
             
-            let gamesToRender = games;
+            let filteredGames = games;
             if (tab === 'new') {
-                gamesToRender = games.slice(0, 2);
-            } else if (tab === 'top') {
-                gamesToRender = [...games].sort((a, b) => parseFloat(b.rating) - parseFloat(a.rating));
+                // Для примера, последние 2 игры считаем новыми
+                filteredGames = games.slice(-2).reverse();
+            } else if (tab === 'popular') {
+                // Для примера, первые 2 игры считаем популярными
+                filteredGames = games.slice(0, 2);
             }
             
-            gamesToRender.forEach(game => {
-                const gameElement = document.createElement('div');
-                gameElement.className = 'game-card';
-                gameElement.innerHTML = `
-                    <div class="game-image">
-                        <img src="${game.image}" alt="${game.title}">
-                    </div>
-                    <div class="game-content">
+            filteredGames.forEach(game => {
+                const gameCard = document.createElement('div');
+                gameCard.className = 'game-card';
+                gameCard.innerHTML = `
+                    <img src="${game.image}" alt="${game.title}" class="game-image">
+                    <div class="game-info">
                         <h3 class="game-title">${game.title}</h3>
                         <div class="game-meta">
-                            <span>${game.size}</span>
-                            <span>★ ${game.rating}</span>
+                            <span>${game.version}</span>
+                            <span class="game-size">${game.size}</span>
                         </div>
                     </div>
                 `;
-                gameElement.addEventListener('click', () => showGameDetails(game));
-                grid.appendChild(gameElement);
+                gameCard.addEventListener('click', () => showGameDetails(game));
+                grid.appendChild(gameCard);
             });
         }
         
-        // Show game details
+        // Показать детали игры
         function showGameDetails(game) {
             currentGame = game;
-            gameDetails.style.display = 'block';
+            if (gameDetails) gameDetails.style.display = 'block';
+            if (detailsTitle) detailsTitle.textContent = game.title;
+            if (detailsImage) detailsImage.src = game.image;
             
-            detailsTitle.textContent = game.title;
-            detailsImage.src = game.image;
-            detailsMeta.innerHTML = `
-                Размер: ${game.size} • Рейтинг: ★ ${game.rating} • Скачано: ${game.downloads}
-            `;
-            detailsDescription.textContent = game.description;
-            detailsWhatsNew.textContent = game.whatsNew;
+            if (detailsMeta) {
+                detailsMeta.innerHTML = `
+                    <span>${game.version}</span>
+                    <span class="game-size">${game.size}</span>
+                `;
+            }
             
-            // Check if game is in library
-            if (currentUser && currentUser.library && currentUser.library.includes(game.id)) {
-                libraryBtn.textContent = 'Удалить из библиотеки';
-                libraryBtn.classList.add('active');
-            } else {
-                libraryBtn.textContent = 'В библиотеку';
-                libraryBtn.classList.remove('active');
+            if (detailsDescription) detailsDescription.textContent = game.description;
+            if (detailsWhatsNew) detailsWhatsNew.textContent = game.whatsNew;
+            
+            // Обновляем кнопку библиотеки
+            if (detailsLibraryBtn) {
+                if (currentUser && currentUser.library && currentUser.library.includes(game.id)) {
+                    detailsLibraryBtn.textContent = 'Удалить из библиотеки';
+                    detailsLibraryBtn.classList.add('active');
+                } else {
+                    detailsLibraryBtn.textContent = 'В библиотеку';
+                    detailsLibraryBtn.classList.remove('active');
+                }
+            }
+            
+            // Загружаем скриншоты
+            loadScreenshots(game.screenshots);
+            
+            // Скрываем основной контент
+            document.querySelector('.container').style.display = 'none';
+        }
+        
+        // Загрузка скриншотов
+        function loadScreenshots(screenshots) {
+            const slider = document.getElementById('screenshots-slider');
+            if (!slider) return;
+            
+            slider.innerHTML = '';
+            
+            screenshots.forEach(screenshot => {
+                const item = document.createElement('div');
+                item.className = 'screenshot-item';
+                item.innerHTML = `<img src="${screenshot}" alt="Скриншот">`;
+                slider.appendChild(item);
+            });
+            
+            // Добавляем обработчики навигации
+            const prevBtn = document.querySelector('.screenshot-nav.prev');
+            const nextBtn = document.querySelector('.screenshot-nav.next');
+            
+            if (prevBtn) prevBtn.addEventListener('click', scrollPrev);
+            if (nextBtn) nextBtn.addEventListener('click', scrollNext);
+            
+            // Добавляем обработчик прокрутки для обновления состояния кнопок
+            if (screenshotsSlider) {
+                screenshotsSlider.addEventListener('scroll', updateNavButtons);
+                // Инициализируем кнопки после загрузки
+                setTimeout(updateNavButtons, 500);
             }
         }
         
-        // Hide game details
-        function hideGameDetails() {
-            gameDetails.style.display = 'none';
-            currentGame = null;
-        }
-        
-        // Add game to library
-        function toggleGameInLibrary(gameId) {
-            if (!currentUser) {
-                authModal.classList.add('active');
-                return;
+        // Обновление кнопок навигации скриншотов
+        function updateNavButtons() {
+            const slider = document.getElementById('screenshots-slider');
+            if (!slider) return;
+            
+            const prevBtn = document.querySelector('.screenshot-nav.prev');
+            const nextBtn = document.querySelector('.screenshot-nav.next');
+            
+            if (prevBtn) {
+                prevBtn.disabled = slider.scrollLeft === 0;
             }
             
-            if (!currentUser.library) {
-                currentUser.library = [];
+            if (nextBtn) {
+                const maxScroll = slider.scrollWidth - slider.clientWidth;
+                nextBtn.disabled = slider.scrollLeft >= maxScroll - 1;
             }
-            
-            const index = currentUser.library.indexOf(gameId);
-            if (index === -1) {
-                // Add to library
-                currentUser.library.push(gameId);
-                tg.showAlert('Игра добавлена в библиотеку!');
-                libraryBtn.textContent = 'Удалить из библиотеки';
-                libraryBtn.classList.add('active');
-            } else {
-                // Remove from library
-                currentUser.library.splice(index, 1);
-                tg.showAlert('Игра удалена из библиотеки!');
-                libraryBtn.textContent = 'В библиотеку';
-                libraryBtn.classList.remove('active');
-            }
-            
-            // Save updated data
-            localStorage.setItem('plugg_user', JSON.stringify(currentUser));
-            saveUserData();
-            
-            // Update library UI
-            updateLibraryUI();
         }
         
-        // Update progress bar
-        function updateProgress(percent, loaded, total) {
-            progressFill.style.width = `${percent}%`;
-            downloadedSize.textContent = `${(loaded / (1024 * 1024)).toFixed(1)} MB`;
-            document.querySelector('.progress-percent').textContent = `${percent}%`;
+        // Прокрутка скриншотов влево
+        function scrollPrev() {
+            const slider = document.getElementById('screenshots-slider');
+            if (!slider) return;
+            
+            slider.scrollBy({
+                left: -slider.clientWidth,
+                behavior: 'smooth'
+            });
+            
+            setTimeout(updateNavButtons, 300);
         }
         
-        // Show status message
+        // Прокрутка скриншотов вправо
+        function scrollNext() {
+            const slider = document.getElementById('screenshots-slider');
+            if (!slider) return;
+            
+            slider.scrollBy({
+                left: slider.clientWidth,
+                behavior: 'smooth'
+            });
+            
+            setTimeout(updateNavButtons, 300);
+        }
+        
+        // Обновление прогресса
+        function updateProgress(percent, downloaded, total) {
+            if (progressFill) progressFill.style.width = `${percent}%`;
+            if (progressPercent) progressPercent.textContent = `${percent}%`;
+            
+            const downloadedMB = (downloaded / (1024 * 1024)).toFixed(1);
+            const totalMB = (total / (1024 * 1024)).toFixed(1);
+            
+            if (downloadedSize) downloadedSize.textContent = `${downloadedMB} MB`;
+            if (document.getElementById('total-size')) document.getElementById('total-size').textContent = `${totalMB} MB`;
+        }
+        
+        // Показать статус
         function showStatus(message, isSuccess) {
+            if (!statusMessage) return;
+            
             statusMessage.textContent = message;
-            statusMessage.className = 'status-message ' + (isSuccess ? 'status-success' : 'status-error');
-            setTimeout(() => {
-                statusMessage.style.display = 'none';
-            }, 3000);
+            statusMessage.className = 'status-message';
+            statusMessage.classList.add(isSuccess ? 'status-success' : 'status-error');
         }
         
-        // Reset download UI
+        // Сброс UI загрузки
         function resetDownloadUI() {
-            isDownloading = false;
-            downloadBtn.disabled = false;
-            downloadBtn.textContent = 'Скачать';
-            document.querySelector('.progress-container').style.display = 'none';
+            if (downloadBtn) {
+                downloadBtn.disabled = false;
+                downloadBtn.textContent = 'Скачать';
+            }
             
-            // Stop visualizer
+            if (progressContainer) progressContainer.style.display = 'none';
+            if (statusMessage) statusMessage.style.display = 'none';
+            
+            // Останавливаем визуализатор загрузки
             if (visualizerInterval) {
                 clearInterval(visualizerInterval);
                 visualizerInterval = null;
             }
+            
             if (downloadVisualizer) {
                 downloadVisualizer.style.display = 'none';
             }
+            
             isVisualizerActive = false;
+            
             if (visualizerToggle) {
                 visualizerToggle.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M17 5v14M7 5v14M2 5h20M2 19h20"></path></svg>`;
             }
         }
         
-        // Animate download visualizer
+        // Анимация визуализатора загрузки
         function animateDownloadVisualizer() {
-            const bars = document.querySelectorAll('.download-bar');
+            const bars = document.querySelectorAll('.download-visualizer .bar');
+            if (!bars) return;
+            
             bars.forEach(bar => {
-                const height = Math.floor(Math.random() * 25) + 5;
+                const height = Math.floor(Math.random() * 30) + 10;
                 bar.style.height = `${height}px`;
             });
         }
         
-        // Toggle visualizer
-        function toggleVisualizer() {
-            if (!isVisualizerActive) {
-                downloadVisualizer.style.display = 'flex';
-                visualizerToggle.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M5 18h14M5 6h14"></path></svg>`;
-                if (visualizerInterval) clearInterval(visualizerInterval);
-                visualizerInterval = setInterval(animateDownloadVisualizer, 80);
-            } else {
-                downloadVisualizer.style.display = 'none';
-                visualizerToggle.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M17 5v14M7 5v14M2 5h20M2 19h20"></path></svg>`;
-                if (visualizerInterval) clearInterval(visualizerInterval);
-                visualizerInterval = null;
-            }
-            isVisualizerActive = !isVisualizerActive;
+        // Создание пользователя
+        function createUser(user) {
+            const userData = {
+                telegram_id: user.id,
+                first_name: user.first_name,
+                last_name: user.last_name || '',
+                username: user.username || '',
+                bio: 'Любитель прививаток для Standoff 2',
+                library: [],
+                banner: '',
+                avatar: ''
+            };
+            
+            currentUser = userData;
+            saveUserData();
+            return userData;
         }
         
-        // Download file
+        // Проверка, находится ли игра в библиотеке
+        function isGameInLibrary(gameId) {
+            return currentUser && currentUser.library && currentUser.library.includes(gameId);
+        }
+        
+        // Добавление/удаление игры из библиотеки
+        function toggleGameInLibrary() {
+            if (!currentGame || !currentUser) return;
+            
+            if (!currentUser.library) {
+                currentUser.library = [];
+            }
+            
+            const index = currentUser.library.indexOf(currentGame.id);
+            if (index === -1) {
+                // Добавляем игру в библиотеку
+                currentUser.library.push(currentGame.id);
+                if (detailsLibraryBtn) {
+                    detailsLibraryBtn.textContent = 'Удалить из библиотеки';
+                    detailsLibraryBtn.classList.add('active');
+                }
+                showStatus('Игра добавлена в библиотеку', true);
+            } else {
+                // Удаляем игру из библиотеки
+                currentUser.library.splice(index, 1);
+                if (detailsLibraryBtn) {
+                    detailsLibraryBtn.textContent = 'В библиотеку';
+                    detailsLibraryBtn.classList.remove('active');
+                }
+                showStatus('Игра удалена из библиотеки', true);
+            }
+            
+            saveUserData();
+            renderLibrary();
+        }
+        
+        // Функция для скачивания файла
         function downloadFile() {
-            if (!isDownloading && downloadBtn) {
+            if (!isDownloading && downloadBtn && currentGame) {
                 isDownloading = true;
                 downloadBtn.disabled = true;
-                downloadBtn.textContent = 'Загрузка...';
-                document.querySelector('.progress-container').style.display = 'block';
+                downloadBtn.textContent = 'Скачивание...';
                 
-                // Create download visualizer bars
-                downloadVisualizer.innerHTML = '';
-                for (let i = 0; i < 30; i++) {
-                    const bar = document.createElement('div');
-                    bar.className = 'download-bar';
-                    downloadVisualizer.appendChild(bar);
+                if (progressContainer) progressContainer.style.display = 'block';
+                
+                // Запускаем пинг для замера скорости
+                startPing();
+                
+                // Включаем визуализатор загрузки
+                if (!isVisualizerActive && visualizerToggle) {
+                    isVisualizerActive = true;
+                    visualizerToggle.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M5 18h14M5 6h14"></path></svg>`;
+                    if (visualizerInterval) clearInterval(visualizerInterval);
+                    visualizerInterval = setInterval(animateDownloadVisualizer, 80);
                 }
                 
-                // Simulate ping
-                pingValue.textContent = '...';
-                let ping = 0;
-                pingInterval = setInterval(() => {
-                    ping = Math.floor(Math.random() * 100) + 20;
-                    pingValue.textContent = `${ping} ms`;
-                }, 1000);
+                xhr = new XMLHttpRequest();
+                xhr.open('GET', currentGame.downloadUrl, true);
+                xhr.responseType = 'arraybuffer';
+                startTime = Date.now();
                 
-                // Start download simulation
-                downloadStartTime = Date.now();
-                downloadedBytes = 0;
-                totalBytes = 100 * 1024 * 1024; // 100 MB
-                
-                // Create a fake download
-                const chunkSize = 5 * 1024 * 1024; // 5 MB chunks
-                let chunksDownloaded = 0;
-                const totalChunks = Math.ceil(totalBytes / chunkSize);
-                
-                const downloadInterval = setInterval(() => {
-                    chunksDownloaded++;
-                    downloadedBytes = Math.min(chunksDownloaded * chunkSize, totalBytes);
-                    const percent = Math.round((downloadedBytes / totalBytes) * 100);
-                    
-                    // Calculate speed
-                    const elapsed = (Date.now() - downloadStartTime) / 1000;
-                    const speed = downloadedBytes / elapsed / (1024 * 1024); // MB/s
-                    
-                    updateProgress(percent, downloadedBytes, totalBytes);
-                    downloadSpeed.textContent = `${speed.toFixed(1)} MB/s`;
-                    
-                    if (downloadedBytes >= totalBytes) {
-                        clearInterval(downloadInterval);
-                        clearInterval(pingInterval);
+                xhr.onprogress = function(event) {
+                    if (event.lengthComputable) {
+                        const percent = Math.round((event.loaded / event.total) * 100);
+                        downloadedBytes = event.loaded;
+                        totalBytes = event.total;
+                        updateProgress(percent, event.loaded, event.total);
                         
-                        // Create blob and trigger download
+                        // Обновляем скорость загрузки
+                        const elapsed = (Date.now() - startTime) / 1000;
+                        if (elapsed > 0) {
+                            const speed = event.loaded / elapsed / 1024; // KB/s
+                            if (downloadSpeed) downloadSpeed.textContent = `${speed.toFixed(1)} KB/s`;
+                        }
+                    }
+                };
+                
+                xhr.onload = function() {
+                    clearInterval(pingInterval);
+                    
+                    if (xhr.status === 200) {
+                        if (statusText) statusText.textContent = 'Проверка целостности файла...';
+                        
                         setTimeout(() => {
-                            const blob = new Blob([new ArrayBuffer(chunkSize)], { type: 'application/vnd.android.package-archive' });
+                            const blob = new Blob([xhr.response], { type: 'application/vnd.android.package-archive' });
                             const url = URL.createObjectURL(blob);
                             const a = document.createElement('a');
                             a.style.display = 'none';
                             a.href = url;
-                            a.download = currentGame.title + '.apk';
+                            a.download = currentGame.fileName;
                             document.body.appendChild(a);
                             a.click();
                             URL.revokeObjectURL(url);
@@ -2108,16 +2351,94 @@
                             updateProgress(100, totalBytes, totalBytes);
                             showStatus('Файл успешно проверен и готов к установке.', true);
                         }, 1500);
-                        
-                        resetDownloadUI();
+                    } else {
+                        showStatus(`Ошибка загрузки: статус ${xhr.status}. Файл может быть поврежден.`, false);
+                        updateProgress(0, 0, 0);
                     }
-                }, 500);
+                    
+                    resetDownloadUI();
+                    xhr = null;
+                };
+                
+                xhr.onerror = function() {
+                    clearInterval(pingInterval);
+                    showStatus('Ошибка загрузки. Проверьте интернет-соединение.', false);
+                    resetDownloadUI();
+                    xhr = null;
+                };
+                
+                xhr.send();
             }
         }
         
-        // Setup all event listeners
-        function setupEventListeners() {
-            // Tab switching
+        // Запуск пинга для замера скорости
+        function startPing() {
+            clearInterval(pingInterval);
+            
+            pingInterval = setInterval(() => {
+                const start = Date.now();
+                fetch('https://api.pluggbot.ru/ping', {
+                    cache: 'no-store',
+                    headers: {
+                        'Pragma': 'no-cache'
+                    }
+                }).then(() => {
+                    const latency = Date.now() - start;
+                    if (pingValue) pingValue.textContent = `${latency} мс`;
+                }).catch(() => {
+                    if (pingValue) pingValue.textContent = 'Ошибка';
+                });
+            }, 2000);
+        }
+        
+        // Инициализация при загрузке
+        document.addEventListener('DOMContentLoaded', function() {
+            // Инициализация Telegram Web App
+            const tg = window.Telegram.WebApp;
+            if (tg) {
+                tg.expand();
+                tg.ready();
+                
+                // Устанавливаем цвета интерфейса
+                tg.setBackgroundColor('#0a0a0a');
+                tg.setHeaderColor('#0a0a0a');
+                
+                // Устанавливаем безопасные области
+                document.documentElement.style.setProperty('--tg-safe-area-inset-top', tg.viewportStableInset.top + 'px');
+                document.documentElement.style.setProperty('--tg-safe-area-inset-bottom', tg.viewportStableInset.bottom + 'px');
+                document.documentElement.style.setProperty('--tg-safe-area-inset-left', tg.viewportStableInset.left + 'px');
+                document.documentElement.style.setProperty('--tg-safe-area-inset-right', tg.viewportStableInset.right + 'px');
+                
+                // Добавляем обработчик изменения темы
+                tg.onEvent('themeChanged', () => {
+                    document.documentElement.style.setProperty('--tg-safe-area-inset-top', tg.viewportStableInset.top + 'px');
+                    document.documentElement.style.setProperty('--tg-safe-area-inset-bottom', tg.viewportStableInset.bottom + 'px');
+                });
+            }
+            
+            // Устанавливаем таймаут для проверки пользователя, чтобы гарантировать инициализацию
+            setTimeout(() => {
+                const isAuthenticated = checkUser();
+                
+                if (isAuthenticated) {
+                    renderGames('all');
+                    document.getElementById('auth-modal').style.display = 'none';
+                    document.querySelector('.container').style.display = 'block';
+                } else {
+                    document.getElementById('auth-modal').style.display = 'flex';
+                    document.querySelector('.container').style.display = 'none';
+                }
+                
+                // Проверка start_param для определения гостя
+                if (tg && tg.initDataUnsafe && tg.initDataUnsafe.start_param) {
+                    const startParam = tg.initDataUnsafe.start_param;
+                    if (currentUser && startParam !== currentUser.username && startParam !== 'none') {
+                        isOwner = false;
+                    }
+                }
+            }, 500);
+            
+            // Обработчики событий
             document.querySelectorAll('.tab').forEach(tab => {
                 tab.addEventListener('click', () => {
                     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -2126,57 +2447,103 @@
                 });
             });
             
-            // Search functionality
             if (searchInput) {
-                searchInput.addEventListener('input', (e) => {
-                    const searchTerm = e.target.value.toLowerCase();
+                searchInput.addEventListener('input', function() {
+                    const query = this.value.toLowerCase();
                     const filteredGames = games.filter(game => 
-                        game.title.toLowerCase().includes(searchTerm)
+                        game.title.toLowerCase().includes(query)
                     );
                     
-                    gamesGrid.innerHTML = '';
-                    filteredGames.forEach(game => {
-                        const gameElement = document.createElement('div');
-                        gameElement.className = 'game-card';
-                        gameElement.innerHTML = `
-                            <div class="game-image">
-                                <img src="${game.image}" alt="${game.title}">
-                            </div>
-                            <div class="game-content">
-                                <h3 class="game-title">${game.title}</h3>
-                                <div class="game-meta">
-                                    <span>${game.size}</span>
-                                    <span>★ ${game.rating}</span>
+                    const grid = document.getElementById('games-grid');
+                    if (grid) {
+                        grid.innerHTML = '';
+                        
+                        filteredGames.forEach(game => {
+                            const gameCard = document.createElement('div');
+                            gameCard.className = 'game-card';
+                            gameCard.innerHTML = `
+                                <img src="${game.image}" alt="${game.title}" class="game-image">
+                                <div class="game-info">
+                                    <h3 class="game-title">${game.title}</h3>
+                                    <div class="game-meta">
+                                        <span>${game.version}</span>
+                                        <span class="game-size">${game.size}</span>
+                                    </div>
                                 </div>
-                            </div>
-                        `;
-                        gameElement.addEventListener('click', () => showGameDetails(game));
-                        gamesGrid.appendChild(gameElement);
-                    });
-                });
-            }
-            
-            // Profile button
-            if (profileBtn) {
-                profileBtn.addEventListener('click', () => {
-                    if (!currentUser) {
-                        showAuthModal();
-                    } else {
-                        profileModal.classList.add('active');
+                            `;
+                            gameCard.addEventListener('click', () => showGameDetails(game));
+                            grid.appendChild(gameCard);
+                        });
+                        
+                        if (filteredGames.length === 0) {
+                            grid.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; color: var(--text-secondary); padding: 20px;">Игры не найдены</p>';
+                        }
                     }
                 });
             }
             
-            // Close profile modal
-            document.addEventListener('click', (e) => {
-                if (profileModal.classList.contains('active') && 
-                    !profileModal.contains(e.target) && 
-                    e.target !== profileBtn) {
-                    profileModal.classList.remove('active');
-                }
-            });
+            if (backBtn) {
+                backBtn.addEventListener('click', () => {
+                    if (gameDetails) gameDetails.style.display = 'none';
+                    document.querySelector('.container').style.display = 'block';
+                });
+            }
             
-            // Profile tabs
+            if (downloadBtn) {
+                downloadBtn.addEventListener('click', downloadFile);
+            }
+            
+            if (detailsLibraryBtn) {
+                detailsLibraryBtn.addEventListener('click', toggleGameInLibrary);
+            }
+            
+            if (profileBtn) {
+                profileBtn.addEventListener('click', () => {
+                    if (profileModal) profileModal.classList.add('active');
+                });
+            }
+            
+            if (profileModal) {
+                profileModal.addEventListener('click', (e) => {
+                    if (e.target === profileModal) {
+                        profileModal.classList.remove('active');
+                    }
+                });
+            }
+            
+            if (telegramAuthButton) {
+                telegramAuthButton.addEventListener('click', () => {
+                    if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
+                        const user = tg.initDataUnsafe.user;
+                        
+                        // Показываем прогресс регистрации
+                        if (pluggAuthButtonContainer) pluggAuthButtonContainer.style.display = 'none';
+                        if (registrationProgress) registrationProgress.style.display = 'block';
+                        
+                        // Создаем пользователя
+                        const userData = createUser(user);
+                        
+                        // Сохраняем данные
+                        localStorage.setItem('plugg_user', JSON.stringify(userData));
+                        
+                        // Через 1.5 секунды переходим к основному интерфейсу
+                        setTimeout(() => {
+                            checkUser();
+                            document.getElementById('auth-modal').style.display = 'none';
+                            document.querySelector('.container').style.display = 'block';
+                        }, 1500);
+                    }
+                });
+            }
+            
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', () => {
+                    localStorage.removeItem('plugg_user');
+                    window.location.reload();
+                });
+            }
+            
+            // Обработчики профиля
             profileTabs.forEach(tab => {
                 tab.addEventListener('click', () => {
                     profileTabs.forEach(t => t.classList.remove('active'));
@@ -2192,190 +2559,169 @@
                 });
             });
             
-            // Library button in game details
-            if (libraryBtn) {
-                libraryBtn.addEventListener('click', () => {
-                    if (currentGame) {
-                        toggleGameInLibrary(currentGame.id);
-                    }
-                });
-            }
-            
-            // Back button
-            document.querySelector('.back-btn').addEventListener('click', hideGameDetails);
-            
-            // Download button
-            if (downloadBtn) {
-                downloadBtn.addEventListener('click', downloadFile);
-            }
-            
-            // Visualizer toggle
-            if (visualizerToggle) {
-                visualizerToggle.addEventListener('click', toggleVisualizer);
-            }
-            
-            // Profile edit
+            // Обработчик редактирования профиля
             if (profileEdit) {
                 profileEdit.addEventListener('click', () => {
-                    profileTabs.forEach(t => t.classList.remove('active'));
-                    document.querySelector('[data-tab="settings"]').classList.add('active');
-                    librarySection.style.display = 'none';
-                    settingsSection.style.display = 'block';
-                });
-            }
-            
-            // Banner placeholder click
-            if (bannerPlaceholder) {
-                bannerPlaceholder.addEventListener('click', () => {
                     bannerSelector.classList.add('active');
+                    loadGallery();
                 });
             }
             
-            // Banner selector close
+            // Закрытие селектора баннера
             if (bannerSelectorClose) {
                 bannerSelectorClose.addEventListener('click', () => {
                     bannerSelector.classList.remove('active');
                 });
             }
             
-            // Banner upload
+            // Загрузка галереи
+            function loadGallery() {
+                // Очищаем галерею
+                bannerGallery.innerHTML = '';
+                
+                // Примеры баннеров
+                const bannerExamples = [
+                    'https://i.imgur.com/7XQY5Qx.jpg',
+                    'https://i.imgur.com/5hF7b2n.jpg',
+                    'https://i.imgur.com/9pHqQ2k.jpg',
+                    'https://i.imgur.com/2yNqH4a.jpg',
+                    'https://i.imgur.com/3gTfD5p.jpg',
+                    'https://i.imgur.com/8cPvKqR.jpg'
+                ];
+                
+                bannerExamples.forEach((url, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'banner-gallery-item';
+                    item.style.backgroundImage = `url('${url}')`;
+                    item.addEventListener('click', () => {
+                        const previewImg = document.getElementById('banner-preview-img');
+                        if (previewImg) {
+                            previewImg.src = url;
+                            bannerPreview.classList.add('active');
+                        }
+                    });
+                    bannerGallery.appendChild(item);
+                });
+            }
+            
+            // Обработчик выбора баннера
             if (bannerUpload) {
                 bannerUpload.addEventListener('click', () => {
-                    const input = document.createElement('input');
-                    input.type = 'file';
-                    input.accept = 'image/*';
-                    input.onchange = (e) => {
-                        const file = e.target.files[0];
+                    const fileInput = document.createElement('input');
+                    fileInput.type = 'file';
+                    fileInput.accept = 'image/*';
+                    
+                    fileInput.addEventListener('change', function(event) {
+                        const file = event.target.files[0];
                         if (file) {
                             const reader = new FileReader();
-                            reader.onload = (event) => {
-                                bannerPreviewImg.src = event.target.result;
-                                bannerPreview.classList.add('active');
-                                selectedBannerFile = file;
+                            reader.onload = function(event) {
+                                const previewImg = document.getElementById('banner-preview-img');
+                                if (previewImg) {
+                                    previewImg.src = event.target.result;
+                                    bannerPreview.classList.add('active');
+                                }
                             };
                             reader.readAsDataURL(file);
                         }
-                    };
-                    input.click();
+                    });
+                    fileInput.click();
                 });
             }
             
-            // Banner cancel
-            if (bannerCancelBtn) {
-                bannerCancelBtn.addEventListener('click', () => {
+            // Обработчик сохранения баннера
+            if (bannerPreviewSave) {
+                bannerPreviewSave.addEventListener('click', () => {
+                    const previewImg = document.getElementById('banner-preview-img');
+                    if (previewImg && currentUser) {
+                        currentUser.banner = previewImg.src;
+                        saveUserData();
+                        bannerPlaceholder.style.backgroundImage = `url('${previewImg.src}')`;
+                        bannerSelector.classList.remove('active');
+                        bannerPreview.classList.remove('active');
+                    }
+                });
+            }
+            
+            // Обработчик отмены выбора баннера
+            if (bannerPreviewCancel) {
+                bannerPreviewCancel.addEventListener('click', () => {
                     bannerPreview.classList.remove('active');
-                    selectedBannerFile = null;
                 });
             }
             
-            // Banner apply
-            if (bannerApplyBtn) {
-                bannerApplyBtn.addEventListener('click', () => {
-                    if (currentUser) {
-                        if (selectedBannerFile) {
-                            const reader = new FileReader();
-                            reader.onload = (event) => {
-                                currentUser.banner = event.target.result;
-                                saveUserData();
-                                updateProfileUI();
-                                bannerSelector.classList.remove('active');
-                                bannerPreview.classList.remove('active');
-                            };
-                            reader.readAsDataURL(selectedBannerFile);
-                        } else if (bannerPreviewImg.src) {
-                            currentUser.banner = bannerPreviewImg.src;
+            // Обработчик включения/выключения визуализатора
+            if (visualizerToggle) {
+                visualizerToggle.addEventListener('click', () => {
+                    if (!isVisualizerActive) {
+                        isVisualizerActive = true;
+                        visualizerToggle.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M5 18h14M5 6h14"></path></svg>`;
+                        if (visualizerInterval) clearInterval(visualizerInterval);
+                        visualizerInterval = setInterval(animateDownloadVisualizer, 80);
+                    } else {
+                        isVisualizerActive = false;
+                        visualizerToggle.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M17 5v14M7 5v14M2 5h20M2 19h20"></path></svg>`;
+                        if (visualizerInterval) clearInterval(visualizerInterval);
+                        visualizerInterval = null;
+                    }
+                });
+            }
+            
+            // Обработчики сохранения профиля
+            if (saveNameBtn) {
+                saveNameBtn.addEventListener('click', () => {
+                    if (currentUser && nameInput) {
+                        const names = nameInput.value.trim().split(' ');
+                        currentUser.first_name = names[0] || '';
+                        currentUser.last_name = names.slice(1).join(' ') || '';
+                        saveUserData();
+                        updateProfileUI();
+                        showStatus('Имя успешно обновлено', true);
+                    }
+                });
+            }
+            
+            if (saveUsernameBtn) {
+                saveUsernameBtn.addEventListener('click', () => {
+                    if (currentUser && usernameInput) {
+                        const username = usernameInput.value.trim();
+                        if (username && !username.includes(' ')) {
+                            currentUser.username = username;
                             saveUserData();
                             updateProfileUI();
-                            bannerSelector.classList.remove('active');
-                            bannerPreview.classList.remove('active');
+                            showStatus('Юзернейм успешно обновлен', true);
+                        } else {
+                            showStatus('Некорректный юзернейм', false);
                         }
                     }
                 });
             }
             
-            // Save name
-            if (saveNameBtn) {
-                saveNameBtn.addEventListener('click', () => {
-                    if (currentUser && nameInput.value.trim() !== '') {
-                        const [firstName, ...lastName] = nameInput.value.trim().split(' ');
-                        currentUser.first_name = firstName;
-                        currentUser.last_name = lastName.join(' ');
-                        saveUserData();
-                        updateProfileUI();
-                        tg.showAlert('Имя успешно обновлено!');
-                    }
-                });
-            }
-            
-            // Save username
-            if (saveUsernameBtn) {
-                saveUsernameBtn.addEventListener('click', () => {
-                    if (currentUser && usernameInput.value.trim() !== '') {
-                        const newUsername = usernameInput.value.trim().replace('@', '');
-                        currentUser.username = newUsername;
-                        saveUserData();
-                        updateProfileUI();
-                        tg.showAlert('Юзернейм успешно обновлен!');
-                    }
-                });
-            }
-            
-            // Save bio
             if (saveBioBtn) {
                 saveBioBtn.addEventListener('click', () => {
-                    if (currentUser) {
+                    if (currentUser && bioInput) {
                         currentUser.bio = bioInput.value.trim();
                         saveUserData();
                         updateProfileUI();
-                        tg.showAlert('Описание успешно обновлено!');
+                        showStatus('Описание успешно обновлено', true);
                     }
                 });
             }
             
-            // Logout
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', () => {
-                    localStorage.removeItem('plugg_user');
-                    currentUser = null;
-                    profileModal.classList.remove('active');
-                    showAuthModal();
-                    tg.showAlert('Вы вышли из аккаунта');
+            // Проверка доступности юзернейма
+            if (usernameInput) {
+                usernameInput.addEventListener('input', function() {
+                    const username = this.value.trim();
+                    if (username && !username.includes(' ')) {
+                        usernameAvailable.style.display = 'block';
+                        usernameUnavailable.style.display = 'none';
+                    } else {
+                        usernameAvailable.style.display = 'none';
+                        usernameUnavailable.style.display = 'block';
+                    }
                 });
             }
-            
-            // Initialize banner gallery
-            const bannerUrls = [
-                'https://i.imgur.com/1a1a1a1.jpg',
-                'https://i.imgur.com/2b2b2b2.jpg',
-                'https://i.imgur.com/3c3c3c3.jpg',
-                'https://i.imgur.com/4d4d4d4.jpg',
-                'https://i.imgur.com/5e5e5e5.jpg'
-            ];
-            
-            bannerUrls.forEach(url => {
-                const item = document.createElement('div');
-                item.className = 'banner-gallery-item';
-                item.style.backgroundImage = `url('${url}')`;
-                item.addEventListener('click', () => {
-                    bannerPreviewImg.src = url;
-                    bannerPreview.classList.add('active');
-                    selectedBannerFile = null;
-                });
-                bannerGallery.appendChild(item);
-            });
-        }
-        
-        // Initialize the app when Telegram WebApp is ready
-        if (tg.ready) {
-            tg.ready();
-            initApp();
-        } else {
-            tg.onEvent('viewportChanged', () => {
-                if (tg.viewportStableHeight > 0) {
-                    initApp();
-                }
-            });
-        }
+        });
     </script>
 </body>
 </html>
