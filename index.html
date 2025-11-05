@@ -498,7 +498,7 @@
             transform: rotate(-10deg);
         }
         
-        /* РќРћР’РђРЇ РЎРРЎРўР•РњРђ РЎРљР РРќРЁРћРўРћР’ */
+        /* НОВАЯ СИСТЕМА СКРИНШОТОВ */
         .screenshots-section {
             margin: 25px 0;
         }
@@ -582,7 +582,7 @@
         .screenshot-nav.next {
             right: 5px;
         }
-        /* РљРћРќР•Р¦ РЎРРЎРўР•РњР« РЎРљР РРќРЁРћРўРћР’ */
+        /* КОНЕЦ СИСТЕМЫ СКРИНШОТОВ */
         
         .section-title {
             font-size: 16px;
@@ -615,7 +615,7 @@
             color: var(--text-secondary);
         }
         .section-content li::before {
-            content: 'вЂў';
+            content: '•';
             color: var(--accent-color);
             font-weight: bold;
             position: absolute;
@@ -1407,7 +1407,7 @@
         <div class="header">
             <div>
                 <h1>PLUGG BOT</h1>
-                <p>Р›СѓС‡С€Р°СЏ РєРѕР»Р»РµРєС†РёСЏ РїСЂРёРІРёРІР°С‚РѕРє РґР»СЏ СѓРґРѕР±РЅРѕРіРѕ СЃРєР°С‡РёРІР°РЅРёСЏ</p>
+                <p>Лучшая коллекция прививаток для удобного скачивания</p>
             </div>
             <div class="profile-btn" id="profile-btn">
                 <svg class="profile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1420,11 +1420,11 @@
             <svg viewBox="0 0 24 24">
                 <path d="M15.5 14H14.71L14.43 13.73C15.41 12.59 16 11.11 16 9.5C16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16C11.11 16 12.59 15.41 13.73 14.43L14 14.71V15.5L19 20.49L20.49 19L15.5 14ZM9.5 14C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14Z"/>
             </svg>
-            <input type="text" placeholder="РџРѕРёСЃРє РёРіСЂ..." id="search-input">
+            <input type="text" placeholder="Поиск игр..." id="search-input">
         </div>
         <div class="tabs">
-            <div class="tab active" data-tab="all">РџР РР’РђРўРљР</div>
-            <div class="tab" data-tab="popular">РџР РР’РђРўРљР Р”Р›РЇ РџРљ</div>
+            <div class="tab active" data-tab="all">ПРИВАТКИ</div>
+            <div class="tab" data-tab="popular">ПРИВАТКИ ДЛЯ ПК</div>
         </div>
         <div class="tab-content active" id="all-tab">
             <div class="games-grid"></div>
@@ -1432,9 +1432,9 @@
         <div class="tab-content" id="popular-tab">
             <div class="games-grid"></div>
         </div>
-        <!-- Р”РµС‚Р°Р»Рё РёРіСЂС‹ (РѕР±С‰РёР№) -->
+        <!-- Детали игры (общий) -->
         <div class="game-details" id="game-details">
-            <button class="back-btn" id="back-btn">в†ђ РќР°Р·Р°Рґ</button>
+            <button class="back-btn" id="back-btn">← Назад</button>
             <div class="game-details-content">
                 <div class="game-details-header">
                     <div class="game-details-icon">
@@ -1447,12 +1447,12 @@
                 </div>
                 <div class="download-section">
                     <div class="download-btn-container">
-                        <button id="download-btn" class="download-btn">РЎРєР°С‡Р°С‚СЊ</button>
-                        <button class="details-library-btn" id="details-library-btn">Р”РѕР±Р°РІРёС‚СЊ РІ Р±РёР±Р»РёРѕС‚РµРєСѓ</button>
+                        <button id="download-btn" class="download-btn">Скачать</button>
+                        <button class="details-library-btn" id="details-library-btn">Добавить в библиотеку</button>
                     </div>
                     <div class="progress-container" id="progress-container">
                         <div class="progress-info">
-                            <span class="progress-text">РЎС‚Р°С‚СѓСЃ: <span id="status-text">Р“РѕС‚РѕРІ Рє Р·Р°РіСЂСѓР·РєРµ</span></span>
+                            <span class="progress-text">Статус: <span id="status-text">Готов к загрузке</span></span>
                             <span class="progress-percent" id="progress-percent">0%</span>
                         </div>
                         <div class="progress-bar">
@@ -1460,15 +1460,15 @@
                         </div>
                         <div class="download-stats">
                             <div class="download-stats-item">
-                                <span>РЎРєР°С‡Р°РЅРѕ</span>
+                                <span>Скачано</span>
                                 <span class="download-stats-value" id="downloaded-size">0 MB</span>
                             </div>
                             <div class="download-stats-item">
-                                <span>РЎРєРѕСЂРѕСЃС‚СЊ</span>
+                                <span>Скорость</span>
                                 <span class="download-stats-value" id="download-speed">0 KB/s</span>
                             </div>
                             <div class="download-stats-item">
-                                <span>РџРёРЅРі</span>
+                                <span>Пинг</span>
                                 <span class="download-stats-value" id="ping-value">-- ms</span>
                             </div>
                         </div>
@@ -1484,22 +1484,22 @@
                 </div>
                 <div id="status-message" class="status-message"></div>
                 
-                <!-- РЎР•РљР¦РРЇ РЎРљР РРќРЁРћРўРћР’ -->
+                <!-- СЕКЦИЯ СКРИНШОТОВ -->
                 <div class="screenshots-section">
-                    <div class="section-title">РЎРєСЂРёРЅС€РѕС‚С‹</div>
+                    <div class="section-title">Скриншоты</div>
                     <div class="screenshots-container">
                         <button class="screenshot-nav prev"><</button>
                         <div class="screenshots-slider" id="screenshots-slider">
-                            <!-- РЎРєСЂРёРЅС€РѕС‚С‹ Р±СѓРґСѓС‚ РґРѕР±Р°РІР»РµРЅС‹ Р·РґРµСЃСЊ РґРёРЅР°РјРёС‡РµСЃРєРё -->
+                            <!-- Скриншоты будут добавлены здесь динамически -->
                         </div>
                         <button class="screenshot-nav next">></button>
                     </div>
                 </div>
-                <!-- РљРћРќР•Р¦ РЎР•РљР¦РР РЎРљР РРќРЁРћРўРћР’ -->
+                <!-- КОНЕЦ СЕКЦИИ СКРИНШОТОВ -->
                 
-                <div class="section-title">РћРїРёСЃР°РЅРёРµ</div>
+                <div class="section-title">Описание</div>
                 <div class="section-content" id="details-description"></div>
-                <div class="section-title">Р§С‚Рѕ РЅРѕРІРѕРіРѕ<span class="new-indicator"></span></div>
+                <div class="section-title">Что нового<span class="new-indicator"></span></div>
                 <div class="section-content" id="details-whats-new"></div>
             </div>
         </div>
@@ -1508,7 +1508,7 @@
             <div class="profile-modal-content">
                 <div class="profile-header">
                     <div class="banner-placeholder" id="banner-placeholder">
-                        Р”РѕР±Р°РІСЊС‚Рµ СЃРІРѕР№ Р±Р°РЅРЅРµСЂ, С‡С‚РѕР±С‹ РІС‹РґРµР»РёС‚СЊСЃСЏ СЃСЂРµРґРё РґСЂСѓРіРёС… РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№
+                        Добавьте свой баннер, чтобы выделиться среди других пользователей
                     </div>
                 </div>
                 <div class="profile-info">
@@ -1518,9 +1518,9 @@
                             <circle cx="12" cy="7" r="4"></circle>
                         </svg>
                     </div>
-                    <div class="profile-name" id="profile-name">Р“РѕСЃС‚СЊ</div>
+                    <div class="profile-name" id="profile-name">Гость</div>
                     <div class="profile-username" id="profile-username">@guest</div>
-                    <div class="profile-bio" id="profile-bio">Р”РѕР±Р°РІСЊС‚Рµ РѕРїРёСЃР°РЅРёРµ РїСЂРѕС„РёР»СЏ, С‡С‚РѕР±С‹ СЂР°СЃСЃРєР°Р·Р°С‚СЊ Рѕ СЃРµР±Рµ</div>
+                    <div class="profile-bio" id="profile-bio">Добавьте описание профиля, чтобы рассказать о себе</div>
                     <div class="profile-edit" id="profile-edit">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
@@ -1529,8 +1529,8 @@
                     </div>
                 </div>
                 <div class="profile-tabs">
-                    <div class="profile-tab active" data-tab="library">Р‘РёР±Р»РёРѕС‚РµРєР°</div>
-                    <div class="profile-tab" data-tab="settings">РќР°СЃС‚СЂРѕР№РєРё</div>
+                    <div class="profile-tab active" data-tab="library">Библиотека</div>
+                    <div class="profile-tab" data-tab="settings">Настройки</div>
                 </div>
                 <div class="profile-content">
                     <div class="profile-section active" id="library-section">
@@ -1540,24 +1540,24 @@
                     </div>
                     <div class="profile-section profile-settings" id="settings-section">
                         <div class="setting-item">
-                            <div class="setting-label">РРјСЏ</div>
-                            <input type="text" class="setting-input" id="name-input" placeholder="Р’РІРµРґРёС‚Рµ РІР°С€Рµ РёРјСЏ">
-                            <button class="save-btn" id="save-name">РЎРѕС…СЂР°РЅРёС‚СЊ</button>
-                            <div class="username-available" id="name-available">РРјСЏ СѓСЃРїРµС€РЅРѕ РѕР±РЅРѕРІР»РµРЅРѕ</div>
+                            <div class="setting-label">Имя</div>
+                            <input type="text" class="setting-input" id="name-input" placeholder="Введите ваше имя">
+                            <button class="save-btn" id="save-name">Сохранить</button>
+                            <div class="username-available" id="name-available">Имя успешно обновлено</div>
                         </div>
                         <div class="setting-item">
-                            <div class="setting-label">Р®Р·РµСЂРЅРµР№Рј</div>
-                            <input type="text" class="setting-input" id="username-input" placeholder="Р’РІРµРґРёС‚Рµ РІР°С€ СЋР·РµСЂРЅРµР№Рј">
-                            <button class="save-btn" id="save-username">РЎРѕС…СЂР°РЅРёС‚СЊ</button>
-                            <div class="username-available" id="username-available">Р®Р·РµСЂРЅРµР№Рј РґРѕСЃС‚СѓРїРµРЅ</div>
-                            <div class="username-unavailable" id="username-unavailable">Р­С‚РѕС‚ СЋР·РµСЂРЅРµР№Рј СѓР¶Рµ Р·Р°РЅСЏС‚</div>
+                            <div class="setting-label">Юзернейм</div>
+                            <input type="text" class="setting-input" id="username-input" placeholder="Введите ваш юзернейм">
+                            <button class="save-btn" id="save-username">Сохранить</button>
+                            <div class="username-available" id="username-available">Юзернейм доступен</div>
+                            <div class="username-unavailable" id="username-unavailable">Этот юзернейм уже занят</div>
                         </div>
                         <div class="setting-item">
-                            <div class="setting-label">РћРїРёСЃР°РЅРёРµ РїСЂРѕС„РёР»СЏ</div>
-                            <textarea class="setting-input" id="bio-input" rows="3" placeholder="Р Р°СЃСЃРєР°Р¶РёС‚Рµ РЅРµРјРЅРѕРіРѕ Рѕ СЃРµР±Рµ..."></textarea>
-                            <button class="save-btn" id="save-bio">РЎРѕС…СЂР°РЅРёС‚СЊ</button>
+                            <div class="setting-label">Описание профиля</div>
+                            <textarea class="setting-input" id="bio-input" rows="3" placeholder="Расскажите немного о себе..."></textarea>
+                            <button class="save-btn" id="save-bio">Сохранить</button>
                         </div>
-                        <button class="logout-btn" id="logout-btn">Р’С‹Р№С‚Рё РёР· Р°РєРєР°СѓРЅС‚Р°</button>
+                        <button class="logout-btn" id="logout-btn">Выйти из аккаунта</button>
                     </div>
                 </div>
             </div>
@@ -1565,7 +1565,7 @@
         <!-- Banner Selector -->
         <div class="banner-selector" id="banner-selector">
             <div class="banner-selector-header">
-                <div class="banner-selector-title">Р’С‹Р±РµСЂРёС‚Рµ Р±Р°РЅРЅРµСЂ</div>
+                <div class="banner-selector-title">Выберите баннер</div>
                 <div class="banner-selector-close" id="banner-selector-close">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M18 6 6 18"></path>
@@ -1577,10 +1577,10 @@
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                     <circle cx="9" cy="9" r="2"></circle>
-                    <!-- РСЃРїСЂР°РІР»РµРЅРѕ: Р·Р°РјРµРЅР° РєРёСЂРёР»Р»РёС‡РµСЃРєРѕР№ "Рј" РЅР° Р»Р°С‚РёРЅСЃРєСѓСЋ "m" -->
+                    <!-- Исправлено: замена кириллической "м" на латинскую "m" -->
                     <path d="m21 15-3.086-3.086a2 2 0 0 1-2.828 0L6 21"></path>
                 </svg>
-                <div>Р’С‹Р±СЂР°С‚СЊ РёР· РіР°Р»РµСЂРµРё</div>
+                <div>Выбрать из галереи</div>
             </div>
             <div class="banner-gallery" id="banner-gallery">
                 <!-- Gallery items will be added here -->
@@ -1590,8 +1590,8 @@
                     <img id="banner-preview-img" src="" alt="Preview">
                 </div>
                 <div class="banner-preview-actions">
-                    <button class="banner-preview-btn" id="banner-cancel">РћС‚РјРµРЅР°</button>
-                    <button class="banner-preview-btn apply" id="banner-apply">РџСЂРёРјРµРЅРёС‚СЊ</button>
+                    <button class="banner-preview-btn" id="banner-cancel">Отмена</button>
+                    <button class="banner-preview-btn apply" id="banner-apply">Применить</button>
                 </div>
             </div>
         </div>
@@ -1599,8 +1599,8 @@
         <div class="profile-modal" id="auth-modal">
             <div class="profile-modal-content">
                 <div class="profile-info" style="margin-top: 0; padding-top: 30px; padding-bottom: 10px;">
-                    <h2 style="text-align: center; margin-bottom: 10px;">Р”РѕР±СЂРѕ РїРѕР¶Р°Р»РѕРІР°С‚СЊ</h2>
-                    <p style="text-align: center; color: var(--text-secondary);">Р’РѕР№РґРёС‚Рµ РІ СЃРІРѕР№ Р°РєРєР°СѓРЅС‚, С‡С‚РѕР±С‹ СЃРѕС…СЂР°РЅСЏС‚СЊ РїСЂРёРІР°С‚РєРё РІ Р±РёР±Р»РёРѕС‚РµРєРµ</p>
+                    <h2 style="text-align: center; margin-bottom: 10px;">Добро пожаловать</h2>
+                    <p style="text-align: center; color: var(--text-secondary);">Войдите в свой аккаунт, чтобы сохранять приватки в библиотеке</p>
                 </div>
                 <div class="plugg-auth-container">
                     <div class="plugg-auth-content">
@@ -1611,46 +1611,46 @@
                             <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
                         </div>
                         <h3 class="plugg-auth-title">PLUGG ID</h3>
-                        <p class="plugg-auth-description">РџСЂРѕСЃС‚Р°СЏ Рё Р±РµР·РѕРїР°СЃРЅР°СЏ Р°РІС‚РѕСЂРёР·Р°С†РёСЏ С‡РµСЂРµР· Telegram.</p>
+                        <p class="plugg-auth-description">Простая и безопасная авторизация через Telegram.</p>
                         <div class="plugg-auth-status" id="plugg-auth-status">
-                            Р”Р»СЏ РІС…РѕРґР° РЅР°Р¶РјРёС‚Рµ РЅР° РєРЅРѕРїРєСѓ РЅРёР¶Рµ
+                            Для входа нажмите на кнопку ниже
                         </div>
                         <div class="plugg-auth-button-container" id="plugg-auth-button-container">
-                            <button class="plugg-auth-button" id="telegram-auth-button">Р’РѕР№С‚Рё С‡РµСЂРµР· Telegram</button>
+                            <button class="plugg-auth-button" id="telegram-auth-button">Войти через Telegram</button>
                         </div>
                     </div>
                 </div>
                 <div class="registration-progress" id="registration-progress">
                     <div class="loader"></div>
-                    <div class="progress-text">РђРІС‚РѕСЂРёР·Р°С†РёСЏ С‡РµСЂРµР· Telegram...</div>
-                    <div class="progress-subtext">РџРѕР¶Р°Р»СѓР№СЃС‚Р°, РїРѕРґРѕР¶РґРёС‚Рµ</div>
+                    <div class="progress-text">Авторизация через Telegram...</div>
+                    <div class="progress-subtext">Пожалуйста, подождите</div>
                 </div>
             </div>
         </div>
         <div class="footer">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h3>Рћ РЅР°СЃ</h3>
-                    <p>PLUGG BOT - Р»СѓС‡С€РёР№ Р±РѕС‚ РґР»СЏ РїРѕРёСЃРєР° Рё СЃРєР°С‡РёРІР°РЅРёСЏ РїСЂРёРІРёРІР°С‚РѕРє. РњС‹ РїСЂРµРґР»Р°РіР°РµРј РѕРіСЂРѕРјРЅСѓСЋ РєРѕР»Р»РµРєС†РёСЋ РїРѕРїСѓР»СЏСЂРЅС‹С… РїСЂРёРІРёРІР°С‚РѕРє.</p>
+                    <h3>О нас</h3>
+                    <p>PLUGG BOT - лучший бот для поиска и скачивания прививаток. Мы предлагаем огромную коллекцию популярных прививаток.</p>
                 </div>
                 <div class="footer-section">
-                    <h3>РќР°С€Рё РєРѕРЅС‚Р°РєС‚С‹</h3>
-                    <p>Р’Р»Р°РґРµР»РµС† Р±РѕС‚Р°: <a href="https://t.me/kurune" target="_blank">РџР»Р°РіРіРё</a></p>
-                    <p>РџРѕ СЂР°Р·РЅС‹Рј РІРѕРїСЂРѕСЃР°Рј: <a href="https://t.me/soukita" target="_blank">РљРёС‚Р°</a></p>
+                    <h3>Наши контакты</h3>
+                    <p>Владелец бота: <a href="https://t.me/kurune" target="_blank">Плагги</a></p>
+                    <p>По разным вопросам: <a href="https://t.me/soukita" target="_blank">Кита</a></p>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>В© 2025 Pluggs. Р’СЃРµ РїСЂР°РІР° Р·Р°С‰РёС‰РµРЅС‹.</p>
+                <p>© 2025 Pluggs. Все права защищены.</p>
             </div>
         </div>
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ Telegram Web App
+            // Инициализация Telegram Web App
             const tg = window.Telegram.WebApp;
             tg.expand();
             tg.ready();
-            // Р­Р»РµРјРµРЅС‚С‹ РёРЅС‚РµСЂС„РµР№СЃР° (СЃ РїСЂРѕРІРµСЂРєРѕР№ РЅР° СЃСѓС‰РµСЃС‚РІРѕРІР°РЅРёРµ)
+            // Элементы интерфейса (с проверкой на существование)
             const downloadBtn = document.getElementById('download-btn');
             const progressFill = document.getElementById('progress-fill');
             const progressPercent = document.getElementById('progress-percent');
@@ -1709,7 +1709,7 @@
             const screenshotsSlider = document.getElementById('screenshots-slider');
             const prevBtn = document.querySelector('.screenshot-nav.prev');
             const nextBtn = document.querySelector('.screenshot-nav.next');
-            // РџРµСЂРµРјРµРЅРЅС‹Рµ РґР»СЏ РѕС‚СЃР»РµР¶РёРІР°РЅРёСЏ СЃРѕСЃС‚РѕСЏРЅРёСЏ
+            // Переменные для отслеживания состояния
             let isDownloading = false;
             let currentTab = 'all';
             let xhr = null;
@@ -1723,9 +1723,9 @@
             let isVisualizerActive = false;
             let visualizerInterval = null;
             let selectedBannerFile = null;
-            let isOwner = true; // РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ РІР»Р°РґРµР»РµС†
+            let isOwner = true; // По умолчанию владелец
             let currentGameId = null;
-            // РЎРѕР·РґР°РµРј РІРёР·СѓР°Р»РёР·Р°С‚РѕСЂ Р·Р°РіСЂСѓР·РєРё
+            // Создаем визуализатор загрузки
             function createDownloadVisualizer() {
                 if (!downloadVisualizer) return;
                 downloadVisualizer.innerHTML = '';
@@ -1736,7 +1736,7 @@
                     downloadVisualizer.appendChild(bar);
                 }
             }
-            // РђРЅРёРјРёСЂСѓРµРј РІРёР·СѓР°Р»РёР·Р°С‚РѕСЂ Р·Р°РіСЂСѓР·РєРё
+            // Анимируем визуализатор загрузки
             function animateDownloadVisualizer() {
                 if (!isVisualizerActive || !downloadVisualizer) return;
                 const bars = document.querySelectorAll('.download-bar');
@@ -1745,7 +1745,7 @@
                     bar.style.height = `${height}px`;
                 });
             }
-            // РџРµСЂРµРєР»СЋС‡РµРЅРёРµ РІРёР·СѓР°Р»РёР·Р°С‚РѕСЂР° Р·Р°РіСЂСѓР·РєРё
+            // Переключение визуализатора загрузки
             if (visualizerToggle) {
                 visualizerToggle.addEventListener('click', () => {
                     isVisualizerActive = !isVisualizerActive;
@@ -1770,9 +1770,9 @@
                     }
                 });
             }
-            // РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РІРёР·СѓР°Р»РёР·Р°С‚РѕСЂР° Р·Р°РіСЂСѓР·РєРё
+            // Инициализация визуализатора загрузки
             createDownloadVisualizer();
-            // Р­РјСѓР»СЏС†РёСЏ РїРёРЅРіР°
+            // Эмуляция пинга
             function simulatePing() {
                 if (!pingValue) return;
                 const minPing = 30;
@@ -1780,7 +1780,7 @@
                 const ping = Math.floor(Math.random() * (maxPing - minPing + 1)) + minPing;
                 pingValue.textContent = `${ping} ms`;
             }
-            // РћР±РЅРѕРІР»РµРЅРёРµ СЃС‚Р°С‚РёСЃС‚РёРєРё Р·Р°РіСЂСѓР·РєРё
+            // Обновление статистики загрузки
             function updateDownloadStats(loaded, total) {
                 if (total === 0 || !downloadedSize || !downloadSpeed) return;
                 const mbLoaded = (loaded / (1024 * 1024)).toFixed(2);
@@ -1793,12 +1793,12 @@
                     }
                 }
             }
-            // РџРѕР»СѓС‡РµРЅРёРµ СЃРѕС…СЂР°РЅРµРЅРЅС‹С… РґР°РЅРЅС‹С… РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+            // Получение сохраненных данных пользователя
             function getSavedUserData(telegram_id) {
                 const savedUsers = JSON.parse(localStorage.getItem('plugg_saved_users') || '{}');
                 return savedUsers[telegram_id] || null;
             }
-            // РЎРѕС…СЂР°РЅРµРЅРёРµ РґР°РЅРЅС‹С… РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+            // Сохранение данных пользователя
             function saveUserData() {
                 if (!currentUser) return;
                 const savedUsers = JSON.parse(localStorage.getItem('plugg_saved_users') || '{}');
@@ -1812,7 +1812,7 @@
                 };
                 localStorage.setItem('plugg_saved_users', JSON.stringify(savedUsers));
             }
-            // РџСЂРѕРІРµСЂРєР° РЅР°Р»РёС‡РёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РІ localStorage
+            // Проверка наличия пользователя в localStorage
             function checkUser() {
                 const user = localStorage.getItem('plugg_user');
                 if (user) {
@@ -1822,7 +1822,7 @@
                             localStorage.removeItem('plugg_user');
                             return false;
                         }
-                        // Р’РѕСЃСЃС‚Р°РЅР°РІР»РёРІР°РµРј СЃРѕС…СЂР°РЅРµРЅРЅС‹Рµ РґР°РЅРЅС‹Рµ
+                        // Восстанавливаем сохраненные данные
                         const savedData = getSavedUserData(currentUser.telegram_id);
                         if (savedData) {
                             Object.assign(currentUser, savedData);
@@ -1838,16 +1838,16 @@
                 }
                 return false;
             }
-            // РћР±РЅРѕРІР»РµРЅРёРµ UI РїСЂРѕС„РёР»СЏ
+            // Обновление UI профиля
             function updateProfileUI() {
                 if (!profileName || !profileUsername || !profileBio || !nameInput || 
                     !usernameInput || !bioInput || !libraryGrid) return;
                 if (currentUser) {
-                    // РџСЂРѕРІРµСЂСЏРµРј РІРµСЂРёС„РёРєР°С†РёСЋ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+                    // Проверяем верификацию пользователя
                     const isVerified = isUserVerified(currentUser.telegram_id);
-                    // РћР±РЅРѕРІР»СЏРµРј РёРјСЏ
+                    // Обновляем имя
                     let nameHTML = currentUser.first_name + (currentUser.last_name ? ' ' + currentUser.last_name : '');
-                    // Р”РѕР±Р°РІР»СЏРµРј РіР°Р»РѕС‡РєСѓ РІРµСЂРёС„РёРєР°С†РёРё, РµСЃР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РІРµСЂРёС„РёС†РёСЂРѕРІР°РЅ
+                    // Добавляем галочку верификации, если пользователь верифицирован
                     if (isVerified) {
                         nameHTML += `
                             <div class="verified-badge" id="verified-badge">
@@ -1858,21 +1858,21 @@
                             </div>
                         `;
                     }
-                    // РћР±РЅРѕРІР»СЏРµРј РёРјСЏ СЃ РіР°Р»РѕС‡РєРѕР№ РІРµСЂРёС„РёРєР°С†РёРё Рё Р·РЅР°С‡РєР°РјРё
+                    // Обновляем имя с галочкой верификации и значками
                     profileName.innerHTML = nameHTML;
                     nameInput.value = currentUser.first_name + (currentUser.last_name ? ' ' + currentUser.last_name : '');
-                    // РћР±РЅРѕРІР»СЏРµРј СЋР·РµСЂРЅРµР№Рј
-                    const usernameText = currentUser.username ? `@${currentUser.username}` : 'РќРµ СѓРєР°Р·Р°РЅ';
+                    // Обновляем юзернейм
+                    const usernameText = currentUser.username ? `@${currentUser.username}` : 'Не указан';
                     profileUsername.innerHTML = usernameText;
                     usernameInput.value = currentUser.username || '';
-                    // РћР±РЅРѕРІР»СЏРµРј Р±РёРѕ
-                    profileBio.textContent = currentUser.bio || 'Р”РѕР±Р°РІСЊС‚Рµ РѕРїРёСЃР°РЅРёРµ РїСЂРѕС„РёР»СЏ, С‡С‚РѕР±С‹ СЂР°СЃСЃРєР°Р·Р°С‚СЊ Рѕ СЃРµР±Рµ';
+                    // Обновляем био
+                    profileBio.textContent = currentUser.bio || 'Добавьте описание профиля, чтобы рассказать о себе';
                     bioInput.value = currentUser.bio || '';
-                    // РћР±РЅРѕРІР»СЏРµРј Р°РІР°С‚Р°СЂ
+                    // Обновляем аватар
                     if (currentUser.avatar) {
-                        profileAvatar.innerHTML = `<img src="${currentUser.avatar}" alt="РђРІР°С‚Р°СЂ">`;
+                        profileAvatar.innerHTML = `<img src="${currentUser.avatar}" alt="Аватар">`;
                     }
-                    // РћР±РЅРѕРІР»СЏРµРј Р±Р°РЅРЅРµСЂ
+                    // Обновляем баннер
                     if (currentUser.banner) {
                         bannerPlaceholder.style.backgroundImage = `url('${currentUser.banner}')`;
                         bannerPlaceholder.style.backgroundSize = 'cover';
@@ -1882,11 +1882,11 @@
                         bannerPlaceholder.style.background = 'var(--accent-gradient)';
                         bannerPlaceholder.style.backgroundSize = '';
                         bannerPlaceholder.style.backgroundPosition = '';
-                        bannerPlaceholder.textContent = 'Р”РѕР±Р°РІСЊС‚Рµ СЃРІРѕР№ Р±Р°РЅРЅРµСЂ, С‡С‚РѕР±С‹ РІС‹РґРµР»РёС‚СЊСЃСЏ СЃСЂРµРґРё РґСЂСѓРіРёС… РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№';
+                        bannerPlaceholder.textContent = 'Добавьте свой баннер, чтобы выделиться среди других пользователей';
                     }
-                    // РћР±РЅРѕРІР»СЏРµРј Р±РёР±Р»РёРѕС‚РµРєСѓ
+                    // Обновляем библиотеку
                     updateLibraryUI();
-                    // Р”РѕР±Р°РІР»СЏРµРј РѕР±СЂР°Р±РѕС‚С‡РёРє РґР»СЏ РіР°Р»РѕС‡РєРё РІРµСЂРёС„РёРєР°С†РёРё
+                    // Добавляем обработчик для галочки верификации
                     const verifiedBadge = document.getElementById('verified-badge');
                     if (verifiedBadge) {
                         const tooltip = document.getElementById('verified-tooltip');
@@ -1898,7 +1898,7 @@
                             }, 10000);
                         });
                     }
-                    // РџСЂРѕРІРµСЂСЏРµРј, СЏРІР»СЏРµС‚СЃСЏ Р»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РІР»Р°РґРµР»СЊС†РµРј
+                    // Проверяем, является ли пользователь владельцем
                     if (!isOwner) {
                         profileModal.classList.add('guest-view');
                     } else {
@@ -1906,12 +1906,12 @@
                     }
                 }
             }
-            // РџСЂРѕРІРµСЂРєР° РІРµСЂРёС„РёРєР°С†РёРё РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+            // Проверка верификации пользователя
             function isUserVerified(telegram_id) {
                 const verifiedUsers = [5772425643, 7942740523, 5507094612];
                 return verifiedUsers.includes(Number(telegram_id));
             }
-            // РџРѕР»СѓС‡РµРЅРёРµ РѕРїРёСЃР°РЅРёСЏ РІРµСЂРёС„РёРєР°С†РёРё
+            // Получение описания верификации
             function getVerifiedDescription(telegram_id, nickname) {
                 const verifiedUsers = {
                     5772425643: `${nickname} is the official person and creator of the project.`,
@@ -1920,14 +1920,14 @@
                 };
                 return verifiedUsers[telegram_id] || '';
             }
-            // РћР±РЅРѕРІР»РµРЅРёРµ UI Р±РёР±Р»РёРѕС‚РµРєРё
+            // Обновление UI библиотеки
             function updateLibraryUI() {
                 if (!libraryGrid) return;
                 libraryGrid.innerHTML = '';
                 if (!currentUser || !currentUser.library || currentUser.library.length === 0) {
                     libraryGrid.innerHTML = `
                         <div style="grid-column: 1 / -1; text-align: center; padding: 20px; color: var(--text-secondary);">
-                            Р’Р°С€Р° Р±РёР±Р»РёРѕС‚РµРєР° РїСѓСЃС‚Р°. Р”РѕР±Р°РІР»СЏР№С‚Рµ РїСЂРёРІРёРІР°С‚РєРё РІ Р±РёР±Р»РёРѕС‚РµРєСѓ, С‡С‚РѕР±С‹ РЅР°Р№С‚Рё РёС… Р·РґРµСЃСЊ!
+                            Ваша библиотека пуста. Добавляйте прививатки в библиотеку, чтобы найти их здесь!
                         </div>
                     `;
                     return;
@@ -1945,19 +1945,19 @@
                     }
                 });
             }
-            // Р”Р°РЅРЅС‹Рµ РёРіСЂ (СЃ РґРѕР±Р°РІР»РµРЅРЅС‹РјРё СЃРєСЂРёРЅС€РѕС‚Р°РјРё)
+            // Данные игр (с добавленными скриншотами)
             const games = [
                 {
                     id: 'standrise',
                     title: 'StandRise',
-                    description: 'РџСЂРёРІР°С‚РЅС‹Р№ СЃРµСЂРІРµСЂ StandRise - СЌС‚Рѕ РїСЂРёРІР°С‚РЅС‹Р№ СЃРµСЂРІРµСЂ РґР»СЏ РїРѕРїСѓР»СЏСЂРЅРѕР№ РёРіСЂС‹ Standoff 2, РєРѕС‚РѕСЂС‹Р№ РѕС‚РєСЂС‹РІР°РµС‚ РїРµСЂРµРґ РёРіСЂРѕРєР°РјРё Р±РµР·РіСЂР°РЅРёС‡РЅС‹Рµ РІРѕР·РјРѕР¶РЅРѕСЃС‚Рё Рё РЅРѕРІСѓСЋ СЃС‚РµРїРµРЅСЊ СЃРІРѕР±РѕРґС‹. Р—РґРµСЃСЊ РЅРµС‚ СЃС‚СЂРѕРіРёС… РѕРіСЂР°РЅРёС‡РµРЅРёР№, РєРѕС‚РѕСЂС‹Рµ СЃРґРµСЂР¶РёРІР°СЋС‚ РІР°С€ РёРіСЂРѕРІРѕР№ РїСЂРѕС†РµСЃСЃ, Р° РІРµСЃСЊ РєРѕРЅС‚РµРЅС‚ СЃС‚Р°РЅРѕРІРёС‚СЃСЏ РґРѕСЃС‚СѓРїРЅС‹Рј Р±РµР· РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹С… СѓСЃРёР»РёР№. РЎРµСЂРІРµСЂ РїСЂРµРґРѕСЃС‚Р°РІР»СЏРµС‚ РЅРµРѕРіСЂР°РЅРёС‡РµРЅРЅС‹Рµ СЂРµСЃСѓСЂСЃС‹, РїРѕР·РІРѕР»СЏСЏ РІР°Рј РјРіРЅРѕРІРµРЅРЅРѕ РїСЂРёРѕР±СЂРµСЃС‚Рё Р»СЋР±С‹Рµ СЃРєРёРЅС‹, РѕСЂСѓР¶РёРµ Рё СѓР»СѓС‡С€РµРЅРёСЏ.',
+                    description: 'Приватный сервер StandRise - это приватный сервер для популярной игры Standoff 2, который открывает перед игроками безграничные возможности и новую степень свободы. Здесь нет строгих ограничений, которые сдерживают ваш игровой процесс, а весь контент становится доступным без дополнительных усилий. Сервер предоставляет неограниченные ресурсы, позволяя вам мгновенно приобрести любые скины, оружие и улучшения.',
                     whatsNew: [
-                        'вЂ” РЈР»СѓС‡С€РµРЅР° РѕРїС‚РёРјРёР·Р°С†РёСЏ',
-                        'вЂ” РСЃРїСЂР°РІР»РµРЅС‹ РІС‹Р»РµС‚С‹',
-                        'Р”РѕСЃС‚СѓРїРЅС‹ РЅРѕРІС‹Рµ РјРµС‚РѕРґС‹ РґР»СЏ РІС…РѕРґР° Facebook Рё VK',
-                        'вЂ” Р”РѕСЃС‚СѓРїРЅР° Р»РёРЅРєРѕРІРєР° Р°РєРєР°СѓРЅС‚РѕРІ С‡РµСЂРµР· СЂР°Р·Р»РёС‡РЅС‹Рµ СЃРїРѕСЃРѕР±С‹ РІС…РѕРґРѕРІ Google, Facebook, VK',
-                        'вЂ” РўРµРїРµСЂСЊ РґРѕСЃС‚СѓРїРЅС‹ С„СѓРЅРєС†РёРё РїСЂРёРІР°С‚РЅРѕСЃС‚Рё',
-                        'вЂ” РЈР»СѓС‡С€РµРЅ Р°РЅС‚РёС‡РёС‚'
+                        '— Улучшена оптимизация',
+                        '— Исправлены вылеты',
+                        'Доступны новые методы для входа Facebook и VK',
+                        '— Доступна линковка аккаунтов через различные способы входов Google, Facebook, VK',
+                        '— Теперь доступны функции приватности',
+                        '— Улучшен античит'
                     ],
                     image: 'https://cash-droid.ru/wp-content/uploads/2023/06/102.jpg',
                     categories: ['action'],
@@ -1966,26 +1966,27 @@
                     version: '1.4F2',
                     size: '1.98 GB',
                     screenshots: [
-                        'https://github.com/MrRazion/pluggbotest.github.io/blob/0e6fc4a4b934b6cebfa55586ecec6aa7f4406370/usrs/IMG_20251102_140217_736.jpg',
-                        'https://github.com/MrRazion/pluggbotest.github.io/blob/0e6fc4a4b934b6cebfa55586ecec6aa7f4406370/usrs/IMG_20251102_140224_394.jpg',
-                        'https://github.com/MrRazion/pluggbotest.github.io/blob/0e6fc4a4b934b6cebfa55586ecec6aa7f4406370/usrs/IMG_20251102_140228_087.jpg',
-                        'https://github.com/MrRazion/pluggbotest.github.io/blob/0e6fc4a4b934b6cebfa55586ecec6aa7f4406370/usrs/IMG_20251102_140231_075.jpg',
-                        'https://github.com/MrRazion/pluggbotest.github.io/blob/0e6fc4a4b934b6cebfa55586ecec6aa7f4406370/usrs/IMG_20251102_140238_440.jpg
+                        'https://5play.life/uploads/posts/2024-04/1745244510__0.jpg',
+                        'https://5play.life/uploads/posts/2024-04/1745244504__1.jpg',
+                        'https://images.sftcdn.net/images/t_app-cover-s,f_auto/p/6256d016-bfd9-11e8-be88-0242ac120011/4082779799/standoff-2-screenshot.jpg',
+                        'https://is1-ssl.mzstatic.com/image/thumb/PurpleSource122/v4/ae/77/17/ae771788-1e64-b055-f05d-fdb778324538/9adc427b-3032-424d-b11b-8b3a1908077a_mr-505_2732x2048_page7_en.png/643x0w.jpg',
+                        'https://i.ytimg.com/vi/7mo1YKY3X-I/hq720.jpg?sqp=-oaymwE7CK4FEIIDSFryq4qpAy0IARUAAAAAGAElAADIQj0AgKJD8AEB-AH-CYAC0AWKAgwIABABGHIgSigtMA8=&rs=AOn4CLA0krcnaVEuxcrfNc56NzmevYGWfA',
+                        'https://www.tiktok.com/api/img/?itemId=7462344775132269831&location=0&aid=1988'
                     ]
                 },
                 {
                     id: 'standleo',
                     title: 'StandLeo',
-                    description: 'РџСЂРёРІР°С‚РЅС‹Р№ СЃРµСЂРІРµСЂ StandLeo - РЅР°СЃС‚РѕСЏС‰РёР№ СЂР°Р№ РґР»СЏ С„Р°РЅР°С‚РѕРІ Standoff 2, РїСЂРµРґР»Р°РіР°СЋС‰РёР№ РїСЂРёРІР°С‚РЅС‹Р№ СЃРµСЂРІРµСЂ. Р—РґРµСЃСЊ РІС‹ СЃРјРѕР¶РµС‚Рµ РїРѕРіСЂСѓР·РёС‚СЊСЃСЏ РІ Р°РґСЂРµРЅР°Р»РёРЅРѕРІС‹Рµ СЃСЂР°Р¶РµРЅРёСЏ Рё С‚Р°РєС‚РёС‡РµСЃРєРёРµ СЃРѕСЂРµРІРЅРѕРІР°РЅРёСЏ, РЅРµ С‚СЂР°С‚СЏ РЅРё РєРѕРїРµР№РєРё РЅР° РІРЅРµС€РЅРёРµ Р°С‚СЂРёР±СѓС‚С‹ Рё РЅР°РіСЂР°РґС‹.',
+                    description: 'Приватный сервер StandLeo - настоящий рай для фанатов Standoff 2, предлагающий приватный сервер. Здесь вы сможете погрузиться в адреналиновые сражения и тактические соревнования, не тратя ни копейки на внешние атрибуты и награды.',
                     whatsNew: [
-                        '- РќРѕРІС‹Р№ РїРѕРґР°СЂРѕРє',
-                        '- Р’СЃРµ РёР· Standoff 0.35.0 (РќРѕРІС‹Р№ РїР°Рє, РЅРѕРІР°СЏ Р°РєС†РёСЏ СЃ РєРѕР»Р»РµРєС†РёРµР№, РєР°СЂС‚С‹, РЅРѕРІРѕРµ РѕСЂСѓР¶РёРµ Рё С‚.Рґ.)',
-                        '- Р”РѕР±Р°РІР»РµРЅС‹ РµР¶РµРґРЅРµРІРЅС‹Рµ РІС‹Р·РѕРІС‹',
-                        '- Р РµР¶РёРј РЅР°Р±Р»СЋРґР°С‚РµР»РµР№',
-                        '- РљР»Р°РЅС‹',
-                        '- Р РµР±Р°Р»Р°РЅСЃ РѕСЂСѓР¶РёР№ РёР· РѕСЂРёРіРёРЅР°Р»Р°',
-                        '- РЈР»СѓС‡С€РµРЅРѕ СЂРµР№С‚РёРЅРіРѕРІС‹С… РёРіСЂ СЃ РїРµСЂРІС‹Рј СЃРµР·РѕРЅРѕРј',
-                        '- РќРѕРІР°СЏ Р°РєС†РёСЏ СЃ СЃРєРёРЅР°РјРё РёР· СЃРїРёРЅР° "Gambit" (Р‘Р°Р±РѕС‡РєР° Рё С‚.d.)'
+                        '- Новый подарок',
+                        '- Все из Standoff 0.35.0 (Новый пак, новая акция с коллекцией, карты, новое оружие и т.д.)',
+                        '- Добавлены ежедневные вызовы',
+                        '- Режим наблюдателей',
+                        '- Кланы',
+                        '- Ребаланс оружий из оригинала',
+                        '- Улучшено рейтинговых игр с первым сезоном',
+                        '- Новая акция с скинами из спина "Gambit" (Бабочка и т.d.)'
                     ],
                     image: 'https://standleo.ru/wp-content/uploads/2025/01/standleo-2-7-1-1024x561.jpg',
                     categories: ['action'],
@@ -1994,27 +1995,25 @@
                     version: '3.0',
                     size: '2.01 GB',
                     screenshots: [
-                        'https://github.com/MrRazion/pluggbotest.github.io/blob/0e6fc4a4b934b6cebfa55586ecec6aa7f4406370/usrs/IMG_20251102_141824_484.jpg',
-                        'https://github.com/MrRazion/pluggbotest.github.io/blob/0e6fc4a4b934b6cebfa55586ecec6aa7f4406370/usrs/IMG_20251102_141823_977.jpg',
-                        'https://github.com/MrRazion/pluggbotest.github.io/blob/0e6fc4a4b934b6cebfa55586ecec6aa7f4406370/usrs/IMG_20251102_141824_241.jpg',
-                        'https://github.com/MrRazion/pluggbotest.github.io/blob/0e6fc4a4b934b6cebfa55586ecec6aa7f4406370/usrs/IMG_20251102_141824_014.jpg',
-                        'https://github.com/MrRazion/pluggbotest.github.io/blob/0e6fc4a4b934b6cebfa55586ecec6aa7f4406370/usrs/IMG_20251102_141824_625.jpg'
+                        'https://image.winudf.com/v2/user/admin/YWRtaW5faW1hZ2UgKDMpLnBuZ18xNzM1MTA4MzEzNDE5/screen-2.jpg?fakeurl=1&type=.jpg',
+                        'https://image.winudf.com/v2/user/admin/YWRtaW5faW1hZ2UgKDQpLnBuZ18xNzM1MTA4MzI0ODQ0/screen-3.jpg?fakeurl=1&type=.jpg',
+                        'https://is1-ssl.mzstatic.com/image/thumb/PurpleSource122/v4/ad/43/5a/ad435ad4-b3cd-9419-5f70-cb10642aa8d9/bfd1301c-75b4-42f4-a312-ba3a7ed4e746_mr-505_2732x2048_page2_en.png/643x0w.jpg'
                     ]
                 },
                 {
                     id: 'projectevolution',
                     title: 'Project Evolution',
-                    description: 'РџСЂРёРІР°С‚РЅС‹Р№ СЃРµСЂРІРµСЂ Project Evolution - СЌС‚Рѕ РјРѕРґРёС„РёРєР°С†РёСЏ РїРѕРїСѓР»СЏСЂРЅРѕРіРѕ С€СѓС‚РµСЂР° Standoff 2, РїСЂРµРґР»Р°РіР°СЋС‰РёР№ РёРіСЂРѕРєР°Рј СѓРЅРёРєР°Р»СЊРЅС‹Рµ РІРѕР·РјРѕР¶РЅРѕСЃС‚Рё Рё РјРЅРѕР¶РµСЃС‚РІРѕ РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹С… С„СѓРЅРєС†РёР№. Р­С‚РѕС‚ СЃРµСЂРІРµСЂ РїСЂРµРґРѕСЃС‚Р°РІР»СЏРµС‚ РѕС‚Р»РёС‡РЅС‹Рµ СѓСЃР»РѕРІРёСЏ РґР»СЏ РІСЃРµС… Р»СЋР±РёС‚РµР»РµР№ РёРЅС‚РµРЅСЃРёРІРЅС‹С… Рё СѓРІР»РµРєР°С‚РµР»СЊРЅС‹С… РѕРЅР»Р°Р№РЅ-СЃСЂР°Р¶РµРЅРёР№, СЃ РјРѕС‰РЅРѕР№ РЅР°СЃС‚СЂРѕР№РєРѕР№ Рё РїСЂРѕСЂР°Р±РѕС‚РєРѕР№ РІСЃРµС… СЌР»РµРјРµРЅС‚РѕРІ.',
+                    description: 'Приватный сервер Project Evolution - это модификация популярного шутера Standoff 2, предлагающий игрокам уникальные возможности и множество дополнительных функций. Этот сервер предоставляет отличные условия для всех любителей интенсивных и увлекательных онлайн-сражений, с мощной настройкой и проработкой всех элементов.',
                     whatsNew: [
-                        'РќРѕРІР°СЏ РєР°СЂС‚Р° Hanami РґР»СЏ СЂРµР¶РёРјРѕРІ СЃРѕ СЃС†РµРЅР°СЂРёРµРј В«Р—Р°РєР»Р°РґРєРё Р±РѕРјР±С‹В».',
-                        'РќРѕРІС‹Р№ Р±РѕРµРІРѕР№ РїСЂРѕРїСѓСЃРє вЂ” В«SyndicateВ».',
-                        'РќРѕРІР°СЏ РєР°СЂС‚Р° Hanari РґР»СЏ СЂРµР¶РёРјРѕРІ В«РљРѕРјР°РЅРґРЅС‹Р№ Р±РѕР№В», В«Р“РѕРЅРєР° РІРѕРѕСЂСѓР¶РµРЅРёР№В» Рё В«РћРіСЂР°Р±Р»РµРЅРёРµВ».',
-                        'РџРµСЂРµСЂР°Р±РѕС‚Р°РЅР° РєР°СЂС‚Р° Bridge Рё СЃР»РµРіРєР° РѕР±РЅРѕРІР»РµРЅР° РєР°СЂС‚Р° Yard.',
-                        'РќРѕРІР°СЏ СЃРЅР°Р№РїРµСЂСЃРєР°СЏ РІРёРЅС‚РѕРІРєР° вЂ” Mallard.',
-                        'РћР±РЅРѕРІР»РµРЅРёРµ С„СЂР°РєС†РёРё РЎРёРЅРґРёРєР°С‚ В«РљРѕРіРѕС‚СЊ Р”СЂР°РєРѕРЅР°В» Рё РЅРµР±РѕР»СЊС€РѕРµ РѕР±РЅРѕРІР»РµРЅРёРµ С„СЂР°РєС†РёРё S.A.F.',
-                        'РќРѕРІС‹Рµ РєРѕР»Р»РµРєС†РёРё вЂ” В«SyndicateВ» Рё В«RewindВ».',
-                        'РќРѕРІС‹Р№ Charm Pack вЂ” В«RewindВ».',
-                        'РќРѕРІС‹Р№ Р·Р°РґРЅРёР№ С„РѕРЅ РіР»Р°РІРЅРѕРіРѕ РјРµРЅСЋ.',
+                        'Новая карта Hanami для режимов со сценарием «Закладки бомбы».',
+                        'Новый боевой пропуск — «Syndicate».',
+                        'Новая карта Hanari для режимов «Командный бой», «Гонка вооружений» и «Ограбление».',
+                        'Переработана карта Bridge и слегка обновлена карта Yard.',
+                        'Новая снайперская винтовка — Mallard.',
+                        'Обновление фракции Синдикат «Коготь Дракона» и небольшое обновление фракции S.A.F.',
+                        'Новые коллекции — «Syndicate» и «Rewind».',
+                        'Новый Charm Pack — «Rewind».',
+                        'Новый задний фон главного меню.',
                     ],
                     image: 'https://androidapplications.store//uploads/og-images/mockup14143.jpg',
                     categories: ['action'],
@@ -2023,19 +2022,18 @@
                     version: '9.4',
                     size: '1.80 GB',
                     screenshots: [
-                        'https://github.com/MrRazion/pluggbotest.github.io/blob/0e6fc4a4b934b6cebfa55586ecec6aa7f4406370/usrs/IMG_20251102_141817_951.jpg',
-                        'https://github.com/MrRazion/pluggbotest.github.io/blob/0e6fc4a4b934b6cebfa55586ecec6aa7f4406370/usrs/IMG_20251102_141817_419.jpg',
-                        'https://github.com/MrRazion/pluggbotest.github.io/blob/0e6fc4a4b934b6cebfa55586ecec6aa7f4406370/usrs/IMG_20251102_141817_567.jpg',
-                        'https://github.com/MrRazion/pluggbotest.github.io/blob/0e6fc4a4b934b6cebfa55586ecec6aa7f4406370/usrs/IMG_20251102_141817_860.jpg',
-                        'https://github.com/MrRazion/pluggbotest.github.io/blob/0e6fc4a4b934b6cebfa55586ecec6aa7f4406370/usrs/IMG_20251102_141818_030.jpg'
+                        'https://androidloading.com/uploads/posts/2024-01/1704579141_5.webp',
+                        'https://androidloading.com/uploads/posts/2024-01/1704579138_1.webp',
+                        'https://androidloading.com/uploads/posts/2024-01/1704579140_4.webp',
+                        'https://i.ytimg.com/vi/cUJ_TAcRHC8/maxresdefault.jpg'
                     ]
                 },
                 {
                     id: 'standknife',
                     title: 'StandKnife',
-                    description: 'РџСЂРёРІР°С‚РЅС‹Р№ СЃРµСЂРІРµСЂ StandKnife Simulator - РёР·РІРµСЃС‚РЅР°СЏ РјРЅРѕРіРёРј РїСЂРёРІР°С‚РєР°, РїРµСЂРµСЂР°Р±Р°С‚С‹РІР°СЋС‰Р°СЏ РєРѕРЅС†РµРїС†РёСЋ РїРѕРїСѓР»СЏСЂРЅРѕРіРѕ С€СѓС‚РµСЂР° Standoff 2 Рё СЃРѕСЃСЂРµРґРѕС‚Р°С‡РёРІР°СЋС‰РёР№ РІРµСЃСЊ РёРіСЂРѕРІРѕР№ РїСЂРѕС†РµСЃСЃ РЅР° РјР°СЃС‚РµСЂСЃС‚РІРµ РІР»Р°РґРµРЅРёСЏ С…РѕР»РѕРґРЅС‹Рј РѕСЂСѓР¶РёРµРј.',
+                    description: 'Приватный сервер StandKnife Simulator - известная многим приватка, перерабатывающая концепцию популярного шутера Standoff 2 и сосредотачивающий весь игровой процесс на мастерстве владения холодным оружием.',
                     whatsNew: [
-                        'Р¤РёРєСЃ РѕС€РёР±РѕРє РїСЂРё РІС…РѕРґРµ РІ РёРіСЂСѓ.'
+                        'Фикс ошибок при входе в игру.'
                     ],
                     image: 'https://standoffworld.ru/wp-content/uploads/2023/12/standknife-2.jpg',
                     categories: ['action'],
@@ -2044,23 +2042,22 @@
                     version: '2.9 (f3)',
                     size: '2.08 GB',
                     screenshots: [
-                        'https://github.com/MrRazion/pluggbotest.github.io/blob/0e6fc4a4b934b6cebfa55586ecec6aa7f4406370/usrs/IMG_20251102_141846_266.jpg',
-                        'https://github.com/MrRazion/pluggbotest.github.io/blob/0e6fc4a4b934b6cebfa55586ecec6aa7f4406370/usrs/IMG_20251102_141846_365.jpg',
-                        'https://github.com/MrRazion/pluggbotest.github.io/blob/0e6fc4a4b934b6cebfa55586ecec6aa7f4406370/usrs/IMG_20251102_141846_365.jpg'
+                        'https://i.ytimg.com/vi/M-IXelbzaYQ/sddefault.jpg',
+                        'https://i.ytimg.com/vi/4CoLN3-L5lE/sddefault.jpg'
                     ]
                 },
                 {
                     id: 'standchillow',
                     title: 'StandChillow',
-                    description: 'StandChillow - СЌС‚Рѕ СѓРІР»РµРєР°С‚РµР»СЊРЅС‹Р№ С€СѓС‚РµСЂ РґР»СЏ Android, РєРѕС‚РѕСЂС‹Р№ РїСЂРµРґР»Р°РіР°РµС‚ РЅР°СЃС‹С‰РµРЅРЅС‹Рµ РєРѕРјР°РЅРґРЅС‹Рµ Р±РѕРё РЅР° РѕСЃРЅРѕРІРµ РїРѕРїСѓР»СЏСЂРЅРѕРіРѕ РјРѕР±РёР»СЊРЅРѕРіРѕ СЌРєС€РµРЅР° Standoff 2. РРіСЂР° РїРµСЂРµРЅРѕСЃРёС‚ РІР°СЃ РІ РјРёСЂ С‚Р°РєС‚РёС‡РµСЃРєРёС… Р±Р°С‚Р°Р»РёР№, РіРґРµ РєР°Р¶РґР°СЏ СЃС…РІР°С‚РєР° РїСЂРѕРІРµСЂСЏРµС‚ РІР°С€Рё Р±РѕРµРІС‹Рµ РЅР°РІС‹РєРё.',
+                    description: 'StandChillow - это увлекательный шутер для Android, который предлагает насыщенные командные бои на основе популярного мобильного экшена Standoff 2. Игра переносит вас в мир тактических баталий, где каждая схватка проверяет ваши боевые навыки.',
                     whatsNew: [
-                        'Р¤РёРєСЃ РѕС€РёР±РѕРє РїСЂРё РІС…РѕРґРµ РІ РёРіСЂСѓ.',
-                        '- РќРѕРІС‹Р№ РєРѕРЅС‚РµРЅС‚ РёР· РѕР±РЅРѕРІР»РµРЅРёСЏ 0.34.0 (СЃРєРёРЅС‹, РёРЅС‚РµСЂС„РµР№СЃ, СЃР°СѓРЅРґС‚СЂРµРє)',
-                        '- Р”РѕР±Р°РІР»РµРЅС‹ РєР°СЂС‚С‹ "Awm Lego" Рё "Summer Breeze"',
-                        '- РЈР±СЂР°РЅРѕ СЃРЅРёР¶РµРЅРёРµ СѓСЂРѕРІРЅСЏ РїСЂРё СѓР±РёР№СЃС‚РІРµ СЃ РЅРѕР¶Р° РІ РіРѕРЅРєРµ РІРѕРѕСЂСѓР¶РµРЅРёР№',
-                        '- Р’РѕР·РІСЂР°С‰РµРЅС‹ СЃС‚Р°С‚С‚СЂРµРє РІРµСЂСЃРёРё СЃРєРёРЅРѕРІ РЅР° Р±РµСЂРµС‚С‹',
-                        '- РЈР»СѓС‡С€РµРЅРѕ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІРµРЅРЅРѕРµ Р°СѓРґРёРѕ',
-                        '- РСЃРїСЂР°РІР»РµРЅРёРµ Р±Р°РіРѕРІ (РІРєР»СЋС‡Р°СЏ РєСЂРёРІРѕР№ СЃРєРµР»РµС‚ РїРµСЂСЃРѕРЅР°Р¶Р°)'
+                        'Фикс ошибок при входе в игру.',
+                        '- Новый контент из обновления 0.34.0 (скины, интерфейс, саундтрек)',
+                        '- Добавлены карты "Awm Lego" и "Summer Breeze"',
+                        '- Убрано снижение уровня при убийстве с ножа в гонке вооружений',
+                        '- Возвращены статтрек версии скинов на береты',
+                        '- Улучшено пространственное аудио',
+                        '- Исправление багов (включая кривой скелет персонажа)'
                     ],
                     image: 'https://res.ldrescdn.com/rms/ldplayer/process/img/f4091033b9044caeae934b4bdba63ecf1740693144.jpg',
                     categories: ['action'],
@@ -2069,20 +2066,21 @@
                     version: '1.6',
                     size: '1.34 GB',
                     screenshots: [
-                        'https://github.com/MrRazion/pluggbotest.github.io/blob/0e6fc4a4b934b6cebfa55586ecec6aa7f4406370/usrs/IMG_20251102_141829_464.jpg',
-                        'https://github.com/MrRazion/pluggbotest.github.io/blob/0e6fc4a4b934b6cebfa55586ecec6aa7f4406370/usrs/IMG_20251102_141829_364.jpg',
-                        'https://github.com/MrRazion/pluggbotest.github.io/blob/0e6fc4a4b934b6cebfa55586ecec6aa7f4406370/usrs/IMG_20251102_141829_247.jpg',
-                        'https://github.com/MrRazion/pluggbotest.github.io/blob/0e6fc4a4b934b6cebfa55586ecec6aa7f4406370/usrs/IMG_20251102_141828_787.jpg'
+                        'https://image.winudf.com/v2/user/admin/YWRtaW5faW1hZ2UgKDEpLnBuZ18xNzI1MzQ5MjU5MTQ2/screen-2.jpg?fakeurl=1&type=.jpg',
+                        'https://i.ytimg.com/vi/_fRmh7abX3w/maxresdefault.jpg',
+                        'https://i.ytimg.com/vi/HECua7uadLA/hq720.jpg?sqp=-oaymwE7CK4FEIIDSFryq4qpAy0IARUAAAAAGAElAADIQj0AgKJD8AEB-AH-CYAC0AWKAgwIABABGBQgTSh_MA8=&rs=AOn4CLAoT_iR6Pnanwey-z2LxQ-Je4r1zg',
+                        'https://i.ytimg.com/vi/u-qn7ROlbto/hq720.jpg?sqp=-oaymwE7CK4FEIIDSFryq4qpAy0IARUAAAAAGAElAADIQj0AgKJD8AEB-AHMCIAC0AWKAgwIABABGGUgVihJMA8=&rs=AOn4CLAabs__Ec5LOHYn8P6q6svCQ46XRg',
+                        'https://androidloading.com/uploads/posts/2024-04/1714344765_2.webp'
                     ]
                 },
                 {
                     id: 'crossoff',
                     title: 'Crossoff: Classic',
-                    description: 'CrossOff вЂ” РїСЂРёРІР°С‚РєР° РІ РєРѕС‚РѕСЂРѕР№ Р·Р° СЃС‹РіСЂР°РЅРЅС‹Рµ РјР°С‚С‡Рё РІС‹РґР°СЋС‚ СЃРµСЂРµР±СЂРѕ Рё Р·РѕР»РѕС‚Рѕ, СЏРІР»СЏРµС‚СЃСЏ РєРѕРїРёРµР№ РѕСЂРёРіРёРЅР°Р»СЊРЅРѕР№ РёРіСЂС‹, РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ РІС…РѕРґР° С‡РµСЂРµР· Google.',
+                    description: 'CrossOff — приватка в которой за сыгранные матчи выдают серебро и золото, является копией оригинальной игры, возможность входа через Google.',
                     whatsNew: [
-                        'Р”РѕР±Р°РІР»РµРЅ Р°РЅС‚РёС‡РёС‚',
-                        'Р”РѕР±Р°РІР»РµРЅС‹ РєР»Р°РЅС‹',
-                        '- Р”РѕР±Р°РІР»РµРЅС‹ СЂРµР¶РёРј "РЎРѕСЂРµРІРЅРѕРІР°С‚РµР»СЊРЅС‹Р№"',
+                        'Добавлен античит',
+                        'Добавлены кланы',
+                        '- Добавлены режим "Соревновательный"',
                     ],
                     image: 'https://androidapplications.store//uploads/og-images/mockup14030.jpg',
                     categories: ['action'],
@@ -2091,13 +2089,14 @@
                     version: '1.1 (F2)',
                     size: '499.1 MB',
                     screenshots: [
-                        'https://github.com/MrRazion/pluggbotest.github.io/blob/0e6fc4a4b934b6cebfa55586ecec6aa7f4406370/usrs/IMG_20251102_141852_438.jpg',
-                        'https://github.com/MrRazion/pluggbotest.github.io/blob/0e6fc4a4b934b6cebfa55586ecec6aa7f4406370/usrs/IMG_20251102_141852_280.jpg',
-                        'https://github.com/MrRazion/pluggbotest.github.io/blob/0e6fc4a4b934b6cebfa55586ecec6aa7f4406370/usrs/IMG_20251102_141851_937.jpg'
+                        'https://jpg.i-androids.ru/gplay/75/standoff-2-04-05-2023-14-11-55-44.png',
+                        'https://jpg.i-androids.ru/gplay/75/standoff-2-04-05-2023-14-11-56-73.png',
+                        'https://jpg.i-androids.ru/gplay/75/standoff-2-04-05-2023-14-12-03-85.png',
+                        'https://jpg.i-androids.ru/gplay/75/standoff-2-04-05-2023-14-11-57-3.png'
                     ]
                 }
             ];
-            // Р¤СѓРЅРєС†РёСЏ РґР»СЏ СЂРµРЅРґРµСЂРёРЅРіР° РёРіСЂ РІ С‚Р°Р±
+            // Функция для рендеринга игр в таб
             function renderGames(tab) {
                 const grid = document.querySelector(`#${tab}-tab .games-grid`);
                 if (!grid) return;
@@ -2122,7 +2121,7 @@
                     grid.appendChild(card);
                 });
             }
-            // Р¤СѓРЅРєС†РёСЏ РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ СЃРєСЂРёРЅС€РѕС‚РѕРІ РёРіСЂС‹
+            // Функция для отображения скриншотов игры
             function showGameScreenshots(gameId) {
                 const game = games.find(g => g.id === gameId);
                 if (!game || !game.screenshots || game.screenshots.length === 0) {
@@ -2139,16 +2138,16 @@
                     game.screenshots.forEach(screenshot => {
                         const item = document.createElement('div');
                         item.className = 'screenshot-item';
-                        item.innerHTML = `<img src="${screenshot}" alt="РЎРєСЂРёРЅС€РѕС‚">`;
+                        item.innerHTML = `<img src="${screenshot}" alt="Скриншот">`;
                         screenshotsSlider.appendChild(item);
                     });
                     
-                    // РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅР°РІРёРіР°С†РёРё
+                    // Инициализация навигации
                     updateNavButtons();
                 }
             }
             
-            // РћР±РЅРѕРІР»РµРЅРёРµ СЃРѕСЃС‚РѕСЏРЅРёСЏ РЅР°РІРёРіР°С†РёРѕРЅРЅС‹С… РєРЅРѕРїРѕРє
+            // Обновление состояния навигационных кнопок
             function updateNavButtons() {
                 if (!screenshotsSlider) return;
                 
@@ -2157,7 +2156,7 @@
                 if (nextBtn) nextBtn.disabled = screenshotsSlider.scrollLeft >= maxScroll - 1;
             }
             
-            // РџСЂРѕРєСЂСѓС‚РєР° РІР»РµРІРѕ
+            // Прокрутка влево
             function scrollPrev() {
                 if (screenshotsSlider) {
                     screenshotsSlider.scrollBy({ left: -200, behavior: 'smooth' });
@@ -2165,7 +2164,7 @@
                 }
             }
             
-            // РџСЂРѕРєСЂСѓС‚РєР° РІРїСЂР°РІРѕ
+            // Прокрутка вправо
             function scrollNext() {
                 if (screenshotsSlider) {
                     screenshotsSlider.scrollBy({ left: 200, behavior: 'smooth' });
@@ -2173,18 +2172,18 @@
                 }
             }
             
-            // РћР±РЅРѕРІР»РµРЅРёРµ РєРЅРѕРїРєРё Р±РёР±Р»РёРѕС‚РµРєРё РІ РґРµС‚Р°Р»СЏС…
+            // Обновление кнопки библиотеки в деталях
             function updateDetailsLibraryButton() {
                 if (!detailsLibraryBtn || !currentGameId || !currentUser) return;
                 if (currentUser.library && currentUser.library.includes(currentGameId)) {
                     detailsLibraryBtn.classList.add('active');
-                    detailsLibraryBtn.textContent = 'РЈРґР°Р»РёС‚СЊ РёР· Р±РёР±Р»РёРѕС‚РµРєРё';
+                    detailsLibraryBtn.textContent = 'Удалить из библиотеки';
                 } else {
                     detailsLibraryBtn.classList.remove('active');
-                    detailsLibraryBtn.textContent = 'Р”РѕР±Р°РІРёС‚СЊ РІ Р±РёР±Р»РёРѕС‚РµРєСѓ';
+                    detailsLibraryBtn.textContent = 'Добавить в библиотеку';
                 }
             }
-            // Р”РѕР±Р°РІР»РµРЅРёРµ/СѓРґР°Р»РµРЅРёРµ РёРіСЂС‹ РёР· Р±РёР±Р»РёРѕС‚РµРєРё
+            // Добавление/удаление игры из библиотеки
             function toggleGameInLibrary(gameId) {
                 if (!currentUser) {
                     authModal.classList.add('active');
@@ -2195,22 +2194,22 @@
                 }
                 const index = currentUser.library.indexOf(gameId);
                 if (index === -1) {
-                    // Р”РѕР±Р°РІР»СЏРµРј РІ Р±РёР±Р»РёРѕС‚РµРєСѓ
+                    // Добавляем в библиотеку
                     currentUser.library.push(gameId);
-                    tg.showAlert('РРіСЂР° РґРѕР±Р°РІР»РµРЅР° РІ Р±РёР±Р»РёРѕС‚РµРєСѓ!');
+                    tg.showAlert('Игра добавлена в библиотеку!');
                 } else {
-                    // РЈРґР°Р»СЏРµРј РёР· Р±РёР±Р»РёРѕС‚РµРєРё
+                    // Удаляем из библиотеки
                     currentUser.library.splice(index, 1);
-                    tg.showAlert('РРіСЂР° СѓРґР°Р»РµРЅР° РёР· Р±РёР±Р»РёРѕС‚РµРєРё!');
+                    tg.showAlert('Игра удалена из библиотеки!');
                 }
-                // РЎРѕС…СЂР°РЅСЏРµРј РѕР±РЅРѕРІР»РµРЅРЅС‹Рµ РґР°РЅРЅС‹Рµ
+                // Сохраняем обновленные данные
                 localStorage.setItem('plugg_user', JSON.stringify(currentUser));
                 saveUserData();
-                // РћР±РЅРѕРІР»СЏРµРј UI
+                // Обновляем UI
                 updateDetailsLibraryButton();
                 updateLibraryUI();
             }
-            // РћР±СЂР°Р±РѕС‚С‡РёРє РєР»РёРєР° РїРѕ РєР°СЂС‚РѕС‡РєРµ РёРіСЂС‹
+            // Обработчик клика по карточке игры
             function handleGameClick(e) {
                 const gameId = e.currentTarget.dataset.gameId;
                 const game = games.find(g => g.id === gameId);
@@ -2218,28 +2217,28 @@
                     detailsTitle.textContent = game.title;
                     detailsImage.src = game.image;
                     detailsImage.alt = game.title;
-                    detailsMeta.textContent = `Р’РµСЂСЃРёСЏ: ${game.version} вЂў Р Р°Р·РјРµСЂ: ${game.size}`;
-                    detailsDescription.innerHTML = `<p>${game.description}</p><ul><li>РЎРїР°СЃРёР±Рѕ Р·Р° РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ PLUGG BOT!</li></ul>`;
+                    detailsMeta.textContent = `Версия: ${game.version} • Размер: ${game.size}`;
+                    detailsDescription.innerHTML = `<p>${game.description}</p><ul><li>Спасибо за использование PLUGG BOT!</li></ul>`;
                     detailsWhatsNew.innerHTML = `<ul>${game.whatsNew.map(item => `<li>${item}</li>`).join('')}</ul>`;
                     currentDownloadUrl = game.url;
                     currentFileName = game.fileName;
                     currentGameTitle = game.title;
                     currentGameId = gameId;
-                    downloadBtn.textContent = 'РЎРєР°С‡Р°С‚СЊ';
+                    downloadBtn.textContent = 'Скачать';
                     gameDetails.classList.add('active');
                     updateDetailsLibraryButton();
                     
-                    // РџРѕРєР°Р·С‹РІР°РµРј СЃРєСЂРёРЅС€РѕС‚С‹
+                    // Показываем скриншоты
                     showGameScreenshots(gameId);
                 } else {
                     tg.showPopup({
-                        title: 'РЎРєРѕСЂРѕ Р±СѓРґРµС‚ РґРѕСЃС‚СѓРїРЅРѕ',
-                        message: 'Р­С‚Р° РёРіСЂР° РЅР°С…РѕРґРёС‚СЃСЏ РІ СЂР°Р·СЂР°Р±РѕС‚РєРµ Рё СЃРєРѕСЂРѕ Р±СѓРґРµС‚ РґРѕСЃС‚СѓРїРЅР° РґР»СЏ СЃРєР°С‡РёРІР°РЅРёСЏ!',
-                        buttons: [{type: 'ok', text: 'РџРѕРЅСЏС‚РЅРѕ'}]
+                        title: 'Скоро будет доступно',
+                        message: 'Эта игра находится в разработке и скоро будет доступна для скачивания!',
+                        buttons: [{type: 'ok', text: 'Понятно'}]
                     });
                 }
             }
-            // РћР±СЂР°Р±РѕС‚С‡РёРєРё РґР»СЏ РІРєР»Р°РґРѕРє
+            // Обработчики для вкладок
             document.querySelectorAll('.tab').forEach(tab => {
                 tab.addEventListener('click', () => {
                     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -2252,7 +2251,7 @@
                     applySearch();
                 });
             });
-            // РћР±СЂР°Р±РѕС‚С‡РёРє РїРѕРёСЃРєР°
+            // Обработчик поиска
             if (searchInput) {
                 searchInput.addEventListener('input', applySearch);
             }
@@ -2265,7 +2264,7 @@
                     card.style.display = title.includes(term) ? '' : 'none';
                 });
             }
-            // РћР±СЂР°Р±РѕС‚С‡РёРє РєРЅРѕРїРєРё "РќР°Р·Р°Рґ"
+            // Обработчик кнопки "Назад"
             if (backBtn) {
                 backBtn.addEventListener('click', () => {
                     gameDetails.classList.remove('active');
@@ -2275,7 +2274,7 @@
                     }
                 });
             }
-            // РћР±СЂР°Р±РѕС‚С‡РёРє РєРЅРѕРїРєРё РґРѕР±Р°РІР»РµРЅРёСЏ РІ Р±РёР±Р»РёРѕС‚РµРєСѓ РІ РґРµС‚Р°Р»СЏС…
+            // Обработчик кнопки добавления в библиотеку в деталях
             if (detailsLibraryBtn) {
                 detailsLibraryBtn.addEventListener('click', () => {
                     if (currentGameId) {
@@ -2283,33 +2282,33 @@
                     }
                 });
             }
-            // Р¤СѓРЅРєС†РёСЏ РґР»СЏ РѕР±РЅРѕРІР»РµРЅРёСЏ РїСЂРѕРіСЂРµСЃСЃР°
+            // Функция для обновления прогресса
             function updateProgress(percent, loaded, total) {
                 if (!progressFill || !progressPercent || !statusText) return;
                 progressFill.style.width = percent + '%';
                 progressPercent.textContent = percent + '%';
                 updateDownloadStats(loaded, total);
                 if (percent === 0) {
-                    statusText.textContent = 'Р“РѕС‚РѕРІ Рє Р·Р°РіСЂСѓР·РєРµ';
+                    statusText.textContent = 'Готов к загрузке';
                 } else if (percent < 100) {
-                    statusText.textContent = `Р—Р°РіСЂСѓР·РєР°: ${percent}%`;
+                    statusText.textContent = `Загрузка: ${percent}%`;
                 } else {
-                    statusText.textContent = 'Р—Р°РіСЂСѓР·РєР° Р·Р°РІРµСЂС€РµРЅР°! РџСЂРѕРІРµСЂСЊС‚Рµ РїР°РїРєСѓ Download РЅР° С‚РµР»РµС„РѕРЅРµ.';
+                    statusText.textContent = 'Загрузка завершена! Проверьте папку Download на телефоне.';
                 }
             }
-            // Р¤СѓРЅРєС†РёСЏ РґР»СЏ РїРѕРєР°Р·Р° СЃС‚Р°С‚СѓСЃР°
+            // Функция для показа статуса
             function showStatus(message, isSuccess) {
                 if (!statusMessage) return;
                 statusMessage.textContent = message;
                 statusMessage.className = `status-message ${isSuccess ? 'status-success' : 'status-error'}`;
                 statusMessage.style.display = 'block';
             }
-            // РЎР±СЂРѕСЃ UI Р·Р°РіСЂСѓР·РєРё
+            // Сброс UI загрузки
             function resetDownloadUI() {
                 isDownloading = false;
                 if (downloadBtn) {
                     downloadBtn.disabled = false;
-                    downloadBtn.textContent = 'РЎРєР°С‡Р°С‚СЊ';
+                    downloadBtn.textContent = 'Скачать';
                 }
                 if (progressContainer) {
                     progressContainer.style.display = 'none';
@@ -2318,7 +2317,7 @@
                     statusMessage.style.display = 'none';
                 }
                 updateProgress(0, 0, 0);
-                // РћСЃС‚Р°РЅР°РІР»РёРІР°РµРј РІРёР·СѓР°Р»РёР·Р°С‚РѕСЂ Р·Р°РіСЂСѓР·РєРё
+                // Останавливаем визуализатор загрузки
                 if (visualizerInterval) {
                     clearInterval(visualizerInterval);
                     visualizerInterval = null;
@@ -2335,19 +2334,19 @@
                     `;
                 }
             }
-            // Р¤СѓРЅРєС†РёСЏ РґР»СЏ СЃРєР°С‡РёРІР°РЅРёСЏ С„Р°Р№Р»Р°
+            // Функция для скачивания файла
             function downloadFile() {
                 if (!isDownloading && downloadBtn) {
                     isDownloading = true;
                     downloadBtn.disabled = true;
-                    downloadBtn.innerHTML = '<span class="loader"></span> Р—Р°РіСЂСѓР·РєР°...';
+                    downloadBtn.innerHTML = '<span class="loader"></span> Загрузка...';
                     if (progressContainer) progressContainer.style.display = 'block';
-                    if (statusText) statusText.textContent = 'Р—Р°РїСЂРѕСЃ РЅР° СЃРєР°С‡РёРІР°РЅРёРµ...';
+                    if (statusText) statusText.textContent = 'Запрос на скачивание...';
                     updateProgress(0, 0, 0);
-                    // Р­РјСѓР»РёСЂСѓРµРј РїРёРЅРі
+                    // Эмулируем пинг
                     simulatePing();
                     const pingInterval = setInterval(simulatePing, 2000);
-                    // Р”РѕР±Р°РІР»СЏРµРј СѓРЅРёРєР°Р»СЊРЅС‹Р№ РїР°СЂР°РјРµС‚СЂ Рє URL РґР»СЏ РїСЂРёРЅСѓРґРёС‚РµР»СЊРЅРѕР№ РїРµСЂРµР·Р°РіСЂСѓР·РєРё
+                    // Добавляем уникальный параметр к URL для принудительной перезагрузки
                     const timestamp = Date.now();
                     const downloadUrl = `${currentDownloadUrl}?t=${timestamp}`;
                     if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.isVersionAtLeast('8.0')) {
@@ -2357,12 +2356,12 @@
                             file_name: currentFileName
                         }, (accepted) => {
                             if (accepted) {
-                                if (statusText) statusText.textContent = 'РЎРєР°С‡РёРІР°РЅРёРµ РЅР°С‡Р°С‚Рѕ...';
-                                // Р­РјСѓР»РёСЂСѓРµРј РїСЂРѕРіСЂРµСЃСЃ Р·Р°РіСЂСѓР·РєРё
+                                if (statusText) statusText.textContent = 'Скачивание начато...';
+                                // Эмулируем прогресс загрузки
                                 downloadStartTime = Date.now();
                                 let percent = 0;
                                 let loadedBytes = 0;
-                                totalBytes = 100 * 1024 * 1024; // 100MB РґР»СЏ СЌРјСѓР»СЏС†РёРё
+                                totalBytes = 100 * 1024 * 1024; // 100MB для эмуляции
                                 const downloadInterval = setInterval(() => {
                                     percent += Math.random() * 2;
                                     if (percent > 100) percent = 100;
@@ -2371,16 +2370,16 @@
                                     if (percent >= 100) {
                                         clearInterval(downloadInterval);
                                         clearInterval(pingInterval);
-                                        showStatus('Р—Р°РіСЂСѓР·РєР° Р·Р°РІРµСЂС€РµРЅР°! Р¤Р°Р№Р» РіРѕС‚РѕРІ Рє СѓСЃС‚Р°РЅРѕРІРєРµ.', true);
+                                        showStatus('Загрузка завершена! Файл готов к установке.', true);
                                     }
                                 }, 200);
                             } else {
                                 clearInterval(pingInterval);
-                                showStatus('РЎРєР°С‡РёРІР°РЅРёРµ РѕС‚РјРµРЅРµРЅРѕ.', false);
+                                showStatus('Скачивание отменено.', false);
                                 updateProgress(0, 0, 0);
                             }
                             resetDownloadUI();
-                            if (downloadBtn) downloadBtn.textContent = 'РЎРєР°С‡Р°С‚СЊ РµС‰Рµ СЂР°Р·';
+                            if (downloadBtn) downloadBtn.textContent = 'Скачать еще раз';
                         });
                     } else {
                         // Fallback to XMLHttpRequest
@@ -2399,7 +2398,7 @@
                             xhr.onload = function() {
                                 clearInterval(pingInterval);
                                 if (xhr.status === 200) {
-                                    if (statusText) statusText.textContent = 'РџСЂРѕРІРµСЂРєР° С†РµР»РѕСЃС‚РЅРѕСЃС‚Рё С„Р°Р№Р»Р°...';
+                                    if (statusText) statusText.textContent = 'Проверка целостности файла...';
                                     setTimeout(() => {
                                         const blob = new Blob([xhr.response], { type: 'application/vnd.android.package-archive' });
                                         const url = URL.createObjectURL(blob);
@@ -2412,10 +2411,10 @@
                                         URL.revokeObjectURL(url);
                                         document.body.removeChild(a);
                                         updateProgress(100, totalBytes, totalBytes);
-                                        showStatus('Р¤Р°Р№Р» СѓСЃРїРµС€РЅРѕ РїСЂРѕРІРµСЂРµРЅ Рё РіРѕС‚РѕРІ Рє СѓСЃС‚Р°РЅРѕРІРєРµ.', true);
+                                        showStatus('Файл успешно проверен и готов к установке.', true);
                                     }, 1500);
                                 } else {
-                                    showStatus(`РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё: СЃС‚Р°С‚СѓСЃ ${xhr.status}. Р¤Р°Р№Р» РјРѕР¶РµС‚ Р±С‹С‚СЊ РїРѕРІСЂРµР¶РґРµРЅ.`, false);
+                                    showStatus(`Ошибка загрузки: статус ${xhr.status}. Файл может быть поврежден.`, false);
                                     updateProgress(0, 0, 0);
                                 }
                                 resetDownloadUI();
@@ -2423,14 +2422,14 @@
                             };
                             xhr.onerror = function() {
                                 clearInterval(pingInterval);
-                                showStatus('РћС€РёР±РєР° СЃРµС‚Рё. РџСЂРѕРІРµСЂСЊС‚Рµ РїРѕРґРєР»СЋС‡РµРЅРёРµ.', false);
+                                showStatus('Ошибка сети. Проверьте подключение.', false);
                                 updateProgress(0, 0, 0);
                                 resetDownloadUI();
                                 xhr = null;
                             };
                             xhr.onabort = function() {
                                 clearInterval(pingInterval);
-                                showStatus('Р—Р°РіСЂСѓР·РєР° РѕС‚РјРµРЅРµРЅР°.', false);
+                                showStatus('Загрузка отменена.', false);
                                 updateProgress(0, 0, 0);
                                 resetDownloadUI();
                                 xhr = null;
@@ -2438,19 +2437,19 @@
                             xhr.send();
                         } catch (error) {
                             clearInterval(pingInterval);
-                            showStatus(`РћС€РёР±РєР°: ${error.message}. РќРµ СѓРґР°Р»РѕСЃСЊ СЃРєР°С‡Р°С‚СЊ С„Р°Р№Р».`, false);
+                            showStatus(`Ошибка: ${error.message}. Не удалось скачать файл.`, false);
                             resetDownloadUI();
                             xhr = null;
                         }
                     }
                 }
             }
-            // РћР±СЂР°Р±РѕС‚С‡РёРє РєРЅРѕРїРєРё СЃРєР°С‡РёРІР°РЅРёСЏ
+            // Обработчик кнопки скачивания
             if (downloadBtn) {
                 downloadBtn.addEventListener('click', downloadFile);
             }
-            // ========== РќРћР’РђРЇ РЎРРЎРўР•РњРђ РђР’РўРћР РР—РђР¦РР Р§Р•Р Р•Р— TELEGRAM ==========
-            // РћР±СЂР°Р±РѕС‚С‡РёРє РєРЅРѕРїРєРё РїСЂРѕС„РёР»СЏ
+            // ========== НОВАЯ СИСТЕМА АВТОРИЗАЦИИ ЧЕРЕЗ TELEGRAM ==========
+            // Обработчик кнопки профиля
             if (profileBtn) {
                 profileBtn.addEventListener('click', () => {
                     if (!checkUser()) {
@@ -2460,17 +2459,17 @@
                     }
                 });
             }
-            // РћР±СЂР°Р±РѕС‚С‡РёРє РєРЅРѕРїРєРё Р°РІС‚РѕСЂРёР·Р°С†РёРё С‡РµСЂРµР· Telegram
+            // Обработчик кнопки авторизации через Telegram
             if (telegramAuthButton) {
                 telegramAuthButton.addEventListener('click', () => {
-                    // РџРѕРєР°Р·С‹РІР°РµРј РёРЅРґРёРєР°С‚РѕСЂ Р·Р°РіСЂСѓР·РєРё
+                    // Показываем индикатор загрузки
                     authModal.classList.remove('active');
                     registrationProgress.style.display = 'block';
-                    // РСЃРїРѕР»СЊР·СѓРµРј РґР°РЅРЅС‹Рµ РёР· Telegram WebApp
+                    // Используем данные из Telegram WebApp
                     setTimeout(() => {
                         if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
                             const user = tg.initDataUnsafe.user;
-                            // РЎРѕР·РґР°РµРј РѕР±СЉРµРєС‚ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+                            // Создаем объект пользователя
                             const userData = {
                                 telegram_id: user.id,
                                 first_name: user.first_name,
@@ -2479,63 +2478,63 @@
                                 auth_date: user.auth_date || Math.floor(Date.now() / 1000),
                                 avatar: user.photo_url || '',
                                 banner: '',
-                                bio: 'Р›СЋР±РёС‚РµР»СЊ РїСЂРёРІРёРІР°С‚РѕРє РґР»СЏ Standoff 2',
+                                bio: 'Любитель прививаток для Standoff 2',
                                 library: [],
                                 created_at: new Date().toISOString()
                             };
-                            // Р’РѕСЃСЃС‚Р°РЅР°РІР»РёРІР°РµРј СЃРѕС…СЂР°РЅРµРЅРЅС‹Рµ РґР°РЅРЅС‹Рµ
+                            // Восстанавливаем сохраненные данные
                             const savedData = getSavedUserData(userData.telegram_id);
                             if (savedData) {
                                 Object.assign(userData, savedData);
                             }
-                            // РЎРѕС…СЂР°РЅСЏРµРј РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+                            // Сохраняем пользователя
                             localStorage.setItem('plugg_user', JSON.stringify(userData));
                             currentUser = userData;
                             saveUserData();
-                            // РћР±РЅРѕРІР»СЏРµРј РёРЅС‚РµСЂС„РµР№СЃ
+                            // Обновляем интерфейс
                             updateProfileUI();
-                            // РџРѕРєР°Р·С‹РІР°РµРј РїСЂРѕС„РёР»СЊ
+                            // Показываем профиль
                             registrationProgress.style.display = 'none';
                             profileModal.classList.add('active');
-                            tg.showAlert('Р’С‹ СѓСЃРїРµС€РЅРѕ РІРѕС€Р»Рё РІ СЃРёСЃС‚РµРјСѓ PLUGG ID С‡РµСЂРµР· Telegram!');
+                            tg.showAlert('Вы успешно вошли в систему PLUGG ID через Telegram!');
                         } else {
                             registrationProgress.style.display = 'none';
                             authModal.classList.add('active');
-                            tg.showAlert('РќРµ СѓРґР°Р»РѕСЃСЊ РїРѕР»СѓС‡РёС‚СЊ РґР°РЅРЅС‹Рµ РёР· Telegram. РџРѕР¶Р°Р»СѓР№СЃС‚Р°, РїРѕРїСЂРѕР±СѓР№С‚Рµ СЃРЅРѕРІР°.');
+                            tg.showAlert('Не удалось получить данные из Telegram. Пожалуйста, попробуйте снова.');
                         }
                     }, 1000);
                 });
             }
-            // РћР±СЂР°Р±РѕС‚С‡РёРє РєРЅРѕРїРєРё РІС‹С…РѕРґР°
+            // Обработчик кнопки выхода
             if (logoutBtn) {
                 logoutBtn.addEventListener('click', () => {
                     if (currentUser) {
-                        // РЎРѕС…СЂР°РЅСЏРµРј РґР°РЅРЅС‹Рµ РїРµСЂРµРґ РІС‹С…РѕРґРѕРј
+                        // Сохраняем данные перед выходом
                         saveUserData();
                     }
-                    // РЈРґР°Р»СЏРµРј С‚РµРєСѓС‰РµРіРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+                    // Удаляем текущего пользователя
                     localStorage.removeItem('plugg_user');
                     currentUser = null;
-                    // Р—Р°РєСЂС‹РІР°РµРј РјРѕРґР°Р»СЊРЅРѕРµ РѕРєРЅРѕ
+                    // Закрываем модальное окно
                     if (profileModal) profileModal.classList.remove('active');
-                    // РџРѕРєР°Р·С‹РІР°РµРј СѓРІРµРґРѕРјР»РµРЅРёРµ
-                    tg.showAlert('Р’С‹ РІС‹С€Р»Рё РёР· Р°РєРєР°СѓРЅС‚Р°');
+                    // Показываем уведомление
+                    tg.showAlert('Вы вышли из аккаунта');
                 });
             }
-            // РћР±СЂР°Р±РѕС‚С‡РёРє Р·Р°РєСЂС‹С‚РёСЏ РјРѕРґР°Р»СЊРЅС‹С… РѕРєРѕРЅ
+            // Обработчик закрытия модальных окон
             document.addEventListener('click', (e) => {
-                // Р—Р°РєСЂС‹С‚РёРµ authModal РїСЂРё РєР»РёРєРµ РІРЅРµ РєРѕРЅС‚РµРЅС‚Р°
+                // Закрытие authModal при клике вне контента
                 if (authModal && authModal.classList.contains('active') && 
                     e.target === authModal) {
                     authModal.classList.remove('active');
                 }
-                // Р—Р°РєСЂС‹С‚РёРµ profileModal РїСЂРё РєР»РёРєРµ РІРЅРµ РєРѕРЅС‚РµРЅС‚Р°
+                // Закрытие profileModal при клике вне контента
                 if (profileModal && profileModal.classList.contains('active') && 
                     e.target === profileModal) {
                     profileModal.classList.remove('active');
                 }
             });
-            // РћР±СЂР°Р±РѕС‚С‡РёРєРё РІРєР»Р°РґРѕРє РїСЂРѕС„РёР»СЏ
+            // Обработчики вкладок профиля
             if (profileTabs && profileTabs.length > 0) {
                 profileTabs.forEach(tab => {
                     tab.addEventListener('click', () => {
@@ -2551,11 +2550,11 @@
                     });
                 });
             }
-            // РћР±СЂР°Р±РѕС‚С‡РёРє СЃРѕС…СЂР°РЅРµРЅРёСЏ РёРјРµРЅРё
+            // Обработчик сохранения имени
             if (saveNameBtn && nameInput) {
                 saveNameBtn.addEventListener('click', () => {
                     if (nameInput.value.trim() !== '' && currentUser) {
-                        // Р Р°Р·РґРµР»СЏРµРј РёРјСЏ Рё С„Р°РјРёР»РёСЋ
+                        // Разделяем имя и фамилию
                         const nameParts = nameInput.value.trim().split(' ');
                         currentUser.first_name = nameParts[0];
                         currentUser.last_name = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
@@ -2569,7 +2568,7 @@
                     }
                 });
             }
-            // РћР±СЂР°Р±РѕС‚С‡РёРє СЃРѕС…СЂР°РЅРµРЅРёСЏ СЋР·РµСЂРЅРµР№РјР°
+            // Обработчик сохранения юзернейма
             if (saveUsernameBtn && usernameInput) {
                 saveUsernameBtn.addEventListener('click', () => {
                     if (usernameInput.value.trim() !== '' && currentUser) {
@@ -2584,7 +2583,7 @@
                     }
                 });
             }
-            // РћР±СЂР°Р±РѕС‚С‡РёРє СЃРѕС…СЂР°РЅРµРЅРёСЏ Р±РёРѕ
+            // Обработчик сохранения био
             if (saveBioBtn && bioInput) {
                 saveBioBtn.addEventListener('click', () => {
                     if (bioInput.value.trim() !== '' && currentUser) {
@@ -2595,14 +2594,14 @@
                     }
                 });
             }
-            // РћР±СЂР°Р±РѕС‚С‡РёРє РєР»РёРєР° РїРѕ Р±Р°РЅРЅРµСЂСѓ
+            // Обработчик клика по баннеру
             if (bannerPlaceholder) {
                 bannerPlaceholder.addEventListener('click', () => {
                     bannerSelector.classList.add('active');
                     loadGallery();
                 });
             }
-            // РћР±СЂР°Р±РѕС‚С‡РёРє Р·Р°РєСЂС‹С‚РёСЏ СЃРµР»РµРєС‚РѕСЂР° Р±Р°РЅРЅРµСЂРѕРІ
+            // Обработчик закрытия селектора баннеров
             if (bannerSelectorClose) {
                 bannerSelectorClose.addEventListener('click', () => {
                     bannerSelector.classList.remove('active');
@@ -2610,14 +2609,14 @@
                     selectedBannerFile = null;
                 });
             }
-            // РћР±СЂР°Р±РѕС‚С‡РёРє РІС‹Р±РѕСЂР° РёР· РіР°Р»РµСЂРµРё
+            // Обработчик выбора из галереи
             if (bannerUpload) {
                 bannerUpload.addEventListener('click', () => {
-                    // РЎРѕР·РґР°РµРј СЃРєСЂС‹С‚С‹Р№ input РґР»СЏ РІС‹Р±РѕСЂР° С„Р°Р№Р»Р°
+                    // Создаем скрытый input для выбора файла
                     const fileInput = document.createElement('input');
                     fileInput.type = 'file';
                     fileInput.accept = 'image/*';
-                    fileInput.capture = 'user'; // Р—Р°РїСЂР°С€РёРІР°РµРј РґРѕСЃС‚СѓРї Рє РєР°РјРµСЂРµ
+                    fileInput.capture = 'user'; // Запрашиваем доступ к камере
                     fileInput.addEventListener('change', (e) => {
                         if (e.target.files && e.target.files[0]) {
                             selectedBannerFile = e.target.files[0];
@@ -2632,11 +2631,11 @@
                     fileInput.click();
                 });
             }
-            // Р—Р°РіСЂСѓР·РєР° РіР°Р»РµСЂРµРё
+            // Загрузка галереи
             function loadGallery() {
-                // РћС‡РёС‰Р°РµРј РіР°Р»РµСЂРµСЋ
+                // Очищаем галерею
                 bannerGallery.innerHTML = '';
-                // РџСЂРёРјРµСЂС‹ Р±Р°РЅРЅРµСЂРѕРІ
+                // Примеры баннеров
                 const bannerExamples = [
                     'https://i.imgur.com/7XQY5Qx.jpg',
                     'https://i.imgur.com/5hF7b2n.jpg',
@@ -2657,19 +2656,19 @@
                     bannerGallery.appendChild(item);
                 });
             }
-            // РћР±СЂР°Р±РѕС‚С‡РёРє РѕС‚РјРµРЅС‹ РІС‹Р±РѕСЂР° Р±Р°РЅРЅРµСЂР°
+            // Обработчик отмены выбора баннера
             if (bannerCancelBtn) {
                 bannerCancelBtn.addEventListener('click', () => {
                     bannerPreview.classList.remove('active');
                     selectedBannerFile = null;
                 });
             }
-            // РћР±СЂР°Р±РѕС‚С‡РёРє РїСЂРёРјРµРЅРµРЅРёСЏ Р±Р°РЅРЅРµСЂР°
+            // Обработчик применения баннера
             if (bannerApplyBtn) {
                 bannerApplyBtn.addEventListener('click', () => {
                     if (currentUser) {
                         if (selectedBannerFile) {
-                            // Р•СЃР»Рё РІС‹Р±СЂР°РЅ С„Р°Р№Р» РёР· РіР°Р»РµСЂРµРё
+                            // Если выбран файл из галереи
                             const reader = new FileReader();
                             reader.onload = function(event) {
                                 currentUser.banner = event.target.result;
@@ -2682,7 +2681,7 @@
                             };
                             reader.readAsDataURL(selectedBannerFile);
                         } else if (bannerPreviewImg.src) {
-                            // Р•СЃР»Рё РІС‹Р±СЂР°РЅРѕ РёР·РѕР±СЂР°Р¶РµРЅРёРµ РёР· РіР°Р»РµСЂРµРё
+                            // Если выбрано изображение из галереи
                             currentUser.banner = bannerPreviewImg.src;
                             localStorage.setItem('plugg_user', JSON.stringify(currentUser));
                             saveUserData();
@@ -2693,24 +2692,24 @@
                     }
                 });
             }
-            // РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РїСЂРё Р·Р°РіСЂСѓР·РєРµ
+            // Инициализация при загрузке
             checkUser();
             renderGames('all');
-            // РџСЂРѕРІРµСЂРєР° start_param РґР»СЏ РѕРїСЂРµРґРµР»РµРЅРёСЏ РіРѕСЃС‚СЏ
+            // Проверка start_param для определения гостя
             if (tg.initDataUnsafe && tg.initDataUnsafe.start_param) {
                 const startParam = tg.initDataUnsafe.start_param;
                 if (currentUser && startParam !== currentUser.username && startParam !== 'none') {
                     isOwner = false;
                 }
             }
-            // РЈСЃС‚Р°РЅРѕРІРєР° safe area insets
+            // Установка safe area insets
             if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.safeAreaInset) {
                 document.documentElement.style.setProperty('--tg-safe-area-inset-top', `${window.Telegram.WebApp.safeAreaInset.top}px`);
                 document.documentElement.style.setProperty('--tg-safe-area-inset-bottom', `${window.Telegram.WebApp.safeAreaInset.bottom}px`);
                 document.documentElement.style.setProperty('--tg-safe-area-inset-left', `${window.Telegram.WebApp.safeAreaInset.left}px`);
                 document.documentElement.style.setProperty('--tg-safe-area-inset-right', `${window.Telegram.WebApp.safeAreaInset.right}px`);
             }
-            // Р”РѕР±Р°РІР»СЏРµРј РѕР±СЂР°Р±РѕС‚С‡РёРє РґР»СЏ Р·Р°РєСЂС‹С‚РёСЏ РјРѕРґР°Р»СЊРЅС‹С… РѕРєРѕРЅ РїСЂРё РЅР°Р¶Р°С‚РёРё Esc
+            // Добавляем обработчик для закрытия модальных окон при нажатии Esc
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
                     if (authModal && authModal.classList.contains('active')) {
@@ -2727,14 +2726,14 @@
                 }
             });
             
-            // РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РѕР±СЂР°Р±РѕС‚С‡РёРєРѕРІ РґР»СЏ СЃРєСЂРёРЅС€РѕС‚РѕРІ
+            // Инициализация обработчиков для скриншотов
             if (prevBtn) prevBtn.addEventListener('click', scrollPrev);
             if (nextBtn) nextBtn.addEventListener('click', scrollNext);
             
-            // Р”РѕР±Р°РІР»СЏРµРј РѕР±СЂР°Р±РѕС‚С‡РёРє РїСЂРѕРєСЂСѓС‚РєРё РґР»СЏ РѕР±РЅРѕРІР»РµРЅРёСЏ СЃРѕСЃС‚РѕСЏРЅРёСЏ РєРЅРѕРїРѕРє
+            // Добавляем обработчик прокрутки для обновления состояния кнопок
             if (screenshotsSlider) {
                 screenshotsSlider.addEventListener('scroll', updateNavButtons);
-                // РРЅРёС†РёР°Р»РёР·РёСЂСѓРµРј РєРЅРѕРїРєРё РїРѕСЃР»Рµ Р·Р°РіСЂСѓР·РєРё
+                // Инициализируем кнопки после загрузки
                 setTimeout(updateNavButtons, 500);
             }
         });
