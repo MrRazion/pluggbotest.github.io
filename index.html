@@ -1400,6 +1400,58 @@
             color: var(--text-secondary);
             padding: 20px;
         }
+
+        /* Добавьте этот CSS в ваш существующий стиль */
+        .security-section {
+          margin: 20px 0;
+        }
+
+        .security-section h3 {
+          font-size: 18px;
+          font-weight: 600;
+          color: var(--text-color);
+          margin-bottom: 8px;
+        }
+
+        .security-subtext {
+          font-size: 12px;
+          color: var(--text-secondary);
+          line-height: 1.4;
+          margin-bottom: 15px;
+        }
+
+        .security-card {
+          background: var(--card-bg);
+          border-radius: var(--border-radius-md);
+          padding: 15px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .security-item {
+          display: flex;
+          align-items: flex-start;
+          margin-bottom: 12px;
+        }
+
+        .security-item:last-child {
+          margin-bottom: 0;
+        }
+
+        .security-icon {
+          width: 20px;
+          height: 20px;
+          margin-right: 10px;
+          color: var(--accent-color);
+          min-width: 20px;
+          flex-shrink: 0;
+          margin-top: 2px;
+        }
+
+        .security-item span {
+          font-size: 14px;
+          color: var(--text-color);
+          line-height: 1.4;
+        }
     </style>
 </head>
 <body>
@@ -1499,6 +1551,49 @@
                 
                 <div class="section-title">Описание</div>
                 <div class="section-content" id="details-description"></div>
+
+                <!-- Раздел безопасности данных -->
+                <div class="security-section">
+                  <h3>Безопасность данных</h3>
+                  <p class="security-subtext">Чтобы контролировать безопасность, нужно знать, как разработчики собирают ваши данные и передают третьим лицам. Методы обеспечения безопасности и конфиденциальности могут зависеть от того, как вы используете приложение, а так же от вашего региона и возраста. Информация ниже в будущем может измениться.</p>
+                  
+                  <div class="security-card">
+                    <div class="security-item">
+                      <svg class="security-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+                        <circle cx="12" cy="4" r="2"></circle>
+                        <path d="M16 16a4 4 0 1 0-8 0"></path>
+                      </svg>
+                      <span>Данные не передаются третьим лицам и сторонам</span>
+                    </div>
+                    
+                    <div class="security-item">
+                      <svg class="security-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2a5 5 0 0 0-5 5v2a5 5 0 0 0 10 0v-2a5 5 0 0 0-5-5z"></path>
+                        <line x1="12" y1="13" x2="12" y2="19"></line>
+                        <polyline points="9 16 12 19 15 16"></polyline>
+                      </svg>
+                      <span>Приложение может собирать типы данных: личная информация, финансовые данные, сведения о приложении и его производительности, сообщения, история действий в приложении</span>
+                    </div>
+                    
+                    <div class="security-item">
+                      <svg class="security-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                      </svg>
+                      <span>Данные шифруются при передаче</span>
+                    </div>
+                    
+                    <div class="security-item">
+                      <svg class="security-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="8" y1="12" x2="16" y2="12"></line>
+                      </svg>
+                      <span>В приложении нет способа запросить удаление данных</span>
+                    </div>
+                  </div>
+                </div>
+
                 <div class="section-title">Что нового<span class="new-indicator"></span></div>
                 <div class="section-content" id="details-whats-new"></div>
             </div>
@@ -2055,7 +2150,7 @@
                         '- Новый контент из обновления 0.34.0 (скины, интерфейс, саундтрек)',
                         '- Добавлены карты "Awm Lego" и "Summer Breeze"',
                         '- Убрано снижение уровня при убийстве с ножа в гонке вооружений',
-                        '- Возвращены статтрек версии скинов на береты',
+                        '- Возвращено статтрек версии скинов на береты',
                         '- Улучшено пространственное аудио',
                         '- Исправление багов (включая кривой скелет персонажа)'
                     ],
@@ -2223,7 +2318,7 @@
                     currentDownloadUrl = game.url;
                     currentFileName = game.fileName;
                     currentGameTitle = game.title;
-                    currentGameId = gameId;
+                    currentGameId = game.id;
                     downloadBtn.textContent = 'Скачать';
                     gameDetails.classList.add('active');
                     updateDetailsLibraryButton();
