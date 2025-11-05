@@ -1400,41 +1400,6 @@
             color: var(--text-secondary);
             padding: 20px;
         }
-
-        /* Data Security Section Styles */
-        .data-security-section {
-            margin: 25px 0;
-        }
-        .data-security-small-text {
-            font-size: 12px;
-            color: var(--text-secondary);
-            margin-bottom: 15px;
-            line-height: 1.4;
-        }
-        .data-security-box {
-            background: var(--card-bg);
-            border-radius: var(--border-radius-lg);
-            padding: 20px;
-            box-shadow: var(--shadow-soft);
-        }
-        .data-security-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        .data-security-item:last-child {
-            margin-bottom: 0;
-        }
-        .data-security-item svg {
-            width: 24px;
-            height: 24px;
-            margin-right: 15px;
-            color: var(--text-secondary);
-        }
-        .data-security-item span {
-            font-size: 14px;
-            color: var(--text-color);
-        }
     </style>
 </head>
 <body>
@@ -1534,43 +1499,6 @@
                 
                 <div class="section-title">Описание</div>
                 <div class="section-content" id="details-description"></div>
-
-                <!-- НОВАЯ СЕКЦИЯ: Безопасность данных -->
-                <div class="data-security-section">
-                    <div class="section-title">Безопасность данных</div>
-                    <p class="data-security-small-text">чтобы контролировать безопасность, нужно знать, как разработчики собирают ваши данные и передают третьим лицам. Методы обеспечения безопасности и конфиденциальности могут зависеть от того, как вы используете приложение, а так же от вашего региона и возраста. Информация ниже в будущем может измениться.</p>
-                    <div class="data-security-box">
-                        <div class="data-security-item">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M4 12V8a4 4 0 014-4h8a4 4 0 014 4v4m-10 8h4a2 2 0 002-2v-4a2 2 0 00-2-2h-4a2 2 0 00-2 2v4a2 2 0 002 2z"/>
-                            </svg>
-                            <span>данные не передаются третьим лицам и сторонам.</span>
-                        </div>
-                        <div class="data-security-item">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 3.582 8 8 8h4c4.418 0 8-3.582 8-8 0-5.523-4.477-10-10-10zm0 16c-3.309 0-6-2.691-6-6s2.691-6 6-6 6 2.691 6 6-2.691 6-6 6z"/>
-                                <path d="M12 7v5"/>
-                            </svg>
-                            <span>что это приложение может собирать типы данных: личная информация, финансовые данные, сведения о приложении и его производительности, сообщения, история действий в приложении</span>
-                        </div>
-                        <div class="data-security-item">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 18c-4.418 0-8-3.582-8-8s3.582-8 8-8 8 3.582 8 8-3.582 8-8 8z"/>
-                                <path d="M12 6v6"/>
-                            </svg>
-                            <span>данные шифруются при передаче.</span>
-                        </div>
-                        <div class="data-security-item">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="12" cy="12" r="10"/>
-                                <line x1="4" y1="12" x2="20" y2="12"/>
-                            </svg>
-                            <span>в приложении нет способа запросить удаление данных</span>
-                        </div>
-                    </div>
-                </div>
-                <!-- КОНЕЦ НОВОЙ СЕКЦИИ -->
-
                 <div class="section-title">Что нового<span class="new-indicator"></span></div>
                 <div class="section-content" id="details-whats-new"></div>
             </div>
