@@ -1496,12 +1496,38 @@
           transform: translateX(26px);
         }
 
-        /* Hide Google Translate banner */
+        /* Enhanced Google Translate hiding */
         .goog-te-banner-frame {
           display: none !important;
         }
+        .goog-te-gadget {
+          display: none !important;
+        }
+        .goog-te-menu-frame {
+          display: none !important;
+        }
+        .skiptranslate {
+          display: none !important;
+        }
+        body > .skiptranslate {
+          display: none !important;
+        }
+        #goog-gt- {
+          display: none !important;
+        }
+        .goog-tooltip {
+          display: none !important;
+        }
+        .goog-tooltip:hover {
+          display: none !important;
+        }
+        .goog-text-highlight {
+          background-color: transparent !important;
+          box-shadow: none !important;
+        }
         body {
           top: 0 !important;
+          position: static !important;
         }
     </style>
 </head>
@@ -2813,7 +2839,7 @@
                     'https://i.imgur.com/9pHqQ2k.jpg',
                     'https://i.imgur.com/2yNqH4a.jpg',
                     'https://i.imgur.com/3gTfD5p.jpg',
-                    'https://i.imgur.com/8cPvPvKqR.jpg'
+                    'https://i.imgur.com/8cPvKqR.jpg'
                 ];
                 bannerExamples.forEach((url, index) => {
                     const item = document.createElement('div');
@@ -2960,6 +2986,16 @@
             if (localStorage.getItem('auto-translate') === 'true') {
               translatePage();
             }
+
+            // Force hide Google Translate elements after load
+            setTimeout(() => {
+              const translateElements = document.querySelectorAll('.goog-te-banner-frame, .goog-te-gadget, .goog-te-menu-frame, .skiptranslate, #goog-gt-, .goog-tooltip, .goog-text-highlight');
+              translateElements.forEach(el => {
+                el.style.display = 'none';
+              });
+              document.body.style.top = '0px';
+              document.body.style.position = 'static';
+            }, 1000);
         });
     </script>
 </body>
