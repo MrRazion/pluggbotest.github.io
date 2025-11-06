@@ -1454,424 +1454,59 @@
           color: var(--text-color);
           line-height: 1.4;
         }
-        /* Система отзывов */
-.reviews-section {
-  padding: 20px 0;
-}
 
-.section-subtitle {
-  font-size: 14px;
-  color: var(--text-secondary);
-  margin-bottom: 15px;
-}
+        /* Toggle switch CSS */
+        .switch {
+          position: relative;
+          display: inline-block;
+          width: 60px;
+          height: 34px;
+        }
+        .switch input { 
+          opacity: 0;
+          width: 0;
+          height: 0;
+        }
+        .slider {
+          position: absolute;
+          cursor: pointer;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: #ccc;
+          transition: .4s;
+          border-radius: 34px;
+        }
+        .slider:before {
+          position: absolute;
+          content: "";
+          height: 26px;
+          width: 26px;
+          left: 4px;
+          bottom: 4px;
+          background-color: white;
+          transition: .4s;
+          border-radius: 50%;
+        }
+        input:checked + .slider {
+          background-color: #2196F3;
+        }
+        input:checked + .slider:before {
+          transform: translateX(26px);
+        }
 
-.rating-system {
-  margin: 15px 0;
-}
-
-.stars-container {
-  display: flex;
-  font-size: 24px;
-  color: #d1d1d1;
-  margin: 10px 0;
-  cursor: pointer;
-}
-
-.stars-container .star {
-  transition: var(--transition);
-  margin-right: 2px;
-}
-
-.stars-container .star.filled {
-  color: #FFD700;
-}
-
-.write-review-link {
-  color: var(--accent-color);
-  font-weight: 600;
-  cursor: pointer;
-  margin-top: 10px;
-  display: inline-block;
-}
-
-.reviews-stats {
-  display: flex;
-  margin: 20px 0;
-  gap: 20px;
-}
-
-.overall-rating {
-  flex: 1;
-  text-align: center;
-}
-
-.rating-value {
-  font-size: 36px;
-  font-weight: 700;
-  color: var(--text-color);
-}
-
-.rating-stars {
-  font-size: 20px;
-  color: #FFD700;
-  margin: 5px 0;
-}
-
-.total-reviews {
-  color: var(--text-secondary);
-  font-size: 14px;
-}
-
-.rating-distribution {
-  flex: 2;
-}
-
-.distribution-row {
-  display: flex;
-  align-items: center;
-  margin: 5px 0;
-}
-
-.distribution-row span {
-  width: 20px;
-  text-align: right;
-  margin-right: 10px;
-  color: var(--text-color);
-  font-size: 14px;
-}
-
-.bar-container {
-  flex: 1;
-  height: 12px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
-  overflow: hidden;
-  margin: 0 10px;
-}
-
-.bar-fill {
-  height: 100%;
-  background: var(--accent-gradient);
-  border-radius: 6px;
-  width: 0%;
-  transition: width 0.5s ease;
-}
-
-.frequent-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 20px 0;
-}
-
-.tag-item {
-  padding: 5px 12px;
-  border-radius: 15px;
-  font-size: 13px;
-  background: rgba(255, 255, 255, 0.05);
-}
-
-.tag-item.positive {
-  background: rgba(52, 199, 89, 0.15);
-  color: #34c759;
-}
-
-.tag-item.negative {
-  background: rgba(255, 59, 48, 0.15);
-  color: #ff3b30;
-}
-
-.user-review {
-  background: var(--card-bg);
-  border-radius: var(--border-radius-md);
-  padding: 15px;
-  margin: 15px 0;
-}
-
-.review-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.review-avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  margin-right: 10px;
-  object-fit: cover;
-}
-
-.review-author {
-  font-weight: 600;
-  color: var(--text-color);
-}
-
-.verified-badge {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  margin-left: 4px;
-  vertical-align: middle;
-}
-
-.review-meta {
-  display: flex;
-  align-items: center;
-  color: var(--text-secondary);
-  font-size: 13px;
-  margin-top: 5px;
-}
-
-.review-stars {
-  margin-right: 8px;
-  color: #FFD700;
-  font-size: 14px;
-}
-
-.review-date {
-  margin-right: 10px;
-}
-
-.review-content {
-  margin: 10px 0;
-  line-height: 1.5;
-}
-
-.review-actions {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-top: 10px;
-}
-
-.action-btn {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  background: rgba(255, 255, 255, 0.05);
-  border: none;
-  border-radius: 20px;
-  padding: 5px 12px;
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: var(--transition);
-}
-
-.action-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--text-color);
-}
-
-.action-btn.liked, .action-btn.disliked {
-  color: var(--text-color);
-}
-
-/* Модальное окно отзыва */
-.review-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: var(--primary-bg);
-  z-index: 1000;
-  display: none;
-  flex-direction: column;
-}
-
-.review-modal.active {
-  display: flex;
-}
-
-.review-modal-header {
-  padding: 15px;
-  display: flex;
-  align-items: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.review-modal-close {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255, 255, 255, 0.05);
-  border: none;
-  color: var(--text-color);
-  font-size: 18px;
-  cursor: pointer;
-}
-
-.review-modal-title {
-  margin-left: 15px;
-  font-weight: 600;
-}
-
-.review-game-info {
-  display: flex;
-  align-items: center;
-  padding: 10px 15px;
-  gap: 10px;
-}
-
-.review-game-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  object-fit: cover;
-}
-
-.review-game-details {
-  flex: 1;
-}
-
-.review-game-title {
-  font-weight: 600;
-  color: var(--text-color);
-}
-
-.review-game-subtitle {
-  font-size: 13px;
-  color: var(--text-secondary);
-}
-
-.review-publish-btn {
-  padding: 10px 15px;
-  background: var(--accent-gradient);
-  color: white;
-  border: none;
-  border-radius: var(--border-radius-md);
-  font-weight: 600;
-  margin: 10px 15px;
-  cursor: pointer;
-}
-
-.review-publish-btn:disabled {
-  background: rgba(255, 255, 255, 0.1);
-  cursor: not-allowed;
-}
-
-.review-rating {
-  padding: 15px;
-  display: flex;
-  justify-content: center;
-  gap: 5px;
-}
-
-.review-rating .star {
-  font-size: 32px;
-  color: #d1d1d1;
-  cursor: pointer;
-}
-
-.review-rating .star.filled {
-  color: #FFD700;
-}
-
-.review-input {
-  margin: 0 15px 15px;
-}
-
-.review-textarea {
-  width: 100%;
-  min-height: 120px;
-  padding: 12px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: var(--border-radius-md);
-  color: var(--text-color);
-  font-size: 16px;
-  resize: none;
-}
-
-.review-textarea::placeholder {
-  color: var(--text-secondary);
-}
-
-.review-user-info {
-  display: flex;
-  align-items: center;
-  padding: 10px 15px;
-  gap: 8px;
-  color: var(--text-secondary);
-  font-size: 13px;
-}
-
-.review-user-avatar {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-}
-
-.review-user-username {
-  font-weight: 500;
-  color: var(--text-color);
-}
-
-/* Модальное окно подтверждения */
-.confirm-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 1001;
-}
-
-.confirm-modal-content {
-  background: var(--secondary-bg);
-  border-radius: var(--border-radius-md);
-  padding: 20px;
-  width: 90%;
-  max-width: 400px;
-}
-
-.confirm-title {
-  font-weight: 600;
-  margin-bottom: 10px;
-  color: var(--text-color);
-}
-
-.confirm-message {
-  color: var(--text-secondary);
-  margin-bottom: 20px;
-  font-size: 14px;
-}
-
-.confirm-buttons {
-  display: flex;
-  gap: 10px;
-}
-
-.confirm-btn {
-  flex: 1;
-  padding: 10px;
-  border: none;
-  border-radius: var(--border-radius-sm);
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.confirm-btn.cancel {
-  background: rgba(255, 59, 48, 0.1);
-  color: var(--error-color);
-}
-
-.confirm-btn.continue {
-  background: var(--accent-gradient);
-  color: white;
-}
-
+        /* Hide Google Translate banner */
+        .goog-te-banner-frame {
+          display: none !important;
+        }
+        body {
+          top: 0 !important;
+        }
     </style>
 </head>
 <body>
+    <div id="google_translate_element" style="display:none;"></div>
     <div class="container">
         <div class="header">
             <div>
@@ -2075,6 +1710,13 @@
                             <textarea class="setting-input" id="bio-input" rows="3" placeholder="Расскажите немного о себе..."></textarea>
                             <button class="save-btn" id="save-bio">Сохранить</button>
                         </div>
+                        <div class="setting-item">
+                            <div class="setting-label">Auto-translate</div>
+                            <label class="switch">
+                                <input type="checkbox" id="auto-translate-toggle">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
                         <button class="logout-btn" id="logout-btn">Выйти из аккаунта</button>
                     </div>
                 </div>
@@ -2162,7 +1804,16 @@
             </div>
         </div>
     </div>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
     <script>
+        window.googleTranslateElementInit = function() {
+          new google.translate.TranslateElement({
+            pageLanguage: 'ru',
+            includedLanguages: 'en,nl,fr,de,es,it,pt,zh-CN,ja,ko,ar,hi',
+            autoDisplay: false
+          }, 'google_translate_element');
+        };
+
         document.addEventListener('DOMContentLoaded', function() {
             // Инициализация Telegram Web App
             const tg = window.Telegram.WebApp;
@@ -2227,6 +1878,7 @@
             const screenshotsSlider = document.getElementById('screenshots-slider');
             const prevBtn = document.querySelector('.screenshot-nav.prev');
             const nextBtn = document.querySelector('.screenshot-nav.next');
+            const autoTranslateToggle = document.getElementById('auto-translate-toggle');
             // Переменные для отслеживания состояния
             let isDownloading = false;
             let currentTab = 'all';
@@ -2474,6 +2126,7 @@
                         '— Исправлены вылеты',
                         'Доступны новые методы для входа Facebook и VK',
                         '— Доступна линковка аккаунтов через различные способы входов Google, Facebook, VK',
+                        '— Теперь доступны функции приватности',
                         '— Теперь доступны функции приватности',
                         '— Улучшен античит'
                     ],
@@ -2748,77 +2401,6 @@
                     
                     // Показываем скриншоты
                     showGameScreenshots(gameId);
-
-const reviewsSection = document.createElement('div');
-reviewsSection.className = 'reviews-section';
-reviewsSection.innerHTML = `
-  <div class="section-title">Оценить приложение</div>
-  <div class="section-subtitle">Поделитесь своим мнением</div>
-  
-  <div class="rating-system" id="game-rating">
-    <div class="stars-container">
-      <span class="star" data-value="1">★</span>
-      <span class="star" data-value="2">★</span>
-      <span class="star" data-value="3">★</span>
-      <span class="star" data-value="4">★</span>
-      <span class="star" data-value="5">★</span>
-    </div>
-    <div class="write-review-link" id="write-review">Написать отзыв</div>
-  </div>
-  
-  <div class="section-title" style="margin-top: 30px;">Оценки и отзывы</div>
-  <div class="section-subtitle">В этой вкладке вы можете почитать комментарии к игре, подумать стоит ли скачивать и оценить саму игру.</div>
-  
-  <div class="reviews-stats">
-    <div class="overall-rating">
-      <span class="rating-value" id="overall-rating">0.0</span>
-      <div class="rating-stars" id="overall-stars"></div>
-      <div class="total-reviews" id="total-reviews">0 отзывов</div>
-    </div>
-    
-    <div class="rating-distribution">
-      <div class="distribution-row">
-        <span>5</span>
-        <div class="bar-container"><div class="bar-fill" id="bar-5"></div></div>
-      </div>
-      <div class="distribution-row">
-        <span>4</span>
-        <div class="bar-container"><div class="bar-fill" id="bar-4"></div></div>
-      </div>
-      <div class="distribution-row">
-        <span>3</span>
-        <div class="bar-container"><div class="bar-fill" id="bar-3"></div></div>
-      </div>
-      <div class="distribution-row">
-        <span>2</span>
-        <div class="bar-container"><div class="bar-fill" id="bar-2"></div></div>
-      </div>
-      <div class="distribution-row">
-        <span>1</span>
-        <div class="bar-container"><div class="bar-fill" id="bar-1"></div></div>
-      </div>
-    </div>
-  </div>
-  
-  <div class="frequent-tags" id="frequent-tags">
-    <!-- Теги будут добавляться динамически -->
-  </div>
-  
-  <div class="user-reviews" id="user-reviews">
-    <!-- Отзывы пользователей будут добавляться сюда -->
-  </div>
-`;
-
-// Вставляем перед кнопкой "Добавить в библиотеку"
-const libraryBtn = document.getElementById('details-library-btn');
-if (libraryBtn) {
-  libraryBtn.parentNode.insertBefore(reviewsSection, libraryBtn);
-}
-
-// Инициализируем систему рейтинга
-initRatingSystem(gameId);
-updateReviewsUI(gameId);
-
                 } else {
                     tg.showPopup({
                         title: 'Скоро будет доступно',
@@ -3231,7 +2813,7 @@ updateReviewsUI(gameId);
                     'https://i.imgur.com/9pHqQ2k.jpg',
                     'https://i.imgur.com/2yNqH4a.jpg',
                     'https://i.imgur.com/3gTfD5p.jpg',
-                    'https://i.imgur.com/8cPvKqR.jpg'
+                    'https://i.imgur.com/8cPvPvKqR.jpg'
                 ];
                 bannerExamples.forEach((url, index) => {
                     const item = document.createElement('div');
@@ -3325,565 +2907,59 @@ updateReviewsUI(gameId);
                 // Инициализируем кнопки после загрузки
                 setTimeout(updateNavButtons, 500);
             }
-            // ... существующий код ...
-  
-  // Инициализация системы отзывов
-  if (currentGameId) {
-    initRatingSystem(currentGameId);
-    updateReviewsUI(currentGameId);
-  }
 
-// Глобальные переменные для системы отзывов
-let currentRating = 0;
-let currentReviewText = '';
-let reviewModal = null;
+            // Auto-translate functionality
+            function translatePage() {
+              fetch('https://ipapi.co/json')
+                .then(res => res.json())
+                .then(data => {
+                  const country = data.country_code;
+                  const langMap = {
+                    'NL': 'nl',
+                    'US': 'en',
+                    'FR': 'fr',
+                    'DE': 'de',
+                    'ES': 'es',
+                    'IT': 'it',
+                    'PT': 'pt',
+                    'CN': 'zh-CN',
+                    'JP': 'ja',
+                    'KR': 'ko',
+                    'SA': 'ar',
+                    'IN': 'hi',
+                    'RU': 'ru' // No translation for RU
+                  };
+                  const targetLang = langMap[country] || 'en';
+                  if (targetLang === 'ru') return;
 
-// Хранилище для отзывов (в реальной реализации это должен быть сервер)
-const reviewsStorage = {
-  // Инициализация из localStorage
-  init: function() {
-    const stored = localStorage.getItem('plugg_reviews');
-    if (stored) {
-      try {
-        return JSON.parse(stored);
-      } catch (e) {
-        console.error('Error parsing reviews data', e);
-      }
-    }
-    return {};
-  },
-  
-  // Сохранение отзывов
-  save: function(reviews) {
-    localStorage.setItem('plugg_reviews', JSON.stringify(reviews));
-  },
-  
-  // Получение отзывов для игры
-  getGameReviews: function(gameId) {
-    const reviews = this.init();
-    return reviews[gameId] || [];
-  },
-  
-  // Добавление отзыва
-  addReview: function(gameId, review) {
-    const reviews = this.init();
-    if (!reviews[gameId]) {
-      reviews[gameId] = [];
-    }
-    
-    // Проверка на частоту отзывов (3-4 отзыва за час)
-    const userReviews = reviews[gameId].filter(r => 
-      r.userId === currentUser.telegram_id && 
-      Date.now() - new Date(r.date).getTime() < 3600000
-    );
-    
-    if (userReviews.length >= 3) {
-      return false; // Превышено количество отзывов за час
-    }
-    
-    reviews[gameId].push({
-      ...review,
-      userId: currentUser.telegram_id,
-      date: new Date().toISOString(),
-      likes: 0,
-      dislikes: 0
-    });
-    
-    this.save(reviews);
-    return true;
-  }
-};
+                  // Wait for Google Translate to initialize
+                  setTimeout(() => {
+                    const select = document.querySelector('.goog-te-combo');
+                    if (select) {
+                      select.value = targetLang;
+                      select.dispatchEvent(new Event('change'));
+                    }
+                  }, 1000);
+                })
+                .catch(err => console.error('Error getting location', err));
+            }
 
-// Инициализация системы рейтинга
-function initRatingSystem(gameId) {
-  const stars = document.querySelectorAll('.stars-container .star');
-  const writeReviewBtn = document.getElementById('write-review');
-  
-  // Обновление звезд при наведении
-  stars.forEach(star => {
-    star.addEventListener('mouseenter', () => {
-      const value = parseInt(star.dataset.value);
-      stars.forEach((s, i) => {
-        if (i < value) {
-          s.classList.add('filled');
-        } else {
-          s.classList.remove('filled');
-        }
-      });
-    });
-    
-    // Выбор рейтинга
-    star.addEventListener('click', () => {
-      const value = parseInt(star.dataset.value);
-      // Сохраняем временный рейтинг
-      currentRating = value;
-      
-      // Открываем модальное окно отзыва
-      openReviewModal(gameId);
-      
-      // Сбрасываем hover-состояние
-      stars.forEach(s => s.classList.remove('filled'));
-    });
-  });
-  
-  // Сброс hover-состояния при уходе с контейнера
-  document.querySelector('.stars-container').addEventListener('mouseleave', () => {
-    updateStarsDisplay(gameId);
-  });
-  
-  // Обработчик кнопки "Написать отзыв"
-  if (writeReviewBtn) {
-    writeReviewBtn.addEventListener('click', () => {
-      openReviewModal(gameId);
-    });
-  }
-  
-  // Инициализируем отображение звезд
-  updateStarsDisplay(gameId);
-}
+            if (autoTranslateToggle) {
+              autoTranslateToggle.checked = localStorage.getItem('auto-translate') === 'true';
+              autoTranslateToggle.addEventListener('change', () => {
+                localStorage.setItem('auto-translate', autoTranslateToggle.checked);
+                if (autoTranslateToggle.checked) {
+                  translatePage();
+                } else {
+                  location.reload(); // Revert to original language
+                }
+              });
+            }
 
-// Обновление отображения звезд
-function updateStarsDisplay(gameId) {
-  const stars = document.querySelectorAll('.stars-container .star');
-  const reviews = reviewsStorage.getGameReviews(gameId);
-  
-  if (reviews.length === 0) {
-    stars.forEach(s => s.classList.remove('filled'));
-    return;
-  }
-  
-  // Вычисляем средний рейтинг
-  const avgRating = reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
-  
-  // Заполняем звезды
-  stars.forEach((s, i) => {
-    const value = i + 1;
-    if (value <= Math.floor(avgRating)) {
-      s.classList.add('filled');
-    } else if (value - 0.5 <= avgRating) {
-      // Половинная звезда (можно добавить отдельный класс для половинной звезды)
-      s.classList.add('filled');
-    } else {
-      s.classList.remove('filled');
-    }
-  });
-}
-
-// Открытие модального окна отзыва
-function openReviewModal(gameId) {
-  if (!currentUser) {
-    authModal.classList.add('active');
-    return;
-  }
-  
-  // Создаем модальное окно, если его нет
-  let reviewModal = document.getElementById('review-modal');
-  if (!reviewModal) {
-    reviewModal = document.createElement('div');
-    reviewModal.id = 'review-modal';
-    reviewModal.className = 'review-modal';
-    reviewModal.innerHTML = `
-      <div class="review-modal-header">
-        <button class="review-modal-close" id="review-close">×</button>
-        <div class="review-modal-title">Оценить приложение</div>
-      </div>
-      
-      <div class="review-game-info">
-        <img class="review-game-icon" id="review-game-icon" src="" alt="Game icon">
-        <div class="review-game-details">
-          <div class="review-game-title" id="review-game-title"></div>
-          <div class="review-game-subtitle">Оценить приложение</div>
-        </div>
-      </div>
-      
-      <div class="review-rating" id="review-rating">
-        <span class="star" data-value="1">★</span>
-        <span class="star" data-value="2">★</span>
-        <span class="star" data-value="3">★</span>
-        <span class="star" data-value="4">★</span>
-        <span class="star" data-value="5">★</span>
-      </div>
-      
-      <div class="review-input">
-        <textarea class="review-textarea" id="review-text" placeholder="Напишите ваш отзыв..."></textarea>
-      </div>
-      
-      <div class="review-user-info">
-        ${currentUser.avatar ? `<img class="review-user-avatar" src="${currentUser.avatar}" alt="Avatar">` : 
-          `<div class="review-user-avatar" style="background:${generateAvatarColor(currentUser.first_name)}">${(currentUser.first_name[0] || '').toUpperCase()}</div>`}
-        <span class="review-user-username">${currentUser.first_name || 'Пользователь'}</span>
-        <span>Отзывы будут видны и содержат сведения о вашем аккаунте</span>
-      </div>
-      
-      <button class="review-publish-btn" id="publish-review" disabled>Опубликовать</button>
-    `;
-    document.body.appendChild(reviewModal);
-    
-    // Инициализируем обработчики
-    initReviewModalHandlers(gameId);
-  }
-  
-  // Заполняем данные
-  const game = games.find(g => g.id === gameId);
-  if (game) {
-    document.getElementById('review-game-icon').src = game.image;
-    document.getElementById('review-game-title').textContent = game.title;
-  }
-  
-  // Сбрасываем состояние
-  currentRating = 0;
-  document.getElementById('review-text').value = '';
-  document.getElementById('publish-review').disabled = true;
-  
-  // Показываем модальное окно
-  reviewModal.classList.add('active');
-}
-
-// Инициализация обработчиков модального окна отзыва
-function initReviewModalHandlers(gameId) {
-  const reviewModal = document.getElementById('review-modal');
-  const reviewClose = document.getElementById('review-close');
-  const reviewText = document.getElementById('review-text');
-  const publishBtn = document.getElementById('publish-review');
-  const ratingStars = document.querySelectorAll('#review-rating .star');
-  
-  // Обработчик закрытия
-  reviewClose.addEventListener('click', () => {
-    const text = reviewText.value.trim();
-    if (text && text.length < 5) {
-      showConfirmModal(
-        'Продолжить?',
-        'Вы недописали ваш отзыв, вы хотите отменить?',
-        () => { /* Продолжить написание */ },
-        () => { 
-          reviewModal.classList.remove('active');
-          currentReviewText = '';
-        }
-      );
-    } else {
-      reviewModal.classList.remove('active');
-    }
-  });
-  
-  // Обработчик звезд
-  ratingStars.forEach(star => {
-    star.addEventListener('mouseenter', () => {
-      const value = parseInt(star.dataset.value);
-      ratingStars.forEach((s, i) => {
-        if (i < value) {
-          s.classList.add('filled');
-        } else {
-          s.classList.remove('filled');
-        }
-      });
-    });
-    
-    star.addEventListener('click', () => {
-      const value = parseInt(star.dataset.value);
-      currentRating = value;
-      ratingStars.forEach((s, i) => {
-        if (i < value) {
-          s.classList.add('filled');
-        } else {
-          s.classList.remove('filled');
-        }
-      });
-    });
-  });
-  
-  // Обработчик ввода текста
-  reviewText.addEventListener('input', () => {
-    const text = reviewText.value.trim();
-    publishBtn.disabled = text.length < 5;
-  });
-  
-  // Обработчик публикации
-  publishBtn.addEventListener('click', () => {
-    if (!currentRating) {
-      tg.showAlert('Пожалуйста, оцените игру звездами');
-      return;
-    }
-    
-    const text = reviewText.value.trim();
-    if (text.length < 5) {
-      tg.showAlert('Отзыв должен содержать минимум 5 символов');
-      return;
-    }
-    
-    const success = reviewsStorage.addReview(gameId, {
-      rating: currentRating,
-      comment: text
-    });
-    
-    if (!success) {
-      // Показываем модальное окно с таймером
-      showRateLimitModal();
-      return;
-    }
-    
-    // Обновляем UI
-    updateReviewsUI(gameId);
-    reviewModal.classList.remove('active');
-    tg.showAlert('Спасибо за ваш отзыв!');
-  });
-}
-
-// Обновление UI отзывов
-function updateReviewsUI(gameId) {
-  const reviews = reviewsStorage.getGameReviews(gameId);
-  
-  // Обновляем общий рейтинг
-  const overallRatingEl = document.getElementById('overall-rating');
-  const overallStarsEl = document.getElementById('overall-stars');
-  const totalReviewsEl = document.getElementById('total-reviews');
-  
-  if (reviews.length > 0) {
-    const avgRating = reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
-    overallRatingEl.textContent = avgRating.toFixed(1);
-    
-    // Создаем HTML для звезд
-    let starsHTML = '';
-    for (let i = 0; i < 5; i++) {
-      if (i < Math.floor(avgRating)) {
-        starsHTML += '★';
-      } else if (i - 0.5 < avgRating) {
-        starsHTML += '★'; // Можно добавить половинную звезду
-      } else {
-        starsHTML += '☆';
-      }
-    }
-    overallStarsEl.innerHTML = starsHTML;
-  } else {
-    overallRatingEl.textContent = '0.0';
-    overallStarsEl.innerHTML = '☆☆☆☆☆';
-  }
-  
-  totalReviewsEl.textContent = `${formatNumber(reviews.length)} отзывов`;
-  
-  // Обновляем распределение рейтинга
-  const ratingCounts = [0, 0, 0, 0, 0];
-  reviews.forEach(review => {
-    if (review.rating >= 1 && review.rating <= 5) {
-      ratingCounts[review.rating - 1]++;
-    }
-  });
-  
-  const total = reviews.length;
-  for (let i = 0; i < 5; i++) {
-    const bar = document.getElementById(`bar-${5-i}`);
-    const percentage = total ? (ratingCounts[4-i] / total * 100) : 0;
-    bar.style.width = `${percentage}%`;
-  }
-  
-  // Обновляем частые упоминания
-  updateFrequentTags(reviews);
-  
-  // Обновляем список отзывов
-  updateUserReviews(reviews);
-}
-
-// Форматирование чисел (127772 -> 127,772)
-function formatNumber(num) {
-  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
-
-// Генерация цвета для аватара
-function generateAvatarColor(name) {
-  if (!name) return '#ccc';
-  let hash = 0;
-  for (let i = 0; i < name.length; i++) {
-    hash = name.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  const color = (hash & 0x00FFFFFF).toString(16).toUpperCase();
-  return `#${'00000'.substring(0, 6 - color.length)}${color}`;
-}
-
-// Обновление частых упоминаний
-function updateFrequentTags(reviews) {
-  const tagsContainer = document.getElementById('frequent-tags');
-  if (!tagsContainer) return;
-  
-  tagsContainer.innerHTML = '';
-  
-  // Анализируем тексты отзывов
-  const wordCounts = {};
-  const positiveWords = ['хорош', 'отличн', 'класс', 'нрав', 'крут', 'лучш', 'супер', 'топ', 'прекрасн', 'замечательн', 'великолепн'];
-  const negativeWords = ['плох', 'ужас', 'отврат', 'кошмар', 'разочарован', 'жалк', 'ужасн', 'неудач', 'ненавиж', 'проблем'];
-  
-  reviews.forEach(review => {
-    const words = review.comment.toLowerCase().split(/\s+/);
-    words.forEach(word => {
-      // Удаляем знаки препинания
-      word = word.replace(/[.,!?;:()]/g, '');
-      
-      // Проверяем на ключевые слова
-      if (word.length > 3) {
-        if (!wordCounts[word]) {
-          wordCounts[word] = {count: 0, sentiment: 'neutral'};
-          
-          // Определяем тональность
-          if (positiveWords.some(pw => word.includes(pw))) {
-            wordCounts[word].sentiment = 'positive';
-          } else if (negativeWords.some(nw => word.includes(nw))) {
-            wordCounts[word].sentiment = 'negative';
-          }
-        }
-        wordCounts[word].count++;
-      }
-    });
-  });
-  
-  // Сортируем и берем топ-9
-  const sortedTags = Object.entries(wordCounts)
-    .sort((a, b) => b[1].count - a[1].count)
-    .slice(0, 9);
-  
-  // Создаем элементы тегов
-  sortedTags.forEach(([word, data]) => {
-    const tag = document.createElement('div');
-    tag.className = `tag-item ${data.sentiment !== 'neutral' ? `tag-item.${data.sentiment}` : ''}`;
-    tag.textContent = word;
-    tagsContainer.appendChild(tag);
-  });
-}
-
-// Обновление списка пользовательских отзывов
-function updateUserReviews(reviews) {
-  const reviewsContainer = document.getElementById('user-reviews');
-  if (!reviewsContainer) return;
-  
-  reviewsContainer.innerHTML = '';
-  
-  // Сортируем по дате (новые сначала)
-  const sortedReviews = [...reviews].sort((a, b) => 
-    new Date(b.date) - new Date(a.date)
-  );
-  
-  sortedReviews.forEach(review => {
-    const reviewEl = document.createElement('div');
-    reviewEl.className = 'user-review';
-    
-    // Получаем информацию о пользователе
-    const user = getUserInfo(review.userId);
-    
-    // Создаем HTML отзыва
-    reviewEl.innerHTML = `
-      <div class="review-header">
-        <img class="review-avatar" src="${user.avatar || 'https://via.placeholder.com/36'}" alt="Avatar">
-        <div class="review-author">${user.name || 'Пользователь'} 
-          ${user.verified ? `<img class="verified-badge" src="https://github.com/MrRazion/pluggbotest.github.io/blob/main/badges/status/1761634926844.png" alt="Verified">` : ''}
-        </div>
-      </div>
-      <div class="review-meta">
-        <div class="review-stars">${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}</div>
-        <div class="review-date">${formatDate(review.date)}</div>
-      </div>
-      <div class="review-content">${review.comment}</div>
-      <div class="review-actions">
-        <button class="action-btn like-btn" data-review-id="${review.id}">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path>
-          </svg>
-          <span class="like-count">${formatNumber(review.likes)}</span>
-        </button>
-        <button class="action-btn dislike-btn" data-review-id="${review.id}">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2 2 0 0 1 22 4v7a2 2 0 0 1-2 2h-3"></path>
-          </svg>
-          <span class="dislike-count">${formatNumber(review.dislikes)}</span>
-        </button>
-      </div>
-    `;
-    
-    reviewsContainer.appendChild(reviewEl);
-  });
-  
-  // Добавляем обработчики лайков/дизлайков
-  document.querySelectorAll('.like-btn, .dislike-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const reviewId = btn.dataset.reviewId;
-      // Здесь будет логика обработки лайков
-      tg.showAlert('Спасибо за вашу оценку!');
-    });
-  });
-}
-
-// Форматирование даты
-function formatDate(dateString) {
-  const date = new Date(dateString);
-  return `${date.getDate().toString().padStart(2, '0')}.${(date.getMonth() + 1).toString().padStart(2, '0')}.${date.getFullYear()}`;
-}
-
-// Получение информации о пользователе
-function getUserInfo(userId) {
-  // В реальной реализации это запрос к серверу
-  const savedUsers = JSON.parse(localStorage.getItem('plugg_saved_users') || '{}');
-  const userData = savedUsers[userId];
-  
-  if (userData) {
-    return {
-      name: userData.first_name || 'Пользователь',
-      avatar: userData.avatar || '',
-      verified: isUserVerified(userId)
-    };
-  }
-  
-  return {
-    name: 'Пользователь',
-    avatar: '',
-    verified: false
-  };
-}
-
-// Модальное окно подтверждения
-function showConfirmModal(title, message, onContinue, onCancel) {
-  let confirmModal = document.getElementById('confirm-modal');
-  if (!confirmModal) {
-    confirmModal = document.createElement('div');
-    confirmModal.id = 'confirm-modal';
-    confirmModal.className = 'confirm-modal';
-    confirmModal.innerHTML = `
-      <div class="confirm-modal-content">
-        <div class="confirm-title">${title}</div>
-        <div class="confirm-message">${message}</div>
-        <div class="confirm-buttons">
-          <button class="confirm-btn cancel" id="confirm-cancel">Отменить</button>
-          <button class="confirm-btn continue" id="confirm-continue">Продолжить</button>
-        </div>
-      </div>
-    `;
-    document.body.appendChild(confirmModal);
-    
-    // Обработчики
-    document.getElementById('confirm-cancel').addEventListener('click', () => {
-      confirmModal.style.display = 'none';
-      if (onCancel) onCancel();
-    });
-    
-    document.getElementById('confirm-continue').addEventListener('click', () => {
-      confirmModal.style.display = 'none';
-      if (onContinue) onContinue();
-    });
-  }
-  
-  // Обновляем текст
-  document.querySelector('.confirm-title').textContent = title;
-  document.querySelector('.confirm-message').textContent = message;
-  
-  // Показываем
-  confirmModal.style.display = 'flex';
-}
-
-// Модальное окно с ограничением частоты отзывов
-function showRateLimitModal() {
-  // В реальной реализации здесь будет таймер
-  const timeLeft = 3600 - (Date.now() % 3600000) / 1000;
-  const minutes = Math.floor(timeLeft / 60);
-  const seconds = Math.floor(timeLeft % 60);
-  
-  tg.showAlert(`Вы можете оставить не более 3 отзывов в час. Попробуйте через ${minutes}:${seconds.toString().padStart(2, '0')}`);
-}
-
+            // On load, if enabled, translate
+            if (localStorage.getItem('auto-translate') === 'true') {
+              translatePage();
+            }
         });
     </script>
 </body>
