@@ -1835,7 +1835,7 @@
         window.googleTranslateElementInit = function() {
           new google.translate.TranslateElement({
             pageLanguage: 'ru',
-            includedLanguages: 'en,nl,fr,de,es,it,pt,zh-CN,ja,ko,ar,hi',
+            includedLanguages: 'en,nl,fr,de,es,it,pt,zh-CN,ja,ko,ar,hi,uk,kk,pl',
             autoDisplay: false
           }, 'google_translate_element');
         };
@@ -2177,7 +2177,7 @@
                     description: 'Приватный сервер StandLeo - настоящий рай для фанатов Standoff 2, предлагающий приватный сервер. Здесь вы сможете погрузиться в адреналиновые сражения и тактические соревнования, не тратя ни копейки на внешние атрибуты и награды.',
                     whatsNew: [
                         '- Новый подарок',
-                        '- Все из Standoff 0.35.0 (Новый пак, новая акция с коллекцией, карты, новое оружие и т.д.)',
+                        '- Все из Standoff 0.35.0 (Новый пак, новая акция с коллекцией, карты, новое оружие и т.d.)',
                         '- Добавлены ежедневные вызовы',
                         '- Режим наблюдателей',
                         '- Кланы',
@@ -2953,7 +2953,10 @@
                     'KR': 'ko',
                     'SA': 'ar',
                     'IN': 'hi',
-                    'RU': 'ru' // No translation for RU
+                    'RU': 'ru',
+                    'UA': 'uk',
+                    'KZ': 'kk',
+                    'PL': 'pl'
                   };
                   const targetLang = langMap[country] || 'en';
                   if (targetLang === 'ru') return;
