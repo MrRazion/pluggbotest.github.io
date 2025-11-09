@@ -2119,7 +2119,7 @@
                             '— Улучшен античит'
                         ],
                         image: 'https://cash-droid.ru/wp-content/uploads/2023/06/102.jpg',
-                        urls: ['https://huggingface.co/Zerchi/test/resolve/main/StandRise1.4.0f1.apk'],
+                        urls: ['https://huggingface.co/Zerchi/cappie_miside/resolve/main/Cap.zip'],
                         fileNames: ['StandRise1.4.0f1.apk'],
                         version: '1.4F2',
                         size: '1.98 GB',
@@ -2284,7 +2284,7 @@
                         description: 'Приватный сервер StandLeo - настоящий рай для фанатов Standoff 2, предлагающий приватный сервер. Здесь вы сможете погрузиться в адреналиновые сражения и тактические соревнования, не тратя ни копейки на внешние атрибуты и награды.',
                         whatsNew: [
                             '- Новый подарок',
-                            '- Все из Standoff 0.35.0 (Новый пак, новая акция с коллекцией, карты, новое оружие и т.д.)',
+                            '- Все из Standoff 0.35.0 (Новый пак, новая акция с коллекцией, карты, новое оружие и т.d.)',
                             '- Добавлены ежедневные вызовы',
                             '- Режим наблюдателей',
                             '- Кланы',
@@ -2358,7 +2358,7 @@
                         description: 'Приватный сервер StandLeo - настоящий рай для фанатов Standoff 2, предлагающий приватный сервер. Здесь вы сможете погрузиться в адреналиновые сражения и тактические соревнования, не тратя ни копейки на внешние атрибуты и награды.',
                         whatsNew: [
                             '- Новый подарок',
-                            '- Все из Standoff 0.35.0 (Новый пак, новая акция с коллекцией, карты, новое оружие и т.д.)',
+                            '- Все из Standoff 0.35.0 (Новый пак, новая акция с коллекцией, карты, новое оружие и т.d.)',
                             '- Добавлены ежедневные вызовы',
                             '- Режим наблюдателей',
                             '- Кланы',
@@ -2645,6 +2645,7 @@
 
                 if (tg.isVersionAtLeast('8.0')) {
                     // Используем Telegram.WebApp.downloadFile
+                    progressContainer.style.display = 'none'; // Hide progress for Telegram
                     tg.downloadFile({
                         url: url,
                         file_name: currentPlatform === 'pc' ? `PlPrivates/${currentGameTitle}/${fileName}` : fileName
@@ -2714,7 +2715,7 @@
             function showCompletionNotification() {
                 let message = '';
                 if (currentPlatform === 'pc') {
-                    message = `Ваша приватка "${currentGameTitle}" была скачана. Установите её в папке PlPrivates.`;
+                    message = `Ваша приватка "${currentGameTitle}" была скачана. Установите её в папке PlPrivates/${currentGameTitle}.`;
                 } else if (currentPlatform === 'ios') {
                     message = `Ваша игра была скачана, перейдите в папку Download и найдите ${currentFileNames[0]}.ipa`;
                 } else {
@@ -2733,6 +2734,7 @@
                     isDownloading = true;
                     downloadBtn.disabled = true;
                     downloadBtn.innerHTML = '<span class="loader"></span> Загрузка...';
+                    if (progressContainer) progressContainer.style.display = 'block';
                     if (statusText) statusText.textContent = 'Запрос на скачивание...';
                     updateProgress(0, 0, 0);
                     // Эмулируем пинг
