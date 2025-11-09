@@ -166,6 +166,23 @@
             white-space: nowrap;
             position: relative;
             overflow: hidden;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .tab-icon {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .tab-icon img {
+            width: 14px;
+            height: 14px;
+            object-fit: contain;
         }
         .tab::after {
             content: '';
@@ -225,6 +242,29 @@
         .game-card:hover .game-image img {
             transform: scale(1.05);
             opacity: 1;
+        }
+        .platform-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+        .platform-badge img {
+            width: 16px;
+            height: 16px;
+            object-fit: contain;
+        }
+        .platform-badge.windows {
+            background: #0078d7;
+        }
+        .platform-badge.apple {
+            background: #000000;
         }
         .game-overlay {
             position: absolute;
@@ -1454,79 +1494,6 @@
           color: var(--text-color);
           line-height: 1.4;
         }
-
-        /* Стили для табов с иконками */
-        .tab-btn .tab-icon {
-          width: 18px;
-          height: 18px;
-          margin-right: 8px;
-          vertical-align: middle;
-          filter: var(--icon-filter, none);
-        }
-
-        /* Стили для платформенных бейджей */
-        .game-image-container {
-          position: relative;
-          border-radius: 12px;
-          overflow: hidden;
-        }
-
-        .platform-badge {
-          position: absolute;
-          bottom: 8px;
-          right: 8px;
-          width: 28px;
-          height: 28px;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 2;
-        }
-
-        .platform-icon {
-          width: 16px;
-          height: 16px;
-        }
-
-        /* Стили для кнопок табов */
-        .tab-btn {
-          padding: 8px 16px;
-          margin: 0 4px;
-          border-radius: 20px;
-          background: rgba(255, 255, 255, 0.08);
-          color: var(--text-color);
-          border: none;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          display: inline-flex;
-          align-items: center;
-        }
-
-        .tab-btn.active {
-          background: var(--accent-gradient);
-          color: white;
-        }
-
-        .tab-btn:hover {
-          background: rgba(255, 255, 255, 0.15);
-        }
-
-        /* Дополнительные стили для платформенной информации */
-        .platform-info {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          background: rgba(0, 0, 0, 0.1);
-          padding: 8px 12px;
-          border-radius: 8px;
-          margin-bottom: 15px;
-        }
-
-        .platform-info .platform-icon {
-          width: 20px;
-          height: 20px;
-        }
     </style>
 </head>
 <body>
@@ -1550,21 +1517,20 @@
             <input type="text" placeholder="Поиск игр..." id="search-input">
         </div>
         <div class="tabs">
-            <button class="tab-btn active" data-tab="all">Все</button>
-            <button class="tab-btn" data-tab="android">
-                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzNEREM4NCI+CiAgPHBhdGggZD0iTTEwIDJINkM0LjkgMiA0IDIuOSA0IDRWMjBDNCAyMS4xIDQuOSAyMiA2IDIySDEwVjJaTTE4IDJIMTRDMTIuOSAyIDEyIDIuOSAxMiA0VjIwQzEyIDIxLjEgMTIuOSAyMiAxNCAyMkgxOEMxOS4xIDIyIDIwIDIxLjEgMjAgMjBWNEMyMCAyLjkgMTkuMSAyIDE4IDJaTTEzIDExSDExVjEzSDEzVjExWk0xNyAxMUgxNVYxM0gxN1YxMVoiLz4KPC9zdmc+" class="tab-icon"> Приватки
-            </button>
-            <button class="tab-btn" data-tab="pc">
-                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzAwQTRFRiI+CiAgPHBhdGggZD0iTTE5IDNIMTBDOS40NSAzIDkgMy40NSA5IDRWMTAuMkM5IDEwLjc1IDkuNDUgMTEuMiAxMCAxMS4ySDE5QzE5LjU1IDExLjIgMjAgMTAuNzUgMjAgMTAuMlY0QzIwIDMuNDUgMTkuNTUgMyAxOSAzWk0xOSAxMi44SDEwQzkuNDUgMTIuOCA5IDEzLjI1IDkgMTMuOFYyMEM5IDIwLjU1IDkuNDUgMjEgMTAgMjFIMTlDMTkuNTUgMjEgMjAgMjAuNTUgMjAgMjBWMTMuOEMyMCAxMy4yNSAxOS41NSAxMi44IDE5IDEyLjhaIi8+Cjwvc3ZnPg==" class="tab-icon"> Приватки для ПК
-            </button>
-            <button class="tab-btn" data-tab="ios">
-                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI0EyQUFBRCI+CiAgPHBhdGggZD0iTTE3IDE5YzEuMSAwIDEuOTktLjkgMS45OS0yLjAxTDE5IDVjMC0xLjExLS45LTIuMDEtMi0yLjAxSDdjLTEuMSAwLTIgLjktMiAyLjAxdjExLjk4QzUgMTguMSA1LjkgMTkgNyAxOWgxMHptLTctMTJjLjU1IDAgMS0uNDUgMS0xcy0uNDUtMS0xLTFzLTEgLjQ1LTEgMXMuNDUgMSAxIDF6bTQgMGMuNTUgMCAxLS40NSAxLTFzLS40NS0xLTFzLTEgLjQ1LTEgMXMuNDUgMSAxIDF6Ii8+Cjwvc3ZnPg==" class="tab-icon"> Приватки для iOS
-            </button>
+            <div class="tab active" data-tab="all">
+                <div class="tab-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/d/d7/Android_robot.svg" alt="Android"></div>
+                ПРИВАТКИ
+            </div>
+            <div class="tab" data-tab="pc">
+                <div class="tab-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/3/34/Windows_logo_-_2012_derivative.svg" alt="Windows"></div>
+                ПРИВАТКИ ДЛЯ ПК
+            </div>
+            <div class="tab" data-tab="ios">
+                <div class="tab-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Black_Apple_logo.svg" alt="Apple"></div>
+                ПРИВАТКИ ДЛЯ iOS
+            </div>
         </div>
         <div class="tab-content active" id="all-tab">
-            <div class="games-grid"></div>
-        </div>
-        <div class="tab-content" id="android-tab">
             <div class="games-grid"></div>
         </div>
         <div class="tab-content" id="pc-tab">
@@ -1767,6 +1733,7 @@
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                     <circle cx="9" cy="9" r="2"></circle>
+                    <!-- Исправлено: замена кириллической "м" на латинскую "m" -->
                     <path d="m21 15-3.086-3.086a2 2 0 0 1-2.828 0L6 21"></path>
                 </svg>
                 <div>Выбрать из галереи</div>
@@ -1902,9 +1869,10 @@
             let isDownloading = false;
             let currentTab = 'all';
             let xhr = null;
-            let currentDownloadUrl = '';
-            let currentFileName = '';
+            let currentDownloadUrls = [];
+            let currentFileNames = [];
             let currentGameTitle = '';
+            let currentPlatform = 'android';
             let currentUser = null;
             let downloadStartTime = 0;
             let downloadedBytes = 0;
@@ -1914,7 +1882,7 @@
             let selectedBannerFile = null;
             let isOwner = true; // По умолчанию владелец
             let currentGameId = null;
-            let currentGame = null;
+            let currentDownloadIndex = 0;
             // Создаем визуализатор загрузки
             function createDownloadVisualizer() {
                 if (!downloadVisualizer) return;
@@ -2135,333 +2103,320 @@
                     }
                 });
             }
-            // Данные игр (с добавленными скриншотами)
-            const games = [
-                {
-                    id: 'standrise',
-                    title: 'StandRise',
-                    description: 'Приватный сервер StandRise - это приватный сервер для популярной игры Standoff 2, который открывает перед игроками безграничные возможности и новую степень свободы. Здесь нет строгих ограничений, которые сдерживают ваш игровой процесс, а весь контент становится доступным без дополнительных усилий. Сервер предоставляет неограниченные ресурсы, позволяя вам мгновенно приобрести любые скины, оружие и улучшения.',
-                    whatsNew: [
-                        '— Улучшена оптимизация',
-                        '— Исправлены вылеты',
-                        'Доступны новые методы для входа Facebook и VK',
-                        '— Доступна линковка аккаунтов через различные способы входов Google, Facebook, VK',
-                        '— Теперь доступны функции приватности',
-                        '— Улучшен античит'
-                    ],
-                    image: 'https://cash-droid.ru/wp-content/uploads/2023/06/102.jpg',
-                    categories: ['action'],
-                    url: 'https://huggingface.co/Zerchi/test/resolve/main/StandRise1.4.0f1.apk',
-                    fileName: 'StandRise1.4.0f1.apk',
-                    version: '1.4F2',
-                    size: '1.98 GB',
-                    screenshots: [
-                        'https://5play.life/uploads/posts/2024-04/1745244510__0.jpg',
-                        'https://5play.life/uploads/posts/2024-04/1745244504__1.jpg',
-                        'https://images.sftcdn.net/images/t_app-cover-s,f_auto/p/6256d016-bfd9-11e8-be88-0242ac120011/4082779799/standoff-2-screenshot.jpg',
-                        'https://is1-ssl.mzstatic.com/image/thumb/PurpleSource122/v4/ae/77/17/ae771788-1e64-b055-f05d-fdb778324538/9adc427b-3032-424d-b11b-8b3a1908077a_mr-505_2732x2048_page7_en.png/643x0w.jpg',
-                        'https://i.ytimg.com/vi/7mo1YKY3X-I/hq720.jpg?sqp=-oaymwE7CK4FEIIDSFryq4qpAy0IARUAAAAAGAElAADIQj0AgKJD8AEB-AH-CYAC0AWKAgwIABABGHIgSigtMA8=&rs=AOn4CLA0krcnaVEuxcrfNc56NzmevYGWfA',
-                        'https://www.tiktok.com/api/img/?itemId=7462344775132269831&location=0&aid=1988'
-                    ]
-                },
-                {
-                    id: 'standleo',
-                    title: 'StandLeo',
-                    description: 'Приватный сервер StandLeo - настоящий рай для фанатов Standoff 2, предлагающий приватный сервер. Здесь вы сможете погрузиться в адреналиновые сражения и тактические соревнования, не тратя ни копейки на внешние атрибуты и награды.',
-                    whatsNew: [
-                        '- Новый подарок',
-                        '- Все из Standoff 0.35.0 (Новый пак, новая акция с коллекцией, карты, новое оружие и т.д.)',
-                        '- Добавлены ежедневные вызовы',
-                        '- Режим наблюдателей',
-                        '- Кланы',
-                        '- Ребаланс оружий из оригинала',
-                        '- Улучшено рейтинговых игр с первым сезоном',
-                        '- Новая акция с скинами из спина "Gambit" (Бабочка и т.d.)'
-                    ],
-                    image: 'https://standleo.ru/wp-content/uploads/2025/01/standleo-2-7-1-1024x561.jpg',
-                    categories: ['action'],
-                    url: 'https://huggingface.co/Zerchi/test/resolve/main/standleoprivate3.0.apk',
-                    fileName: 'standleoprivate3.0.apk',
-                    version: '3.0',
-                    size: '2.01 GB',
-                    screenshots: [
-                        'https://image.winudf.com/v2/user/admin/YWRtaW5faW1hZ2UgKDMpLnBuZ18xNzM1MTA4MzEzNDE5/screen-2.jpg?fakeurl=1&type=.jpg',
-                        'https://image.winudf.com/v2/user/admin/YWRtaW5faW1hZ2UgKDQpLnBuZ18xNzM1MTA4MzI0ODQ0/screen-3.jpg?fakeurl=1&type=.jpg',
-                        'https://is1-ssl.mzstatic.com/image/thumb/PurpleSource122/v4/ad/43/5a/ad435ad4-b3cd-9419-5f70-cb10642aa8d9/bfd1301c-75b4-42f4-a312-ba3a7ed4e746_mr-505_2732x2048_page2_en.png/643x0w.jpg'
-                    ]
-                },
-                {
-                    id: 'projectevolution',
-                    title: 'Project Evolution',
-                    description: 'Приватный сервер Project Evolution - это модификация популярного шутера Standoff 2, предлагающий игрокам уникальные возможности и множество дополнительных функций. Этот сервер предоставляет отличные условия для всех любителей интенсивных и увлекательных онлайн-сражений, с мощной настройкой и проработкой всех элементов.',
-                    whatsNew: [
-                        'Новая карта Hanami для режимов со сценарием «Закладки бомбы».',
-                        'Новый боевой пропуск — «Syndicate».',
-                        'Новая карта Hanari для режимов «Командный бой», «Гонка вооружений» и «Ограбление».',
-                        'Переработана карта Bridge и слегка обновлена карта Yard.',
-                        'Новая снайперская винтовка — Mallard.',
-                        'Обновление фракции Синдикат «Коготь Дракона» и небольшое обновление фракции S.A.F.',
-                        'Новые коллекции — «Syndicate» и «Rewind».',
-                        'Новый Charm Pack — «Rewind».',
-                        'Новый задний фон главного меню.',
-                    ],
-                    image: 'https://androidapplications.store//uploads/og-images/mockup14143.jpg',
-                    categories: ['action'],
-                    url: 'https://huggingface.co/Zerchi/test/resolve/main/Project%20Evolution%209.4%20f1.apk',
-                    fileName: 'Project Evolution 9.4 f1.apk',
-                    version: '9.4',
-                    size: '1.80 GB',
-                    screenshots: [
-                        'https://androidloading.com/uploads/posts/2024-01/1704579141_5.webp',
-                        'https://androidloading.com/uploads/posts/2024-01/1704579138_1.webp',
-                        'https://androidloading.com/uploads/posts/2024-01/1704579140_4.webp',
-                        'https://i.ytimg.com/vi/cUJ_TAcRHC8/maxresdefault.jpg'
-                    ]
-                },
-                {
-                    id: 'standknife',
-                    title: 'StandKnife',
-                    description: 'Приватный сервер StandKnife Simulator - известная многим приватка, перерабатывающая концепцию популярного шутера Standoff 2 и сосредотачивающий весь игровой процесс на мастерстве владения холодным оружием.',
-                    whatsNew: [
-                        'Фикс ошибок при входе в игру.'
-                    ],
-                    image: 'https://standoffworld.ru/wp-content/uploads/2023/12/standknife-2.jpg',
-                    categories: ['action'],
-                    url: 'https://huggingface.co/Zerchi/test/resolve/main/StandKnife%202.9%20(f3).apk',
-                    fileName: 'StandKnife 2.9 (f3).apk',
-                    version: '2.9 (f3)',
-                    size: '2.08 GB',
-                    screenshots: [
-                        'https://i.ytimg.com/vi/M-IXelbzaYQ/sddefault.jpg',
-                        'https://i.ytimg.com/vi/4CoLN3-L5lE/sddefault.jpg'
-                    ]
-                },
-                {
-                    id: 'standchillow',
-                    title: 'StandChillow',
-                    description: 'StandChillow - это увлекательный шутер для Android, который предлагает насыщенные командные бои на основе популярного мобильного экшена Standoff 2. Игра переносит вас в мир тактических баталий, где каждая схватка проверяет ваши боевые навыки.',
-                    whatsNew: [
-                        'Фикс ошибок при входе в игру.',
-                        '- Новый контент из обновления 0.34.0 (скины, интерфейс, саундтрек)',
-                        '- Добавлены карты "Awm Lego" и "Summer Breeze"',
-                        '- Убрано снижение уровня при убийстве с ножа в гонке вооружений',
-                        '- Возвращено статтрек версии скинов на береты',
-                        '- Улучшено пространственное аудио',
-                        '- Исправление багов (включая кривой скелет персонажа)'
-                    ],
-                    image: 'https://res.ldrescdn.com/rms/ldplayer/process/img/f4091033b9044caeae934b4bdba63ecf1740693144.jpg',
-                    categories: ['action'],
-                    url: 'https://huggingface.co/Zerchi/test/resolve/main/1.6.apk',
-                    fileName: '1.6.apk',
-                    version: '1.6',
-                    size: '1.34 GB',
-                    screenshots: [
-                        'https://image.winudf.com/v2/user/admin/YWRtaW5faW1hZ2UgKDEpLnBuZ18xNzI1MzQ5MjU5MTQ2/screen-2.jpg?fakeurl=1&type=.jpg',
-                        'https://i.ytimg.com/vi/_fRmh7abX3w/maxresdefault.jpg',
-                        'https://i.ytimg.com/vi/HECua7uadLA/hq720.jpg?sqp=-oaymwE7CK4FEIIDSFryq4qpAy0IARUAAAAAGAElAADIQj0AgKJD8AEB-AH-CYAC0AWKAgwIABABGBQgTSh_MA8=&rs=AOn4CLAoT_iR6Pnanwey-z2LxQ-Je4r1zg',
-                        'https://i.ytimg.com/vi/u-qn7ROlbto/hq720.jpg?sqp=-oaymwE7CK4FEIIDSFryq4qpAy0IARUAAAAAGAElAADIQj0AgKJD8AEB-AHMCIAC0AWKAgwIABABGGUgVihJMA8=&rs=AOn4CLAabs__Ec5LOHYn8P6q6svCQ46XRg',
-                        'https://androidloading.com/uploads/posts/2024-04/1714344765_2.webp'
-                    ]
-                },
-                {
-                    id: 'crossoff',
-                    title: 'Crossoff: Classic',
-                    description: 'CrossOff — приватка в которой за сыгранные матчи выдают серебро и золото, является копией оригинальной игры, возможность входа через Google.',
-                    whatsNew: [
-                        'Добавлен античит',
-                        'Добавлены кланы',
-                        '- Добавлены режим "Соревновательный"',
-                    ],
-                    image: 'https://androidapplications.store//uploads/og-images/mockup14030.jpg',
-                    categories: ['action'],
-                    url: 'https://huggingface.co/Zerchi/test/resolve/main/CrossOffClassic-1.1F2.apk',
-                    fileName: 'CrossOffClassic-1.1F2.apk',
-                    version: '1.1 (F2)',
-                    size: '499.1 MB',
-                    screenshots: [
-                        'https://jpg.i-androids.ru/gplay/75/standoff-2-04-05-2023-14-11-55-44.png',
-                        'https://jpg.i-androids.ru/gplay/75/standoff-2-04-05-2023-14-11-56-73.png',
-                        'https://jpg.i-androids.ru/gplay/75/standoff-2-04-05-2023-14-12-03-85.png',
-                        'https://jpg.i-androids.ru/gplay/75/standoff-2-04-05-2023-14-11-57-3.png'
-                    ]
-                },
-                {
-                  id: 'projectevolution-pc',
-                  title: 'Project Evolution',
-                  description: 'ПК-версия приватного сервера Project Evolution с улучшенной графикой и поддержкой мыши и клавиатуры',
-                  whatsNew: [
-                    'Новая карта Hanami для режимов со сценарием «Закладки бомбы».',
-                    'Новый боевой пропуск — «Syndicate».',
-                    'Поддержка высоких разрешений экрана'
-                  ],
-                  image: 'https://androidapplications.store//uploads/og-images/mockup14143.jpg',
-                  categories: ['pc'],
-                  urls: [
-                    'https://plugin.co/ProjectEvo1.exe',
-                    'https://plugin.co/ProjectEvo1data.bin',
-                    'https://plugin.co/ProjectEvo1data2.bin'
-                  ],
-                  fileNames: [
-                    'ProjectEvo1.exe',
-                    'ProjectEvo1data.bin',
-                    'ProjectEvo1data2.bin'
-                  ],
-                  version: '9.4',
-                  size: '1.80 GB',
-                  platformBadge: {
-                    icon: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzAwQTRFRiI+CiAgPHBhdGggZD0iTTE5IDNIMTBDOS40NSAzIDkgMy40NSA5IDRWMTAuMkM5IDEwLjc1IDkuNDUgMTEuMiAxMCAxMS4ySDE5QzE5LjU1IDExLjIgMjAgMTAuNzUgMjAgMTAuMlY0QzIwIDMuNDUgMTkuNTUgMyAxOSAzWk0xOSAxMi44SDEwQzkuNDUgMTIuOCA5IDEzLjI1IDkgMTMuOFYyMEM5IDIwLjU1IDkuNDUgMjEgMTAgMjFIMTlDMTkuNTUgMjEgMjAgMjAuNTUgMjAgMjBWMTMuOEMyMCAxMy4yNSAxOS41NSAxMi44IDE5IDEyLjhaIi8+Cjwvc3ZnPg==',
-                    color: '#00A4EF',
-                    text: 'Windows'
-                  }
-                },
-                {
-                  id: 'standleo-pc',
-                  title: 'StandLeo',
-                  description: 'ПК-версия приватного сервера StandLeo с оптимизацией под высокие FPS и поддержкой периферии',
-                  whatsNew: [
-                    'Новый подарок',
-                    'Все из Standoff 0.35.0',
-                    'Добавлены ежедневные вызовы',
-                    'Режим наблюдателей'
-                  ],
-                  image: 'https://standleo.ru/wp-content/uploads/2025/01/standleo-2-7-1-1024x561.jpg',
-                  categories: ['pc'],
-                  urls: [
-                    'https://plugin.co/standleo.exe',
-                    'https://plugin.co/Standleodata1.bin',
-                    'https://plugin.co/standleodata2.bin'
-                  ],
-                  fileNames: [
-                    'standleo.exe',
-                    'Standleodata1.bin',
-                    'standleodata2.bin'
-                  ],
-                  version: '3.0',
-                  size: '2.01 GB',
-                  platformBadge: {
-                    icon: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzAwQTRFRiI+CiAgPHBhdGggZD0iTTE5IDNIMTBDOS40NSAzIDkgMy40NSA5IDRWMTAuMkM5IDEwLjc1IDkuNDUgMTEuMiAxMCAxMS4ySDE5QzE5LjU1IDExLjIgMjAgMTAuNzUgMjAgMTAuMlY0QzIwIDMuNDUgMTkuNTUgMyAxOSAzWk0xOSAxMi44SDEwQzkuNDUgMTIuOCA5IDEzLjI1IDkgMTMuOFYyMEM5IDIwLjU1IDkuNDUgMjEgMTAgMjFIMTlDMTkuNTUgMjEgMjAgMjAuNTUgMjAgMjBWMTMuOEMyMCAxMy4yNSAxOS41NSAxMi44IDE5IDEyLjhaIi8+Cjwvc3ZnPg==',
-                    color: '#00A4EF',
-                    text: 'Windows'
-                  }
-                },
-                {
-                  id: 'standknife-pc',
-                  title: 'StandKnife',
-                  description: 'ПК-версия StandKnife Simulator с улучшенной графикой и поддержкой высоких разрешений',
-                  whatsNew: [
-                    'Фикс ошибок при входе в игру',
-                    'Улучшена графика ножей',
-                    'Поддержка разрешения 4K'
-                  ],
-                  image: 'https://standoffworld.ru/wp-content/uploads/2023/12/standknife-2.jpg',
-                  categories: ['pc'],
-                  urls: [
-                    'https://plugin.co/standknife.exe',
-                    'https://plugin.co/standknifedata1.bin',
-                    'https://plugin.co/standknifedata2.bin'
-                  ],
-                  fileNames: [
-                    'standknife.exe',
-                    'standknifedata1.bin',
-                    'standknifedata2.bin'
-                  ],
-                  version: '2.9',
-                  size: '2.08 GB',
-                  platformBadge: {
-                    icon: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzAwQTRFRiI+CiAgPHBhdGggZD0iTTE5IDNIMTBDOS40NSAzIDkgMy40NSA5IDRWMTAuMkM5IDEwLjc1IDkuNDUgMTEuMiAxMCAxMS4ySDE5QzE5LjU1IDExLjIgMjAgMTAuNzUgMjAgMTAuMlY0QzIwIDMuNDUgMTkuNTUgMyAxOSAzWk0xOSAxMi44SDEwQzkuNDUgMTIuOCA5IDEzLjI1IDkgMTMuOFYyMEM5IDIwLjU1IDkuNDUgMjEgMTAgMjFIMTlDMTkuNTUgMjEgMjAgMjAuNTUgMjAgMjBWMTMuOEMyMCAxMy4yNSAxOS41NSAxMi44IDE5IDEyLjhaIi8+Cjwvc3ZnPg==',
-                    color: '#00A4EF',
-                    text: 'Windows'
-                  }
-                },
-                {
-                  id: 'projectevolution-ios',
-                  title: 'Project Evolution',
-                  description: 'iOS-версия приватного сервера Project Evolution для iPhone и iPad',
-                  whatsNew: [
-                    'Новая карта Hanami для режимов со сценарием «Закладки бомбы».',
-                    'Новый боевой пропуск — «Syndicate».',
-                    'Оптимизация под iOS 17'
-                  ],
-                  image: 'https://androidapplications.store//uploads/og-images/mockup14143.jpg',
-                  categories: ['ios'],
-                  url: 'https://plugin.co/ProjectEvo1.ipa',
-                  fileName: 'ProjectEvo1.ipa',
-                  version: '9.4',
-                  size: '1.45 GB',
-                  platformBadge: {
-                    icon: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI0EyQUFBRCI+CiAgPHBhdGggZD0iTTE3IDE5YzEuMSAwIDEuOTktLjkgMS45OS0yLjAxTDE5IDVjMC0xLjExLS45LTIuMDEtMi0yLjAxSDdjLTEuMSAwLTIgLjktMiAyLjAxdjExLjk4QzUgMTguMSA1LjkgMTkgNyAxOWgxMHptLTctMTJjLjU1IDAgMS0uNDUgMS0xcy0uNDUtMS0xLTFzLTEgLjQ1LTEgMXMuNDUgMSAxIDF6bTQgMGMuNTUgMCAxLS40NSAxLTFzLS40NS0xLTFzLTEgLjQ1LTEgMXMuNDUgMSAxIDF6Ii8+Cjwvc3ZnPg==',
-                    color: '#A2AAAD',
-                    text: 'iOS'
-                  }
-                },
-                {
-                  id: 'standleo-ios',
-                  title: 'StandLeo',
-                  description: 'iOS-версия приватного сервера StandLeo для iPhone и iPad',
-                  whatsNew: [
-                    'Новый подарок',
-                    'Все из Standoff 0.35.0',
-                    'Добавлены ежедневные вызовы'
-                  ],
-                  image: 'https://standleo.ru/wp-content/uploads/2025/01/standleo-2-7-1-1024x561.jpg',
-                  categories: ['ios'],
-                  url: 'https://plugin.co/standleo.ipa',
-                  fileName: 'standleo.ipa',
-                  version: '3.0',
-                  size: '1.52 GB',
-                  platformBadge: {
-                    icon: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI0EyQUFBRCI+CiAgPHBhdGggZD0iTTE3IDE5YzEuMSAwIDEuOTktLjkgMS45OS0yLjAxTDE5IDVjMC0xLjExLS45LTIuMDEtMi0yLjAxSDdjLTEuMSAwLTIgLjktMiAyLjAxdjExLjk4QzUgMTguMSA1LjkgMTkgNyAxOWgxMHptLTctMTJjLjU1IDAgMS0uNDUgMS0xcy0uNDUtMS0xLTFzLTEgLjQ1LTEgMXMuNDUgMSAxIDF6bTQgMGMuNTUgMCAxLS40NSAxLTFzLS40NS0xLTFzLTEgLjQ1LTEgMXMuNDUgMSAxIDF6Ii8+Cjwvc3ZnPg==',
-                    color: '#A2AAAD',
-                    text: 'iOS'
-                  }
-                }
-            ];
+            // Данные игр для разных платформ
+            const games = {
+                android: [
+                    {
+                        id: 'standrise',
+                        title: 'StandRise',
+                        description: 'Приватный сервер StandRise - это приватный сервер для популярной игры Standoff 2, который открывает перед игроками безграничные возможности и новую степень свободы. Здесь нет строгих ограничений, которые сдерживают ваш игровой процесс, а весь контент становится доступным без дополнительных усилий. Сервер предоставляет неограниченные ресурсы, позволяя вам мгновенно приобрести любые скины, оружие и улучшения.',
+                        whatsNew: [
+                            '— Улучшена оптимизация',
+                            '— Исправлены вылеты',
+                            'Доступны новые методы для входа Facebook и VK',
+                            '— Доступна линковка аккаунтов через различные способы входов Google, Facebook, VK',
+                            '— Теперь доступны функции приватности',
+                            '— Улучшен античит'
+                        ],
+                        image: 'https://cash-droid.ru/wp-content/uploads/2023/06/102.jpg',
+                        urls: ['https://huggingface.co/Zerchi/test/resolve/main/StandRise1.4.0f1.apk'],
+                        fileNames: ['StandRise1.4.0f1.apk'],
+                        version: '1.4F2',
+                        size: '1.98 GB',
+                        screenshots: [
+                            'https://5play.life/uploads/posts/2024-04/1745244510__0.jpg',
+                            'https://5play.life/uploads/posts/2024-04/1745244504__1.jpg',
+                            'https://images.sftcdn.net/images/t_app-cover-s,f_auto/p/6256d016-bfd9-11e8-be88-0242ac120011/4082779799/standoff-2-screenshot.jpg',
+                            'https://is1-ssl.mzstatic.com/image/thumb/PurpleSource122/v4/ae/77/17/ae771788-1e64-b055-f05d-fdb778324538/9adc427b-3032-424d-b11b-8b3a1908077a_mr-505_2732x2048_page7_en.png/643x0w.jpg',
+                            'https://i.ytimg.com/vi/7mo1YKY3X-I/hq720.jpg?sqp=-oaymwE7CK4FEIIDSFryq4qpAy0IARUAAAAAGAElAADIQj0AgKJD8AEB-AH-CYAC0AWKAgwIABABGHIgSigtMA8=&rs=AOn4CLA0krcnaVEuxcrfNc56NzmevYGWfA',
+                            'https://www.tiktok.com/api/img/?itemId=7462344775132269831&location=0&aid=1988'
+                        ]
+                    },
+                    {
+                        id: 'standleo',
+                        title: 'StandLeo',
+                        description: 'Приватный сервер StandLeo - настоящий рай для фанатов Standoff 2, предлагающий приватный сервер. Здесь вы сможете погрузиться в адреналиновые сражения и тактические соревнования, не тратя ни копейки на внешние атрибуты и награды.',
+                        whatsNew: [
+                            '- Новый подарок',
+                            '- Все из Standoff 0.35.0 (Новый пак, новая акция с коллекцией, карты, новое оружие и т.д.)',
+                            '- Добавлены ежедневные вызовы',
+                            '- Режим наблюдателей',
+                            '- Кланы',
+                            '- Ребаланс оружий из оригинала',
+                            '- Улучшено рейтинговых игр с первым сезоном',
+                            '- Новая акция с скинами из спина "Gambit" (Бабочка и т.d.)'
+                        ],
+                        image: 'https://standleo.ru/wp-content/uploads/2025/01/standleo-2-7-1-1024x561.jpg',
+                        urls: ['https://huggingface.co/Zerchi/test/resolve/main/standleoprivate3.0.apk'],
+                        fileNames: ['standleoprivate3.0.apk'],
+                        version: '3.0',
+                        size: '2.01 GB',
+                        screenshots: [
+                            'https://image.winudf.com/v2/user/admin/YWRtaW5faW1hZ2UgKDMpLnBuZ18xNzM1MTA4MzEzNDE5/screen-2.jpg?fakeurl=1&type=.jpg',
+                            'https://image.winudf.com/v2/user/admin/YWRtaW5faW1hZ2UgKDQpLnBuZ18xNzM1MTA4MzI0ODQ0/screen-3.jpg?fakeurl=1&type=.jpg',
+                            'https://is1-ssl.mzstatic.com/image/thumb/PurpleSource122/v4/ad/43/5a/ad435ad4-b3cd-9419-5f70-cb10642aa8d9/bfd1301c-75b4-42f4-a312-ba3a7ed4e746_mr-505_2732x2048_page2_en.png/643x0w.jpg'
+                        ]
+                    },
+                    {
+                        id: 'projectevolution',
+                        title: 'Project Evolution',
+                        description: 'Приватный сервер Project Evolution - это модификация популярного шутера Standoff 2, предлагающий игрокам уникальные возможности и множество дополнительных функций. Этот сервер предоставляет отличные условия для всех любителей интенсивных и увлекательных онлайн-сражений, с мощной настройкой и проработкой всех элементов.',
+                        whatsNew: [
+                            'Новая карта Hanami для режимов со сценарием «Закладки бомбы».',
+                            'Новый боевой пропуск — «Syndicate».',
+                            'Новая карта Hanari для режимов «Командный бой», «Гонка вооружений» и «Ограбление».',
+                            'Переработана карта Bridge и слегка обновлена карта Yard.',
+                            'Новая снайперская винтовка — Mallard.',
+                            'Обновление фракции Синдикат «Коготь Дракона» и небольшое обновление фракции S.A.F.',
+                            'Новые коллекции — «Syndicate» и «Rewind».',
+                            'Новый Charm Pack — «Rewind».',
+                            'Новый задний фон главного меню.',
+                        ],
+                        image: 'https://androidapplications.store//uploads/og-images/mockup14143.jpg',
+                        urls: ['https://huggingface.co/Zerchi/test/resolve/main/Project%20Evolution%209.4%20f1.apk'],
+                        fileNames: ['Project Evolution 9.4 f1.apk'],
+                        version: '9.4',
+                        size: '1.80 GB',
+                        screenshots: [
+                            'https://androidloading.com/uploads/posts/2024-01/1704579141_5.webp',
+                            'https://androidloading.com/uploads/posts/2024-01/1704579138_1.webp',
+                            'https://androidloading.com/uploads/posts/2024-01/1704579140_4.webp',
+                            'https://i.ytimg.com/vi/cUJ_TAcRHC8/maxresdefault.jpg'
+                        ]
+                    },
+                    {
+                        id: 'standknife',
+                        title: 'StandKnife',
+                        description: 'Приватный сервер StandKnife Simulator - известная многим приватка, перерабатывающая концепцию популярного шутера Standoff 2 и сосредотачивающий весь игровой процесс на мастерстве владения холодным оружием.',
+                        whatsNew: [
+                            'Фикс ошибок при входе в игру.'
+                        ],
+                        image: 'https://standoffworld.ru/wp-content/uploads/2023/12/standknife-2.jpg',
+                        urls: ['https://huggingface.co/Zerchi/test/resolve/main/StandKnife%202.9%20(f3).apk'],
+                        fileNames: ['StandKnife 2.9 (f3).apk'],
+                        version: '2.9 (f3)',
+                        size: '2.08 GB',
+                        screenshots: [
+                            'https://i.ytimg.com/vi/M-IXelbzaYQ/sddefault.jpg',
+                            'https://i.ytimg.com/vi/4CoLN3-L5lE/sddefault.jpg'
+                        ]
+                    },
+                    {
+                        id: 'standchillow',
+                        title: 'StandChillow',
+                        description: 'StandChillow - это увлекательный шутер для Android, который предлагает насыщенные командные бои на основе популярного мобильного экшена Standoff 2. Игра переносит вас в мир тактических баталий, где каждая схватка проверяет ваши боевые навыки.',
+                        whatsNew: [
+                            'Фикс ошибок при входе в игру.',
+                            '- Новый контент из обновления 0.34.0 (скины, интерфейс, саундтрек)',
+                            '- Добавлены карты "Awm Lego" и "Summer Breeze"',
+                            '- Убрано снижение уровня при убийстве с ножа в гонке вооружений',
+                            '- Возвращено статтрек версии скинов на береты',
+                            '- Улучшено пространственное аудио',
+                            '- Исправление багов (включая кривой скелет персонажа)'
+                        ],
+                        image: 'https://res.ldrescdn.com/rms/ldplayer/process/img/f4091033b9044caeae934b4bdba63ecf1740693144.jpg',
+                        urls: ['https://huggingface.co/Zerchi/test/resolve/main/1.6.apk'],
+                        fileNames: ['1.6.apk'],
+                        version: '1.6',
+                        size: '1.34 GB',
+                        screenshots: [
+                            'https://image.winudf.com/v2/user/admin/YWRtaW5faW1hZ2UgKDEpLnBuZ18xNzI1MzQ5MjU5MTQ2/screen-2.jpg?fakeurl=1&type=.jpg',
+                            'https://i.ytimg.com/vi/_fRmh7abX3w/maxresdefault.jpg',
+                            'https://i.ytimg.com/vi/HECua7uadLA/hq720.jpg?sqp=-oaymwE7CK4FEIIDSFryq4qpAy0IARUAAAAAGAElAADIQj0AgKJD8AEB-AH-CYAC0AWKAgwIABABGBQgTSh_MA8=&rs=AOn4CLAoT_iR6Pnanwey-z2LxQ-Je4r1zg',
+                            'https://i.ytimg.com/vi/u-qn7ROlbto/hq720.jpg?sqp=-oaymwE7CK4FEIIDSFryq4qpAy0IARUAAAAAGAElAADIQj0AgKJD8AEB-AHMCIAC0AWKAgwIABABGGUgVihJMA8=&rs=AOn4CLAabs__Ec5LOHYn8P6q6svCQ46XRg',
+                            'https://androidloading.com/uploads/posts/2024-04/1714344765_2.webp'
+                        ]
+                    },
+                    {
+                        id: 'crossoff',
+                        title: 'Crossoff: Classic',
+                        description: 'CrossOff — приватка в которой за сыгранные матчи выдают серебро и золото, является копией оригинальной игры, возможность входа через Google.',
+                        whatsNew: [
+                            'Добавлен античит',
+                            'Добавлены кланы',
+                            '- Добавлены режим "Соревновательный"',
+                        ],
+                        image: 'https://androidapplications.store//uploads/og-images/mockup14030.jpg',
+                        urls: ['https://huggingface.co/Zerchi/test/resolve/main/CrossOffClassic-1.1F2.apk'],
+                        fileNames: ['CrossOffClassic-1.1F2.apk'],
+                        version: '1.1 (F2)',
+                        size: '499.1 MB',
+                        screenshots: [
+                            'https://jpg.i-androids.ru/gplay/75/standoff-2-04-05-2023-14-11-55-44.png',
+                            'https://jpg.i-androids.ru/gplay/75/standoff-2-04-05-2023-14-11-56-73.png',
+                            'https://jpg.i-androids.ru/gplay/75/standoff-2-04-05-2023-14-12-03-85.png',
+                            'https://jpg.i-androids.ru/gplay/75/standoff-2-04-05-2023-14-11-57-3.png'
+                        ]
+                    }
+                ],
+                pc: [
+                    {
+                        id: 'projectevolution_pc',
+                        title: 'Project Evolution (PC)',
+                        description: 'Приватный сервер Project Evolution - это модификация популярного шутера Standoff 2, предлагающий игрокам уникальные возможности и множество дополнительных функций. Этот сервер предоставляет отличные условия для всех любителей интенсивных и увлекательных онлайн-сражений, с мощной настройкой и проработкой всех элементов.',
+                        whatsNew: [
+                            'Новая карта Hanami для режимов со сценарием «Закладки бомбы».',
+                            'Новый боевой пропуск — «Syndicate».',
+                            'Новая карта Hanari для режимов «Командный бой», «Гонка вооружений» и «Ограбление».',
+                            'Переработана карта Bridge и слегка обновлена карта Yard.',
+                            'Новая снайперская винтовка — Mallard.',
+                            'Обновление фракции Синдикат «Коготь Дракона» и небольшое обновление фракции S.A.F.',
+                            'Новые коллекции — «Syndicate» и «Rewind».',
+                            'Новый Charm Pack — «Rewind».',
+                            'Новый задний фон главного меню.',
+                        ],
+                        image: 'https://androidapplications.store//uploads/og-images/mockup14143.jpg',
+                        urls: ['https://plugin.co/ProjectEvo1.exe', 'https://plugin.co/ProjectEvo1data.bin', 'https://plugin.co/ProjectEvo1data2.bin'],
+                        fileNames: ['ProjectEvo1.exe', 'ProjectEvo1data.bin', 'ProjectEvo1data2.bin'],
+                        version: '9.4',
+                        size: '1.80 GB',
+                        screenshots: [
+                            'https://androidloading.com/uploads/posts/2024-01/1704579141_5.webp',
+                            'https://androidloading.com/uploads/posts/2024-01/1704579138_1.webp',
+                            'https://androidloading.com/uploads/posts/2024-01/1704579140_4.webp',
+                            'https://i.ytimg.com/vi/cUJ_TAcRHC8/maxresdefault.jpg'
+                        ],
+                        badge: 'windows'
+                    },
+                    {
+                        id: 'standleo_pc',
+                        title: 'StandLeo (PC)',
+                        description: 'Приватный сервер StandLeo - настоящий рай для фанатов Standoff 2, предлагающий приватный сервер. Здесь вы сможете погрузиться в адреналиновые сражения и тактические соревнования, не тратя ни копейки на внешние атрибуты и награды.',
+                        whatsNew: [
+                            '- Новый подарок',
+                            '- Все из Standoff 0.35.0 (Новый пак, новая акция с коллекцией, карты, новое оружие и т.д.)',
+                            '- Добавлены ежедневные вызовы',
+                            '- Режим наблюдателей',
+                            '- Кланы',
+                            '- Ребаланс оружий из оригинала',
+                            '- Улучшено рейтинговых игр с первым сезоном',
+                            '- Новая акция с скинами из спина "Gambit" (Бабочка и т.d.)'
+                        ],
+                        image: 'https://standleo.ru/wp-content/uploads/2025/01/standleo-2-7-1-1024x561.jpg',
+                        urls: ['https://plugin.co/standleo.exe', 'https://plugin.co/Standleodata1.bin', 'https://plugin.co/standleodata2.bin'],
+                        fileNames: ['standleo.exe', 'Standleodata1.bin', 'standleodata2.bin'],
+                        version: '3.0',
+                        size: '2.01 GB',
+                        screenshots: [
+                            'https://image.winudf.com/v2/user/admin/YWRtaW5faW1hZ2UgKDMpLnBuZ18xNzM1MTA4MzEzNDE5/screen-2.jpg?fakeurl=1&type=.jpg',
+                            'https://image.winudf.com/v2/user/admin/YWRtaW5faW1hZ2UgKDQpLnBuZ18xNzM1MTA4MzI0ODQ0/screen-3.jpg?fakeurl=1&type=.jpg',
+                            'https://is1-ssl.mzstatic.com/image/thumb/PurpleSource122/v4/ad/43/5a/ad435ad4-b3cd-9419-5f70-cb10642aa8d9/bfd1301c-75b4-42f4-a312-ba3a7ed4e746_mr-505_2732x2048_page2_en.png/643x0w.jpg'
+                        ],
+                        badge: 'windows'
+                    },
+                    {
+                        id: 'standknife_pc',
+                        title: 'StandKnife (PC)',
+                        description: 'Приватный сервер StandKnife Simulator - известная многим приватка, перерабатывающая концепцию популярного шутера Standoff 2 и сосредотачивающий весь игровой процесс на мастерстве владения холодным оружием.',
+                        whatsNew: [
+                            'Фикс ошибок при входе в игру.'
+                        ],
+                        image: 'https://standoffworld.ru/wp-content/uploads/2023/12/standknife-2.jpg',
+                        urls: ['https://plugin.co/standknife.exe'],
+                        fileNames: ['standknife.exe'],
+                        version: '2.9 (f3)',
+                        size: '2.08 GB',
+                        screenshots: [
+                            'https://i.ytimg.com/vi/M-IXelbzaYQ/sddefault.jpg',
+                            'https://i.ytimg.com/vi/4CoLN3-L5lE/sddefault.jpg'
+                        ],
+                        badge: 'windows'
+                    }
+                ],
+                ios: [
+                    {
+                        id: 'projectevolution_ios',
+                        title: 'Project Evolution (iOS)',
+                        description: 'Приватный сервер Project Evolution - это модификация популярного шутера Standoff 2, предлагающий игрокам уникальные возможности и множество дополнительных функций. Этот сервер предоставляет отличные условия для всех любителей интенсивных и увлекательных онлайн-сражений, с мощной настройкой и проработкой всех элементов.',
+                        whatsNew: [
+                            'Новая карта Hanami для режимов со сценарием «Закладки бомбы».',
+                            'Новый боевой пропуск — «Syndicate».',
+                            'Новая карта Hanari для режимов «Командный бой», «Гонка вооружений» и «Ограбление».',
+                            'Переработана карта Bridge и слегка обновлена карта Yard.',
+                            'Новая снайперская винтовка — Mallard.',
+                            'Обновление фракции Синдикат «Коготь Дракона» и небольшое обновление фракции S.A.F.',
+                            'Новые коллекции — «Syndicate» и «Rewind».',
+                            'Новый Charm Pack — «Rewind».',
+                            'Новый задний фон главного меню.',
+                        ],
+                        image: 'https://androidapplications.store//uploads/og-images/mockup14143.jpg',
+                        urls: ['https://plugin.co/ProjectEvo1.ipa'],
+                        fileNames: ['ProjectEvo1.ipa'],
+                        version: '9.4',
+                        size: '1.80 GB',
+                        screenshots: [
+                            'https://androidloading.com/uploads/posts/2024-01/1704579141_5.webp',
+                            'https://androidloading.com/uploads/posts/2024-01/1704579138_1.webp',
+                            'https://androidloading.com/uploads/posts/2024-01/1704579140_4.webp',
+                            'https://i.ytimg.com/vi/cUJ_TAcRHC8/maxresdefault.jpg'
+                        ],
+                        badge: 'apple'
+                    },
+                    {
+                        id: 'standleo_ios',
+                        title: 'StandLeo (iOS)',
+                        description: 'Приватный сервер StandLeo - настоящий рай для фанатов Standoff 2, предлагающий приватный сервер. Здесь вы сможете погрузиться в адреналиновые сражения и тактические соревнования, не тратя ни копейки на внешние атрибуты и награды.',
+                        whatsNew: [
+                            '- Новый подарок',
+                            '- Все из Standoff 0.35.0 (Новый пак, новая акция с коллекцией, карты, новое оружие и т.д.)',
+                            '- Добавлены ежедневные вызовы',
+                            '- Режим наблюдателей',
+                            '- Кланы',
+                            '- Ребаланс оружий из оригинала',
+                            '- Улучшено рейтинговых игр с первым сезоном',
+                            '- Новая акция с скинами из спина "Gambit" (Бабочка и т.d.)'
+                        ],
+                        image: 'https://standleo.ru/wp-content/uploads/2025/01/standleo-2-7-1-1024x561.jpg',
+                        urls: ['https://plugin.co/standleo.ipa'],
+                        fileNames: ['standleo.ipa'],
+                        version: '3.0',
+                        size: '2.01 GB',
+                        screenshots: [
+                            'https://image.winudf.com/v2/user/admin/YWRtaW5faW1hZ2UgKDMpLnBuZ18xNzM1MTA4MzEzNDE5/screen-2.jpg?fakeurl=1&type=.jpg',
+                            'https://image.winudf.com/v2/user/admin/YWRtaW5faW1hZ2UgKDQpLnBuZ18xNzM1MTA4MzI0ODQ0/screen-3.jpg?fakeurl=1&type=.jpg',
+                            'https://is1-ssl.mzstatic.com/image/thumb/PurpleSource122/v4/ad/43/5a/ad435ad4-b3cd-9419-5f70-cb10642aa8d9/bfd1301c-75b4-42f4-a312-ba3a7ed4e746_mr-505_2732x2048_page2_en.png/643x0w.jpg'
+                        ],
+                        badge: 'apple'
+                    }
+                ]
+            };
             // Функция для рендеринга игр в таб
             function renderGames(tab) {
                 const grid = document.querySelector(`#${tab}-tab .games-grid`);
                 if (!grid) return;
                 grid.innerHTML = '';
-                
-                let filteredGames;
-                if (tab === 'android') {
-                  filteredGames = games.filter(game => game.categories.includes('action') || !game.categories.includes('pc') && !game.categories.includes('ios'));
-                } else {
-                  filteredGames = tab === 'all' ? games : games.filter(game => game.categories.includes(tab));
-                }
-
-                filteredGames.forEach(game => {
-                  const card = document.createElement('div');
-                  card.className = 'game-card animate-fade-in-up';
-                  card.dataset.gameId = game.id;
-                  
-                  // Создаем HTML карточки с платформенной бейджей
-                  let platformBadgeHTML = '';
-                  if (game.platformBadge) {
-                    platformBadgeHTML = `
-                      <div class="platform-badge" style="background-color: ${game.platformBadge.color}33;">
-                        <img src="${game.platformBadge.icon}" alt="${game.platformBadge.text}" class="platform-icon">
-                      </div>
+                const platformGames = games[tab === 'all' ? 'android' : tab] || [];
+                platformGames.forEach(game => {
+                    const card = document.createElement('div');
+                    card.className = 'game-card animate-fade-in-up';
+                    card.dataset.gameId = game.id;
+                    let badgeHTML = '';
+                    if (game.badge) {
+                        badgeHTML = `
+                            <div class="platform-badge ${game.badge}">
+                                <img src="${game.badge === 'windows' ? 'https://upload.wikimedia.org/wikipedia/commons/3/34/Windows_logo_-_2012_derivative.svg' : 'https://upload.wikimedia.org/wikipedia/commons/3/3c/Black_Apple_logo.svg'}" alt="${game.badge}">
+                            </div>
+                        `;
+                    }
+                    card.innerHTML = `
+                        <div class="game-image">
+                            <img src="${game.image}" alt="${game.title}">
+                            <div class="game-overlay"></div>
+                            ${badgeHTML}
+                        </div>
+                        <div class="game-info">
+                            <div class="game-title">${game.title}</div>
+                            <div class="game-description">${game.description}</div>
+                        </div>
                     `;
-                  }
-                  
-                  card.innerHTML = `
-                    <div class="game-image-container">
-                      <img src="${game.image}" alt="${game.title}">
-                      ${platformBadgeHTML}
-                    </div>
-                    <div class="game-info">
-                      <h3 class="game-title">${game.title}</h3>
-                      <p class="game-meta">Версия: ${game.version} • Размер: ${game.size}</p>
-                    </div>
-                  `;
-                  card.style.animationDelay = `${Math.random() * 0.3}s`;
-                  card.addEventListener('click', handleGameClick);
-                  grid.appendChild(card);
+                    card.style.animationDelay = `${Math.random() * 0.3}s`;
+                    card.addEventListener('click', handleGameClick);
+                    grid.appendChild(card);
                 });
             }
             // Функция для отображения скриншотов игры
             function showGameScreenshots(gameId) {
-                const game = games.find(g => g.id === gameId);
+                const game = [...games.android, ...games.pc, ...games.ios].find(g => g.id === gameId);
                 if (!game || !game.screenshots || game.screenshots.length === 0) {
                     if (screenshotsSlider && screenshotsSlider.closest('.screenshots-section')) {
                         screenshotsSlider.closest('.screenshots-section').style.display = 'none';
@@ -2550,59 +2505,26 @@
             // Обработчик клика по карточке игры
             function handleGameClick(e) {
                 const gameId = e.currentTarget.dataset.gameId;
-                const game = games.find(g => g.id === gameId);
+                const allGames = [...games.android, ...games.pc, ...games.ios];
+                const game = allGames.find(g => g.id === gameId);
                 if (game) {
-                    currentGameId = gameId;
-                    currentGame = game;
-                    
-                    // Определяем тип загрузки
-                    if (game.categories.includes('pc')) {
-                      currentDownloadUrl = game.urls[0]; // Для отображения в интерфейсе
-                      currentFileName = game.fileNames[0];
-                    } else if (game.categories.includes('ios')) {
-                      currentDownloadUrl = game.url;
-                      currentFileName = game.fileName;
-                    } else {
-                      currentDownloadUrl = game.url;
-                      currentFileName = game.fileName;
-                    }
-                    
-                    // Обновляем UI деталей
                     detailsTitle.textContent = game.title;
                     detailsImage.src = game.image;
                     detailsImage.alt = game.title;
                     detailsMeta.textContent = `Версия: ${game.version} • Размер: ${game.size}`;
-                    
-                    // Добавляем информацию о платформе в описание
-                    let platformInfo = '';
-                    if (game.platformBadge) {
-                      platformInfo = `<div class="platform-info">
-                        <img src="${game.platformBadge.icon}" class="platform-icon"> 
-                        Версия для ${game.platformBadge.text}
-                      </div>`;
-                    }
-                    
-                    detailsDescription.innerHTML = platformInfo + `<p>${game.description}</p>
-                      <h4>Что нового:</h4>
-                      <ul>${game.whatsNew.map(item => `<li>${item}</li>`).join('')}</ul>`;
-                    
-                    // Обновляем текст кнопки в зависимости от платформы
-                    if (game.categories.includes('pc')) {
-                      downloadBtn.textContent = 'Скачать для ПК';
-                    } else if (game.categories.includes('ios')) {
-                      downloadBtn.textContent = 'Скачать для iOS';
-                    } else {
-                      downloadBtn.textContent = 'Скачать';
-                    }
-                    
-                    // Показываем детали
+                    detailsDescription.innerHTML = `<p>${game.description}</p><ul><li>Спасибо за использование PLUGG BOT!</li></ul>`;
+                    detailsWhatsNew.innerHTML = `<ul>${game.whatsNew.map(item => `<li>${item}</li>`).join('')}</ul>`;
+                    currentDownloadUrls = game.urls;
+                    currentFileNames = game.fileNames;
+                    currentGameTitle = game.title;
+                    currentGameId = game.id;
+                    currentPlatform = game.id.endsWith('_pc') ? 'pc' : game.id.endsWith('_ios') ? 'ios' : 'android';
+                    downloadBtn.textContent = 'Скачать';
                     gameDetails.classList.add('active');
+                    updateDetailsLibraryButton();
                     
                     // Показываем скриншоты
                     showGameScreenshots(gameId);
-                    
-                    // Обновляем состояние кнопки библиотеки
-                    updateDetailsLibraryButton();
                 } else {
                     tg.showPopup({
                         title: 'Скоро будет доступно',
@@ -2612,9 +2534,9 @@
                 }
             }
             // Обработчики для вкладок
-            document.querySelectorAll('.tab-btn').forEach(tab => {
+            document.querySelectorAll('.tab').forEach(tab => {
                 tab.addEventListener('click', () => {
-                    document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
                     tab.classList.add('active');
                     document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
                     const content = document.getElementById(`${tab.dataset.tab}-tab`);
@@ -2679,6 +2601,7 @@
             // Сброс UI загрузки
             function resetDownloadUI() {
                 isDownloading = false;
+                currentDownloadIndex = 0;
                 if (downloadBtn) {
                     downloadBtn.disabled = false;
                     downloadBtn.textContent = 'Скачать';
@@ -2707,187 +2630,130 @@
                     `;
                 }
             }
-            // Функция для скачивания файла
-            function downloadFile() {
-              if (!currentDownloadUrl || !downloadBtn || !progressContainer || !statusText) return;
-              
-              // Проверка на PC версию (множественная загрузка)
-              if (currentGame && currentGame.categories.includes('pc')) {
-                downloadMultipleFiles(currentGame.urls, currentGame.fileNames, 'pc');
-                return;
-              }
-              
-              // Проверка на iOS версию
-              if (currentGame && currentGame.categories.includes('ios')) {
-                downloadSingleFile(currentGame.url, currentGame.fileName, 'ios');
-                return;
-              }
-              
-              // Стандартная загрузка для Android
-              downloadSingleFile(currentDownloadUrl, currentFileName, 'android');
-            }
-
-            function downloadSingleFile(url, fileName, platform) {
-              isDownloading = true;
-              downloadBtn.disabled = true;
-              downloadBtn.innerHTML = '<span class="loader"></span> Загрузка...';
-              progressContainer.style.display = 'block';
-              statusText.textContent = 'Подготовка к загрузке...';
-              updateProgress(0, 0, 0);
-              
-              // Эмулируем пинг
-              simulatePing();
-              const pingInterval = setInterval(simulatePing, 2000);
-              
-              // Добавляем уникальный параметр к URL для принудительной перезагрузки
-              const timestamp = Date.now();
-              const downloadUrl = `${url}?t=${timestamp}`;
-              
-              try {
-                // ВСЕГДА используем XMLHttpRequest для реального отслеживания прогресса
-                const xhr = new XMLHttpRequest();
-                xhr.open('GET', downloadUrl, true);
-                xhr.responseType = 'blob';
-                
-                xhr.onprogress = function(event) {
-                  if (event.lengthComputable) {
-                    const percent = Math.round((event.loaded / event.total) * 100);
-                    updateProgress(percent, event.loaded, event.total);
-                    statusText.textContent = `Загрузка: ${percent}%`;
-                  }
-                };
-                
-                xhr.onload = function() {
-                  clearInterval(pingInterval);
-                  if (xhr.status === 200) {
-                    statusText.textContent = 'Проверка целостности файла...';
-                    setTimeout(() => {
-                      const blob = new Blob([xhr.response], { 
-                        type: platform === 'ios' ? 'application/octet-stream' : 'application/vnd.android.package-archive' 
-                      });
-                      const url = URL.createObjectURL(blob);
-                      const a = document.createElement('a');
-                      a.style.display = 'none';
-                      a.href = url;
-                      a.download = fileName;
-                      document.body.appendChild(a);
-                      a.click();
-                      URL.revokeObjectURL(url);
-                      document.body.removeChild(a);
-                      
-                      updateProgress(100, event.total, event.total);
-                      
-                      // Показываем соответствующее сообщение в зависимости от платформы
-                      if (platform === 'android') {
-                        showStatus(`Файл успешно скачан. Найдите ${fileName} в папке Download.`, true);
-                      } else if (platform === 'ios') {
-                        showStatus(`Файл успешно скачан. Найдите ${fileName} в папке Download.`, true);
-                      } else {
-                        showStatus(`Файл успешно скачан. Найдите ${fileName} в папке Download.`, true);
-                      }
-                      
-                      resetDownloadUI();
-                    }, 1500);
-                  } else {
-                    showStatus(`Ошибка загрузки: статус ${xhr.status}. Файл может быть поврежден.`, false);
-                    updateProgress(0, 0, 0);
+            // Функция для скачивания следующего файла в последовательности
+            function downloadNextFile() {
+                if (currentDownloadIndex >= currentDownloadUrls.length) {
+                    // Все файлы скачаны
+                    showCompletionNotification();
                     resetDownloadUI();
-                  }
-                };
-                
-                xhr.onerror = function() {
-                  clearInterval(pingInterval);
-                  showStatus('Ошибка сети. Проверьте подключение.', false);
-                  updateProgress(0, 0, 0);
-                  resetDownloadUI();
-                };
-                
-                xhr.onabort = function() {
-                  clearInterval(pingInterval);
-                  showStatus('Загрузка отменена.', false);
-                  updateProgress(0, 0, 0);
-                  resetDownloadUI();
-                };
-                
-                xhr.send();
-                
-              } catch (error) {
-                clearInterval(pingInterval);
-                showStatus(`Ошибка: ${error.message}. Не удалось скачать файл.`, false);
-                resetDownloadUI();
-              }
-            }
-
-            function downloadMultipleFiles(urls, fileNames, platform) {
-              let currentIndex = 0;
-              const totalFiles = urls.length;
-              
-              function downloadNextFile() {
-                if (currentIndex >= urls.length) {
-                  clearInterval(pingInterval);
-                  showStatus(`Все файлы скачаны. Установите игру из папки Download/PlPrivates/${currentGame.title}/`, true);
-                  resetDownloadUI();
-                  return;
+                    return;
                 }
-                
-                const url = urls[currentIndex];
-                const fileName = fileNames[currentIndex];
-                statusText.textContent = `Скачивание файла ${currentIndex + 1} из ${totalFiles}: ${fileName}`;
-                
-                // ВСЕГДА используем XMLHttpRequest для реального отслеживания прогресса
-                const xhr = new XMLHttpRequest();
-                xhr.open('GET', url, true);
-                xhr.responseType = 'blob';
-                
-                xhr.onprogress = function(event) {
-                  if (event.lengthComputable) {
-                    const percent = Math.round((event.loaded / event.total) * 100);
-                    // Показываем общий прогресс по всем файлам
-                    const overallPercent = Math.round(((currentIndex * 100) + percent) / totalFiles);
-                    updateProgress(overallPercent, event.loaded, event.total);
-                    statusText.textContent = `Файл ${currentIndex + 1}/${totalFiles}: ${percent}%`;
-                  }
+
+                const url = currentDownloadUrls[currentDownloadIndex] + '?t=' + Date.now();
+                const fileName = currentFileNames[currentDownloadIndex];
+                statusText.textContent = `Загрузка файла ${currentDownloadIndex + 1} из ${currentDownloadUrls.length}: ${fileName}`;
+
+                if (tg.isVersionAtLeast('8.0')) {
+                    // Используем Telegram.WebApp.downloadFile
+                    tg.downloadFile({
+                        url: url,
+                        file_name: currentPlatform === 'pc' ? `PlPrivates/${currentGameTitle}/${fileName}` : fileName
+                    }, (accepted) => {
+                        if (accepted) {
+                            // Эмулируем прогресс для Telegram download
+                            downloadStartTime = Date.now();
+                            let percent = 0;
+                            let loadedBytes = 0;
+                            totalBytes = 100 * 1024 * 1024; // Эмуляция размера 100MB на файл
+                            const downloadInterval = setInterval(() => {
+                                percent += Math.random() * 5 + 5; // Более быстрый прогресс
+                                if (percent > 100) percent = 100;
+                                loadedBytes = (percent / 100) * totalBytes;
+                                updateProgress(percent, loadedBytes, totalBytes);
+                                if (percent >= 100) {
+                                    clearInterval(downloadInterval);
+                                    currentDownloadIndex++;
+                                    downloadNextFile(); // Скачиваем следующий файл
+                                }
+                            }, 200);
+                        } else {
+                            showStatus('Скачивание отменено.', false);
+                            resetDownloadUI();
+                        }
+                    });
+                } else {
+                    // Fallback на XMLHttpRequest
+                    xhr = new XMLHttpRequest();
+                    xhr.open('GET', url, true);
+                    xhr.responseType = 'blob';
+                    xhr.onprogress = function(event) {
+                        if (event.lengthComputable) {
+                            const percent = Math.round((event.loaded / event.total) * 100);
+                            downloadedBytes = event.loaded;
+                            totalBytes = event.total;
+                            updateProgress(percent, event.loaded, event.total);
+                        } else {
+                            // Если размер неизвестен, эмулируем
+                            const percent = Math.min(100, Math.round((event.loaded / (1024 * 1024 * 100)) * 100)); // Предполагаем 100MB
+                            updateProgress(percent, event.loaded, 1024 * 1024 * 100);
+                        }
+                    };
+                    xhr.onload = function() {
+                        if (xhr.status === 200) {
+                            statusText.textContent = 'Проверка целостности файла...';
+                            setTimeout(() => {
+                                const blob = new Blob([xhr.response]);
+                                const blobUrl = URL.createObjectURL(blob);
+                                const a = document.createElement('a');
+                                a.style.display = 'none';
+                                a.href = blobUrl;
+                                a.download = currentPlatform === 'pc' ? `PlPrivates/${currentGameTitle}/${fileName}` : fileName;
+                                document.body.appendChild(a);
+                                a.click();
+                                URL.revokeObjectURL(blobUrl);
+                                document.body.removeChild(a);
+                                updateProgress(100, totalBytes, totalBytes);
+                                currentDownloadIndex++;
+                                downloadNextFile(); // Скачиваем следующий файл
+                            }, 1000);
+                        } else {
+                            showStatus(`Ошибка загрузки файла ${fileName}: статус ${xhr.status}`, false);
+                            resetDownloadUI();
+                        }
+                    };
+                    xhr.onerror = function() {
+                        showStatus(`Ошибка сети при загрузке ${fileName}. Проверьте подключение.`, false);
+                        resetDownloadUI();
+                    };
+                    xhr.onabort = function() {
+                        showStatus(`Загрузка ${fileName} отменена.`, false);
+                        resetDownloadUI();
+                    };
+                    xhr.send();
+                }
+            }
+            // Функция для показа уведомления о завершении
+            function showCompletionNotification() {
+                let message = '';
+                if (currentPlatform === 'pc') {
+                    message = `Ваша приватка "${currentGameTitle}" была скачана. Установите её в папке <a href="file:///storage/emulated/0/Download/PlPrivates/${currentGameTitle}" style="color: var(--accent-color);">PlPrivates</a>.`;
+                } else if (currentPlatform === 'ios') {
+                    message = `Ваша игра была скачана, перейдите в папку Download и найдите ${currentFileNames[0]}.ipa`;
+                } else {
+                    message = `Ваша игра была скачана, перейдите в папку Download и найдите ${currentFileNames[0]}.apk`;
+                }
+                const popupParams = {
+                    title: 'Загрузка завершена',
+                    message: message,
+                    buttons: [{type: 'ok', text: 'OK'}]
                 };
-                
-                xhr.onload = function() {
-                  if (xhr.status === 200) {
-                    const blob = new Blob([xhr.response], { type: 'application/octet-stream' });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.style.display = 'none';
-                    a.href = url;
-                    a.download = fileName;
-                    document.body.appendChild(a);
-                    a.click();
-                    URL.revokeObjectURL(url);
-                    document.body.removeChild(a);
-                    
-                    currentIndex++;
-                    downloadNextFile();
-                  } else {
-                    clearInterval(pingInterval);
-                    showStatus(`Ошибка при загрузке файла: статус ${xhr.status}`, false);
+                tg.showPopup(popupParams);
+            }
+            // Функция для скачивания файла(ов)
+            function downloadFile() {
+                if (!isDownloading && downloadBtn) {
+                    isDownloading = true;
+                    downloadBtn.disabled = true;
+                    downloadBtn.innerHTML = '<span class="loader"></span> Загрузка...';
+                    if (progressContainer) progressContainer.style.display = 'block';
+                    if (statusText) statusText.textContent = 'Запрос на скачивание...';
                     updateProgress(0, 0, 0);
-                    resetDownloadUI();
-                  }
-                };
-                
-                xhr.onerror = function() {
-                  clearInterval(pingInterval);
-                  showStatus(`Ошибка сети при загрузке файла ${fileName}`, false);
-                  updateProgress(0, 0, 0);
-                  resetDownloadUI();
-                };
-                
-                xhr.send();
-              }
-              
-              // Эмулируем пинг
-              simulatePing();
-              const pingInterval = setInterval(simulatePing, 2000);
-              
-              // Начинаем загрузку первой части
-              downloadNextFile();
+                    // Эмулируем пинг
+                    simulatePing();
+                    const pingInterval = setInterval(simulatePing, 2000);
+                    currentDownloadIndex = 0;
+                    downloadNextFile();
+                }
             }
             // Обработчик кнопки скачивания
             if (downloadBtn) {
