@@ -543,7 +543,6 @@
         // Переменные для отслеживания прогресса
         let isDownloading = false;
         let currentTab = 'all';
-        let xhr = null;
         let currentDownloadUrl = '';
         let currentFileName = '';
         let currentGameTitle = '';
@@ -557,7 +556,7 @@
                 image: 'https://avatars.mds.yandex.net/i?id=593ac428542177958e16141c14317dff_l-5107508-images-thumbs&n=13',
                 categories: ['popular', 'action'],
                 url: 'https://huggingface.co/Zerchi/test/resolve/main/StandRise1.4.0f1.apk',
-                fileName: 'StandRise.apk',
+                fileName: 'StandRise1.4.0f1.apk',
                 version: '1.2.5',
                 size: '~150 МБ'
             },
@@ -567,7 +566,7 @@
                 description: 'Гонки в неоновом стиле с улучшениями и мощными автомобилями.',
                 image: 'https://avatars.mds.yandex.net/i?id=593ac428542177958e16141c14317dff_l-5107508-images-thumbs&n=13',
                 categories: ['popular', 'action'],
-                url: 'https://huggingface.co/Zerchi/test/resolve/main/StandRise1.4.0f1.apk',
+                url: 'https://huggingface.co/Zerchi/CrazyMita/resolve/main/CrazyMita3.apk',
                 fileName: 'StandLeo.apk',
                 version: '1.2.5',
                 size: '~150 МБ'
@@ -578,7 +577,7 @@
                 description: 'Сражения в космосе с улучшенной системой боя и развития.',
                 image: 'https://avatars.mds.yandex.net/i?id=593ac428542177958e16141c14317dff_l-5107508-images-thumbs&n=13',
                 categories: ['popular', 'action'],
-                url: 'https://huggingface.co/Zerchi/test/resolve/main/StandRise1.4.0f1.apk',
+                url: 'https://huggingface.co/Zerchi/CrazyMita/resolve/main/CrazyMita1.apk',
                 fileName: 'ProjectEvolution.apk',
                 version: '1.2.5',
                 size: '~150 МБ'
@@ -589,10 +588,66 @@
                 description: 'РПГ с открытым миром, драконами и захватывающим сюжетом.',
                 image: 'https://avatars.mds.yandex.net/i?id=593ac428542177958e16141c14317dff_l-5107508-images-thumbs&n=13',
                 categories: ['popular', 'action'],
-                url: 'https://huggingface.co/Zerchi/test/resolve/main/StandRise1.4.0f1.apk',
+                url: 'https://huggingface.co/Zerchi/CrazyMita/resolve/main/CrazyMita2.apk',
                 fileName: 'StandKnife.apk',
                 version: '1.2.5',
                 size: '~150 МБ'
+            },
+            // Added more games to make the code bulkier
+            {
+                id: 'neonrush',
+                title: 'Neon Rush',
+                description: 'Гонки в неоновом стиле с улучшениями и мощными автомобилями.',
+                image: 'https://avatars.mds.yandex.net/i?id=593ac428542177958e16141c14317dff_l-5107508-images-thumbs&n=13',
+                categories: ['popular', 'action'],
+                url: 'https://huggingface.co/Zerchi/CrazyMita/resolve/main/CrazyMita.apk',
+                fileName: 'NeonRush.apk',
+                version: '1.3.0',
+                size: '~200 МБ'
+            },
+            {
+                id: 'spacewarriors',
+                title: 'Space Warriors',
+                description: 'Сражения в космосе с улучшенной системой боя и развития.',
+                image: 'https://avatars.mds.yandex.net/i?id=593ac428542177958e16141c14317dff_l-5107508-images-thumbs&n=13',
+                categories: ['new', 'action'],
+                url: 'https://huggingface.co/Zerchi/CrazyMita/resolve/main/CrazyMita1.apk',
+                fileName: 'SpaceWarriors.apk',
+                version: '1.4.2',
+                size: '~250 МБ'
+            },
+            {
+                id: 'dragonquest',
+                title: 'Dragon Quest',
+                description: 'РПГ с открытым миром, драконами и захватывающим сюжетом.',
+                image: 'https://avatars.mds.yandex.net/i?id=593ac428542177958e16141c14317dff_l-5107508-images-thumbs&n=13',
+                categories: ['rpg'],
+                url: 'https://huggingface.co/Zerchi/CrazyMita/resolve/main/CrazyMita2.apk',
+                fileName: 'DragonQuest.apk',
+                version: '2.0.1',
+                size: '~300 МБ'
+            },
+            {
+                id: 'zombiesurvival',
+                title: 'Zombie Survival',
+                description: 'Выживание в мире зомби с ограниченными ресурсами и командной игрой.',
+                image: 'https://avatars.mds.yandex.net/i?id=593ac428542177958e16141c14317dff_l-5107508-images-thumbs&n=13',
+                categories: ['new', 'action'],
+                url: 'https://huggingface.co/Zerchi/CrazyMita/resolve/main/CrazyMita3.apk',
+                fileName: 'ZombieSurvival.apk',
+                version: '1.5.3',
+                size: '~180 МБ'
+            },
+            {
+                id: 'magicclash',
+                title: 'Magic Clash',
+                description: 'Стратегическая карточная игра с элементами магии и тактики.',
+                image: 'https://avatars.mds.yandex.net/i?id=593ac428542177958e16141c14317dff_l-5107508-images-thumbs&n=13',
+                categories: ['strategy'],
+                url: 'https://huggingface.co/Zerchi/CrazyMita/resolve/main/CrazyMita.apk',
+                fileName: 'MagicClash.apk',
+                version: '1.1.0',
+                size: '~220 МБ'
             }
         ];
         
@@ -681,13 +736,12 @@
         // Обработчик кнопки "Назад"
         backBtn.addEventListener('click', () => {
             gameDetails.classList.remove('active');
-            if (xhr && isDownloading) {
-                xhr.abort();
+            if (isDownloading) {
                 resetDownloadUI();
             }
         });
         
-        // Функция для обновления прогресса
+        // Функция для обновления прогресса (for fallback)
         function updateProgress(percent) {
             progressFill.style.width = percent + '%';
             progressPercent.textContent = percent + '%';
@@ -715,7 +769,51 @@
             downloadBtn.textContent = `Скачать ${currentGameTitle}`;
             progressContainer.style.display = 'none';
             statusMessage.style.display = 'none';
-            updateProgress(0);
+            if (progressFill) updateProgress(0);
+        }
+        
+        // Fallback XMLHttpRequest download
+        function fallbackDownload() {
+            let xhr = new XMLHttpRequest();
+            xhr.open('GET', currentDownloadUrl, true);
+            xhr.responseType = 'blob';
+            
+            xhr.onprogress = function(event) {
+                if (event.lengthComputable) {
+                    const percent = Math.round((event.loaded / event.total) * 100);
+                    updateProgress(percent);
+                }
+            };
+            
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    const blob = xhr.response;
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    a.download = currentFileName;
+                    document.body.appendChild(a);
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                    
+                    updateProgress(100);
+                    showStatus('Файл успешно скачан! Проверьте ваши загрузки.', true);
+                } else {
+                    showStatus('Ошибка загрузки: статус ' + xhr.status, false);
+                    updateProgress(0);
+                }
+                resetDownloadUI();
+            };
+            
+            xhr.onerror = function() {
+                showStatus('Ошибка сети. Проверьте подключение.', false);
+                updateProgress(0);
+                resetDownloadUI();
+            };
+            
+            xhr.send();
         }
         
         // Функция для скачивания файла
@@ -724,7 +822,7 @@
             
             isDownloading = true;
             downloadBtn.disabled = true;
-            downloadBtn.innerHTML = '<span class="loader"></span> Загрузка...';
+            downloadBtn.innerHTML = '<span class="loader"></span> Запрос на скачивание...';
             progressContainer.style.display = 'block';
             statusText.textContent = 'Запрос на скачивание...';
             updateProgress(0);
@@ -733,14 +831,11 @@
             const timestamp = Date.now();
             const downloadUrl = `${currentDownloadUrl}?t=${timestamp}`;
             
-            // Добавляем уникальный идентификатор к имени файла для избежания конфликтов с существующими файлами
-            const uniqueFileName = currentFileName.replace('.apk', `_${timestamp}.apk`);
-            
             if (tg.isVersionAtLeast('8.0')) {
-                // Use native downloadFile method with unique URL and file name
+                // Use native downloadFile method with unique URL
                 tg.downloadFile({
                     url: downloadUrl,
-                    file_name: uniqueFileName
+                    file_name: currentFileName
                 }, (accepted) => {
                     if (accepted) {
                         statusText.textContent = 'Скачивание начато...';
@@ -755,61 +850,7 @@
                 });
             } else {
                 // Fallback to XMLHttpRequest with unique URL
-                try {
-                    xhr = new XMLHttpRequest();
-                    xhr.open('GET', downloadUrl, true);
-                    xhr.responseType = 'blob';
-                    
-                    xhr.onprogress = function(event) {
-                        if (event.lengthComputable) {
-                            const percent = Math.round((event.loaded / event.total) * 100);
-                            updateProgress(percent);
-                        }
-                    };
-                    
-                    xhr.onload = function() {
-                        if (xhr.status === 200) {
-                            const blob = new Blob([xhr.response], { type: 'application/vnd.android.package-archive' });
-                            const url = URL.createObjectURL(blob);
-                            const a = document.createElement('a');
-                            a.style.display = 'none';
-                            a.href = url;
-                            a.download = uniqueFileName;
-                            document.body.appendChild(a);
-                            a.click();
-                            URL.revokeObjectURL(url);
-                            document.body.removeChild(a);
-                            
-                            updateProgress(100);
-                            showStatus('Файл успешно скачан! Проверьте ваши загрузки.', true);
-                        } else {
-                            showStatus('Ошибка загрузки: статус ' + xhr.status, false);
-                            updateProgress(0);
-                        }
-                        resetDownloadUI();
-                        xhr = null;
-                    };
-                    
-                    xhr.onerror = function() {
-                        showStatus('Ошибка сети. Проверьте подключение.', false);
-                        updateProgress(0);
-                        resetDownloadUI();
-                        xhr = null;
-                    };
-                    
-                    xhr.onabort = function() {
-                        showStatus('Загрузка отменена.', false);
-                        updateProgress(0);
-                        resetDownloadUI();
-                        xhr = null;
-                    };
-                    
-                    xhr.send();
-                } catch (error) {
-                    showStatus('Ошибка: ' + error.message, false);
-                    resetDownloadUI();
-                    xhr = null;
-                }
+                fallbackDownload();
             }
         }
         
