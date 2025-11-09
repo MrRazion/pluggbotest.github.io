@@ -33,6 +33,7 @@
             background: var(--tg-theme-secondary-bg-color, #1c1c1c);
             border-radius: 16px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
         }
         
         .header h1 {
@@ -48,6 +49,23 @@
         .header p {
             color: var(--tg-theme-hint-color, #aaaaaa);
             font-size: 14px;
+        }
+        
+        .settings-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--tg-theme-secondary-bg-color, #1c1c1c);
+            border: none;
+            border-radius: 8px;
+            width: 40px;
+            height: 40px;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--tg-theme-text-color, #ffffff);
         }
         
         .tabs {
@@ -263,26 +281,6 @@
             opacity: 0.9;
         }
         
-        .cancel-btn {
-            display: none;
-            width: 100%;
-            padding: 16px;
-            background: linear-gradient(45deg, #ff3b30, #ff9500);
-            color: var(--tg-theme-button-text-color, #ffffff);
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            text-align: center;
-            transition: all 0.2s;
-            margin-top: 10px;
-        }
-        
-        .cancel-btn:not(:disabled):hover {
-            opacity: 0.9;
-        }
-        
         .back-btn {
             display: inline-flex;
             align-items: center;
@@ -433,6 +431,7 @@
         <div class="header">
             <h1>Pluggs Game Store</h1>
             <p>Лучшая коллекция игр для всех платформ</p>
+            <button class="settings-btn">⚙️</button>
         </div>
         
         <div class="search-bar">
@@ -507,8 +506,7 @@
                         </div>
                     </div>
                     
-                    <button id="download-btn" class="download-btn">Скачать CrazyMita</button>
-                    <button id="cancel-btn" class="cancel-btn">Отменить</button>
+                    <button id="download-btn" class="download-btn">Скачать</button>
                     
                     <div id="status-message" class="status-message"></div>
                 </div>
@@ -542,7 +540,6 @@
         
         // Элементы интерфейса
         const downloadBtn = document.getElementById('download-btn');
-        const cancelBtn = document.getElementById('cancel-btn');
         const progressFill = document.getElementById('progress-fill');
         const progressPercent = document.getElementById('progress-percent');
         const statusText = document.getElementById('status-text');
@@ -567,265 +564,4 @@
                 id: 'crazymita',
                 title: 'CrazyMita',
                 description: 'Захватывающая игра в жанре экшен с уникальным геймплеем и графикой.',
-                image: 'https://avatars.mds.yandex.net/i?id=593ac428542177958e16141c14317dff_l-5107508-images-thumbs&n=13',
-                categories: ['popular', 'action']
-            },
-            {
-                id: 'neonrush',
-                title: 'Neon Rush',
-                description: 'Гонки в неоновом стиле с улучшениями и мощными автомобилями.',
-                image: 'https://avatars.mds.yandex.net/i?id=593ac428542177958e16141c14317dff_l-5107508-images-thumbs&n=13',
-                categories: ['popular', 'action']
-            },
-            {
-                id: 'spacewarriors',
-                title: 'Space Warriors',
-                description: 'Сражения в космосе с улучшенной системой боя и развития.',
-                image: 'https://avatars.mds.yandex.net/i?id=593ac428542177958e16141c14317dff_l-5107508-images-thumbs&n=13',
-                categories: ['new', 'action']
-            },
-            {
-                id: 'dragonquest',
-                title: 'Dragon Quest',
-                description: 'РПГ с открытым миром, драконами и захватывающим сюжетом.',
-                image: 'https://avatars.mds.yandex.net/i?id=593ac428542177958e16141c14317dff_l-5107508-images-thumbs&n=13',
-                categories: ['rpg']
-            },
-            {
-                id: 'zombiesurvival',
-                title: 'Zombie Survival',
-                description: 'Выживание в мире зомби с ограниченными ресурсами и командной игрой.',
-                image: 'https://avatars.mds.yandex.net/i?id=593ac428542177958e16141c14317dff_l-5107508-images-thumbs&n=13',
-                categories: ['new', 'action']
-            },
-            {
-                id: 'magicclash',
-                title: 'Magic Clash',
-                description: 'Стратегическая карточная игра с элементами магии и тактики.',
-                image: 'https://avatars.mds.yandex.net/i?id=593ac428542177958e16141c14317dff_l-5107508-images-thumbs&n=13',
-                categories: ['strategy']
-            }
-        ];
-        
-        // Функция для рендеринга игр в таб
-        function renderGames(tab) {
-            const grid = document.querySelector(`#${tab}-tab .games-grid`);
-            if (!grid) return;
-            
-            grid.innerHTML = '';
-            
-            const filteredGames = tab === 'all' ? games : games.filter(game => game.categories.includes(tab));
-            
-            filteredGames.forEach(game => {
-                const card = document.createElement('div');
-                card.className = 'game-card';
-                card.dataset.game = game.id;
-                card.innerHTML = `
-                    <div class="game-image">
-                        <img src="${game.image}" alt="${game.title}">
-                        <div class="game-overlay"></div>
-                    </div>
-                    <div class="game-info">
-                        <div class="game-title">${game.title}</div>
-                        <div class="game-description">${game.description}</div>
-                    </div>
-                `;
-                card.addEventListener('click', handleGameClick);
-                grid.appendChild(card);
-            });
-        }
-        
-        // Обработчик клика по карточке игры
-        function handleGameClick(e) {
-            const gameId = e.currentTarget.dataset.game;
-            if (gameId === 'crazymita') {
-                gameDetails.classList.add('active');
-            } else {
-                tg.showPopup({
-                    title: 'Скоро будет доступно',
-                    message: 'Эта игра находится в разработке и скоро будет доступна для скачивания!',
-                    buttons: [{type: 'ok', text: 'Понятно'}]
-                });
-            }
-        }
-        
-        // Обработчики для вкладок
-        document.querySelectorAll('.tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                
-                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-                const content = document.getElementById(`${tab.dataset.tab}-tab`);
-                content.classList.add('active');
-                
-                currentTab = tab.dataset.tab;
-                renderGames(currentTab);
-                applySearch(); // Применить поиск при смене таба
-            });
-        });
-        
-        // Обработчик поиска
-        searchInput.addEventListener('input', applySearch);
-        
-        function applySearch() {
-            const term = searchInput.value.toLowerCase();
-            const grid = document.querySelector(`#${currentTab}-tab .games-grid`);
-            if (!grid) return;
-            
-            Array.from(grid.children).forEach(card => {
-                const title = card.querySelector('.game-title').textContent.toLowerCase();
-                card.style.display = title.includes(term) ? '' : 'none';
-            });
-        }
-        
-        // Обработчик кнопки "Назад"
-        backBtn.addEventListener('click', () => {
-            gameDetails.classList.remove('active');
-            if (xhr && isDownloading) {
-                xhr.abort();
-                resetDownloadUI();
-            }
-        });
-        
-        // Функция для обновления прогресса
-        function updateProgress(percent) {
-            progressFill.style.width = percent + '%';
-            progressPercent.textContent = percent + '%';
-            
-            if (percent === 0) {
-                statusText.textContent = 'Готов к загрузке';
-            } else if (percent < 100) {
-                statusText.textContent = 'Загрузка: ' + percent + '%';
-            } else {
-                statusText.textContent = 'Загрузка завершена!';
-            }
-        }
-        
-        // Функция для показа статуса
-        function showStatus(message, isSuccess) {
-            statusMessage.textContent = message;
-            statusMessage.className = `status-message ${isSuccess ? 'status-success' : 'status-error'}`;
-            statusMessage.style.display = 'block';
-        }
-        
-        // Сброс UI загрузки
-        function resetDownloadUI() {
-            isDownloading = false;
-            downloadBtn.disabled = false;
-            downloadBtn.innerHTML = 'Скачать CrazyMita';
-            downloadBtn.style.display = 'block';
-            cancelBtn.style.display = 'none';
-            progressContainer.style.display = 'none';
-            statusMessage.style.display = 'none';
-            updateProgress(0);
-        }
-        
-        // Функция для скачивания файла
-        function downloadFile() {
-            if (isDownloading) return;
-            
-            isDownloading = true;
-            downloadBtn.disabled = true;
-            downloadBtn.style.display = 'none';
-            cancelBtn.style.display = 'block';
-            downloadBtn.innerHTML = '<span class="loader"></span> Загрузка...';
-            progressContainer.style.display = 'block';
-            statusText.textContent = 'Запрос на скачивание...';
-            updateProgress(0);
-            
-            // Always use XMLHttpRequest for better control and redownload capability
-            try {
-                xhr = new XMLHttpRequest();
-                xhr.open('GET', DOWNLOAD_URL + '?' + new Date().getTime(), true); // Append timestamp to URL to avoid caching issues
-                xhr.responseType = 'blob';
-                
-                xhr.onprogress = function(event) {
-                    if (event.lengthComputable) {
-                        const percent = Math.round((event.loaded / event.total) * 100);
-                        updateProgress(percent);
-                    }
-                };
-                
-                xhr.onload = function() {
-                    if (xhr.status === 200) {
-                        const blob = xhr.response;
-                        const url = URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.style.display = 'none';
-                        a.href = url;
-                        a.download = FILE_NAME;
-                        document.body.appendChild(a);
-                        a.click();
-                        URL.revokeObjectURL(url);
-                        document.body.removeChild(a);
-                        
-                        updateProgress(100);
-                        showStatus('Файл успешно скачан! Проверьте ваши загрузки. Вы можете скачать снова.', true);
-                    } else {
-                        showStatus('Ошибка загрузки: статус ' + xhr.status, false);
-                        updateProgress(0);
-                    }
-                    resetDownloadUI();
-                    downloadBtn.innerHTML = 'Скачать еще раз';
-                    xhr = null;
-                };
-                
-                xhr.onerror = function() {
-                    showStatus('Ошибка сети. Проверьте подключение.', false);
-                    updateProgress(0);
-                    resetDownloadUI();
-                    xhr = null;
-                };
-                
-                xhr.onabort = function() {
-                    showStatus('Загрузка отменена.', false);
-                    updateProgress(0);
-                    resetDownloadUI();
-                    xhr = null;
-                };
-                
-                xhr.send();
-            } catch (error) {
-                showStatus('Ошибка: ' + error.message, false);
-                resetDownloadUI();
-                xhr = null;
-            }
-        }
-        
-        // Обработчик кнопки отмены
-        function cancelDownload() {
-            if (xhr && isDownloading) {
-                xhr.abort();
-            }
-            resetDownloadUI();
-        }
-        
-        // Обработчики кнопок
-        downloadBtn.addEventListener('click', downloadFile);
-        cancelBtn.addEventListener('click', cancelDownload);
-        
-        // Инициализация при загрузке
-        tg.ready();
-        updateProgress(0);
-        
-        // Рендеринг начального таба
-        renderGames('all');
-        
-        // Слушатель события writeAccessRequested (если нужно, но в данном случае не используется)
-        tg.onEvent('writeAccessRequested', (result) => {
-            console.log('Write access requested:', result);
-        });
-        
-        // Для отладки события fileDownloadRequested
-        tg.onEvent('fileDownloadRequested', (data) => {
-            console.log('File download requested:', data);
-            if (data.status === 'downloading') {
-                showStatus('Скачивание начато!', true);
-            } else if (data.status === 'cancelled') {
-                showStatus('Скачивание отменено.', false);
-            }
-        });
-    </script>
-</body>
-</html>
+                image: 'https://avatars.mds.yandex.net/i?id=593ac428542177958e16141c14317dff_l-510
