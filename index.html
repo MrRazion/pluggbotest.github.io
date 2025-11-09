@@ -2,10 +2,17 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pluggs Game Store</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Plugg BOT</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
+        :root {
+            --tg-safe-area-inset-top: 0px;
+            --tg-safe-area-inset-bottom: 0px;
+            --tg-safe-area-inset-left: 0px;
+            --tg-safe-area-inset-right: 0px;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -17,7 +24,10 @@
             background: var(--tg-theme-bg-color, #0f0f0f);
             color: var(--tg-theme-text-color, #ffffff);
             line-height: 1.6;
-            padding-bottom: 100px;
+            padding-top: var(--tg-safe-area-inset-top);
+            padding-bottom: calc(100px + var(--tg-safe-area-inset-bottom));
+            padding-left: var(--tg-safe-area-inset-left);
+            padding-right: var(--tg-safe-area-inset-right);
         }
         
         .container {
@@ -33,6 +43,9 @@
             background: var(--tg-theme-secondary-bg-color, #1c1c1c);
             border-radius: 16px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         
         .header h1 {
@@ -48,6 +61,15 @@
         .header p {
             color: var(--tg-theme-hint-color, #aaaaaa);
             font-size: 14px;
+        }
+        
+        .fullscreen-btn {
+            padding: 8px 12px;
+            background: linear-gradient(45deg, #6a11cb, #2575fc);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
         }
         
         .tabs {
@@ -150,6 +172,10 @@
             z-index: 1000;
             padding: 20px;
             overflow-y: auto;
+            padding-top: var(--tg-safe-area-inset-top);
+            padding-bottom: var(--tg-safe-area-inset-bottom);
+            padding-left: var(--tg-safe-area-inset-left);
+            padding-right: var(--tg-safe-area-inset-right);
         }
         
         .game-details.active {
@@ -406,13 +432,23 @@
                 height: 150px;
             }
         }
+        
+        .tg-safe-area {
+            padding-top: var(--tg-safe-area-inset-top);
+            padding-bottom: var(--tg-safe-area-inset-bottom);
+            padding-left: var(--tg-safe-area-inset-left);
+            padding-right: var(--tg-safe-area-inset-right);
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>Pluggs Game Store</h1>
-            <p>Лучшая коллекция игр для всех платформ</p>
+            <div>
+                <h1>Plugg BOT</h1>
+                <p>Лучшая коллекция игр для всех платформ</p>
+            </div>
+            <button id="fullscreen-btn">Enter Fullscreen</button>
         </div>
         
         <div class="search-bar">
@@ -423,12 +459,8 @@
         </div>
         
         <div class="tabs">
-            <div class="tab active" data-tab="all">Все игры</div>
-            <div class="tab" data-tab="popular">Популярные</div>
-            <div class="tab" data-tab="new">Новинки</div>
-            <div class="tab" data-tab="action">Экшен</div>
-            <div class="tab" data-tab="rpg">RPG</div>
-            <div class="tab" data-tab="strategy">Стратегии</div>
+            <div class="tab active" data-tab="all">Privatki</div>
+            <div class="tab" data-tab="popular">Privatki on Pc</div>
         </div>
         
         <div class="tab-content active" id="all-tab">
@@ -437,36 +469,24 @@
         <div class="tab-content" id="popular-tab">
             <div class="games-grid"></div>
         </div>
-        <div class="tab-content" id="new-tab">
-            <div class="games-grid"></div>
-        </div>
-        <div class="tab-content" id="action-tab">
-            <div class="games-grid"></div>
-        </div>
-        <div class="tab-content" id="rpg-tab">
-            <div class="games-grid"></div>
-        </div>
-        <div class="tab-content" id="strategy-tab">
-            <div class="games-grid"></div>
-        </div>
         
-        <!-- Детали игры CrazyMita -->
-        <div class="game-details" id="crazymita-details">
+        <!-- Детали игры (общий) -->
+        <div class="game-details" id="game-details">
             <button class="back-btn" id="back-btn">← Назад</button>
             
             <div class="game-details-content">
                 <div class="game-details-header">
                     <div class="game-details-image">
-                        <img src="https://avatars.mds.yandex.net/i?id=593ac428542177958e16141c14317dff_l-5107508-images-thumbs&n=13" alt="CrazyMita">
+                        <img id="details-image" src="" alt="">
                     </div>
                     <div>
-                        <div class="game-details-title">CrazyMita</div>
-                        <div class="game-details-meta">Версия: 1.2.5 • Размер: ~150 МБ</div>
+                        <div class="game-details-title" id="details-title"></div>
+                        <div class="game-details-meta" id="details-meta"></div>
                     </div>
                 </div>
                 
-                <div class="game-details-description">
-                    <p>CrazyMita - это захватывающая экшен-игра с уникальным геймплеем и потрясающей графикой. Игра предлагает:</p>
+                <div class="game-details-description" id="details-description">
+                    <p>Захватывающая игра с уникальным геймплеем и потрясающей графикой. Игра предлагает:</p>
                     <ul>
                         <li>Динамичные бои с разнообразными противниками</li>
                         <li>Разветвленную систему прокачки персонажа</li>
@@ -498,7 +518,7 @@
             <div class="footer-content">
                 <div class="footer-section">
                     <h3>О нас</h3>
-                    <p>Pluggs - лучший бот для поиска и скачивания приваток. Мы предлагаем огромную коллекцию популярных приваток для всех платформ.</p>
+                    <p>Plugg BOT - лучший бот для поиска и скачивания приваток. Мы предлагаем огромную коллекцию популярных приваток для всех платформ.</p>
                 </div>
                 
                 <div class="footer-section">
@@ -527,61 +547,67 @@
         const statusMessage = document.getElementById('status-message');
         const progressContainer = document.getElementById('progress-container');
         const backBtn = document.getElementById('back-btn');
-        const gameDetails = document.getElementById('crazymita-details');
+        const gameDetails = document.getElementById('game-details');
+        const detailsTitle = document.getElementById('details-title');
+        const detailsImage = document.getElementById('details-image');
+        const detailsMeta = document.getElementById('details-meta');
+        const detailsDescription = document.getElementById('details-description');
         const searchInput = document.getElementById('search-input');
-        
-        // URL для скачивания
-        const DOWNLOAD_URL = 'https://huggingface.co/Zerchi/CrazyMita/resolve/main/CrazyMita.zip';
-        const FILE_NAME = 'CrazyMita.zip';
+        const fullscreenBtn = document.getElementById('fullscreen-btn');
         
         // Переменные для отслеживания прогресса
         let isDownloading = false;
         let currentTab = 'all';
         let xhr = null;
+        let currentDownloadUrl = '';
+        let currentFileName = '';
+        let currentGameTitle = '';
         
         // Данные игр
         const games = [
             {
-                id: 'crazymita',
-                title: 'CrazyMita',
+                id: 'standrise',
+                title: 'StandRise',
                 description: 'Захватывающая игра в жанре экшен с уникальным геймплеем и графикой.',
                 image: 'https://avatars.mds.yandex.net/i?id=593ac428542177958e16141c14317dff_l-5107508-images-thumbs&n=13',
-                categories: ['popular', 'action']
+                categories: ['popular', 'action'],
+                url: 'https://huggingface.co/Zerchi/CrazyMita/resolve/main/CrazyMita.zip',
+                fileName: 'StandRise.zip',
+                version: '1.2.5',
+                size: '~150 МБ'
             },
             {
-                id: 'neonrush',
-                title: 'Neon Rush',
+                id: 'standleo',
+                title: 'StandLeo',
                 description: 'Гонки в неоновом стиле с улучшениями и мощными автомобилями.',
                 image: 'https://avatars.mds.yandex.net/i?id=593ac428542177958e16141c14317dff_l-5107508-images-thumbs&n=13',
-                categories: ['popular', 'action']
+                categories: ['popular', 'action'],
+                url: 'https://huggingface.co/Zerchi/CrazyMita/resolve/main/CrazyMita3.zip',
+                fileName: 'StandLeo.zip',
+                version: '1.2.5',
+                size: '~150 МБ'
             },
             {
-                id: 'spacewarriors',
-                title: 'Space Warriors',
+                id: 'projectevolution',
+                title: 'Project Evolution',
                 description: 'Сражения в космосе с улучшенной системой боя и развития.',
                 image: 'https://avatars.mds.yandex.net/i?id=593ac428542177958e16141c14317dff_l-5107508-images-thumbs&n=13',
-                categories: ['new', 'action']
+                categories: ['popular', 'action'],
+                url: 'https://huggingface.co/Zerchi/CrazyMita/resolve/main/CrazyMita1.zip',
+                fileName: 'ProjectEvolution.zip',
+                version: '1.2.5',
+                size: '~150 МБ'
             },
             {
-                id: 'dragonquest',
-                title: 'Dragon Quest',
+                id: 'standknife',
+                title: 'StandKnife',
                 description: 'РПГ с открытым миром, драконами и захватывающим сюжетом.',
                 image: 'https://avatars.mds.yandex.net/i?id=593ac428542177958e16141c14317dff_l-5107508-images-thumbs&n=13',
-                categories: ['rpg']
-            },
-            {
-                id: 'zombiesurvival',
-                title: 'Zombie Survival',
-                description: 'Выживание в мире зомби с ограниченными ресурсами и командной игрой.',
-                image: 'https://avatars.mds.yandex.net/i?id=593ac428542177958e16141c14317dff_l-5107508-images-thumbs&n=13',
-                categories: ['new', 'action']
-            },
-            {
-                id: 'magicclash',
-                title: 'Magic Clash',
-                description: 'Стратегическая карточная игра с элементами магии и тактики.',
-                image: 'https://avatars.mds.yandex.net/i?id=593ac428542177958e16141c14317dff_l-5107508-images-thumbs&n=13',
-                categories: ['strategy']
+                categories: ['popular', 'action'],
+                url: 'https://huggingface.co/Zerchi/CrazyMita/resolve/main/CrazyMita2.zip',
+                fileName: 'StandKnife.zip',
+                version: '1.2.5',
+                size: '~150 МБ'
             }
         ];
         
@@ -597,7 +623,7 @@
             filteredGames.forEach(game => {
                 const card = document.createElement('div');
                 card.className = 'game-card';
-                card.dataset.game = game.id;
+                card.dataset.gameId = game.id;
                 card.innerHTML = `
                     <div class="game-image">
                         <img src="${game.image}" alt="${game.title}">
@@ -615,8 +641,18 @@
         
         // Обработчик клика по карточке игры
         function handleGameClick(e) {
-            const gameId = e.currentTarget.dataset.game;
-            if (gameId === 'crazymita') {
+            const gameId = e.currentTarget.dataset.gameId;
+            const game = games.find(g => g.id === gameId);
+            if (game) {
+                detailsTitle.textContent = game.title;
+                detailsImage.src = game.image;
+                detailsImage.alt = game.title;
+                detailsMeta.textContent = `Версия: ${game.version} • Размер: ${game.size}`;
+                // Можно обновить description если нужно, но пока статичный
+                currentDownloadUrl = game.url;
+                currentFileName = game.fileName;
+                currentGameTitle = game.title;
+                downloadBtn.textContent = `Скачать ${game.title}`;
                 gameDetails.classList.add('active');
             } else {
                 tg.showPopup({
@@ -691,44 +727,137 @@
         function resetDownloadUI() {
             isDownloading = false;
             downloadBtn.disabled = false;
-            downloadBtn.textContent = 'Скачать';
+            downloadBtn.textContent = `Скачать ${currentGameTitle}`;
             progressContainer.style.display = 'none';
             statusMessage.style.display = 'none';
             updateProgress(0);
         }
         
-        // Функция для скачивания файла через бота
+        // Функция для скачивания файла
         function downloadFile() {
             if (isDownloading) return;
             
             isDownloading = true;
             downloadBtn.disabled = true;
-            downloadBtn.innerHTML = '<span class="loader"></span> Отправка запроса боту...';
-            progressContainer.style.display = 'none'; // Не показываем прогресс, так как используем sendData
+            downloadBtn.innerHTML = '<span class="loader"></span> Загрузка...';
+            progressContainer.style.display = 'block';
+            statusText.textContent = 'Запрос на скачивание...';
+            updateProgress(0);
             
-            const botName = tg.initDataUnsafe?.bot_username || 'Pluggs';
-            showStatus(`${botName} предлагает скачать файл: CrazyMita. Запрос отправлен, проверьте чат с ботом.`, true);
+            // Добавляем уникальный параметр к URL для принудительной перезагрузки
+            const timestamp = Date.now();
+            const downloadUrl = `${currentDownloadUrl}?t=${timestamp}`;
             
-            // Отправляем данные боту для обработки (бот должен отправить сообщение с файлом)
-            const data = JSON.stringify({
-                action: 'download',
-                game: 'CrazyMita',
-                file_name: FILE_NAME,
-                url: DOWNLOAD_URL
-            });
-            
-            // sendData закроет приложение после отправки
-            tg.sendData(data);
-            
-            // xhr = null; // Не нужно, так как не используем
+            if (tg.isVersionAtLeast('8.0')) {
+                // Use native downloadFile method with unique URL
+                tg.downloadFile({
+                    url: downloadUrl,
+                    file_name: currentFileName
+                }, (accepted) => {
+                    if (accepted) {
+                        statusText.textContent = 'Скачивание начато...';
+                        showStatus('Скачивание файла запущено. Проверьте уведомления или загрузки в Telegram.', true);
+                        // Note: No progress available with native download, so simulate or just show message
+                        updateProgress(100); // Fake completion since no progress
+                    } else {
+                        showStatus('Скачивание отменено.', false);
+                    }
+                    resetDownloadUI();
+                    downloadBtn.textContent = `Скачать еще раз ${currentGameTitle}`;
+                });
+            } else {
+                // Fallback to XMLHttpRequest with unique URL
+                try {
+                    xhr = new XMLHttpRequest();
+                    xhr.open('GET', downloadUrl, true);
+                    xhr.responseType = 'blob';
+                    
+                    xhr.onprogress = function(event) {
+                        if (event.lengthComputable) {
+                            const percent = Math.round((event.loaded / event.total) * 100);
+                            updateProgress(percent);
+                        }
+                    };
+                    
+                    xhr.onload = function() {
+                        if (xhr.status === 200) {
+                            const blob = xhr.response;
+                            const url = URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.style.display = 'none';
+                            a.href = url;
+                            a.download = currentFileName;
+                            document.body.appendChild(a);
+                            a.click();
+                            URL.revokeObjectURL(url);
+                            document.body.removeChild(a);
+                            
+                            updateProgress(100);
+                            showStatus('Файл успешно скачан! Проверьте ваши загрузки.', true);
+                        } else {
+                            showStatus('Ошибка загрузки: статус ' + xhr.status, false);
+                            updateProgress(0);
+                        }
+                        resetDownloadUI();
+                        xhr = null;
+                    };
+                    
+                    xhr.onerror = function() {
+                        showStatus('Ошибка сети. Проверьте подключение.', false);
+                        updateProgress(0);
+                        resetDownloadUI();
+                        xhr = null;
+                    };
+                    
+                    xhr.onabort = function() {
+                        showStatus('Загрузка отменена.', false);
+                        updateProgress(0);
+                        resetDownloadUI();
+                        xhr = null;
+                    };
+                    
+                    xhr.send();
+                } catch (error) {
+                    showStatus('Ошибка: ' + error.message, false);
+                    resetDownloadUI();
+                    xhr = null;
+                }
+            }
         }
         
         // Обработчик кнопки скачивания
         downloadBtn.addEventListener('click', downloadFile);
         
+        // Обработчик fullscreen
+        fullscreenBtn.addEventListener('click', () => {
+            if (tg.isFullscreen) {
+                tg.exitFullscreen();
+                fullscreenBtn.textContent = 'Enter Fullscreen';
+            } else {
+                tg.setHeaderColor('bg_color'); // Или 'transparent' если поддерживается, но по docs hex or theme
+                tg.requestFullscreen();
+                fullscreenBtn.textContent = 'Exit Fullscreen';
+            }
+        });
+        
         // Инициализация при загрузке
         tg.ready();
         updateProgress(0);
+        
+        // Установка safe area insets
+        if (tg.safeAreaInset) {
+            document.documentElement.style.setProperty('--tg-safe-area-inset-top', `${tg.safeAreaInset.top}px`);
+            document.documentElement.style.setProperty('--tg-safe-area-inset-bottom', `${tg.safeAreaInset.bottom}px`);
+            document.documentElement.style.setProperty('--tg-safe-area-inset-left', `${tg.safeAreaInset.left}px`);
+            document.documentElement.style.setProperty('--tg-safe-area-inset-right', `${tg.safeAreaInset.right}px`);
+        }
+        
+        // Установка начального состояния fullscreen кнопки
+        if (tg.isFullscreen) {
+            fullscreenBtn.textContent = 'Exit Fullscreen';
+        } else {
+            fullscreenBtn.textContent = 'Enter Fullscreen';
+        }
         
         // Рендеринг начального таба
         renderGames('all');
