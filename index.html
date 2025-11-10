@@ -5,29 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Plugg BOT</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --tg-safe-area-inset-top: 0px;
             --tg-safe-area-inset-bottom: 0px;
             --tg-safe-area-inset-left: 0px;
             --tg-safe-area-inset-right: 0px;
+            --primary-gradient: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            --secondary-gradient: linear-gradient(135deg, #8e2de2 0%, #4a00e0 100%);
+            --accent-color: #7c4dff;
+            --card-bg: rgba(28, 28, 28, 0.7);
+            --card-border: rgba(106, 17, 203, 0.2);
+            --text-color: #ffffff;
+            --hint-color: #b0b0b0;
+            --success-color: #34c759;
+            --error-color: #ff3b30;
+            --border-radius: 16px;
+            --transition: all 0.3s ease;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
         }
         
         body {
-            background: var(--tg-theme-bg-color, #0f0f0f);
-            color: var(--tg-theme-text-color, #ffffff);
+            background: #0f0f0f;
+            color: var(--text-color);
             line-height: 1.6;
             padding-top: var(--tg-safe-area-inset-top);
             padding-bottom: calc(100px + var(--tg-safe-area-inset-bottom));
             padding-left: var(--tg-safe-area-inset-left);
             padding-right: var(--tg-safe-area-inset-right);
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a2e 100%);
         }
         
         .container {
@@ -37,27 +51,72 @@
         }
         
         .header {
-            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 20px;
             padding: 15px;
-            background: var(--tg-theme-secondary-bg-color, #1c1c1c);
-            border-radius: 16px;
+            border-radius: var(--border-radius);
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--card-border);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
         }
         
-        .header h1 {
-            font-size: 22px;
-            margin-bottom: 5px;
-            color: var(--tg-theme-text-color, #ffffff);
-            background: linear-gradient(45deg, #6a11cb, #2575fc);
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary-gradient);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo {
+            background: var(--primary-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
         }
         
-        .header p {
-            color: var(--tg-theme-hint-color, #aaaaaa);
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 2px solid var(--accent-color);
+            cursor: pointer;
+            overflow: hidden;
+            transition: var(--transition);
+            background: var(--secondary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
             font-size: 14px;
+        }
+        
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .user-avatar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 0 4px rgba(106, 17, 203, 0.3);
         }
         
         .tabs {
@@ -66,6 +125,7 @@
             margin-bottom: 20px;
             padding-bottom: 5px;
             scrollbar-width: none;
+            gap: 8px;
         }
         
         .tabs::-webkit-scrollbar {
@@ -74,18 +134,37 @@
         
         .tab {
             padding: 10px 20px;
-            background: var(--tg-theme-secondary-bg-color, #1c1c1c);
+            background: var(--card-bg);
             border-radius: 12px;
-            margin-right: 10px;
+            margin-right: 0;
             white-space: nowrap;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             font-weight: 500;
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(5px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tab::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: transparent;
         }
         
         .tab.active {
-            background: linear-gradient(45deg, #6a11cb, #2575fc);
+            background: var(--card-bg);
             color: white;
+            border: 1px solid var(--accent-color);
+        }
+        
+        .tab.active::before {
+            background: var(--primary-gradient);
         }
         
         .games-grid {
@@ -96,15 +175,34 @@
         }
         
         .game-card {
-            background: var(--tg-theme-secondary-bg-color, #1c1c1c);
-            border-radius: 16px;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
             overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: var(--transition);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(5px);
+            position: relative;
         }
         
-        .game-card:active {
-            transform: scale(0.98);
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: transparent;
+            transition: var(--transition);
+        }
+        
+        .game-card:hover, .game-card:active {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .game-card:hover::before, .game-card:active::before {
+            background: var(--primary-gradient);
         }
         
         .game-image {
@@ -118,6 +216,11 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: var(--transition);
+        }
+        
+        .game-card:hover .game-image img {
+            transform: scale(1.05);
         }
         
         .game-overlay {
@@ -134,19 +237,71 @@
         }
         
         .game-title {
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 600;
             margin-bottom: 5px;
-            color: var(--tg-theme-text-color, #ffffff);
+            color: var(--text-color);
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            height: 20px;
         }
         
         .game-description {
             font-size: 12px;
-            color: var(--tg-theme-hint-color, #aaaaaa);
+            color: var(--hint-color);
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
+            height: 36px;
+            margin-bottom: 10px;
+        }
+        
+        .game-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            color: var(--hint-color);
+            margin-bottom: 8px;
+        }
+        
+        .game-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .action-btn {
+            flex: 1;
+            padding: 6px 0;
+            border-radius: 8px;
+            border: none;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+        
+        .download-btn {
+            background: var(--primary-gradient);
+            color: white;
+        }
+        
+        .library-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-color);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .library-btn.in-library {
+            background: var(--success-color);
+            color: white;
         }
         
         .game-details {
@@ -156,7 +311,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: var(--tg-theme-bg-color, #0f0f0f);
+            background: #0f0f0f;
             z-index: 1000;
             padding: 20px;
             overflow-y: auto;
@@ -171,24 +326,27 @@
         }
         
         .game-details-content {
-            background: var(--tg-theme-secondary-bg-color, #1c1c1c);
-            border-radius: 16px;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
             padding: 20px;
             margin-top: 20px;
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(10px);
         }
         
         .game-details-header {
             display: flex;
             align-items: center;
             margin-bottom: 20px;
+            gap: 15px;
         }
         
         .game-details-image {
-            width: 80px;
-            height: 80px;
+            width: 90px;
+            height: 90px;
             border-radius: 12px;
             overflow: hidden;
-            margin-right: 15px;
+            border: 1px solid var(--card-border);
         }
         
         .game-details-image img {
@@ -198,19 +356,97 @@
         }
         
         .game-details-title {
-            font-size: 18px;
-            font-weight: 600;
+            font-size: 20px;
+            font-weight: 700;
             margin-bottom: 5px;
+            color: var(--text-color);
         }
         
         .game-details-meta {
             font-size: 14px;
-            color: var(--tg-theme-hint-color, #aaaaaa);
+            color: var(--hint-color);
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        
+        .game-details-meta-item {
+            display: flex;
+            gap: 5px;
+            align-items: center;
         }
         
         .game-details-description {
             margin-bottom: 20px;
             line-height: 1.6;
+            color: var(--text-color);
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 25px 0 15px 0;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--card-border);
+            margin-left: 10px;
+        }
+        
+        .screenshots {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .screenshot {
+            border-radius: 10px;
+            overflow: hidden;
+            height: 120px;
+            border: 1px solid var(--card-border);
+        }
+        
+        .screenshot img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+        
+        .screenshot:hover img {
+            transform: scale(1.05);
+        }
+        
+        .whats-new {
+            background: rgba(106, 17, 203, 0.1);
+            border-radius: 10px;
+            padding: 12px;
+            margin-top: 15px;
+        }
+        
+        .whats-new h4 {
+            color: var(--accent-color);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .whats-new ul {
+            padding-left: 20px;
+        }
+        
+        .whats-new li {
+            margin-bottom: 5px;
+            color: var(--text-color);
         }
         
         .download-section {
@@ -230,34 +466,34 @@
         
         .progress-text {
             font-size: 14px;
-            color: var(--tg-theme-hint-color, #aaaaaa);
+            color: var(--hint-color);
         }
         
         .progress-percent {
             font-weight: bold;
-            color: var(--tg-theme-button-color, #40a7e3);
+            color: var(--accent-color);
         }
         
         .progress-bar {
             height: 8px;
-            background: var(--tg-theme-section-bg-color, #333);
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 4px;
             overflow: hidden;
         }
         
         .progress-fill {
             height: 100%;
-            background: linear-gradient(45deg, #6a11cb, #2575fc);
+            background: var(--primary-gradient);
             border-radius: 4px;
             width: 0%;
             transition: width 0.3s ease;
         }
         
-        .download-btn {
+        .main-download-btn {
             display: block;
             width: 100%;
             padding: 16px;
-            background: linear-gradient(45deg, #6a11cb, #2575fc);
+            background: var(--primary-gradient);
             color: var(--tg-theme-button-text-color, #ffffff);
             border: none;
             border-radius: 12px;
@@ -265,30 +501,39 @@
             font-weight: 600;
             cursor: pointer;
             text-align: center;
-            transition: all 0.2s;
+            transition: var(--transition);
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(106, 17, 203, 0.3);
         }
         
-        .download-btn:disabled {
-            background: var(--tg-theme-secondary-bg-color, #555);
+        .main-download-btn:disabled {
+            background: rgba(150, 150, 150, 0.5);
             cursor: not-allowed;
         }
         
-        .download-btn:not(:disabled):hover {
+        .main-download-btn:not(:disabled):hover {
             opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(106, 17, 203, 0.4);
         }
         
         .back-btn {
             display: inline-flex;
             align-items: center;
             padding: 10px 15px;
-            background: var(--tg-theme-secondary-bg-color, #1c1c1c);
-            color: var(--tg-theme-text-color, #ffffff);
-            border: none;
+            background: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid var(--card-border);
             border-radius: 12px;
             font-size: 14px;
             cursor: pointer;
             margin-bottom: 15px;
-            margin-top: 40px;
+            margin-top: 10px;
+            transition: var(--transition);
+        }
+        
+        .back-btn:hover {
+            background: rgba(106, 17, 203, 0.2);
         }
         
         .loader {
@@ -308,70 +553,86 @@
         }
         
         .status-message {
-            padding: 15px;
-            border-radius: 12px;
+            padding: 12px;
+            border-radius: 10px;
             margin-top: 15px;
             font-size: 14px;
             display: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
         .status-success {
-            background: rgba(52, 199, 89, 0.1);
-            color: #34c759;
-            display: block;
+            background: rgba(52, 199, 89, 0.15);
+            color: var(--success-color);
+            display: flex;
         }
         
         .status-error {
-            background: rgba(255, 59, 48, 0.1);
-            color: #ff3b30;
-            display: block;
+            background: rgba(255, 59, 48, 0.15);
+            color: var(--error-color);
+            display: flex;
         }
         
         .footer {
-            background: var(--tg-theme-secondary-bg-color, #1c1c1c);
-            border-radius: 16px;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
             padding: 20px;
             margin-top: 30px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(10px);
         }
         
         .footer-content {
             display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
+            flex-direction: column;
+            gap: 15px;
         }
         
         .footer-section {
-            flex: 1;
-            padding: 0 10px;
+            padding: 0;
         }
         
         .footer-section h3 {
-            font-size: 14px;
+            font-size: 15px;
             margin-bottom: 10px;
-            color: var(--tg-theme-text-color, #ffffff);
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
         
         .footer-section p, .footer-section a {
-            font-size: 12px;
-            color: var(--tg-theme-hint-color, #aaaaaa);
+            font-size: 13px;
+            color: var(--hint-color);
             margin-bottom: 5px;
             text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
         
         .footer-section a {
-            color: #6a9eff;
+            color: var(--accent-color);
+            transition: var(--transition);
+        }
+        
+        .footer-section a:hover {
+            color: white;
         }
         
         .footer-bottom {
             text-align: center;
             padding-top: 15px;
-            border-top: 1px solid var(--tg-theme-hint-color, #333333);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 15px;
         }
         
         .footer-bottom p {
             font-size: 12px;
-            color: var(--tg-theme-hint-color, #aaaaaa);
+            color: var(--hint-color);
         }
         
         .tab-content {
@@ -389,13 +650,13 @@
         
         .search-bar input {
             width: 100%;
-            padding: 12px 15px;
-            padding-left: 40px;
-            background: var(--tg-theme-secondary-bg-color, #1c1c1c);
-            border: none;
+            padding: 12px 15px 12px 45px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
             border-radius: 12px;
-            color: var(--tg-theme-text-color, #ffffff);
+            color: var(--text-color);
             font-size: 14px;
+            backdrop-filter: blur(5px);
         }
         
         .search-bar svg {
@@ -405,7 +666,282 @@
             transform: translateY(-50%);
             width: 18px;
             height: 18px;
-            fill: var(--tg-theme-hint-color, #aaaaaa);
+            fill: var(--hint-color);
+        }
+        
+        .profile-view {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #0f0f0f;
+            z-index: 1000;
+            padding: 20px;
+            overflow-y: auto;
+            padding-top: var(--tg-safe-area-inset-top);
+            padding-bottom: var(--tg-safe-area-inset-bottom);
+            padding-left: var(--tg-safe-area-inset-left);
+            padding-right: var(--tg-safe-area-inset-right);
+        }
+        
+        .profile-view.active {
+            display: block;
+        }
+        
+        .profile-banner {
+            height: 150px;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            margin-bottom: -50px;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .profile-banner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .profile-banner::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: var(--transition);
+        }
+        
+        .profile-banner:hover::after {
+            opacity: 1;
+        }
+        
+        .profile-banner:hover::after {
+            content: 'Изменить обложку';
+            color: white;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        .profile-content {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-top: 50px;
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(10px);
+        }
+        
+        .profile-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid var(--accent-color);
+            margin: 0 auto 15px;
+            overflow: hidden;
+            border: 2px solid var(--accent-color);
+            background: var(--secondary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 28px;
+        }
+        
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .profile-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 5px;
+        }
+        
+        .profile-username {
+            font-size: 14px;
+            color: var(--hint-color);
+            margin-bottom: 15px;
+        }
+        
+        .profile-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            flex: 1;
+        }
+        
+        .stat-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: var(--hint-color);
+        }
+        
+        .profile-tabs {
+            display: flex;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+        
+        .profile-tab {
+            padding: 10px 0;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--hint-color);
+            transition: var(--transition);
+            position: relative;
+        }
+        
+        .profile-tab.active {
+            color: var(--text-color);
+        }
+        
+        .profile-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary-gradient);
+        }
+        
+        .library-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .library-game {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .library-game-image {
+            width: 100%;
+            height: 100px;
+            overflow: hidden;
+        }
+        
+        .library-game-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .library-game-info {
+            padding: 10px;
+        }
+        
+        .library-game-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-color);
+            margin-bottom: 5px;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .library-game-meta {
+            font-size: 12px;
+            color: var(--hint-color);
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .library-game-actions {
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            right: 0;
+            padding: 0 10px;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: var(--transition);
+        }
+        
+        .library-game:hover .library-game-actions {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .library-action-btn {
+            width: 100%;
+            padding: 8px;
+            border-radius: 8px;
+            border: none;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 5px;
+        }
+        
+        .library-action-btn.play {
+            background: var(--success-color);
+            color: white;
+        }
+        
+        .library-action-btn.download {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-color);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .library-action-btn.remove {
+            background: var(--error-color);
+            color: white;
+        }
+        
+        .empty-library {
+            text-align: center;
+            padding: 30px 0;
+            color: var(--hint-color);
+        }
+        
+        .empty-library i {
+            font-size: 40px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+        
+        .empty-library p {
+            font-size: 14px;
         }
         
         @media (min-width: 768px) {
@@ -420,6 +956,14 @@
             .game-image {
                 height: 150px;
             }
+            
+            .screenshots {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .library-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
         }
         
         .tg-safe-area {
@@ -428,13 +972,95 @@
             padding-left: var(--tg-safe-area-inset-left);
             padding-right: var(--tg-safe-area-inset-right);
         }
+        
+        .floating-button {
+            position: fixed;
+            bottom: calc(20px + var(--tg-safe-area-inset-bottom));
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 15px rgba(106, 17, 203, 0.4);
+            z-index: 900;
+            transition: var(--transition);
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .floating-button:hover {
+            transform: scale(1.1) translateY(-3px);
+            box-shadow: 0 6px 20px rgba(106, 17, 203, 0.5);
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .game-details-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .detail-action-btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .detail-action-btn.play {
+            background: var(--success-color);
+            color: white;
+        }
+        
+        .detail-action-btn.library {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-color);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .detail-action-btn.library.in-library {
+            background: var(--success-color);
+            color: white;
+        }
+        
+        .detail-action-btn.remove {
+            background: var(--error-color);
+            color: white;
+        }
+        
+        .detail-action-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>Plugg BOT</h1>
-            <p>Лучшая коллекция игр для всех платформ</p>
+            <div class="logo-container">
+                <div class="logo">Plugg BOT</div>
+            </div>
+            <div class="user-avatar" id="user-avatar">
+                <i class="fas fa-user"></i>
+            </div>
         </div>
         
         <div class="search-bar">
@@ -447,6 +1073,7 @@
         <div class="tabs">
             <div class="tab active" data-tab="all">Privatki</div>
             <div class="tab" data-tab="popular">Privatki on Pc</div>
+            <div class="tab" data-tab="library">Моя библиотека</div>
         </div>
         
         <div class="tab-content active" id="all-tab">
@@ -454,6 +1081,9 @@
         </div>
         <div class="tab-content" id="popular-tab">
             <div class="games-grid"></div>
+        </div>
+        <div class="tab-content" id="library-tab">
+            <div class="library-grid" id="library-grid"></div>
         </div>
         
         <!-- Детали игры (общий) -->
@@ -467,18 +1097,42 @@
                     </div>
                     <div>
                         <div class="game-details-title" id="details-title"></div>
-                        <div class="game-details-meta" id="details-meta"></div>
+                        <div class="game-details-meta">
+                            <div class="game-details-meta-item">
+                                <i class="fas fa-tag"></i>
+                                <span id="details-version"></span>
+                            </div>
+                            <div class="game-details-meta-item">
+                                <i class="fas fa-download"></i>
+                                <span id="details-size"></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
                 <div class="game-details-description" id="details-description">
-                    <p>Захватывающая игра с уникальным геймплеем и потрясающей графикой. Игра предлагает:</p>
+                    <!-- Description will be populated dynamically -->
+                </div>
+                
+                <div class="section-title">
+                    <i class="fas fa-images"></i>
+                    Скриншоты
+                </div>
+                <div class="screenshots" id="screenshots-container">
+                    <!-- Screenshots will be populated dynamically -->
+                </div>
+                
+                <div class="section-title">
+                    <i class="fas fa-bolt"></i>
+                    Что нового
+                </div>
+                <div class="whats-new" id="whats-new">
+                    <h4><i class="fas fa-check-circle"></i> Версия 1.2.5</h4>
                     <ul>
-                        <li>Динамичные бои с разнообразными противниками</li>
-                        <li>Разветвленную систему прокачки персонажа</li>
-                        <li>Десятки уровней с уникальными боссами</li>
-                        <li>Режимы одиночной и многопользовательской игры</li>
-                        <li>Регулярные обновления с новым контентом</li>
+                        <li>Исправлены критические ошибки в мультиплеере</li>
+                        <li>Добавлены новые уровни и персонажи</li>
+                        <li>Оптимизирована производительность для слабых устройств</li>
+                        <li>Улучшена графика и анимации</li>
                     </ul>
                 </div>
                 
@@ -493,9 +1147,74 @@
                         </div>
                     </div>
                     
-                    <button id="download-btn" class="download-btn">Скачать</button>
+                    <button id="main-download-btn" class="main-download-btn">
+                        <i class="fas fa-download"></i> Скачать
+                    </button>
+                    
+                    <div class="game-details-actions">
+                        <button class="detail-action-btn library" id="library-btn">
+                            <i class="fas fa-bookmark"></i> Добавить в библиотеку
+                        </button>
+                    </div>
                     
                     <div id="status-message" class="status-message"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Profile View -->
+        <div class="profile-view" id="profile-view">
+            <button class="back-btn" id="profile-back-btn">← Назад</button>
+            
+            <div class="profile-banner" id="profile-banner">
+                <img src="https://images.unsplash.com/photo-1579546929518-9e396f3cc809?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80" alt="Profile Banner">
+            </div>
+            
+            <div class="profile-content">
+                <div class="profile-header">
+                    <div class="profile-avatar" id="profile-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="profile-name" id="profile-name">Пользователь Telegram</div>
+                    <div class="profile-username" id="profile-username">@username</div>
+                    
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <div class="stat-value" id="games-count">0</div>
+                            <div class="stat-label">Игр</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">2.4 ГБ</div>
+                            <div class="stat-label">Размер</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">3</div>
+                            <div class="stat-label">Сегодня</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="profile-tabs">
+                    <div class="profile-tab active" data-tab="library">Библиотека</div>
+                    <div class="profile-tab" data-tab="settings">Настройки</div>
+                </div>
+                
+                <div class="profile-tab-content active" id="library-content">
+                    <div class="library-grid" id="profile-library-grid"></div>
+                    
+                    <div class="empty-library" id="empty-library">
+                        <i class="fas fa-book-open"></i>
+                        <p>Ваша библиотека пуста</p>
+                        <p>Добавляйте игры в библиотеку, чтобы они отображались здесь</p>
+                    </div>
+                </div>
+                
+                <div class="profile-tab-content" id="settings-content">
+                    <div style="text-align: center; padding: 30px 0;">
+                        <i class="fas fa-cog" style="font-size: 40px; color: var(--hint-color); margin-bottom: 15px;"></i>
+                        <h3 style="color: var(--text-color); margin-bottom: 10px;">Настройки</h3>
+                        <p style="color: var(--hint-color);">Здесь будут настройки вашего профиля</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -503,14 +1222,14 @@
         <div class="footer">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h3>О нас</h3>
+                    <h3><i class="fas fa-info-circle"></i> О нас</h3>
                     <p>Plugg BOT - лучший бот для поиска и скачивания приваток. Мы предлагаем огромную коллекцию популярных приваток для всех платформ.</p>
                 </div>
                 
                 <div class="footer-section">
-                    <h3>Наши контакты</h3>
-                    <p>Владелец бота: <a href="https://t.me/kurune" target="_blank">Плагги</a></p>
-                    <p>По разным вопросам: <a href="https://t.me/soukita" target="_blank">kitaru</a></p>
+                    <h3><i class="fas fa-headset"></i> Наши контакты</h3>
+                    <p><i class="fas fa-user-shield"></i> Владелец бота: <a href="https://t.me/kurune" target="_blank">Плагги</a></p>
+                    <p><i class="fas fa-question-circle"></i> По разным вопросам: <a href="https://t.me/soukita" target="_blank">kitaru</a></p>
                 </div>
             </div>
             
@@ -518,27 +1237,65 @@
                 <p>© 2025 Pluggs. Все права защищены.</p>
             </div>
         </div>
+        
+        <button class="floating-button" id="floating-library-btn">
+            <i class="fas fa-bookmark"></i>
+        </button>
     </div>
 
     <script>
         // Инициализация Telegram Web App
         const tg = window.Telegram.WebApp;
         tg.expand();
+        tg.ready();
+        
+        // Получение информации о пользователе
+        const user = tg.initDataUnsafe?.user;
+        let userId = 'guest';
+        let userFirstName = 'Пользователь';
+        let userLastName = '';
+        let username = 'username';
+        let userPhotoUrl = '';
+        
+        // Настройка профиля пользователя если данные доступны
+        if (user) {
+            userId = user.id;
+            userFirstName = user.first_name || 'Пользователь';
+            userLastName = user.last_name || '';
+            username = user.username ? `@${user.username}` : 'username';
+            userPhotoUrl = user.photo_url || '';
+        }
         
         // Элементы интерфейса
         const downloadBtn = document.getElementById('download-btn');
+        const mainDownloadBtn = document.getElementById('main-download-btn');
+        const libraryBtn = document.getElementById('library-btn');
         const progressFill = document.getElementById('progress-fill');
         const progressPercent = document.getElementById('progress-percent');
         const statusText = document.getElementById('status-text');
         const statusMessage = document.getElementById('status-message');
         const progressContainer = document.getElementById('progress-container');
         const backBtn = document.getElementById('back-btn');
+        const profileBackBtn = document.getElementById('profile-back-btn');
         const gameDetails = document.getElementById('game-details');
+        const profileView = document.getElementById('profile-view');
+        const userAvatar = document.getElementById('user-avatar');
+        const profileAvatar = document.getElementById('profile-avatar');
+        const profileBanner = document.getElementById('profile-banner');
+        const profileName = document.getElementById('profile-name');
+        const profileUsername = document.getElementById('profile-username');
         const detailsTitle = document.getElementById('details-title');
         const detailsImage = document.getElementById('details-image');
-        const detailsMeta = document.getElementById('details-meta');
+        const detailsVersion = document.getElementById('details-version');
+        const detailsSize = document.getElementById('details-size');
         const detailsDescription = document.getElementById('details-description');
+        const screenshotsContainer = document.getElementById('screenshots-container');
         const searchInput = document.getElementById('search-input');
+        const floatingLibraryBtn = document.getElementById('floating-library-btn');
+        const gamesCount = document.getElementById('games-count');
+        const libraryGrid = document.getElementById('library-grid');
+        const profileLibraryGrid = document.getElementById('profile-library-grid');
+        const emptyLibrary = document.getElementById('empty-library');
         
         // Переменные для отслеживания прогресса
         let isDownloading = false;
@@ -546,6 +1303,8 @@
         let currentDownloadUrl = '';
         let currentFileName = '';
         let currentGameTitle = '';
+        let currentGameId = '';
+        let library = JSON.parse(localStorage.getItem(`plugg_bot_library_${userId}`)) || [];
         
         // Данные игр
         const games = [
@@ -554,6 +1313,20 @@
                 title: 'StandRise',
                 description: 'Захватывающая игра в жанре экшен с уникальным геймплеем и графикой.',
                 image: 'https://avatars.mds.yandex.net/i?id=593ac428542177958e16141c14317dff_l-5107508-images-thumbs&n=13',
+                screenshots: [
+                    'https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1542751110-97427bbecf20?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80'
+                ],
+                whatsNew: `
+                    <h4><i class="fas fa-check-circle"></i> Версия 1.2.5</h4>
+                    <ul>
+                        <li>Исправлены критические ошибки в мультиплеере</li>
+                        <li>Добавлены новые уровни и персонажи</li>
+                        <li>Оптимизирована производительность для слабых устройств</li>
+                        <li>Улучшена графика и анимации</li>
+                    </ul>
+                `,
                 categories: ['popular', 'action'],
                 url: 'https://huggingface.co/Zerchi/test/resolve/main/StandRise1.4.0f1.apk',
                 fileName: 'StandRise1.4.0f1.apk',
@@ -565,6 +1338,20 @@
                 title: 'StandLeo',
                 description: 'Гонки в неоновом стиле с улучшениями и мощными автомобилями.',
                 image: 'https://avatars.mds.yandex.net/i?id=593ac428542177958e16141c14317dff_l-5107508-images-thumbs&n=13',
+                screenshots: [
+                    'https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1542751110-97427bbecf20?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80'
+                ],
+                whatsNew: `
+                    <h4><i class="fas fa-check-circle"></i> Версия 1.3.2</h4>
+                    <ul>
+                        <li>Новые автомобили и трассы</li>
+                        <li>Улучшена физика вождения</li>
+                        <li>Добавлен ночной режим гонок</li>
+                        <li>Исправлены ошибки с сохранением</li>
+                    </ul>
+                `,
                 categories: ['popular', 'action'],
                 url: 'https://huggingface.co/Zerchi/CrazyMita/resolve/main/CrazyMita3.apk',
                 fileName: 'StandLeo.apk',
@@ -576,6 +1363,20 @@
                 title: 'Project Evolution',
                 description: 'Сражения в космосе с улучшенной системой боя и развития.',
                 image: 'https://avatars.mds.yandex.net/i?id=593ac428542177958e16141c14317dff_l-5107508-images-thumbs&n=13',
+                screenshots: [
+                    'https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1542751110-97427bbecf20?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80'
+                ],
+                whatsNew: `
+                    <h4><i class="fas fa-check-circle"></i> Версия 2.1.0</h4>
+                    <ul>
+                        <li>Новая кампания с 20 уровнями</li>
+                        <li>Режим кооператива до 4 игроков</li>
+                        <li>Улучшена графика и эффекты взрывов</li>
+                        <li>Исправлены ошибки с сохранением прогресса</li>
+                    </ul>
+                `,
                 categories: ['popular', 'action'],
                 url: 'https://huggingface.co/Zerchi/CrazyMita/resolve/main/CrazyMita1.apk',
                 fileName: 'ProjectEvolution.apk',
@@ -587,18 +1388,45 @@
                 title: 'StandKnife',
                 description: 'РПГ с открытым миром, драконами и захватывающим сюжетом.',
                 image: 'https://avatars.mds.yandex.net/i?id=593ac428542177958e16141c14317dff_l-5107508-images-thumbs&n=13',
+                screenshots: [
+                    'https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1542751110-97427bbecf20?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80'
+                ],
+                whatsNew: `
+                    <h4><i class="fas fa-check-circle"></i> Версия 1.8.3</h4>
+                    <ul>
+                        <li>Новые квесты и задания</li>
+                        <li>Добавлены 5 новых видов драконов</li>
+                        <li>Улучшена система крафта оружия</li>
+                        <li>Исправлены ошибки с сохранением</li>
+                    </ul>
+                `,
                 categories: ['popular', 'action'],
                 url: 'https://huggingface.co/Zerchi/CrazyMita/resolve/main/CrazyMita2.apk',
                 fileName: 'StandKnife.apk',
                 version: '1.2.5',
                 size: '~150 МБ'
             },
-            // Added more games to make the code bulkier
             {
                 id: 'neonrush',
                 title: 'Neon Rush',
                 description: 'Гонки в неоновом стиле с улучшениями и мощными автомобилями.',
                 image: 'https://avatars.mds.yandex.net/i?id=593ac428542177958e16141c14317dff_l-5107508-images-thumbs&n=13',
+                screenshots: [
+                    'https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1542751110-97427bbecf20?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80'
+                ],
+                whatsNew: `
+                    <h4><i class="fas fa-check-circle"></i> Версия 1.3.0</h4>
+                    <ul>
+                        <li>Новые автомобили и трассы</li>
+                        <li>Улучшена физика вождения</li>
+                        <li>Добавлен ночной режим гонок</li>
+                        <li>Исправлены ошибки с сохранением</li>
+                    </ul>
+                `,
                 categories: ['popular', 'action'],
                 url: 'https://huggingface.co/Zerchi/CrazyMita/resolve/main/CrazyMita.apk',
                 fileName: 'NeonRush.apk',
@@ -610,6 +1438,20 @@
                 title: 'Space Warriors',
                 description: 'Сражения в космосе с улучшенной системой боя и развития.',
                 image: 'https://avatars.mds.yandex.net/i?id=593ac428542177958e16141c14317dff_l-5107508-images-thumbs&n=13',
+                screenshots: [
+                    'https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1542751110-97427bbecf20?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80'
+                ],
+                whatsNew: `
+                    <h4><i class="fas fa-check-circle"></i> Версия 1.4.2</h4>
+                    <ul>
+                        <li>Новая кампания с 20 уровнями</li>
+                        <li>Режим кооператива до 4 игроков</li>
+                        <li>Улучшена графика и эффекты взрывов</li>
+                        <li>Исправлены ошибки с сохранением прогресса</li>
+                    </ul>
+                `,
                 categories: ['new', 'action'],
                 url: 'https://huggingface.co/Zerchi/CrazyMita/resolve/main/CrazyMita1.apk',
                 fileName: 'SpaceWarriors.apk',
@@ -621,6 +1463,20 @@
                 title: 'Dragon Quest',
                 description: 'РПГ с открытым миром, драконами и захватывающим сюжетом.',
                 image: 'https://avatars.mds.yandex.net/i?id=593ac428542177958e16141c14317dff_l-5107508-images-thumbs&n=13',
+                screenshots: [
+                    'https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1542751110-97427bbecf20?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80'
+                ],
+                whatsNew: `
+                    <h4><i class="fas fa-check-circle"></i> Версия 2.0.1</h4>
+                    <ul>
+                        <li>Новые квесты и задания</li>
+                        <li>Добавлены 5 новых видов драконов</li>
+                        <li>Улучшена система крафта оружия</li>
+                        <li>Исправлены ошибки с сохранением</li>
+                    </ul>
+                `,
                 categories: ['rpg'],
                 url: 'https://huggingface.co/Zerchi/CrazyMita/resolve/main/CrazyMita2.apk',
                 fileName: 'DragonQuest.apk',
@@ -632,6 +1488,20 @@
                 title: 'Zombie Survival',
                 description: 'Выживание в мире зомби с ограниченными ресурсами и командной игрой.',
                 image: 'https://avatars.mds.yandex.net/i?id=593ac428542177958e16141c14317dff_l-5107508-images-thumbs&n=13',
+                screenshots: [
+                    'https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1542751110-97427bbecf20?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80'
+                ],
+                whatsNew: `
+                    <h4><i class="fas fa-check-circle"></i> Версия 1.5.3</h4>
+                    <ul>
+                        <li>Новые локации и зомби</li>
+                        <li>Улучшена система крафта</li>
+                        <li>Добавлен кооперативный режим</li>
+                        <li>Исправлены ошибки с сохранением</li>
+                    </ul>
+                `,
                 categories: ['new', 'action'],
                 url: 'https://huggingface.co/Zerchi/CrazyMita/resolve/main/CrazyMita3.apk',
                 fileName: 'ZombieSurvival.apk',
@@ -643,6 +1513,20 @@
                 title: 'Magic Clash',
                 description: 'Стратегическая карточная игра с элементами магии и тактики.',
                 image: 'https://avatars.mds.yandex.net/i?id=593ac428542177958e16141c14317dff_l-5107508-images-thumbs&n=13',
+                screenshots: [
+                    'https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1542751110-97427bbecf20?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80'
+                ],
+                whatsNew: `
+                    <h4><i class="fas fa-check-circle"></i> Версия 1.1.0</h4>
+                    <ul>
+                        <li>Новые карты и колоды</li>
+                        <li>Улучшен баланс игры</li>
+                        <li>Добавлены еженедельные задания</li>
+                        <li>Исправлены ошибки с сохранением</li>
+                    </ul>
+                `,
                 categories: ['strategy'],
                 url: 'https://huggingface.co/Zerchi/CrazyMita/resolve/main/CrazyMita.apk',
                 fileName: 'MagicClash.apk',
@@ -658,7 +1542,22 @@
             
             grid.innerHTML = '';
             
-            const filteredGames = tab === 'all' ? games : games.filter(game => game.categories.includes(tab));
+            let filteredGames = [];
+            
+            if (tab === 'library') {
+                // Для библиотеки отображаем только сохраненные игры
+                filteredGames = library.map(gameId => games.find(g => g.id === gameId)).filter(Boolean);
+            } else {
+                filteredGames = tab === 'all' ? 
+                    games : 
+                    games.filter(game => game.categories.includes(tab));
+            }
+            
+            if (filteredGames.length === 0 && tab === 'library') {
+                emptyLibrary.style.display = 'block';
+            } else {
+                emptyLibrary.style.display = 'none';
+            }
             
             filteredGames.forEach(game => {
                 const card = document.createElement('div');
@@ -672,27 +1571,108 @@
                     <div class="game-info">
                         <div class="game-title">${game.title}</div>
                         <div class="game-description">${game.description}</div>
+                        <div class="game-meta">
+                            <span><i class="fas fa-tag"></i> ${game.version}</span>
+                            <span><i class="fas fa-download"></i> ${game.size}</span>
+                        </div>
+                        <div class="game-actions">
+                            <button class="action-btn download-btn">
+                                <i class="fas fa-download"></i> Скачать
+                            </button>
+                            <button class="action-btn library-btn ${library.includes(game.id) ? 'in-library' : ''}">
+                                <i class="fas ${library.includes(game.id) ? 'fa-bookmark' : 'fa-bookmark'}"></i>
+                            </button>
+                        </div>
                     </div>
                 `;
-                card.addEventListener('click', handleGameClick);
                 grid.appendChild(card);
             });
+            
+            // Обновляем количество игр в профиле
+            updateProfileStats();
+        }
+        
+        // Функция для рендеринга библиотеки в профиле
+        function renderProfileLibrary() {
+            profileLibraryGrid.innerHTML = '';
+            
+            if (library.length === 0) {
+                emptyLibrary.style.display = 'block';
+                return;
+            }
+            
+            emptyLibrary.style.display = 'none';
+            
+            library.forEach(gameId => {
+                const game = games.find(g => g.id === gameId);
+                if (!game) return;
+                
+                const card = document.createElement('div');
+                card.className = 'library-game';
+                card.dataset.gameId = game.id;
+                card.innerHTML = `
+                    <div class="library-game-image">
+                        <img src="${game.image}" alt="${game.title}">
+                    </div>
+                    <div class="library-game-info">
+                        <div class="library-game-title">${game.title}</div>
+                        <div class="library-game-meta">
+                            <span>${game.version}</span>
+                            <span>${game.size}</span>
+                        </div>
+                    </div>
+                    <div class="library-game-actions">
+                        <button class="library-action-btn play">
+                            <i class="fas fa-play"></i> Играть
+                        </button>
+                        <button class="library-action-btn download">
+                            <i class="fas fa-download"></i> Скачать
+                        </button>
+                        <button class="library-action-btn remove">
+                            <i class="fas fa-trash"></i> Удалить
+                        </button>
+                    </div>
+                `;
+                profileLibraryGrid.appendChild(card);
+            });
+        }
+        
+        // Функция для обновления статистики профиля
+        function updateProfileStats() {
+            gamesCount.textContent = library.length;
         }
         
         // Обработчик клика по карточке игры
         function handleGameClick(e) {
-            const gameId = e.currentTarget.dataset.gameId;
+            const target = e.target.closest('.game-card, .library-game');
+            if (!target) return;
+            
+            const gameId = target.dataset.gameId;
             const game = games.find(g => g.id === gameId);
             if (game) {
+                // Устанавливаем данные игры
                 detailsTitle.textContent = game.title;
                 detailsImage.src = game.image;
                 detailsImage.alt = game.title;
-                detailsMeta.textContent = `Версия: ${game.version} • Размер: ${game.size}`;
-                // Можно обновить description если нужно, но пока статичный
+                detailsVersion.textContent = `Версия: ${game.version}`;
+                detailsSize.textContent = `Размер: ${game.size}`;
+                detailsDescription.textContent = game.description;
+                
+                // Обновляем скриншоты
+                updateScreenshots(game.screenshots);
+                
+                // Обновляем раздел "Что нового"
+                document.getElementById('whats-new').innerHTML = game.whatsNew;
+                
                 currentDownloadUrl = game.url;
                 currentFileName = game.fileName;
                 currentGameTitle = game.title;
-                downloadBtn.textContent = `Скачать ${game.title}`;
+                currentGameId = game.id;
+                
+                // Обновляем статус кнопки библиотеки
+                updateLibraryButton();
+                
+                // Показываем детали игры
                 gameDetails.classList.add('active');
             } else {
                 tg.showPopup({
@@ -701,6 +1681,51 @@
                     buttons: [{type: 'ok', text: 'Понятно'}]
                 });
             }
+        }
+        
+        // Обновление скриншотов
+        function updateScreenshots(screenshots) {
+            screenshotsContainer.innerHTML = '';
+            
+            screenshots.forEach(screenshot => {
+                const screenshotElement = document.createElement('div');
+                screenshotElement.className = 'screenshot';
+                screenshotElement.innerHTML = `<img src="${screenshot}" alt="Скриншот">`;
+                screenshotsContainer.appendChild(screenshotElement);
+            });
+        }
+        
+        // Обновление кнопки библиотеки
+        function updateLibraryButton() {
+            if (library.includes(currentGameId)) {
+                libraryBtn.classList.add('in-library');
+                libraryBtn.innerHTML = '<i class="fas fa-bookmark"></i> Убрать из библиотеки';
+            } else {
+                libraryBtn.classList.remove('in-library');
+                libraryBtn.innerHTML = '<i class="fas fa-bookmark"></i> Добавить в библиотеку';
+            }
+        }
+        
+        // Добавление/удаление из библиотеки
+        function toggleLibrary() {
+            if (library.includes(currentGameId)) {
+                // Удаляем из библиотеки
+                library = library.filter(id => id !== currentGameId);
+                showStatus('Игра удалена из библиотеки', true);
+            } else {
+                // Добавляем в библиотеку
+                library.push(currentGameId);
+                showStatus('Игра добавлена в библиотеку', true);
+            }
+            
+            // Сохраняем в localStorage
+            localStorage.setItem(`plugg_bot_library_${userId}`, JSON.stringify(library));
+            
+            // Обновляем интерфейс
+            updateLibraryButton();
+            renderGames('library');
+            renderProfileLibrary();
+            updateProfileStats();
         }
         
         // Обработчики для вкладок
@@ -715,7 +1740,19 @@
                 
                 currentTab = tab.dataset.tab;
                 renderGames(currentTab);
-                applySearch(); // Применить поиск при смене таба
+                applySearch();
+            });
+        });
+        
+        // Обработчики для профильных вкладок
+        document.querySelectorAll('.profile-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                document.querySelectorAll('.profile-tab-content').forEach(content => content.classList.remove('active'));
+                const content = document.getElementById(`${tab.dataset.tab}-content`);
+                content.classList.add('active');
             });
         });
         
@@ -741,7 +1778,61 @@
             }
         });
         
-        // Функция для обновления прогресса (for fallback)
+        // Обработчик кнопки "Назад" в профиле
+        profileBackBtn.addEventListener('click', () => {
+            profileView.classList.remove('active');
+        });
+        
+        // Обработчик клика по аватару пользователя
+        userAvatar.addEventListener('click', () => {
+            // Заполняем данные профиля
+            profileName.textContent = userFirstName + (userLastName ? ' ' + userLastName : '');
+            profileUsername.textContent = username;
+            
+            // Обновляем аватар профиля
+            if (userPhotoUrl) {
+                profileAvatar.innerHTML = `<img src="${userPhotoUrl}" alt="${userFirstName}">`;
+            } else {
+                const initials = (userFirstName.charAt(0) + (userLastName ? userLastName.charAt(0) : '')).toUpperCase();
+                profileAvatar.innerHTML = initials;
+            }
+            
+            // Рендерим библиотеку в профиле
+            renderProfileLibrary();
+            
+            // Показываем профиль
+            profileView.classList.add('active');
+        });
+        
+        // Обработчик клика по баннеру профиля
+        profileBanner.addEventListener('click', () => {
+            tg.showAlert('Изменение обложки', 'Выберите изображение из галереи или отправьте файл.', () => {
+                // В реальном приложении здесь был бы код для выбора изображения
+                // Для примера просто меняем на случайное изображение
+                const randomBanner = [
+                    'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
+                    'https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
+                    'https://images.unsplash.com/photo-1542751110-97427bbecf20?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80'
+                ];
+                const randomIndex = Math.floor(Math.random() * randomBanner.length);
+                profileBanner.querySelector('img').src = randomBanner[randomIndex];
+            });
+        });
+        
+        // Обработчик клика по плавающей кнопке библиотеки
+        floatingLibraryBtn.addEventListener('click', () => {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelector('.tab[data-tab="library"]').classList.add('active');
+            
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById('library-tab').classList.add('active');
+            
+            currentTab = 'library';
+            renderGames(currentTab);
+            applySearch();
+        });
+        
+        // Функция для обновления прогресса
         function updateProgress(percent) {
             progressFill.style.width = percent + '%';
             progressPercent.textContent = percent + '%';
@@ -759,14 +1850,19 @@
         function showStatus(message, isSuccess) {
             statusMessage.textContent = message;
             statusMessage.className = `status-message ${isSuccess ? 'status-success' : 'status-error'}`;
-            statusMessage.style.display = 'block';
+            statusMessage.style.display = 'flex';
+            
+            // Автоматическое скрытие через 3 секунды
+            setTimeout(() => {
+                statusMessage.style.display = 'none';
+            }, 3000);
         }
         
         // Сброс UI загрузки
         function resetDownloadUI() {
             isDownloading = false;
-            downloadBtn.disabled = false;
-            downloadBtn.textContent = `Скачать ${currentGameTitle}`;
+            mainDownloadBtn.disabled = false;
+            mainDownloadBtn.innerHTML = '<i class="fas fa-download"></i> Скачать';
             progressContainer.style.display = 'none';
             statusMessage.style.display = 'none';
             if (progressFill) updateProgress(0);
@@ -821,8 +1917,8 @@
             if (isDownloading) return;
             
             isDownloading = true;
-            downloadBtn.disabled = true;
-            downloadBtn.innerHTML = '<span class="loader"></span> Запрос на скачивание...';
+            mainDownloadBtn.disabled = true;
+            mainDownloadBtn.innerHTML = '<span class="loader"></span> Запрос на скачивание...';
             progressContainer.style.display = 'block';
             statusText.textContent = 'Запрос на скачивание...';
             updateProgress(0);
@@ -846,7 +1942,7 @@
                         showStatus('Скачивание отменено.', false);
                     }
                     resetDownloadUI();
-                    downloadBtn.textContent = `Скачать еще раз ${currentGameTitle}`;
+                    mainDownloadBtn.innerHTML = '<i class="fas fa-redo"></i> Скачать еще раз';
                 });
             } else {
                 // Fallback to XMLHttpRequest with unique URL
@@ -854,44 +1950,103 @@
             }
         }
         
-        // Обработчик кнопки скачивания
-        downloadBtn.addEventListener('click', downloadFile);
-        
         // Инициализация при загрузке
-        tg.ready();
-        updateProgress(0);
-        
-        // Автоматический вход в fullscreen
-        if (!tg.isFullscreen) {
-            tg.setHeaderColor('bg_color');
-            tg.requestFullscreen();
-        }
-        
-        // Установка safe area insets
-        if (tg.safeAreaInset) {
-            document.documentElement.style.setProperty('--tg-safe-area-inset-top', `${tg.safeAreaInset.top}px`);
-            document.documentElement.style.setProperty('--tg-safe-area-inset-bottom', `${tg.safeAreaInset.bottom}px`);
-            document.documentElement.style.setProperty('--tg-safe-area-inset-left', `${tg.safeAreaInset.left}px`);
-            document.documentElement.style.setProperty('--tg-safe-area-inset-right', `${tg.safeAreaInset.right}px`);
-        }
-        
-        // Рендеринг начального таба
-        renderGames('all');
-        
-        // Слушатель события writeAccessRequested (если нужно, но в данном случае не используется)
-        tg.onEvent('writeAccessRequested', (result) => {
-            console.log('Write access requested:', result);
-        });
-        
-        // Для отладки события fileDownloadRequested
-        tg.onEvent('fileDownloadRequested', (data) => {
-            console.log('File download requested:', data);
-            if (data.status === 'downloading') {
-                showStatus('Скачивание начато!', true);
-            } else if (data.status === 'cancelled') {
-                showStatus('Скачивание отменено.', false);
+        function init() {
+            // Устанавливаем аватар пользователя
+            if (userPhotoUrl) {
+                userAvatar.innerHTML = `<img src="${userPhotoUrl}" alt="${userFirstName}">`;
+            } else {
+                const initials = (userFirstName.charAt(0) + (userLastName ? userLastName.charAt(0) : '')).toUpperCase();
+                userAvatar.textContent = initials;
             }
-        });
+            
+            // Устанавливаем имя пользователя в профиль
+            profileName.textContent = userFirstName + (userLastName ? ' ' + userLastName : '');
+            profileUsername.textContent = username;
+            
+            // Рендеринг начального таба
+            renderGames('all');
+            
+            // Добавляем обработчики событий
+            document.querySelector('.games-grid').addEventListener('click', handleGameClick);
+            document.querySelector('#profile-library-grid').addEventListener('click', handleGameClick);
+            
+            // Обработчик клика по кнопке библиотеки
+            libraryBtn.addEventListener('click', toggleLibrary);
+            
+            // Обработчик клика по основной кнопке загрузки
+            mainDownloadBtn.addEventListener('click', downloadFile);
+            
+            // Обработчик клика по кнопке библиотеки на карточках
+            document.addEventListener('click', (e) => {
+                if (e.target.closest('.library-btn')) {
+                    const card = e.target.closest('.game-card');
+                    if (card) {
+                        const gameId = card.dataset.gameId;
+                        const game = games.find(g => g.id === gameId);
+                        if (game) {
+                            currentGameId = game.id;
+                            toggleLibrary();
+                        }
+                    }
+                }
+            });
+            
+            // Обработчик клика по кнопке удаления в профиле
+            document.addEventListener('click', (e) => {
+                if (e.target.closest('.library-action-btn.remove')) {
+                    const card = e.target.closest('.library-game');
+                    if (card) {
+                        const gameId = card.dataset.gameId;
+                        library = library.filter(id => id !== gameId);
+                        localStorage.setItem(`plugg_bot_library_${userId}`, JSON.stringify(library));
+                        renderGames('library');
+                        renderProfileLibrary();
+                        updateProfileStats();
+                        showStatus('Игра удалена из библиотеки', true);
+                    }
+                }
+            });
+            
+            // Обработчик клика по кнопке загрузки в профиле
+            document.addEventListener('click', (e) => {
+                if (e.target.closest('.library-action-btn.download')) {
+                    const card = e.target.closest('.library-game');
+                    if (card) {
+                        const gameId = card.dataset.gameId;
+                        const game = games.find(g => g.id === gameId);
+                        if (game) {
+                            detailsTitle.textContent = game.title;
+                            detailsImage.src = game.image;
+                            detailsImage.alt = game.title;
+                            detailsVersion.textContent = `Версия: ${game.version}`;
+                            detailsSize.textContent = `Размер: ${game.size}`;
+                            detailsDescription.textContent = game.description;
+                            
+                            // Обновляем скриншоты
+                            updateScreenshots(game.screenshots);
+                            
+                            // Обновляем раздел "Что нового"
+                            document.getElementById('whats-new').innerHTML = game.whatsNew;
+                            
+                            currentDownloadUrl = game.url;
+                            currentFileName = game.fileName;
+                            currentGameTitle = game.title;
+                            currentGameId = game.id;
+                            
+                            // Обновляем статус кнопки библиотеки
+                            updateLibraryButton();
+                            
+                            // Показываем детали игры
+                            gameDetails.classList.add('active');
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Запускаем инициализацию после загрузки DOM
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
